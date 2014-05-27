@@ -16,7 +16,9 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 # Another good one: https://github.com/etianen/django-herokuapp#validating-your-heroku-setup
 
+
 SECRET_KEY = os.getenv('SECRET_KEY')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 
 if os.getenv('DEBUG') == 'True':

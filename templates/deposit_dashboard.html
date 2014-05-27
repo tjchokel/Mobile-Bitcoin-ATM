@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>{{business.business_name}}</h1>
+        </div>
+
+        <div id="status" style="text-align: center; margin-top: 50px;">
+          {% if transaction %}
+            {% if transaction.irreversible_by %}
+              <h1>Status: Complete</h1>
+            {% else %}
+              <h1>Status: Waiting On Confirmation</h1>
+
+              <h3>Transaction Amount: {{transaction.satoshis}}</h3>
+              <h3>Confirmations: {{transaction.conf_num}}</h3>
+            {% endif %}
+          {% else %}
+            <h1>Status: Not Yet Detected</h1>
+
+            <h3>Thanks you for your deposit.</h3>
+            <h3>Your transaction has NOT been detected. To be notified when your deposit has been confirmed, please enter your contact info below.</h3>
+
+            <a href="{% url "app.views.simulate_deposit_detected" %}">Simulate A Deposit Being Detected</a>
+          {%endif %}
+        </div>
+        
+        {% if shopper %}
+            <h4>Shopper Info:</h4>
+            <ul>
+              <li>Name: {{shopper.name}}</li>
+              <li>Phone: {{shopper.phone_num}}</li>
+              <li>Email: {{shopper.email}}</li>
+            </ul>
+        {% else %}
+
+          <form class="form-horizontal" method="post" action="{% url "app.views.deposit_dashboard" %}" >
+              {% load crispy_forms_tags %}
+              {{ form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+              </div>
+          </form>
+        {% endif %}
+        
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    <script>
+      var TIMEOUT_LENGTH = 10000; 
+      function poll_new_deposits() {
+          $.ajax({
+              type: 'get',
+              url: '/poll-deposits/',
+              success: function (data) {
+                console.log(data);
+                var deposit = data['deposit']
+                if(! deposit){
+                  setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+                }else{
+                  location.reload(true);
+                }
+                
+              },
+              error: function(data) {
+                setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+              }
+          });
+      }
+
+      function poll_new_confirmations() {
+          $.ajax({
+              type: 'get',
+              url: '/poll-deposits/',
+              success: function (data) {
+                console.log(data);
+                var deposit = data['deposit']
+                if(! deposit){
+                  setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+                }else{
+                  location.reload(true);
+                }
+                
+              },
+              error: function(data) {
+                setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+              }
+          });
+      }
+
+      $(document).ready(function(){
+          {% if not transaction %}
+            setTimeout(
+            function() 
+            {
+              poll_new_deposits();
+            }, 5000);
+
+          {% endif %}
+          
+      });    
+    </script>
+{% endblock %}

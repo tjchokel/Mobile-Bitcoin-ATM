@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>{{business.business_name}}</h1>
+        </div>
+
+        <span id='predeposit' style="text-align: center; margin-top: 50px;">
+            <h3 class="text-center hidden" id="usd-amt" style="color: #72a53b;" >
+              <!-- <strong class="text-muted hidden" id='usd-amt' style="display:inline !important;font-size:16px;">blahbla</strong> -->
+            </h3> 
+            <h3>1. Deposit to this address: {{current_address.b58_address}}</h3>
+
+            <span style="margin-left: auto; margin-right: auto; display: block;">
+                <img style="margin-left: auto; margin-right: auto; display: block;" src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{{business.get_current_address}}&choe=UTF-8&chs=300x300"/>
+                
+                <h3>2. Click this button after sending the funds </h3>
+                <a class="btn btn-primary btn-lg" href="{% url "app.views.deposit_dashboard" %}">Confirm My Deposit</a>
+            </span>
+        </span>
+
+        <span class='hidden' id='postdeposit' style="text-align: center; margin-top: 50px;">
+            <h3>DEPOSIT DETECTED!!!!</h3>
+        </span>
+
+
+
+    </div>
+{% endblock content %}
+{% block extra_js %}
+  <script>
+    var TIMEOUT_LENGTH = 10000; 
+    function poll_new_deposits() {
+        $.ajax({
+            type: 'get',
+            url: '/poll-deposits/',
+            success: function (data) {
+              console.log(data);
+              var deposit = data['deposit']
+              if(! deposit){
+                setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+              }else{
+                $("#postdeposit").toggleClass("show hidden");
+                $("#predeposit").toggleClass("show hidden");
+              }
+              // var amount = data['amount']
+              // $("#usd-amt").toggleClass("show hidden");
+              // $("#usd-amt").text(amount);
+            },
+            error: function(data) {
+              setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        console.log('DOCUMENT READY!');
+        $.ajax({
+          type: 'get',
+          url: '/get-bitcoin-price/',
+          success: function (data) {
+            console.log(data);
+            var amount = data['amount']+"/BTC"
+            $("#usd-amt").toggleClass("show hidden");
+            $("#usd-amt").text(amount);
+          },
+          error: function(data) {
+            console.log('FAILURE');
+          }
+        });
+        // setTimeout(
+        //   function() 
+        //   {
+        //     poll_new_deposits();
+        //   }, 5000);
+    });    
+  </script>
+{% endblock %}

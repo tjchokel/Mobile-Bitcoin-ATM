@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>Register Account</h1>
+        </div>
+
+        <form class="form-horizontal" method="post" action="{% url "business.views.register_account" %}" >
+            {% load crispy_forms_tags %}
+            {{ form|crispy }}
+            {% csrf_token %}
+            <div class="button-wrapper">
+              <button type="submit" class="btn btn-primary btn-lg">Create Account</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

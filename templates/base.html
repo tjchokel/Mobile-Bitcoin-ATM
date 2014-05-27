@@ -71,8 +71,10 @@
     {% block content %}{% endblock content %}
 
 
-    <div id="footer">
-      <ul class="nav nav-tabs">
+    <div id="footer" style="background-color:white;">
+      <div class="container">
+
+        <ul class="nav nav-tabs">
           {% if on_admin_page %}
             <li style="width:50%;">
               <a href="{% url "customer_dashboard" %}" style="text-align: center;font-size: 24px;">Customers</a>

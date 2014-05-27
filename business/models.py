@@ -44,3 +44,12 @@ class Business(models.Model):
 
     def get_current_address(self):
         return self.btcaddress_set.last()
+
+    def get_all_addresses(self):
+        return self.btcaddress_set.all()
+
+    def get_all_transactions(self):
+        transactions = []
+        for address in self.get_all_addresses():
+            transactions += address.get_all_transactions()
+        return transactions

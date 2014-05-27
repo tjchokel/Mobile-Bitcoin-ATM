@@ -21,6 +21,9 @@ class BTCAddress(models.Model):
     def get_transaction(self):
         return self.btctransaction_set.last()
 
+    def get_all_transactions(self):
+        return self.btctransaction_set.all()
+
     def get_current_shopper(self):
         return self.shopper_set.last()
 

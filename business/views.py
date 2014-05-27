@@ -143,3 +143,17 @@ def register_business(request):
 
             return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     return {'form': form, 'user':user}
+
+
+@login_required
+@render_to('business_dash.html')
+def business_dash(request):
+    user = request.user
+    business = user.get_business()
+    transactions = business.get_all_transactions()
+    return {
+        'user': user,
+        'business': business,
+        'transactions': transactions,
+        'on_admin_page': True
+    }

@@ -2,19 +2,20 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>Register Personal</h1>
+            <h1>Register Bitcoins</h1>
         </div>
         <div class="row">
-            {% with current_step=1 registration_step=user.get_registration_step %}
+            {% with current_step=3 registration_step=user.get_registration_step %}
                 {% include "breadcrumb.html" %}
             {% endwith %}
         </div>
-        <form class="form-horizontal" method="post" action="{% url "business.views.register_personal" %}" >
+
+        <form class="form-horizontal" method="post" action="{% url "business.views.register_bitcoins" %}" >
             {% load crispy_forms_tags %}
             {{ form|crispy }}
             {% csrf_token %}
             <div class="button-wrapper">
-              <button type="submit" class="btn btn-primary btn-lg">Next</button>
+              <button type="submit" class="btn btn-primary btn-lg">Complete Registration</button>
             </div>
         </form>
     </div>

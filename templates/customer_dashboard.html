@@ -6,7 +6,7 @@
         </div>
 
         <span id='predeposit' style="text-align: center; margin-top: 50px;">
-            <h3 class="text-center hidden" id="usd-amt" style="color: #72a53b;" >
+            <h3 class="text-center hidden" id="fiat-amt" style="color: #72a53b;" >
               <!-- <strong class="text-muted hidden" id='usd-amt' style="display:inline !important;font-size:16px;">blahbla</strong> -->
             </h3> 
             <h3>1. Deposit to this address: {{current_address.b58_address}}</h3>
@@ -61,8 +61,8 @@
           success: function (data) {
             console.log(data);
             var amount = data['amount']+"/BTC"
-            $("#usd-amt").toggleClass("show hidden");
-            $("#usd-amt").text(amount);
+            $("#fiat-amt").toggleClass("show hidden");
+            $("#fiat-amt").text(amount);
           },
           error: function(data) {
             console.log('FAILURE');

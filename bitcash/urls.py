@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^register-account/$', 'business.views.register_account', name='register_account'),
     url(r'^register-personal/$', 'business.views.register_personal', name='register_personal'),
     url(r'^register-business/$', 'business.views.register_business', name='register_business'),
+    url(r'^register-bitcoins/$', 'business.views.register_bitcoins', name='register_bitcoins'),
     url(r'^business-dash/$', 'business.views.business_dash', name='business_dash'),
 
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),

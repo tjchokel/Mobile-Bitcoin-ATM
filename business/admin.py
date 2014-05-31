@@ -19,7 +19,6 @@ class BusinessAdmin(admin.ModelAdmin):
         'id',
         'business_name',
         'currency_code',
-        'btc_storage_address',
         'address_1',
         'address_2',
         'city',

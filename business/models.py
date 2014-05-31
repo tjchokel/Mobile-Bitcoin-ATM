@@ -53,14 +53,18 @@ class Business(models.Model):
     btc_storage_address = models.CharField(blank=True, null=True, max_length=34,
             db_index=True)
 
+    def __str__(self):
+        return '%s: %s' % (self.id, self.business_name)
+
     # TODO: Make this actually work
     def get_next_address(self):
-        address = BTCAddress.objects.create(
-            generated_at=now(),
-            b58_address='1FXK3Qeu6ouf2haDXUCttWRHH4SLdRoFhA',
-            business=self,
-        )
-        return address
+        # address = BTCAddress.objects.create(
+        #     generated_at=now(),
+        #     b58_address='1FXK3Qeu6ouf2haDXUCttWRHH4SLdRoFhA',
+        #     business=self,
+        # )
+        # return address
+        return self.btcaddress_set.last()
 
     def get_current_address(self):
         return self.btcaddress_set.last()

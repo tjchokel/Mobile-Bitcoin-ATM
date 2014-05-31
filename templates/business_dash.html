@@ -5,7 +5,26 @@
             <h1>Settings</h1>
         </div>
 
-        <ul>
+        <ul><b>Personal Info</b> <a class="btn btn-primary btn-sm" onclick="editPersonalInfo();" id="personal-info-edit-button">Edit</a>
+          <span id="personal-info-list">
+            <li>Name: {{user.full_name}}</li>
+            <li>Email: {{user.email}}</li>
+            <li>Phone Number: {{user.phone_num}}</li>
+          </span>
+          <span class="hidden" id="personal-info-edit">
+            
+            <form class="form-horizontal" method="post" action="{% url "business.views.edit_personal_info" %}" >
+              {% load crispy_forms_tags %}
+              {{ personal_form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+              </div>
+          </form>
+          </span>
+        </ul>
+        <ul><b>Business Info</b> <a class="btn btn-primary btn-sm" onclick="editBusinessInfo();" id="business-info-edit-button">Edit</a>
+          <span id="business-info-list">
             <li>Business Name: {{business.business_name}}</li>
             <li>Address 1: {{business.address_1}}</li>
             <li>Address 2: {{business.address_2}}</li>
@@ -13,7 +32,34 @@
             <li>Country: {{business.country}}</li>
             <li>Zip Code: {{business.zip_code}}</li>
             <li>Phone Number: {{business.phone_num}}</li>
+          </span>
+          <span class="hidden" id="business-info-edit">
+            <form class="form-horizontal" method="post" action="{% url "business.views.edit_business_info" %}" >
+              {% load crispy_forms_tags %}
+              {{ business_form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+              </div>
+            </form>
+          </span>
+        </ul>
+        <ul><b>Bitcoin Info</b> <a class="btn btn-primary btn-sm" onclick="editBitcoinInfo();" id="bitcoin-info-edit-button">Edit</a>
+          <span id="bitcoin-info-list">
+            <li>Currency: {{business.get_currency_name}}</li>
             <li>Percent Markup: {{business.get_percent_markup}}%</li>
+            <li>BTC Storage Address: {{business.btc_storage_address}}%</li>
+          </span>
+          <span class="hidden" id="bitcoin-info-edit">
+          <form class="form-horizontal" method="post" action="{% url "business.views.edit_bitcoin_info" %}" >
+              {% load crispy_forms_tags %}
+              {{ bitcoin_form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+              </div>
+            </form>
+          </span>
         </ul>
 
         <hr>
@@ -56,3 +102,39 @@
 
     </div>
 {% endblock content %}
+{% block extra_js %}
+  <script>
+    function editPersonalInfo() {
+        $("#personal-info-list").toggleClass("show hidden");
+        $("#personal-info-edit").toggleClass("show hidden");
+        var edit_button = $("#personal-info-edit-button");
+        if (edit_button.text()=="Edit"){
+          edit_button.text("Cancel");
+        }else{
+          edit_button.text("Edit");
+        }        
+    }
+
+    function editBusinessInfo() {
+        $("#business-info-list").toggleClass("show hidden");
+        $("#business-info-edit").toggleClass("show hidden");
+        var edit_button = $("#business-info-edit-button");
+        if (edit_button.text()=="Edit"){
+          edit_button.text("Cancel");
+        }else{
+          edit_button.text("Edit");
+        }
+    }
+
+    function editBitcoinInfo() {
+        $("#bitcoin-info-list").toggleClass("show hidden");
+        $("#bitcoin-info-edit").toggleClass("show hidden");
+        var edit_button = $("#bitcoin-info-edit-button");
+        if (edit_button.text()=="Edit"){
+          edit_button.text("Cancel");
+        }else{
+          edit_button.text("Edit");
+        }
+    }
+  </script>
+{% endblock %}

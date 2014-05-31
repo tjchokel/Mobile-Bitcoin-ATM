@@ -82,3 +82,9 @@ class Business(models.Model):
             return BFHCurrenciesList[self.currency_code]['symbol']
         else:
             return '$'
+
+    def get_currency_name(self):
+        if self.currency_code:
+            return BFHCurrenciesList[self.currency_code]['label']
+        else:
+            return 'United States dollar'

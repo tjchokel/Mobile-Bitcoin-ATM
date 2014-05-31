@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
@@ -12,6 +12,7 @@ from annoying.functions import get_object_or_None
 from business.forms import *
 from business.models import AppUser, Business
 from bitcoins.models import BTCAddress
+from bitcash.decorators import confirm_registration_eligible
 
 
 @render_to('login.html')
@@ -57,6 +58,23 @@ def logout_request(request):
     return HttpResponseRedirect(reverse_lazy('login_request'))
 
 
+def register_router(request):
+    user = request.user
+    if not user.is_authenticated():  # if user is not authenticated
+        return HttpResponsePermanentRedirect(reverse_lazy('register_account'))
+
+    # onboarding steps
+    reg_step = user.get_registration_step()
+    if reg_step == 0:
+        return HttpResponseRedirect(reverse_lazy('register_personal'))
+    elif reg_step == 1:
+        return HttpResponseRedirect(reverse_lazy('register_business'))
+    elif reg_step == 2:
+        return HttpResponseRedirect(reverse_lazy('register_bitcoins'))
+
+    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
+
 @render_to('register_account.html')
 def register_account(request):
     user = request.user
@@ -82,6 +100,7 @@ def register_account(request):
 
 
 @login_required
+@confirm_registration_eligible
 @render_to('register_personal.html')
 def register_personal(request):
     user = request.user
@@ -111,6 +130,7 @@ def register_personal(request):
 
 
 @login_required
+@confirm_registration_eligible
 @render_to('register_business.html')
 def register_business(request):
     user = request.user
@@ -177,26 +197,32 @@ def register_business(request):
 
 
 @login_required
+# @confirm_registration_eligible
 @render_to('register_bitcoins.html')
 def register_bitcoins(request):
     user = request.user
     business = user.get_business()
     initial = {}
+    initial['btc_markup'] = business.basis_points_markup / 100.0
+    if business.currency_code:
+        initial['currency_code'] = business.currency_code
+    if business.btc_storage_address:
+        initial['btc_address'] = business.btc_storage_address
     form = BitcoinRegistrationForm(initial=initial)
     if request.method == 'POST':
         form = BitcoinRegistrationForm(data=request.POST)
         if form.is_valid():
-
             currency_code = form.cleaned_data['currency_code']
             btc_address = form.cleaned_data['btc_address']
-
+            basis_points_markup = form.cleaned_data['btc_markup']
             business.currency_code = currency_code
-            business.btc_address = btc_address
-
+            business.btc_storage_address = btc_address
+            business.basis_points_markup = basis_points_markup * 100
             business.save()
 
             return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     return {'form': form, 'user': user}
+
 
 @login_required
 @render_to('business_dash.html')
@@ -204,9 +230,100 @@ def business_dash(request):
     user = request.user
     business = user.get_business()
     transactions = business.get_all_transactions()
+    initial = {}
+    initial['full_name'] = user.full_name
+    initial['phone_num'] = user.phone_num
+    initial['phone_country'] = user.phone_num_country
+
+    initial['business_name'] = business.business_name
+    initial['address_1'] = business.address_1
+    initial['address_2'] = business.address_2
+    initial['city'] = business.city
+    initial['state'] = business.state
+    initial['zip_code'] = business.zip_code
+    initial['country'] = business.country
+    initial['phone_num'] = business.phone_num
+
+    initial['currency_code'] = business.currency_code
+    initial['btc_address'] = business.btc_storage_address
+    initial['btc_markup'] = business.basis_points_markup / 100.0
+
+    personal_form = PersonalInfoRegistrationForm(initial=initial)
+    business_form = BusinessInfoRegistrationForm(initial=initial)
+    bitcoin_form = BitcoinRegistrationForm(initial=initial)
     return {
         'user': user,
         'business': business,
         'transactions': transactions,
-        'on_admin_page': True
+        'on_admin_page': True,
+        'personal_form': personal_form,
+        'business_form': business_form,
+        'bitcoin_form': bitcoin_form
     }
+
+
+@login_required
+def edit_personal_info(request):
+    user = request.user
+    if request.method == 'POST':
+        form = PersonalInfoRegistrationForm(data=request.POST)
+        if form.is_valid():
+
+            full_name = form.cleaned_data['full_name']
+            phone_num = form.cleaned_data['phone_num']
+            phone_country = form.cleaned_data['phone_country']
+
+            user.full_name = full_name
+            user.phone_num = phone_num
+            user.phone_num_country = phone_country
+            user.save()
+
+            return HttpResponseRedirect(reverse_lazy('business_dash'))
+
+
+@login_required
+def edit_business_info(request):
+    user = request.user
+    business = user.get_business()
+    if request.method == 'POST':
+        form = BusinessInfoRegistrationForm(data=request.POST)
+        if form.is_valid():
+
+            business_name = form.cleaned_data['business_name']
+            address_1 = form.cleaned_data['address_1']
+            address_2 = form.cleaned_data['address_2']
+            city = form.cleaned_data['city']
+            state = form.cleaned_data['state']
+            country = form.cleaned_data['country']
+            zip_code = form.cleaned_data['zip_code']
+            phone_num = form.cleaned_data['phone_num']
+
+            if business:
+                business.business_name = business_name
+                business.address_1 = address_1
+                business.address_2 = address_2
+                business.city = city
+                business.state = state
+                business.country = country
+                business.zip_code = zip_code
+                business.phone_num = phone_num
+                business.save()
+
+            return HttpResponseRedirect(reverse_lazy('business_dash'))
+
+
+@login_required
+def edit_bitcoin_info(request):
+    user = request.user
+    business = user.get_business()
+    if request.method == 'POST':
+        form = BitcoinRegistrationForm(data=request.POST)
+        if form.is_valid():
+            currency_code = form.cleaned_data['currency_code']
+            btc_address = form.cleaned_data['btc_address']
+            if business:
+                business.currency_code = currency_code
+                business.btc_storage_address = btc_address
+                business.save()
+
+            return HttpResponseRedirect(reverse_lazy('business_dash'))

@@ -96,8 +96,9 @@
         </div>
       </div>
     {% endif %}
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="{% static "js/jquery.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
     <script src="{% static "js/bootstrap-formhelpers.js" %}"></script><!-- http://vincentlamanna.com/BootstrapFormHelpers/phone/#jquery-plugins -->
     {% block extra_js %}
     {% endblock extra_js %}

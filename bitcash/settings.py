@@ -52,7 +52,8 @@ INSTALLED_APPS = (
     'business',
     'app',
     'bitcoins',
-    'shoppers'
+    'shoppers',
+    'services',
 )
 
 MIDDLEWARE_CLASSES = (

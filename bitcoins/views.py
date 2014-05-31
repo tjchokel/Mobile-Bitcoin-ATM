@@ -33,10 +33,21 @@ def get_bitcoin_price(request):
     content = json.loads(r.content)
     fiat_btc = content['last']
     print fiat_btc
-    markup_fee = fiat_btc * business.basis_points_markup / 10000.00
+    basis_points_markup = business.basis_points_markup
+    markup_fee = fiat_btc * basis_points_markup / 10000.00
     print markup_fee
     fiat_btc = fiat_btc - markup_fee
     print fiat_btc
     fiat_rate_formatted = "%s%s" % (business.get_currency_symbol(), '{:20,.2f}'.format(fiat_btc))
-    json_response = json.dumps({"amount": fiat_rate_formatted})
+    percent_markup = basis_points_markup / 100.00
+    json_response = json.dumps({"amount": fiat_rate_formatted, "markup": percent_markup})
+    return HttpResponse(json_response, mimetype='application/json')
+
+
+@login_required
+def get_next_deposit_address(request):
+    user = request.user
+    business = user.get_business()
+    address = business.get_next_address()
+    json_response = json.dumps({"address": address.b58_address})
     return HttpResponse(json_response, mimetype='application/json')

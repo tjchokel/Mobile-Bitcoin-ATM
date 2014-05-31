@@ -118,3 +118,6 @@ STATICFILES_DIRS = (
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, 'templates'),)
+
+
+BCI_SECRET_KEY = os.getenv('BCI_SECRET_KEY')

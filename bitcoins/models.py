@@ -10,6 +10,9 @@ class DestinationAddress(models.Model):
     retired_at = models.DateTimeField(blank=True, null=True, db_index=True)
     business = models.ForeignKey('business.Business', blank=True, null=True)
 
+    def __str__(self):
+        return '%s: %s' % (self.id, self.b58_address)
+
 
 class ForwardingAddress(models.Model):
     """
@@ -20,6 +23,9 @@ class ForwardingAddress(models.Model):
             db_index=True, unique=True)
     retired_at = models.DateTimeField(blank=True, null=True, db_index=True)
     destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.b58_address)
 
     def get_transaction(self):
         return self.btctransaction_set.last()
@@ -51,6 +57,9 @@ class BTCTransaction(models.Model):
     # TODO: add currency (USD, EUR, etc)?
     fiat_ammount = models.DecimalField(
         blank=True, null=True, max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.b58_address)
 
     def received_new_confirmation(self):
         # TODO: make this actually work

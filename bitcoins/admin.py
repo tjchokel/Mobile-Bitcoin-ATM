@@ -1,25 +1,42 @@
 from django.contrib import admin
-from bitcoins.models import BTCTransaction, BTCAddress
+from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransaction
 
 
-class BTCAddressAdmin(admin.ModelAdmin):
+class DestinationAddressAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'b58_address', 'revealed_to_user_at'
+        'id', 'uploaded_at', 'b58_address', 'retired_at', 'destination_address',
     )
 
     class Meta:
-        model = BTCAddress
+        model = DestinationAddress
 
-admin.site.register(BTCAddress, BTCAddressAdmin)
+admin.site.register(DestinationAddress, DestinationAddressAdmin)
+
+
+class ForwardingAddressAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'generated_at', 'b58_address', 'retired_at', 'destination_address',
+    )
+
+    class Meta:
+        model = ForwardingAddress
+
+admin.site.register(ForwardingAddress, ForwardingAddressAdmin)
 
 
 class BTCTransactionAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'satoshis'
+        'id',
+        'txn_hash',
+        'satoshis',
+        'conf_num',
+        'irreversible_by',
+        'suspected_double_spend_at',
+        'btc_address',
+        'fiat_ammount',
     )
 
     class Meta:
         model = BTCTransaction
 
 admin.site.register(BTCTransaction, BTCTransactionAdmin)
-

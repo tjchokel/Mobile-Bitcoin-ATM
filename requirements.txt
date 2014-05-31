@@ -5,6 +5,7 @@ django-annoying==0.7.9
 django-crispy-forms==1.4.0
 django-phonenumber-field==0.5
 gnureadline==6.3.3
+ipython==2.1.0
 phonenumbers==6.1.0
 psycopg2==2.5.3
 requests==2.3.0

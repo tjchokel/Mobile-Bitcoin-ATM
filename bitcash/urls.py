@@ -4,7 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    
+
     url(r'^login/$', 'business.views.login_request', name='login_request'),
     url(r'^logout/?$', 'business.views.logout_request', name='logout'),
 
@@ -22,7 +22,6 @@ urlpatterns = patterns('',
     url(r'^edit-personal-info/$', 'business.views.edit_personal_info', name='edit_personal_info'),
     url(r'^edit-business-info/$', 'business.views.edit_business_info', name='edit_business_info'),
     url(r'^edit-btc-info/$', 'business.views.edit_bitcoin_info', name='edit_bitcoin_info'),
-
 
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),

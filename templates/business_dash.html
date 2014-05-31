@@ -48,7 +48,7 @@
           <span id="bitcoin-info-list">
             <li>Currency: {{business.get_currency_name}}</li>
             <li>Percent Markup: {{business.get_percent_markup}}%</li>
-            <li>BTC Storage Address: {{business.btc_storage_address}}%</li>
+            <li>BTC Storage Address: {{business.get_destination_address}}%</li>
           </span>
           <span class="hidden" id="bitcoin-info-edit">
           <form class="form-horizontal" method="post" action="{% url "business.views.edit_bitcoin_info" %}" >

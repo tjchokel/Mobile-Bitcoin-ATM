@@ -1,5 +1,4 @@
 from django import forms
-from django.forms import extras
 from countries import COUNTRY_DROPDOWN
 import phonenumbers
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -152,7 +151,7 @@ class BitcoinRegistrationForm(forms.Form):
 
     btc_address = forms.CharField(
             label='Bitcoin Address',
-            required=True,  
+            required=True,
             min_length=27,
             max_length=34,
             help_text='The wallet address where you want your bitcoin sent',
@@ -176,9 +175,4 @@ class BitcoinRegistrationForm(forms.Form):
         if not is_valid_btc_address(address):
             msg = "Sorry, that's not a valid bitcoin address"
             raise forms.ValidationError(msg)
-        # if address.startswith('3'):
-        #     msg = "Sorry, we don't currently support withdrawals to multisig addresses."
-        #     msg += " We'll be adding this soon."
-        #     msg += " In the meantime, you can withdraw to your regular address and then send the funds to a multi-sig address."
-        #     raise forms.ValidationError(msg)
         return address

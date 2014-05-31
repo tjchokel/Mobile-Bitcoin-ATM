@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.contrib.auth import authenticate, login, logout
@@ -9,9 +8,11 @@ from django.utils.html import escape
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
-from business.forms import *
+from business.forms import (LoginForm, AccountRegistrationForm,
+        BitcoinRegistrationForm, PersonalInfoRegistrationForm,
+        BusinessInfoRegistrationForm)
 from business.models import AppUser, Business
-from bitcoins.models import BTCAddress
+from bitcoins.models import ForwardingAddress
 from bitcash.decorators import confirm_registration_eligible
 
 
@@ -89,14 +90,15 @@ def register_account(request):
             email = form.cleaned_data['email']
 
             # create user
-            user = AppUser.objects.create_user(email,
-                email=email,
-                password=password
-            )
+            user = AppUser.objects.create_user(
+                    email,
+                    email=email,
+                    password=password
+                    )
             user_to_login = authenticate(username=email, password=password)
             login(request, user_to_login)
             return HttpResponseRedirect(reverse_lazy('register_personal'))
-    return {'form': form, 'user':user}
+    return {'form': form, 'user': user}
 
 
 @login_required
@@ -186,7 +188,7 @@ def register_business(request):
                 )
 
             if not business.get_current_address():
-                address = BTCAddress.objects.create(
+                ForwardingAddress.objects.create(
                     generated_at=now(),
                     b58_address='1FXK3Qeu6ouf2haDXUCttWRHH4SLdRoFhA',
                     business=business,
@@ -206,8 +208,8 @@ def register_bitcoins(request):
     initial['btc_markup'] = business.basis_points_markup / 100.0
     if business.currency_code:
         initial['currency_code'] = business.currency_code
-    if business.btc_storage_address:
-        initial['btc_address'] = business.btc_storage_address
+    if business.has_destination_address():
+        initial['btc_address'] = business.get_destination_address()
     form = BitcoinRegistrationForm(initial=initial)
     if request.method == 'POST':
         form = BitcoinRegistrationForm(data=request.POST)
@@ -216,9 +218,10 @@ def register_bitcoins(request):
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             business.currency_code = currency_code
-            business.btc_storage_address = btc_address
             business.basis_points_markup = basis_points_markup * 100
             business.save()
+
+            business.set_destination_address(btc_address)
 
             return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     return {'form': form, 'user': user}
@@ -245,7 +248,7 @@ def business_dash(request):
     initial['phone_num'] = business.phone_num
 
     initial['currency_code'] = business.currency_code
-    initial['btc_address'] = business.btc_storage_address
+    initial['btc_address'] = business.get_destination_address()
     initial['btc_markup'] = business.basis_points_markup / 100.0
 
     personal_form = PersonalInfoRegistrationForm(initial=initial)
@@ -323,7 +326,8 @@ def edit_bitcoin_info(request):
             btc_address = form.cleaned_data['btc_address']
             if business:
                 business.currency_code = currency_code
-                business.btc_storage_address = btc_address
                 business.save()
+
+                business.set_destination_address(btc_address)
 
             return HttpResponseRedirect(reverse_lazy('business_dash'))

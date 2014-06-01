@@ -35,7 +35,7 @@
         <div class="col-sm-12">
           <h4 class="hl">
             <a style="color:#515151;" href="#">Business Info</a>
-            <a href="#" onclick="editBusinessInfo();" id="business-info-edit-button"><i class="fa fa-pencil-square-o"></i></a>
+            <a href="#" onclick="editBusinessInfo();" id="business-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="business-info-list" class="table">
             <tbody>
@@ -90,7 +90,7 @@
         <div class="col-sm-12">
           <h4 class="hl">
             <a style="color:#515151;" href="#">Personal Info</a>
-            <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button"><i class="fa fa-pencil-square-o"></i></a>
+            <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="personal-info-list" class="table">
             <tbody>
@@ -121,62 +121,6 @@
           </span>
         </div>
       </div>
-
-        <!-- <ul><b>Bitcoin Info</b> <a class="btn btn-primary btn-sm" onclick="editBitcoinInfo();" id="bitcoin-info-edit-button">Edit</a>
-          <span id="bitcoin-info-list">
-            <li>Currency: {{business.get_currency_name}}</li>
-            <li>Percent Markup: {{business.get_percent_markup}}%</li>
-            <li>BTC Storage Address: {{business.get_destination_address}}%</li>
-          </span>
-          <span class="hidden" id="bitcoin-info-edit">
-          <form class="form-horizontal" method="post" action="{% url "business.views.edit_bitcoin_info" %}" >
-              {% load crispy_forms_tags %}
-              {{ bitcoin_form|crispy }}
-              {% csrf_token %}
-              <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-              </div>
-            </form>
-          </span>
-        </ul> -->
-
-        <hr>
-        <br/>
-        <h4 class="hl"><i class="fa fa-map-marker"></i> Transactions</h4>
-          <table class="table table-condensed" style="border-collapse:collapse;">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Date</th>
-                <th>Amount (btc)</th>
-                <th>Amount (fiat)</th>
-                <th>Confirmations</th>
-              </tr>
-            </thead>
-          <tbody>
-            {% if transactions %}
-              {% for transaction in transactions %}
-                <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
-                  <td>
-                    <i class="fa fa-plus-square-o text-blue" style="font-size: 18px;cursor: pointer;">
-                    </i>
-                  </td>
-                  <td>{{transaction.added_at}}</td>
-                  <td>{{transaction.satoshis}}</td>
-                  <td>{{transaction.fiat_amount}}</td>
-                  <td>{{transaction.conf_num}}</td>
-                  
-                </tr>
-              {% endfor %}
-            {% else %}
-              <tr>
-                <td colspan="5" style="text-align: center;">
-                  You have no transactions yet.
-                </td>
-              </tr>
-            {% endif %}
-          </tbody>
-          </table>
     </div>
     </div>
     </div>
@@ -187,10 +131,10 @@
         $("#personal-info-list").toggleClass("show hidden");
         $("#personal-info-edit").toggleClass("show hidden");
         var edit_button = $("#personal-info-edit-button");
-        if (edit_button.text()=="Edit"){
+        if (edit_button.text().replace(" ", "")=="Edit"){
           edit_button.text("Cancel");
         }else{
-          edit_button.text("Edit");
+          edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
         }        
     }
 
@@ -198,21 +142,10 @@
         $("#business-info-list").toggleClass("show hidden");
         $("#business-info-edit").toggleClass("show hidden");
         var edit_button = $("#business-info-edit-button");
-        if (edit_button.text()=="Edit"){
+        if (edit_button.text().replace(" ", "")=="Edit"){
           edit_button.text("Cancel");
         }else{
-          edit_button.text("Edit");
-        }
-    }
-
-    function editBitcoinInfo() {
-        $("#bitcoin-info-list").toggleClass("show hidden");
-        $("#bitcoin-info-edit").toggleClass("show hidden");
-        var edit_button = $("#bitcoin-info-edit-button");
-        if (edit_button.text()=="Edit"){
-          edit_button.text("Cancel");
-        }else{
-          edit_button.text("Edit");
+          edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
         }
     }
   </script>

@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.utils.timezone import now
 from django.contrib import messages
 from django.utils.html import escape
 
@@ -12,13 +11,16 @@ from business.forms import (LoginForm, AccountRegistrationForm,
         BitcoinRegistrationForm, PersonalInfoRegistrationForm,
         BusinessInfoRegistrationForm)
 from business.models import AppUser, Business
-from bitcoins.models import ForwardingAddress
 from bitcash.decorators import confirm_registration_eligible
+
+from services.models import WebHook
 
 
 @render_to('login.html')
 def login_request(request):
     form = LoginForm()
+
+    WebHook.create_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
 
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
@@ -185,13 +187,6 @@ def register_business(request):
                     country=country,
                     zip_code=zip_code,
                     phone_num=phone_num,
-                )
-
-            if not business.get_current_address():
-                ForwardingAddress.objects.create(
-                    generated_at=now(),
-                    b58_address='1FXK3Qeu6ouf2haDXUCttWRHH4SLdRoFhA',
-                    business=business,
                 )
 
             return HttpResponseRedirect(reverse_lazy('register_bitcoins'))

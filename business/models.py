@@ -3,7 +3,8 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import now
 
 from phonenumber_field.modelfields import PhoneNumberField
-from bitcoins.models import ForwardingAddress, DestinationAddress
+from bitcoins.models import DestinationAddress
+
 from countries import BFHCurrenciesList
 
 
@@ -51,21 +52,15 @@ class Business(models.Model):
         max_length=5, blank=True, null=True, db_index=True)
     basis_points_markup = models.IntegerField(blank=True, null=True, db_index=True, default=100)
 
-    # TODO: Make this actually work
-    def get_next_address(self):
-        address = ForwardingAddress.objects.create(
-            generated_at=now(),
-            b58_address='1FXK3Qeu6ouf2haDXUCttWRHH4SLdRoFhA',
-            business=self,
-        )
-        return address
+    def get_new_forwarding_address(self):
+        return self.get_destination_address().create_new_forwarding_address()
 
-    def get_active_addresses(self):
+    def get_active_dest_addresses(self):
         # There should only ever be one at a time
         return self.destinationaddress_set.filter(retired_at__isnull=True)
 
     def get_destination_address(self):
-        destination_addresses = self.get_active_addresses()
+        destination_addresses = self.get_active_dest_addresses()
         if destination_addresses:
             return destination_addresses[0]
         return None
@@ -81,23 +76,17 @@ class Business(models.Model):
                 matching_address.save()
         else:
             # Mark all other addresses retired
-            for active_address in self.get_active_addresses():
+            for active_address in self.get_active_dest_addresses():
                 active_address.retired_at = now()
                 active_address.save()
             # Create new address object
             DestinationAddress.objects.create(b58_address=dest_address, business=self)
 
-    def get_current_address(self):
-        return self.btcaddress_set.last()
-
-    def get_all_addresses(self):
-        return self.btcaddress_set.all()
+    def get_all_forwarding_addresses(self):
+        return self.forwardingaddress_set.all()
 
     def get_all_transactions(self):
-        transactions = []
-        for address in self.get_all_addresses():
-            transactions += address.get_all_transactions()
-        return transactions
+        return self.btctransaction_set.all()
 
     def get_percent_markup(self):
         return self.basis_points_markup / 100.00

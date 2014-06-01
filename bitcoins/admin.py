@@ -3,9 +3,7 @@ from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransactio
 
 
 class DestinationAddressAdmin(admin.ModelAdmin):
-    list_display = (
-        'id', 'uploaded_at', 'b58_address', 'retired_at', 'destination_address',
-    )
+    list_display = ('id', 'uploaded_at', 'b58_address', 'retired_at', 'business')
 
     class Meta:
         model = DestinationAddress
@@ -15,8 +13,13 @@ admin.site.register(DestinationAddress, DestinationAddressAdmin)
 
 class ForwardingAddressAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'generated_at', 'b58_address', 'retired_at', 'destination_address',
-    )
+            'id',
+            'generated_at',
+            'b58_address',
+            'retired_at',
+            'destination_address',
+            'business',
+            )
 
     class Meta:
         model = ForwardingAddress
@@ -32,7 +35,8 @@ class BTCTransactionAdmin(admin.ModelAdmin):
         'conf_num',
         'irreversible_by',
         'suspected_double_spend_at',
-        'btc_address',
+        'forwarding_address',
+        'destination_address',
         'fiat_ammount',
     )
 

@@ -26,5 +26,7 @@ urlpatterns = patterns('',
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
 
+    url(r'^bci-webhook/$', 'bitcoins.views.process_bci_webook', name='process_bci_webhook'),
+
     url(r'^admin/', include(admin.site.urls)),
 )

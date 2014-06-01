@@ -32,7 +32,6 @@ else:
 
 ALLOWED_HOSTS = []
 
-# TODO: confirm this works!
 ADMINS = (
     ('Michael Flaxman', 'michael@coinsafe.com'),
     ('Tom Chokel', 'tom@coinsafe.com'),
@@ -52,7 +51,8 @@ INSTALLED_APPS = (
     'business',
     'app',
     'bitcoins',
-    'shoppers'
+    'shoppers',
+    'services',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -76,6 +76,32 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 AUTH_USER_MODEL = 'business.AppUser'
+
+
+PRODUCTION_DOMAIN = 'www.coinsafe.com'
+STAGING_DOMAIN = 'coinsafestaging.herokuapp.com'
+SITE_DOMAIN = os.getenv('SITE_DOMAIN', PRODUCTION_DOMAIN)
+
+# SSL and BASE_URL settings for Production, Staging and Local:
+if SITE_DOMAIN in (PRODUCTION_DOMAIN, STAGING_DOMAIN):
+    BASE_URL = 'https://%s' % SITE_DOMAIN
+    # SSL stuff:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    MIDDLEWARE_CLASSES += ('bitvault.middleware.SSLMiddleware',)
+else:
+    BASE_URL = 'http://%s' % SITE_DOMAIN
+
+if SITE_DOMAIN == PRODUCTION_DOMAIN:
+    EMAIL_DEV_PREFIX = False
+else:
+    EMAIL_DEV_PREFIX = True
+    # Enable debug toolbar on local and staging
+    MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware',) + MIDDLEWARE_CLASSES
+    INSTALLED_APPS += ('debug_toolbar', )
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 
 ROOT_URLCONF = 'bitcash.urls'
 
@@ -117,3 +143,12 @@ STATICFILES_DIRS = (
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, 'templates'),)
+
+BCI_SECRET_KEY = os.getenv('BCI_SECRET_KEY')
+
+# Keep this at the end
+if DEBUG:
+    print '-' * 75
+    print 'SITE_DOMAIN is set to %s' % SITE_DOMAIN
+    print "If you're testing webhooks, be sure this is correct"
+    print '-' * 75

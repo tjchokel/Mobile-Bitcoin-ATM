@@ -34,7 +34,7 @@ class APICall(models.Model):
     api_results = models.CharField(max_length=100000, blank=True, null=True)
 
     # optional FK
-    user = models.ForeignKey('business.AppUser', null=True, blank=True)
+    user = models.ForeignKey('merchants.AppUser', null=True, blank=True)
 
 
 class WebHook(models.Model):

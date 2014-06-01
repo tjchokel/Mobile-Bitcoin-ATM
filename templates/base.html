@@ -84,14 +84,14 @@
                 <a href="{% url "customer_dashboard" %}" style="text-align: center;font-size: 24px;">Customers</a>
               </li>
               <li class="active" style="width:50%">
-                <a href="{% url "business_settings" %}" style="text-align: center;font-size: 24px;">Settings</a>
+                <a href="{% url "merchant_settings" %}" style="text-align: center;font-size: 24px;">Settings</a>
               </li>
             {% else %}
             <li class="active" style="width:50%;">
               <a href="#" style="text-align: center;font-size: 24px;">Customers</a>
             </li>
             <li style="width:50%">
-              <a href="{% url "business_settings" %}" style="text-align: center;font-size: 24px;">Settings</a>
+              <a href="{% url "merchant_settings" %}" style="text-align: center;font-size: 24px;">Settings</a>
             </li>
             {% endif %}
           </ul>

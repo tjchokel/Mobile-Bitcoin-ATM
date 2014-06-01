@@ -2,14 +2,15 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>Register Account</h1>
+            <h1>Register Business</h1>
         </div>
         <div class="row">
-            {% with current_step=0 registration_step=user.get_registration_step %}
+            {% with current_step=2 registration_step=user.get_registration_step %}
                 {% include "breadcrumb.html" %}
             {% endwith %}
         </div>
-        <form class="form-horizontal" method="post" action="{% url "merchants.views.register_account" %}" >
+
+        <form class="form-horizontal" method="post" action="{% url "merchants.views.register_business" %}" >
             {% load crispy_forms_tags %}
             {{ form|crispy }}
             {% csrf_token %}

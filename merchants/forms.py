@@ -70,7 +70,7 @@ class PersonalInfoRegistrationForm(forms.Form):
         return phone_num
 
 
-class BusinessInfoRegistrationForm(forms.Form):
+class MerchantInfoRegistrationForm(forms.Form):
 
     business_name = forms.CharField(
         label='Business Name',

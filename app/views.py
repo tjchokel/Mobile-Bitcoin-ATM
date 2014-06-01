@@ -13,16 +13,16 @@ from shoppers.forms import ShopperInformationForm
 @render_to('customer_dashboard.html')
 def customer_dashboard(request):
     user = request.user
-    business = user.get_business()
+    merchant = user.get_merchant()
     current_address = '12345'  # FIXME: this should be passed in from previous page
-    return {'user': user, 'business': business, 'current_address': current_address}
+    return {'user': user, 'merchant': merchant, 'current_address': current_address}
 
 
 @login_required
 @render_to('deposit_dashboard.html')
 def deposit_dashboard(request):
     user = request.user
-    business = user.get_business()
+    merchant = user.get_merchant()
     current_address = '12345'  # FIXME: this should be passed in from previous page
     transaction = current_address.get_transaction()
     shopper = current_address.get_current_shopper()
@@ -46,7 +46,7 @@ def deposit_dashboard(request):
     return {
         'form': form,
         'user': user,
-        'business': business,
+        'merchant': merchant,
         'shopper': shopper,
         'current_address': current_address,
         'transaction': transaction}
@@ -54,8 +54,8 @@ def deposit_dashboard(request):
 
 def simulate_deposit_detected(request):
     user = request.user
-    business = user.get_business()
-    btc_address = business.get_all_forwarding_addresses()[0]
+    merchant = user.get_merchant()
+    btc_address = merchant.get_all_forwarding_addresses()[0]
     BTCTransaction.objects.create(
         satoshis=12345678,
         forwarding_address=btc_address,

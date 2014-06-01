@@ -124,7 +124,7 @@ class BTCTransaction(models.Model):
                 btc_txn.save()
 
         else:
-            business = ForwardingAddress.objects.get(b58_address=forwarding_addr)
+            forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_addr)
             if conf_num >= 6:
                 irreversible_by = now()
             else:
@@ -134,11 +134,12 @@ class BTCTransaction(models.Model):
                     satoshis=satoshis,
                     conf_num=conf_num,
                     irreversible_by=irreversible_by,
-                    forwarding_address=forwarding_addr,
-                    business=business,
+                    forwarding_address=forwarding_obj,
+                    business=forwarding_obj.business,
                     )
 
     @classmethod
     def process_destination_webhook(cls, txn_hash, satoshis, conf_num, destination_addr):
         # User's final address
+        # This will be implemented with blockcypher
         pass

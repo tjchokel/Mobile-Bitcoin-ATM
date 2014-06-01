@@ -31,102 +31,11 @@
   </div>
   <div class="col-sm-8 col-md-9">
 
-      <!-- <div class="row">
-        <div class="col-sm-12">
-          <h4 class="hl">
-            <a style="color:#515151;" href="#">Business Info</a>
-            <a href="#" onclick="editBusinessInfo();" id="business-info-edit-button"><i class="fa fa-pencil-square-o"></i></a>
-          </h4>
-          <table id="business-info-list" class="table">
-            <tbody>
-              <tr>
-                <td class="text-muted">Business Name</td>
-                <td align="right">{{business.business_name}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">Adress Line 1</td>
-                <td align="right">{{business.address_1}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">Address Line 2</td>
-                <td align="right">{{business.address_2}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">City</td>
-                <td align="right">{{business.city}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">State</td>
-                <td align="right">{{business.state}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">Country</td>
-                <td align="right">{{business.country}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">Zip Code</td>
-                <td align="right">{{business.zip_code}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">Phone Number</td>
-                <td align="right">{{business.phone_num}}</td>
-              </tr>
-            </tbody>
-          </table>
-          <span class="hidden" id="business-info-edit">
-            <form class="form-horizontal" method="post" action="{% url "business.views.edit_business_info" %}" >
-              {% load crispy_forms_tags %}
-              {{ business_form|crispy }}
-              {% csrf_token %}
-              <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-              </div>
-            </form>
-          </span>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-sm-12">
-          <h4 class="hl">
-            <a style="color:#515151;" href="#">Personal Info</a>
-            <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button"><i class="fa fa-pencil-square-o"></i></a>
-          </h4>
-          <table id="personal-info-list" class="table">
-            <tbody>
-              <tr>
-                <td class="text-muted">Name</td>
-                <td align="right">{{user.full_name}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">Email</td>
-                <td align="right">{{user.email}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">Phone Number</td>
-                <td align="right">{{user.phone_num}}</td>
-              </tr>
-            </tbody>
-          </table>
-          <span class="hidden" id="personal-info-edit">
-            
-            <form class="form-horizontal" method="post" action="{% url "business.views.edit_personal_info" %}" >
-              {% load crispy_forms_tags %}
-              {{ personal_form|crispy }}
-              {% csrf_token %}
-              <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-              </div>
-            </form>
-          </span>
-        </div>
-      </div> -->
-
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
             <a style="color:#515151;" href="#">Bitcoin Settings</a>
-            <a href="#" onclick="editBitcoinInfo();" id="bitcoin-info-edit-button"><i class="fa fa-pencil-square-o"></i></a>
+            <a href="#" onclick="editBitcoinInfo();" id="bitcoin-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
           </h4>
 
           <table id="bitcoin-info-list" class="table">
@@ -149,7 +58,7 @@
             
             <form class="form-horizontal" method="post" action="{% url "business.views.edit_bitcoin_info" %}" >
               {% load crispy_forms_tags %}
-              {{ personal_form|crispy }}
+              {{ bitcoin_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
                 <button type="submit" class="btn btn-primary btn-lg">Submit</button>
@@ -168,10 +77,10 @@
         $("#bitcoin-info-list").toggleClass("show hidden");
         $("#bitcoin-info-edit").toggleClass("show hidden");
         var edit_button = $("#bitcoin-info-edit-button");
-        if (edit_button.text()=="Edit"){
+        if (edit_button.text().replace(" ", "")=="Edit"){
           edit_button.text("Cancel");
         }else{
-          edit_button.text("Edit");
+          edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
         }
     }
   </script>

@@ -223,8 +223,28 @@ def register_bitcoins(request):
 
 
 @login_required
-@render_to('business_dash.html')
-def business_dash(request):
+@render_to('business_settings.html')
+def business_settings(request):
+    user = request.user
+    business = user.get_business()
+    initial = {}
+
+    initial['currency_code'] = business.currency_code
+    initial['btc_address'] = business.btc_storage_address
+    initial['btc_markup'] = business.basis_points_markup / 100.0
+
+    bitcoin_form = BitcoinRegistrationForm(initial=initial)
+    return {
+        'user': user,
+        'business': business,
+        'on_admin_page': True,
+        'bitcoin_form': bitcoin_form
+    }
+
+
+@login_required
+@render_to('business_profile.html')
+def business_profile(request):
     user = request.user
     business = user.get_business()
     transactions = business.get_all_transactions()
@@ -261,6 +281,20 @@ def business_dash(request):
 
 
 @login_required
+@render_to('business_transactions.html')
+def transactions(request):
+    user = request.user
+    business = user.get_business()
+    transactions = business.get_all_transactions()
+    return {
+        'user': user,
+        'business': business,
+        'transactions': transactions,
+        'on_admin_page': True
+    }
+
+
+@login_required
 def edit_personal_info(request):
     user = request.user
     if request.method == 'POST':
@@ -276,7 +310,7 @@ def edit_personal_info(request):
             user.phone_num_country = phone_country
             user.save()
 
-            return HttpResponseRedirect(reverse_lazy('business_dash'))
+            return HttpResponseRedirect(reverse_lazy('business_settings'))
 
 
 @login_required
@@ -307,7 +341,7 @@ def edit_business_info(request):
                 business.phone_num = phone_num
                 business.save()
 
-            return HttpResponseRedirect(reverse_lazy('business_dash'))
+            return HttpResponseRedirect(reverse_lazy('business_settings'))
 
 
 @login_required
@@ -322,7 +356,5 @@ def edit_bitcoin_info(request):
             if business:
                 business.currency_code = currency_code
                 business.save()
-
                 business.set_destination_address(btc_address)
-
-            return HttpResponseRedirect(reverse_lazy('business_dash'))
+            return HttpResponseRedirect(reverse_lazy('business_settings'))

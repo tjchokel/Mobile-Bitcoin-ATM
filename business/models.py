@@ -65,6 +65,9 @@ class Business(models.Model):
             return destination_addresses[0]
         return None
 
+    def __str__(self):
+        return '%s: %s' % (self.id, self.business_name)
+
     def has_destination_address(self):
         return bool(self.get_destination_address)
 

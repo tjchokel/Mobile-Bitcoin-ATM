@@ -2,22 +2,34 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>{{business.business_name}}</h1>
+            <h1 class="pull-left">{{business.business_name}}</h1>
+            <h1 class="pull-right hidden" id="fiat-amt" style="color: #72a53b; float:right;"></h1>
+            <div class="clearfix"></div>
         </div>
 
         <span id='predeposit' style="text-align: center; margin-top: 50px;">
-            <h3 class="text-center hidden" id="fiat-amt" style="color: #72a53b;" >
               <!-- <strong class="text-muted hidden" id='usd-amt' style="display:inline !important;font-size:16px;">blahbla</strong> -->
             </h3> 
-            <h3>1. Deposit to this address: {{current_address.b58_address}}</h3>
 
             <h5>WARNING: THE QR CODE IS BADLY BROKEN. THE ADDRESS SHOULD BE GENERATED ON THE USER'S REQUEST</h5>
 
             <span style="margin-left: auto; margin-right: auto; display: block;">
+<<<<<<< HEAD
               <img style="margin-left: auto; margin-right: auto; display: block;" src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{1REALBITCOINADDRESSGOESHERE}&choe=UTF-8&chs=300x300"/>
+=======
+              <h3>1. Deposit to this address: 
+                <span id="current_address">
+                  <a class="btn btn-primary" onclick="getNextAddress();">Show Address</a>
+                </span>
+              </h3>
+
+              <div id="qr_code_span" style="display:none;">
+                <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{{business.get_current_address}}&choe=UTF-8&chs=300x300"/>
+>>>>>>> master
                 
                 <h3>2. Click this button after sending the funds </h3>
                 <a class="btn btn-primary btn-lg" href="{% url "app.views.deposit_dashboard" %}">Confirm My Deposit</a>
+              </div>
             </span>
         </span>
 
@@ -45,9 +57,6 @@
                 $("#postdeposit").toggleClass("show hidden");
                 $("#predeposit").toggleClass("show hidden");
               }
-              // var amount = data['amount']
-              // $("#usd-amt").toggleClass("show hidden");
-              // $("#usd-amt").text(amount);
             },
             error: function(data) {
               setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
@@ -55,14 +64,35 @@
         });
     }
 
+    function getNextAddress() {
+      console.log("GET NEXT ADDRESS");
+      $.ajax({
+          type: 'get',
+          url: '/get-deposit-address/',
+          success: function (data) {
+            console.log(data);
+            var address = data['address'];
+            if (address){
+              $("#current_address").html(address);
+              var src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=300x300";
+              $("#qr_code").attr("src", src);
+
+              $("#qr_code_span").slideDown(500);
+            }
+          },
+          error: function(data) {
+            console.log('FAILURE');
+          }
+        });
+    }
+
     $(document).ready(function(){
-        console.log('DOCUMENT READY!');
         $.ajax({
           type: 'get',
           url: '/get-bitcoin-price/',
           success: function (data) {
             console.log(data);
-            var amount = data['amount']+"/BTC"
+            var amount = data['amount']+"/BTC ("+data['markup']+"% markup)"
             $("#fiat-amt").toggleClass("show hidden");
             $("#fiat-amt").text(amount);
           },

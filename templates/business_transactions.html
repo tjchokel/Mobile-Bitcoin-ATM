@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>Settings</h1>
+        </div>
+
+        <div class="row">
+      <!-- Profile Menu -->
+    <div class="col-sm-4 col-md-3">
+      <div class="user-menu bottom-15">
+        <ul>
+          <li>
+            <a href="{% url "business.views.business_settings" %}">
+            <i class="sign fa fa-gears bg-green"></i>Settings <i class="fa fa-chevron-right pull-right"></i>
+            </a>  
+          </li>
+          <li>
+            <a href="{% url "business.views.business_profile"%}">
+            <i class="sign fa fa-users bg-blue"></i>Profile <i class="fa fa-chevron-right pull-right"></i>
+          </a>  
+          </li>
+          <li>
+            <a href="#" class="active">
+            <i class="sign fa fa-sign-out bg-amethyst"></i> Transactions <i class="fa fa-chevron-right pull-right"></i>
+          </a>  
+          </li>
+        </ul>
+      </div>
+
+  </div>
+  <div class="col-sm-8 col-md-9">
+
+        <h4 class="hl"><i class="fa fa-map-marker"></i> Transactions</h4>
+          <table class="table table-condensed" style="border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Date</th>
+                <th>Amount (btc)</th>
+                <th>Amount (fiat)</th>
+                <th>Confirmations</th>
+              </tr>
+            </thead>
+          <tbody>
+            {% if transactions %}
+              {% for transaction in transactions %}
+                <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
+                  <td>
+                    <i class="fa fa-plus-square-o text-blue" style="font-size: 18px;cursor: pointer;">
+                    </i>
+                  </td>
+                  <td>{{transaction.added_at}}</td>
+                  <td>{{transaction.satoshis}}</td>
+                  <td>{{transaction.fiat_amount}}</td>
+                  <td>{{transaction.conf_num}}</td>
+                  
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="5" style="text-align: center;">
+                  You have no transactions yet.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+          </table>
+    </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+{% endblock %}

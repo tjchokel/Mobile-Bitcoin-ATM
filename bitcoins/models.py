@@ -30,7 +30,7 @@ class DestinationAddress(models.Model):
         forwarding_address = set_bci_webhook(
                 dest_address=self.b58_address,
                 callback_url=uri_to_url(BASE_URL, bci_uri),
-                user=self.app_user)
+                user=self.merchant)
 
         # Store it in the DB
         ForwardingAddress.objects.create(
@@ -41,7 +41,7 @@ class DestinationAddress(models.Model):
         set_blockcypher_webhook(
                 monitoring_address=forwarding_address,
                 callback_url=uri_to_url(BASE_URL, blockcypher_uri),
-                user=self.app_user)
+                user=self.merchant)
 
         return forwarding_address
 

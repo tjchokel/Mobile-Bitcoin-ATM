@@ -70,7 +70,7 @@ class WebHook(models.Model):
         return '%s from %s' % (self.id, self.api_name)
 
     @classmethod
-    def create_webhook(cls, request, api_name):
+    def log_webhook(cls, request, api_name):
         return WebHook.objects.create(
                 ip_address=get_client_ip(request),
                 user_agent=request.META.get('HTTP_USER_AGENT'),

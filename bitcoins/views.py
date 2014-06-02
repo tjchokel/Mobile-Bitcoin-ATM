@@ -53,7 +53,7 @@ def get_bitcoin_price(request):
 @csrf_exempt
 def process_bci_webhook(request, random_id):
     # Log webhook
-    WebHook.create_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
+    WebHook.log_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
 
     input_txn_hash = request.GET['input_transaction_hash']
     destination_txn_hash = request.GET['transaction_hash']
@@ -137,7 +137,7 @@ def get_forwarding_obj_from_address_list(address_list):
 @csrf_exempt
 def process_blockcypher_webhook(request, random_id):
     # Log webhook
-    WebHook.create_webhook(request, WebHook.BLOCKCYPHER_ADDR_MONITORING)
+    WebHook.log_webhook(request, WebHook.BLOCKCYPHER_ADDR_MONITORING)
 
     assert request.method == 'POST', 'Request has no post'
 

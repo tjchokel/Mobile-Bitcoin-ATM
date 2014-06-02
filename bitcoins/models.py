@@ -103,4 +103,4 @@ class BTCTransaction(models.Model):
     fiat_ammount = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return '%s: %s' % (self.id, self.b58_address)
+        return '%s: %s' % (self.id, self.txn_hash)

@@ -2,7 +2,7 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1 class="pull-left">{{business.business_name}}</h1>
+            <h1 class="pull-left">{{merchant.business_name}}</h1>
             <h1 class="pull-right hidden" id="fiat-amt" style="color: #72a53b; float:right;"></h1>
             <div class="clearfix"></div>
         </div>
@@ -14,9 +14,7 @@
             <h5>WARNING: THE QR CODE IS BADLY BROKEN. THE ADDRESS SHOULD BE GENERATED ON THE USER'S REQUEST</h5>
 
             <span style="margin-left: auto; margin-right: auto; display: block;">
-<<<<<<< HEAD
-              <img style="margin-left: auto; margin-right: auto; display: block;" src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{1REALBITCOINADDRESSGOESHERE}&choe=UTF-8&chs=300x300"/>
-=======
+
               <h3>1. Deposit to this address: 
                 <span id="current_address">
                   <a class="btn btn-primary" onclick="getNextAddress();">Show Address</a>
@@ -24,9 +22,6 @@
               </h3>
 
               <div id="qr_code_span" style="display:none;">
-                <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{{business.get_current_address}}&choe=UTF-8&chs=300x300"/>
->>>>>>> master
-                
                 <h3>2. Click this button after sending the funds </h3>
                 <a class="btn btn-primary btn-lg" href="{% url "app.views.deposit_dashboard" %}">Confirm My Deposit</a>
               </div>

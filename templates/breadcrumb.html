@@ -9,7 +9,7 @@
   {% if current_step == 1 %}
     <li>Personal</li>
   {% elif registration_step >= 0 %}
-    <li><a href="{% url "business.views.register_personal" %}">Personal</a></li>
+    <li><a href="{% url "merchants.views.register_personal" %}">Personal</a></li>
   {% else %}
     <li class="active">Personal</li>
   {% endif %}
@@ -17,7 +17,7 @@
   {% if current_step == 2 %}
     <li>Business</li>
   {% elif registration_step >= 1 %}
-    <li><a href="{% url "business.views.register_business" %}">Business</a></li>
+    <li><a href="{% url "merchants.views.register_merchant" %}">Business</a></li>
   {% else %}
     <li class="active">Business</li>
   {% endif %}
@@ -25,7 +25,7 @@
   {% if current_step == 3 %}
     <li>Bitcoins</li>
   {% elif registration_step >= 2 %}
-    <li><a href="{% url "business.views.register_bitcoins" %}">Bitcoins</a></li>
+    <li><a href="{% url "merchants.views.register_bitcoins" %}">Bitcoins</a></li>
   {% else %}
     <li class="active">Bitcoins</li>
   {% endif %}

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from business.models import Business, AppUser
+from merchants.models import Merchant, AppUser
 
 
 class AppUserAdmin(admin.ModelAdmin):
@@ -14,7 +14,7 @@ class AppUserAdmin(admin.ModelAdmin):
 admin.site.register(AppUser, AppUserAdmin)
 
 
-class BusinessAdmin(admin.ModelAdmin):
+class MerchantAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'business_name',
@@ -31,6 +31,6 @@ class BusinessAdmin(admin.ModelAdmin):
     raw_id_fields = ('app_user', )
 
     class Meta:
-        model = Business
+        model = Merchant
 
-admin.site.register(Business, BusinessAdmin)
+admin.site.register(Merchant, MerchantAdmin)

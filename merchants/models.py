@@ -15,22 +15,22 @@ class AppUser(AbstractUser):
     phone_num_country = models.CharField(
         max_length=256, blank=True, null=True, db_index=True)
 
-    def get_business(self):
-        return self.business_set.last()
+    def get_merchant(self):
+        return self.merchant_set.last()
 
     def get_registration_step(self):
         step = 0
-        business = self.get_business()
+        merchant = self.get_merchant()
         if self.full_name:
             step += 1
-        if business:
+        if merchant:
             step += 1
-            if business.has_destination_address():
+            if merchant.has_destination_address():
                 step += 1
         return step
 
 
-class Business(models.Model):
+class Merchant(models.Model):
     app_user = models.ForeignKey(AppUser, blank=True, null=True)
     business_name = models.CharField(
         max_length=256, blank=False, null=False, db_index=True)
@@ -83,7 +83,7 @@ class Business(models.Model):
                 active_address.retired_at = now()
                 active_address.save()
             # Create new address object
-            DestinationAddress.objects.create(b58_address=dest_address, business=self)
+            DestinationAddress.objects.create(b58_address=dest_address, merchant=self)
 
     def get_all_forwarding_addresses(self):
         return self.forwardingaddress_set.all()

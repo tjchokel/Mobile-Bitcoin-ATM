@@ -16,7 +16,7 @@ class DestinationAddress(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True, db_index=True)
     b58_address = models.CharField(blank=False, null=False, max_length=34, db_index=True)
     retired_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    business = models.ForeignKey('business.Business', blank=False, null=False)
+    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
@@ -46,7 +46,7 @@ class ForwardingAddress(models.Model):
 
     # technically, this is redundant through DestinationAddress
     # but having it here makes for easier querying
-    business = models.ForeignKey('business.Business', blank=False, null=False)
+    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
@@ -79,7 +79,7 @@ class BTCTransaction(models.Model):
     forwarding_address = models.ForeignKey(ForwardingAddress, blank=True, null=True)
     destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
     # This is redundant through Address models, but having it here makes easier queries
-    business = models.ForeignKey('business.Business', blank=False, null=False)
+    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     # TODO: add shopper here?
     # TODO: add currency (USD, EUR, etc)?
     fiat_ammount = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
@@ -135,7 +135,7 @@ class BTCTransaction(models.Model):
                     conf_num=conf_num,
                     irreversible_by=irreversible_by,
                     forwarding_address=forwarding_obj,
-                    business=forwarding_obj.business,
+                    merchant=forwarding_obj.merchant,
                     )
 
     @classmethod

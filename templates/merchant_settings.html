@@ -16,12 +16,12 @@
             </a>  
           </li>
           <li>
-            <a href="{% url "business.views.business_profile" %}">
+            <a href="{% url "merchants.views.merchant_profile" %}">
             <i class="sign fa fa-users bg-blue"></i>Profile <i class="fa fa-chevron-right pull-right"></i>
           </a>  
           </li>
           <li>
-            <a href="{% url "business.views.transactions" %}">
+            <a href="{% url "merchants.views.transactions" %}">
             <i class="sign fa fa-sign-out bg-amethyst"></i> Transactions <i class="fa fa-chevron-right pull-right"></i>
           </a>  
           </li>
@@ -42,21 +42,21 @@
             <tbody>
               <tr>
                 <td class="text-muted">Currency</td>
-                <td align="right">{{business.get_currency_name}}</td>
+                <td align="right">{{merchant.get_currency_name}}</td>
               </tr>
               <tr>
                 <td class="text-muted">Percent Markup</td>
-                <td align="right">{{business.get_percent_markup}}%</td>
+                <td align="right">{{merchant.get_percent_markup}}%</td>
               </tr>
               <tr>
                 <td class="text-muted">BTC Storage Address:</td>
-                <td align="right">{{business.btc_storage_address}}</td>
+                <td align="right">{{merchant.btc_storage_address}}</td>
               </tr>
             </tbody>
           </table>
           <span class="hidden" id="bitcoin-info-edit">
             
-            <form class="form-horizontal" method="post" action="{% url "business.views.edit_bitcoin_info" %}" >
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_bitcoin_info" %}" >
               {% load crispy_forms_tags %}
               {{ bitcoin_form|crispy }}
               {% csrf_token %}

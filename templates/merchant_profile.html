@@ -11,7 +11,7 @@
       <div class="user-menu bottom-15">
         <ul>
           <li>
-            <a href="{% url "business.views.business_settings" %}">
+            <a href="{% url "merchants.views.merchant_settings" %}">
             <i class="sign fa fa-gears bg-green"></i>Settings <i class="fa fa-chevron-right pull-right"></i>
             </a>  
           </li>
@@ -21,7 +21,7 @@
           </a>  
           </li>
           <li>
-            <a href="{% url "business.views.transactions" %}">
+            <a href="{% url "merchants.views.transactions" %}">
             <i class="sign fa fa-sign-out bg-amethyst"></i> Transactions <i class="fa fa-chevron-right pull-right"></i>
           </a>  
           </li>
@@ -35,48 +35,48 @@
         <div class="col-sm-12">
           <h4 class="hl">
             <a style="color:#515151;" href="#">Business Info</a>
-            <a href="#" onclick="editBusinessInfo();" id="business-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
+            <a href="#" onclick="editMerchantInfo();" id="merchant-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
           </h4>
-          <table id="business-info-list" class="table">
+          <table id="merchant-info-list" class="table">
             <tbody>
               <tr>
                 <td class="text-muted">Business Name</td>
-                <td align="right">{{business.business_name}}</td>
+                <td align="right">{{merchant.business_name}}</td>
               </tr>
               <tr>
                 <td class="text-muted">Adress Line 1</td>
-                <td align="right">{{business.address_1}}</td>
+                <td align="right">{{merchant.address_1}}</td>
               </tr>
               <tr>
                 <td class="text-muted">Address Line 2</td>
-                <td align="right">{{business.address_2}}</td>
+                <td align="right">{{merchant.address_2}}</td>
               </tr>
               <tr>
                 <td class="text-muted">City</td>
-                <td align="right">{{business.city}}</td>
+                <td align="right">{{merchant.city}}</td>
               </tr>
               <tr>
                 <td class="text-muted">State</td>
-                <td align="right">{{business.state}}</td>
+                <td align="right">{{merchant.state}}</td>
               </tr>
               <tr>
                 <td class="text-muted">Country</td>
-                <td align="right">{{business.country}}</td>
+                <td align="right">{{merchant.country}}</td>
               </tr>
               <tr>
                 <td class="text-muted">Zip Code</td>
-                <td align="right">{{business.zip_code}}</td>
+                <td align="right">{{merchant.zip_code}}</td>
               </tr>
               <tr>
                 <td class="text-muted">Phone Number</td>
-                <td align="right">{{business.phone_num}}</td>
+                <td align="right">{{merchant.phone_num}}</td>
               </tr>
             </tbody>
           </table>
-          <span class="hidden" id="business-info-edit">
-            <form class="form-horizontal" method="post" action="{% url "business.views.edit_business_info" %}" >
+          <span class="hidden" id="merchant-info-edit">
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_merchant_info" %}" >
               {% load crispy_forms_tags %}
-              {{ business_form|crispy }}
+              {{ merchant_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
                 <button type="submit" class="btn btn-primary btn-lg">Submit</button>
@@ -110,7 +110,7 @@
           </table>
           <span class="hidden" id="personal-info-edit">
             
-            <form class="form-horizontal" method="post" action="{% url "business.views.edit_personal_info" %}" >
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_personal_info" %}" >
               {% load crispy_forms_tags %}
               {{ personal_form|crispy }}
               {% csrf_token %}
@@ -138,10 +138,10 @@
         }        
     }
 
-    function editBusinessInfo() {
-        $("#business-info-list").toggleClass("show hidden");
-        $("#business-info-edit").toggleClass("show hidden");
-        var edit_button = $("#business-info-edit-button");
+    function editMerchantInfo() {
+        $("#merchant-info-list").toggleClass("show hidden");
+        $("#merchant-info-edit").toggleClass("show hidden");
+        var edit_button = $("#merchant-info-edit-button");
         if (edit_button.text().replace(" ", "")=="Edit"){
           edit_button.text("Cancel");
         }else{

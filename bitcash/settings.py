@@ -48,7 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'crispy_forms',
-    'business',
+    'merchants',
     'app',
     'bitcoins',
     'shoppers',
@@ -75,7 +75,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request'
 )
 
-AUTH_USER_MODEL = 'business.AppUser'
+AUTH_USER_MODEL = 'merchants.AppUser'
 
 
 PRODUCTION_DOMAIN = 'www.coinsafe.com'

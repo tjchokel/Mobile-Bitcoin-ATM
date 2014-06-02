@@ -5,26 +5,26 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(r'^login/$', 'business.views.login_request', name='login_request'),
-    url(r'^logout/?$', 'business.views.logout_request', name='logout'),
+    url(r'^login/$', 'merchants.views.login_request', name='login_request'),
+    url(r'^logout/?$', 'merchants.views.logout_request', name='logout'),
 
     url(r'^app/$', 'app.views.customer_dashboard', name='customer_dashboard'),
     url(r'^simulate-deposit/$', 'app.views.simulate_deposit_detected', name='simulate_deposit_detected'),
     url(r'^deposit/$', 'app.views.deposit_dashboard', name='deposit_dashboard'),
 
-    url(r'^register/$', 'business.views.register_router',
+    url(r'^register/$', 'merchants.views.register_router',
         name='register_router'),
-    url(r'^register-account/$', 'business.views.register_account', name='register_account'),
-    url(r'^register-personal/$', 'business.views.register_personal', name='register_personal'),
-    url(r'^register-business/$', 'business.views.register_business', name='register_business'),
-    url(r'^register-bitcoins/$', 'business.views.register_bitcoins', name='register_bitcoins'),
-    
-    url(r'^business-settings/$', 'business.views.business_settings', name='business_settings'),
-    url(r'^profile/$', 'business.views.business_profile', name='business_profile'),
-    url(r'^transactions/$', 'business.views.transactions', name='transactions'),
-    url(r'^edit-personal-info/$', 'business.views.edit_personal_info', name='edit_personal_info'),
-    url(r'^edit-business-info/$', 'business.views.edit_business_info', name='edit_business_info'),
-    url(r'^edit-btc-info/$', 'business.views.edit_bitcoin_info', name='edit_bitcoin_info'),
+    url(r'^register-account/$', 'merchants.views.register_account', name='register_account'),
+    url(r'^register-personal/$', 'merchants.views.register_personal', name='register_personal'),
+    url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),
+    url(r'^register-bitcoins/$', 'merchants.views.register_bitcoins', name='register_bitcoins'),
+
+    url(r'^merchant-settings/$', 'merchants.views.merchant_settings', name='merchant_settings'),
+    url(r'^profile/$', 'merchants.views.merchant_profile', name='merchant_profile'),
+    url(r'^transactions/$', 'merchants.views.transactions', name='transactions'),
+    url(r'^edit-personal-info/$', 'merchants.views.edit_personal_info', name='edit_personal_info'),
+    url(r'^edit-merchant-info/$', 'merchants.views.edit_merchant_info', name='edit_merchant_info'),
+    url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
 
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),

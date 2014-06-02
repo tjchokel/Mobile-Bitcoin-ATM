@@ -10,7 +10,7 @@
             {% endwith %}
         </div>
 
-        <form class="form-horizontal" method="post" action="{% url "business.views.register_bitcoins" %}" >
+        <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoins" %}" >
             {% load crispy_forms_tags %}
             {{ form|crispy }}
             {% csrf_token %}

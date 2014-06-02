@@ -7,10 +7,10 @@ from django.utils.html import escape
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
-from business.forms import (LoginForm, AccountRegistrationForm,
+from merchants.forms import (LoginForm, AccountRegistrationForm,
         BitcoinRegistrationForm, PersonalInfoRegistrationForm,
-        BusinessInfoRegistrationForm)
-from business.models import AppUser, Business
+        MerchantInfoRegistrationForm)
+from merchants.models import AppUser, Merchant
 from bitcash.decorators import confirm_registration_eligible
 
 from services.models import WebHook
@@ -71,7 +71,7 @@ def register_router(request):
     if reg_step == 0:
         return HttpResponseRedirect(reverse_lazy('register_personal'))
     elif reg_step == 1:
-        return HttpResponseRedirect(reverse_lazy('register_business'))
+        return HttpResponseRedirect(reverse_lazy('register_merchant'))
     elif reg_step == 2:
         return HttpResponseRedirect(reverse_lazy('register_bitcoins'))
 
@@ -129,32 +129,32 @@ def register_personal(request):
             user.phone_num_country = phone_country
             user.save()
 
-            return HttpResponseRedirect(reverse_lazy('register_business'))
+            return HttpResponseRedirect(reverse_lazy('register_merchant'))
     return {'form': form, 'user': user}
 
 
 @login_required
 @confirm_registration_eligible
-@render_to('register_business.html')
-def register_business(request):
+@render_to('register_merchant.html')
+def register_merchant(request):
     user = request.user
-    business = user.get_business()
+    merchant = user.get_merchant()
     initial = {}
-    if business:
-        initial['country'] = business.country
-        initial['business_name'] = business.business_name
-        initial['address_1'] = business.address_1
-        initial['address_2'] = business.address_2
-        initial['city'] = business.city
-        initial['state'] = business.state
-        initial['zip_code'] = business.zip_code
-        initial['country'] = business.country
-        initial['phone_num'] = business.phone_num
+    if merchant:
+        initial['country'] = merchant.country
+        initial['business_name'] = merchant.business_name
+        initial['address_1'] = merchant.address_1
+        initial['address_2'] = merchant.address_2
+        initial['city'] = merchant.city
+        initial['state'] = merchant.state
+        initial['zip_code'] = merchant.zip_code
+        initial['country'] = merchant.country
+        initial['phone_num'] = merchant.phone_num
     else:
         initial['country'] = user.phone_num_country
-    form = BusinessInfoRegistrationForm(initial=initial)
+    form = MerchantInfoRegistrationForm(initial=initial)
     if request.method == 'POST':
-        form = BusinessInfoRegistrationForm(data=request.POST)
+        form = MerchantInfoRegistrationForm(data=request.POST)
         if form.is_valid():
 
             business_name = form.cleaned_data['business_name']
@@ -166,18 +166,18 @@ def register_business(request):
             zip_code = form.cleaned_data['zip_code']
             phone_num = form.cleaned_data['phone_num']
 
-            if business:
-                business.business_name = business_name
-                business.address_1 = address_1
-                business.address_2 = address_2
-                business.city = city
-                business.state = state
-                business.country = country
-                business.zip_code = zip_code
-                business.phone_num = phone_num
-                business.save()
+            if merchant:
+                merchant.business_name = business_name
+                merchant.address_1 = address_1
+                merchant.address_2 = address_2
+                merchant.city = city
+                merchant.state = state
+                merchant.country = country
+                merchant.zip_code = zip_code
+                merchant.phone_num = phone_num
+                merchant.save()
             else:
-                business = Business.objects.create(
+                merchant = Merchant.objects.create(
                     app_user=user,
                     business_name=business_name,
                     address_1=address_1,
@@ -198,13 +198,13 @@ def register_business(request):
 @render_to('register_bitcoins.html')
 def register_bitcoins(request):
     user = request.user
-    business = user.get_business()
+    merchant = user.get_merchant()
     initial = {}
-    initial['btc_markup'] = business.basis_points_markup / 100.0
-    if business.currency_code:
-        initial['currency_code'] = business.currency_code
-    if business.has_destination_address():
-        initial['btc_address'] = business.get_destination_address()
+    initial['btc_markup'] = merchant.basis_points_markup / 100.0
+    if merchant.currency_code:
+        initial['currency_code'] = merchant.currency_code
+    if merchant.has_destination_address():
+        initial['btc_address'] = merchant.get_destination_address()
     form = BitcoinRegistrationForm(initial=initial)
     if request.method == 'POST':
         form = BitcoinRegistrationForm(data=request.POST)
@@ -212,83 +212,83 @@ def register_bitcoins(request):
             currency_code = form.cleaned_data['currency_code']
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
-            business.currency_code = currency_code
-            business.basis_points_markup = basis_points_markup * 100
-            business.save()
+            merchant.currency_code = currency_code
+            merchant.basis_points_markup = basis_points_markup * 100
+            merchant.save()
 
-            business.set_destination_address(btc_address)
+            merchant.set_destination_address(btc_address)
 
             return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     return {'form': form, 'user': user}
 
 
 @login_required
-@render_to('business_settings.html')
-def business_settings(request):
+@render_to('merchant_settings.html')
+def merchant_settings(request):
     user = request.user
-    business = user.get_business()
+    merchant = user.get_merchant()
     initial = {}
 
-    initial['currency_code'] = business.currency_code
-    initial['btc_address'] = business.btc_storage_address
-    initial['btc_markup'] = business.basis_points_markup / 100.0
+    initial['currency_code'] = merchant.currency_code
+    initial['btc_address'] = merchant.btc_storage_address
+    initial['btc_markup'] = merchant.basis_points_markup / 100.0
 
     bitcoin_form = BitcoinRegistrationForm(initial=initial)
     return {
         'user': user,
-        'business': business,
+        'merchant': merchant,
         'on_admin_page': True,
         'bitcoin_form': bitcoin_form
     }
 
 
 @login_required
-@render_to('business_profile.html')
-def business_profile(request):
+@render_to('merchant_profile.html')
+def merchant_profile(request):
     user = request.user
-    business = user.get_business()
-    transactions = business.get_all_transactions()
+    merchant = user.get_merchant()
+    transactions = merchant.get_all_transactions()
     initial = {}
     initial['full_name'] = user.full_name
     initial['phone_num'] = user.phone_num
     initial['phone_country'] = user.phone_num_country
 
-    initial['business_name'] = business.business_name
-    initial['address_1'] = business.address_1
-    initial['address_2'] = business.address_2
-    initial['city'] = business.city
-    initial['state'] = business.state
-    initial['zip_code'] = business.zip_code
-    initial['country'] = business.country
-    initial['phone_num'] = business.phone_num
+    initial['business_name'] = merchant.business_name
+    initial['address_1'] = merchant.address_1
+    initial['address_2'] = merchant.address_2
+    initial['city'] = merchant.city
+    initial['state'] = merchant.state
+    initial['zip_code'] = merchant.zip_code
+    initial['country'] = merchant.country
+    initial['phone_num'] = merchant.phone_num
 
-    initial['currency_code'] = business.currency_code
-    initial['btc_address'] = business.get_destination_address()
-    initial['btc_markup'] = business.basis_points_markup / 100.0
+    initial['currency_code'] = merchant.currency_code
+    initial['btc_address'] = merchant.get_destination_address()
+    initial['btc_markup'] = merchant.basis_points_markup / 100.0
 
     personal_form = PersonalInfoRegistrationForm(initial=initial)
-    business_form = BusinessInfoRegistrationForm(initial=initial)
+    merchant_form = MerchantInfoRegistrationForm(initial=initial)
     bitcoin_form = BitcoinRegistrationForm(initial=initial)
     return {
         'user': user,
-        'business': business,
+        'merchant': merchant,
         'transactions': transactions,
         'on_admin_page': True,
         'personal_form': personal_form,
-        'business_form': business_form,
+        'merchant_form': merchant_form,
         'bitcoin_form': bitcoin_form
     }
 
 
 @login_required
-@render_to('business_transactions.html')
+@render_to('merchant_transactions.html')
 def transactions(request):
     user = request.user
-    business = user.get_business()
-    transactions = business.get_all_transactions()
+    merchant = user.get_merchant()
+    transactions = merchant.get_all_transactions()
     return {
         'user': user,
-        'business': business,
+        'merchant': merchant,
         'transactions': transactions,
         'on_admin_page': True
     }
@@ -310,15 +310,15 @@ def edit_personal_info(request):
             user.phone_num_country = phone_country
             user.save()
 
-            return HttpResponseRedirect(reverse_lazy('business_settings'))
+            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
 
 
 @login_required
-def edit_business_info(request):
+def edit_merchant_info(request):
     user = request.user
-    business = user.get_business()
+    merchant = user.get_merchant()
     if request.method == 'POST':
-        form = BusinessInfoRegistrationForm(data=request.POST)
+        form = MerchantInfoRegistrationForm(data=request.POST)
         if form.is_valid():
 
             business_name = form.cleaned_data['business_name']
@@ -330,31 +330,31 @@ def edit_business_info(request):
             zip_code = form.cleaned_data['zip_code']
             phone_num = form.cleaned_data['phone_num']
 
-            if business:
-                business.business_name = business_name
-                business.address_1 = address_1
-                business.address_2 = address_2
-                business.city = city
-                business.state = state
-                business.country = country
-                business.zip_code = zip_code
-                business.phone_num = phone_num
-                business.save()
+            if merchant:
+                merchant.business_name = business_name
+                merchant.address_1 = address_1
+                merchant.address_2 = address_2
+                merchant.city = city
+                merchant.state = state
+                merchant.country = country
+                merchant.zip_code = zip_code
+                merchant.phone_num = phone_num
+                merchant.save()
 
-            return HttpResponseRedirect(reverse_lazy('business_settings'))
+            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
 
 
 @login_required
 def edit_bitcoin_info(request):
     user = request.user
-    business = user.get_business()
+    merchant = user.get_merchant()
     if request.method == 'POST':
         form = BitcoinRegistrationForm(data=request.POST)
         if form.is_valid():
             currency_code = form.cleaned_data['currency_code']
             btc_address = form.cleaned_data['btc_address']
-            if business:
-                business.currency_code = currency_code
-                business.save()
-                business.set_destination_address(btc_address)
-            return HttpResponseRedirect(reverse_lazy('business_settings'))
+            if merchant:
+                merchant.currency_code = currency_code
+                merchant.save()
+                merchant.set_destination_address(btc_address)
+            return HttpResponseRedirect(reverse_lazy('merchant_settings'))

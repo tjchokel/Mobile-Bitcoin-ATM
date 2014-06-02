@@ -3,7 +3,7 @@ from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransactio
 
 
 class DestinationAddressAdmin(admin.ModelAdmin):
-    list_display = ('id', 'uploaded_at', 'b58_address', 'retired_at', 'business')
+    list_display = ('id', 'uploaded_at', 'b58_address', 'retired_at', 'merchant')
 
     class Meta:
         model = DestinationAddress
@@ -18,7 +18,7 @@ class ForwardingAddressAdmin(admin.ModelAdmin):
             'b58_address',
             'retired_at',
             'destination_address',
-            'business',
+            'merchant',
             )
 
     class Meta:

@@ -1,0 +1,41 @@
+$(document).ajaxComplete(function(e, xhr, settings) {
+    var contentType = xhr.getResponseHeader("Content-Type");
+    if (contentType == "application/javascript" || contentType == "application/json") {
+        var json = $.parseJSON(xhr.responseText);
+
+        $.each(json.django_messages, function (i, item) {
+            addMessage(item.message, item.extra_tags);
+        });
+    }
+}).ajaxError(function(e, xhr, settings, exception) {
+    addMessage("There was an error processing your request, please try again.", "error");
+});
+
+function addMessage(text, extra_tags) {
+    if (extra_tags.indexOf('warning') != -1) {
+        var div_class="alert alert-danger"
+    } else if (extra_tags.indexOf('success') != -1){
+        var div_class="alert alert-success"
+    }else{
+        var div_class="alert alert-info"
+    }
+
+    var message = $('<div class="'+div_class+'">'+text+'<a class="close" data-dismiss="alert">×</a></div>').hide().fadeIn(500);
+    
+    $("#messages").append(message);
+    $(".page-tip").slideDown();
+}
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    crossDomain: false, // obviates need for sameOrigin test
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            var csrftoken = $.cookie('csrftoken');
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});

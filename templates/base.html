@@ -19,6 +19,7 @@
     <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-formhelpers.min.css" %}" />
     <link rel="stylesheet" type="text/css" href="{% static "css/custom.css" %}" />
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static "css/elements.css" %}"/>
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -32,7 +33,7 @@
 
   <body>
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -69,10 +70,40 @@
           </ul>
         </div><!--/.nav-collapse -->
       </div>
-    </div>
+      <div class="page-tip">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12" id="messages">
+              {% for message in messages %}
+                <div class=
+                  {% if 'warning' in message.tags %}
+                    "alert alert-danger"
+                  {% elif 'success' in message.tags %}
+                    "alert alert-success"
+                  {% else %}
+                    "alert alert-info"
+                  {% endif %}
+                >
+                {# http://stackoverflow.com/a/10124845 #}
+                {% if 'safe' in message.tags %}
+                  {{ message|safe }}
+                {% else %}
+                  {{ message }}
+                {% endif %}
 
+                <a class="close" data-dismiss="alert">×</a>
+                </div>
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wrapper">
     <!-- Begin page content -->
-    {% block content %}{% endblock content %}
+      {% block content %}{% endblock content %}
+    </div>
 
     {% if user.is_authenticated %}
       <div id="footer" style="background-color:white;">
@@ -102,6 +133,7 @@
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
     <script src="{% static "js/bootstrap-formhelpers.js" %}"></script><!-- http://vincentlamanna.com/BootstrapFormHelpers/phone/#jquery-plugins -->
+    <script src="{% static "js/custom.js" %}"></script>
     {% block extra_js %}
     {% endblock extra_js %}
   </body>

@@ -310,8 +310,9 @@ def edit_personal_info(request):
             user.phone_num = phone_num
             user.phone_num_country = phone_country
             user.save()
-
-            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
+            msg = 'Your profile has been updated'
+            messages.success(request, msg, extra_tags='safe')
+            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
 
 @login_required
@@ -342,7 +343,9 @@ def edit_merchant_info(request):
                 merchant.phone_num = phone_num
                 merchant.save()
 
-            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
+                msg = 'Your profile has been updated'
+                messages.success(request, msg, extra_tags='safe')
+            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
 
 @login_required
@@ -354,8 +357,12 @@ def edit_bitcoin_info(request):
         if form.is_valid():
             currency_code = form.cleaned_data['currency_code']
             btc_address = form.cleaned_data['btc_address']
+            markup = form.cleaned_data['btc_markup']
             if merchant:
                 merchant.currency_code = currency_code
-                merchant.save()
                 merchant.set_destination_address(btc_address)
+                merchant.basis_points_markup = markup * 100
+                merchant.save()
+                msg = 'Your profile has been updated'
+                messages.success(request, msg, extra_tags='safe')
             return HttpResponseRedirect(reverse_lazy('merchant_settings'))

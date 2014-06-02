@@ -40,7 +40,8 @@ class DestinationAddress(models.Model):
         # Store it in the DB
         ForwardingAddress.objects.create(
                 b58_address=forwarding_address,
-                destination_address=self)
+                destination_address=self,
+                merchant=self.merchant)
 
         # set webhook for forwarding address
         set_blockcypher_webhook(

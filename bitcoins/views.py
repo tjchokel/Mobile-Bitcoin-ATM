@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from annoying.functions import get_object_or_None
 from django.utils.timezone import now
+from django.views.decorators.csrf import csrf_exempt
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
@@ -49,14 +50,15 @@ def get_bitcoin_price(request):
     return HttpResponse(json_response, mimetype='application/json')
 
 
+@csrf_exempt
 def process_bci_webhook(request, random_id):
     # Log webhook
     WebHook.create_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
 
-    input_txn_hash = request.GET['input_transaction_hash'][0]
-    destination_txn_hash = request.GET['transaction_hash'][0]
-    satoshis = int(request.GET['value'][0])
-    num_confirmations = int(request.GET['confirmations'][0])
+    input_txn_hash = request.GET['input_transaction_hash']
+    destination_txn_hash = request.GET['transaction_hash']
+    satoshis = int(request.GET['value'])
+    num_confirmations = int(request.GET['confirmations'])
     input_address = request.GET['input_address']
     destination_address = request.GET['destination_address']
 
@@ -132,6 +134,7 @@ def get_forwarding_obj_from_address_list(address_list):
     return None
 
 
+@csrf_exempt
 def process_blockcypher_webhook(request, random_id):
     # Log webhook
     WebHook.create_webhook(request, WebHook.BLOCKCYPHER_ADDR_MONITORING)

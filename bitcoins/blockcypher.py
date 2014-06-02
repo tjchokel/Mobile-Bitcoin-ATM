@@ -24,7 +24,7 @@ def set_blockcypher_webhook(monitoring_address, callback_url, merchant=None):
 
     payload = {
             # YUCK: this is how they do it though
-            'filter': 'event=new-pool-tx&addr=%s' % monitoring_address,
+            'filter': 'event=tx-confirmation&addr=%s' % monitoring_address,
             'url': callback_url,
             }
 

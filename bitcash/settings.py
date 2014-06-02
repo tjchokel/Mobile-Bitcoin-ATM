@@ -145,6 +145,7 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, 'templates'),)
 
 BCI_SECRET_KEY = os.getenv('BCI_SECRET_KEY')
+BLOCKCYPHER_API_KEY = os.getenv('BLOCKCYPHER_API_KEY')
 
 # Keep this at the end
 if DEBUG:

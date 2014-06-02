@@ -1,8 +1,8 @@
 from django.db import models
-from django.utils.timezone import now
 from django.core.urlresolvers import reverse
 
 from bitcoins.bci import set_bci_webhook
+from bitcoins.blockcypher import set_blockcypher_webhook
 
 from bitcash.settings import BASE_URL
 
@@ -22,15 +22,27 @@ class DestinationAddress(models.Model):
         return '%s: %s' % (self.id, self.b58_address)
 
     def create_new_forwarding_address(self):
-        callback_uri = reverse('process_bci_webook')
+        # blockchain.info and blockcypher callback uris
+        bci_uri = reverse('process_bci_webhook')
+        blockcypher_uri = reverse('process_blockcypher_webhook')
 
+        # get address to forward to (this also signs up for webhook on destination address)
         forwarding_address = set_bci_webhook(
                 dest_address=self.b58_address,
-                callback_url=uri_to_url(BASE_URL, callback_uri),
+                callback_url=uri_to_url(BASE_URL, bci_uri),
                 user=self.app_user)
+
+        # Store it in the DB
         ForwardingAddress.objects.create(
                 b58_address=forwarding_address,
                 destination_address=self)
+
+        # set webhook for forwarding address
+        set_blockcypher_webhook(
+                monitoring_address=forwarding_address,
+                callback_url=uri_to_url(BASE_URL, blockcypher_uri),
+                user=self.app_user)
+
         return forwarding_address
 
 
@@ -86,60 +98,3 @@ class BTCTransaction(models.Model):
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
-
-    @classmethod
-    def process_forwarding_webhook(cls, txn_hash, satoshis, conf_num, forwarding_addr):
-        """
-        Blockchain.info Forwarding Address
-        """
-
-        # TODO: send email notifications
-
-        btc_txn = cls.objects.get(txn_hash=txn_hash)
-
-        if btc_txn:
-            # already had txn in database
-
-            # run defensive checks
-            msg = '%s != %s' % (btc_txn.satoshis, satoshis)
-            assert btc_txn.satoshis == satoshis, msg
-            msg = '%s != %s' % (btc_txn.forwarding_address.b58_address, forwarding_addr)
-            assert btc_txn.forwarding_address.b58_address == forwarding_addr, msg
-
-            # update # confirms
-            if conf_num < btc_txn.conf_num:
-                msg = 'BCI Reports %s confirms and previously reported %s confirms for txn %s'
-                msg = msg % (conf_num, btc_txn.conf_num, txn_hash)
-                raise Exception(msg)
-
-            elif conf_num == btc_txn.conf_num:
-                # Same #, no need to update
-                pass
-
-            else:
-                # Incrase conf_num
-                btc_txn.conf_num = conf_num
-                if conf_num >= 6 and not btc_txn.irreversible_by:
-                    btc_txn.irreversible_by = now()
-                btc_txn.save()
-
-        else:
-            forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_addr)
-            if conf_num >= 6:
-                irreversible_by = now()
-            else:
-                irreversible_by = None
-            cls.objects.create(
-                    txn_hash=txn_hash,
-                    satoshis=satoshis,
-                    conf_num=conf_num,
-                    irreversible_by=irreversible_by,
-                    forwarding_address=forwarding_obj,
-                    merchant=forwarding_obj.merchant,
-                    )
-
-    @classmethod
-    def process_destination_webhook(cls, txn_hash, satoshis, conf_num, destination_addr):
-        # User's final address
-        # This will be implemented with blockcypher
-        pass

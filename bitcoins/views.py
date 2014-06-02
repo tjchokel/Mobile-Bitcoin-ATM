@@ -49,7 +49,7 @@ def get_bitcoin_price(request):
     return HttpResponse(json_response, mimetype='application/json')
 
 
-def process_bci_webhook(request):
+def process_bci_webhook(request, random_id):
     # Log webhook
     WebHook.create_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
 
@@ -132,7 +132,7 @@ def get_forwarding_obj_from_address_list(address_list):
     return None
 
 
-def process_blockcypher_webhook(request):
+def process_blockcypher_webhook(request, random_id):
     # Log webhook
     WebHook.create_webhook(request, WebHook.BLOCKCYPHER_ADDR_MONITORING)
 

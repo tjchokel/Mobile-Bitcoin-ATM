@@ -6,7 +6,7 @@ from bitcoins.blockcypher import set_blockcypher_webhook
 
 from bitcash.settings import BASE_URL
 
-from utils import uri_to_url
+from utils import uri_to_url, simple_random_generator
 
 
 class DestinationAddress(models.Model):
@@ -22,9 +22,14 @@ class DestinationAddress(models.Model):
         return '%s: %s' % (self.id, self.b58_address)
 
     def create_new_forwarding_address(self):
+
+        # generate random id so that each webhook has a unqiue endpoint to hit
+        # this helps solve some edge cases
+        kw_to_use = {'random_id': simple_random_generator(16)}
+
         # blockchain.info and blockcypher callback uris
-        bci_uri = reverse('process_bci_webhook')
-        blockcypher_uri = reverse('process_blockcypher_webhook')
+        bci_uri = reverse('process_bci_webhook', kwargs=kw_to_use)
+        blockcypher_uri = reverse('process_blockcypher_webhook', kwargs=kw_to_use)
 
         # get address to forward to (this also signs up for webhook on destination address)
         forwarding_address = set_bci_webhook(

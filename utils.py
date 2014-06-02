@@ -1,4 +1,5 @@
 import re
+import random
 
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
@@ -101,3 +102,17 @@ def get_file_ext(fname):
             return split_result[0]
         return ''
     return split_result[-1]
+
+
+def simple_random_generator(num_chars=32, eligible_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'):
+
+    """
+    Generate a random password using the characters in `chars` and with a
+    length of `size`.
+
+    Note: this is NOT a CSPRNG and shouldn't be used for crypto.
+
+    http://stackoverflow.com/a/2257449
+    """
+    #FIXME: switch to CSPRNG
+    return ''.join(random.choice(eligible_chars) for x in range(num_chars))

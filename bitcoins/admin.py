@@ -38,6 +38,7 @@ class BTCTransactionAdmin(admin.ModelAdmin):
         'forwarding_address',
         'destination_address',
         'fiat_ammount',
+        'currency_code_when_created',
     )
 
     class Meta:

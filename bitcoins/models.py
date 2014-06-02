@@ -22,15 +22,16 @@ class DestinationAddress(models.Model):
         return '%s: %s' % (self.id, self.b58_address)
 
     def create_new_forwarding_address(self):
-        callback_uri = reverse('process_bci_webook')
-
+        callback_uri = reverse('process_bci_webhook')
+        user = self.merchant.app_user
         forwarding_address = set_bci_webhook(
                 dest_address=self.b58_address,
                 callback_url=uri_to_url(BASE_URL, callback_uri),
-                user=self.app_user)
+                user=user)
         ForwardingAddress.objects.create(
                 b58_address=forwarding_address,
-                destination_address=self)
+                destination_address=self,
+                merchant=self.merchant)
         return forwarding_address
 
 

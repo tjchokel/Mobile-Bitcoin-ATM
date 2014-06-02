@@ -30,7 +30,7 @@ urlpatterns = patterns('',
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
     url(r'^get-deposit-address/$', 'bitcoins.views.get_next_deposit_address', name='get_next_deposit_address'),
 
-    url(r'^bci-webhook/$', 'bitcoins.views.process_bci_webook', name='process_bci_webhook'),
+    url(r'^bci-webhook/$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),
 
     url(r'^admin/', include(admin.site.urls)),
 )

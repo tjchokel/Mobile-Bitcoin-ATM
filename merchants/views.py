@@ -227,18 +227,19 @@ def register_bitcoins(request):
 def merchant_settings(request):
     user = request.user
     merchant = user.get_merchant()
+    dest_address = merchant.get_destination_address()
     initial = {}
 
     initial['currency_code'] = merchant.currency_code
-    initial['btc_address'] = merchant.btc_storage_address
+    initial['btc_address'] = dest_address.b58_address
     initial['btc_markup'] = merchant.basis_points_markup / 100.0
-
     bitcoin_form = BitcoinRegistrationForm(initial=initial)
     return {
         'user': user,
         'merchant': merchant,
         'on_admin_page': True,
-        'bitcoin_form': bitcoin_form
+        'bitcoin_form': bitcoin_form,
+        'dest_address': dest_address
     }
 
 

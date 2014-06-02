@@ -10,9 +10,6 @@
         <span id='predeposit' style="text-align: center; margin-top: 50px;">
               <!-- <strong class="text-muted hidden" id='usd-amt' style="display:inline !important;font-size:16px;">blahbla</strong> -->
             </h3> 
-
-            <h5>WARNING: THE QR CODE IS BADLY BROKEN. THE ADDRESS SHOULD BE GENERATED ON THE USER'S REQUEST</h5>
-
             <span style="margin-left: auto; margin-right: auto; display: block;">
 
               <h3>1. Deposit to this address: 
@@ -22,6 +19,8 @@
               </h3>
 
               <div id="qr_code_span" style="display:none;">
+                <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
+
                 <h3>2. Click this button after sending the funds </h3>
                 <a class="btn btn-primary btn-lg" href="{% url "app.views.deposit_dashboard" %}">Confirm My Deposit</a>
               </div>

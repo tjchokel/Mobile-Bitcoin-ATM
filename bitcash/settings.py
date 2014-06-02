@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'bitcoins',
     'shoppers',
     'services',
+    'emails',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -146,6 +147,16 @@ TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, 'templates'),)
 
 BCI_SECRET_KEY = os.getenv('BCI_SECRET_KEY')
 BLOCKCYPHER_API_KEY = os.getenv('BLOCKCYPHER_API_KEY')
+
+SERVER_EMAIL = 'support@coinsafe.com'
+
+POSTMARK_SMTP_SERVER = 'smtp.postmarkapp.com'
+POSTMARK_SENDER = 'CoinSafe Support <support@coinsafe.com>'
+POSTMARK_TEST_MODE = os.getenv('POSTMARK_TEST_MODE', False)
+POSTMARK_API_KEY = os.getenv('POSTMARK_API_KEY')
+assert POSTMARK_API_KEY, 'Must have a Postmark API Key'
+
+EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
 
 # Keep this at the end
 if DEBUG:

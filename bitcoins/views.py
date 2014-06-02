@@ -13,15 +13,20 @@ import requests
 
 
 def poll_deposits(request):
-    address = '12345'  # FIXME: this should be passed through the requrest
-    txn = address.get_transaction()
-
     json_dict = {}
-    if txn:
-        txn_dict = {'amount': txn.satoshis}
-    else:
-        txn_dict = None
-    json_dict['deposit'] = txn_dict
+    json_dict['deposit'] = None
+    json_dict['amount'] = None
+    if request.session.get('forwarding_address'):
+        address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
+        if address:
+            txn = address.get_transaction()
+
+            if txn:
+                txn_dict = {'amount': txn.satoshis}
+            else:
+                txn_dict = None
+            json_dict['deposit'] = txn_dict
+
     json_response = json.dumps(json_dict)
     return HttpResponse(json_response, mimetype='application/json')
 
@@ -35,12 +40,9 @@ def get_bitcoin_price(request):
     r = requests.get(url)
     content = json.loads(r.content)
     fiat_btc = content['last']
-    print fiat_btc
     basis_points_markup = merchant.basis_points_markup
     markup_fee = fiat_btc * basis_points_markup / 10000.00
-    print markup_fee
     fiat_btc = fiat_btc - markup_fee
-    print fiat_btc
     fiat_rate_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:20,.2f}'.format(fiat_btc))
     percent_markup = basis_points_markup / 100.00
     json_response = json.dumps({"amount": fiat_rate_formatted, "markup": percent_markup})
@@ -200,6 +202,7 @@ def process_blockcypher_webhook(request):
 def get_next_deposit_address(request):
     user = request.user
     merchant = user.get_merchant()
-    address = merchant.get_next_address()
-    json_response = json.dumps({"address": address.b58_address})
+    address = merchant.get_new_forwarding_address()
+    request.session['forwarding_address'] = address
+    json_response = json.dumps({"address": address})
     return HttpResponse(json_response, mimetype='application/json')

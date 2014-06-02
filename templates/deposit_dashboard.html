@@ -12,7 +12,7 @@
             {% else %}
               <h1>Status: Waiting On Confirmation</h1>
 
-              <h3>Transaction Amount: {{transaction.satoshis}}</h3>
+              <h3>Transaction Amount: {{transaction.fiat_ammount}} {{transaction.currency_code_when_created}} ({{transaction.satoshis}} satoshis)</h3>
               <h3>Confirmations: {{transaction.conf_num}}</h3>
             {% endif %}
           {% else %}

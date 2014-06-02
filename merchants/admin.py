@@ -15,10 +15,16 @@ admin.site.register(AppUser, AppUserAdmin)
 
 
 class MerchantAdmin(admin.ModelAdmin):
+
+    def btc_address(self, instance):
+        return instance.get_destination_address()
+    btc_address.allow_tags = True
+
     list_display = (
         'id',
         'business_name',
         'currency_code',
+        'btc_address',
         'address_1',
         'address_2',
         'city',

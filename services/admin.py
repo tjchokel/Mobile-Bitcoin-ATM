@@ -14,7 +14,7 @@ class APICallAdmin(admin.ModelAdmin):
             'headers',
             )
     # https://coderwall.com/p/ppqusg
-    raw_id_fields = ('user', )
+    raw_id_fields = ('merchant', )
 
     class Meta:
         model = APICall

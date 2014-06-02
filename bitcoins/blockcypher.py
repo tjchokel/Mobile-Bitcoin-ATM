@@ -8,7 +8,7 @@ import requests
 import json
 
 
-def set_blockcypher_webhook(monitoring_address, callback_url, user=None):
+def set_blockcypher_webhook(monitoring_address, callback_url, merchant=None):
     '''
     Set a blockcypher webhook to monitoring an address.
 
@@ -42,7 +42,7 @@ def set_blockcypher_webhook(monitoring_address, callback_url, user=None):
             response_code=r.status_code,
             post_params=payload,
             api_results=r.content,
-            user=user)
+            merchant=merchant)
 
     err_msg = 'Expected status code 201 but got %s' % r.status_code
     assert r.status_code == 201, err_msg

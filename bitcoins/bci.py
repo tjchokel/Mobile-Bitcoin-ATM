@@ -10,7 +10,7 @@ import json
 from urllib import urlencode
 
 
-def set_bci_webhook(dest_address, callback_url, user=None):
+def set_bci_webhook(dest_address, callback_url, merchant=None):
     '''
     Set a blockchain.info webhook to generate a recieving address that will forward to dest_address
 
@@ -32,7 +32,7 @@ def set_bci_webhook(dest_address, callback_url, user=None):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            user=user)
+            merchant=merchant)
 
     err_msg = 'Expected status code 200 but got %s' % r.status_code
     assert r.status_code == 200, err_msg
@@ -51,7 +51,7 @@ def set_bci_webhook(dest_address, callback_url, user=None):
 # UNUSED METHODS:
 
 
-def fetch_bci_txn_data_from_hash(txn_hash, user=None):
+def fetch_bci_txn_data_from_hash(txn_hash, merchant=None):
     url = 'https://blockchain.info/rawtx/%s?api_code=%s' % (txn_hash,
             BCI_SECRET_KEY)
     r = requests.get(url)
@@ -63,7 +63,7 @@ def fetch_bci_txn_data_from_hash(txn_hash, user=None):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            user=user)
+            merchant=merchant)
 
     err_msg = 'Expected status code 200 but got %s' % r.status_code
     assert r.status_code == 200, err_msg
@@ -71,7 +71,7 @@ def fetch_bci_txn_data_from_hash(txn_hash, user=None):
     return json.loads(r.content)
 
 
-def fetch_bci_txn_data(address, user=None):
+def fetch_bci_txn_data(address, merchant=None):
     """
     Get all BCI transactions for a given address
     """
@@ -87,7 +87,7 @@ def fetch_bci_txn_data(address, user=None):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            user=user)
+            merchant=merchant)
 
     err_msg = 'Expected status code 200 but got %s' % r.status_code
     assert r.status_code == 200, err_msg

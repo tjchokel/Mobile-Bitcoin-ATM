@@ -7,6 +7,9 @@ from bitcoins.bci import set_bci_webhook
 from bitcash.settings import BASE_URL
 
 from utils import uri_to_url
+import requests
+import json
+import math
 
 
 class DestinationAddress(models.Model):
@@ -83,10 +86,34 @@ class BTCTransaction(models.Model):
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     # TODO: add shopper here?
     # TODO: add currency (USD, EUR, etc)?
-    fiat_ammount = models.DecimalField(blank=True, null=True, max_digits=5, decimal_places=2)
+    fiat_ammount = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
+    currency_code_when_created = models.CharField(max_length=5, blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
+
+    def save(self, *args, **kwargs):
+        """
+        Set fiat_ammount when this object is first created
+        http://stackoverflow.com/a/2311499/1754586
+        """
+        if not self.pk:
+            # This only happens if the objects isn't in the database yet.
+            self.currency_code_when_created = self.merchant.currency_code
+            self.fiat_ammount = self.calculate_fiat_amount()
+        super(BTCTransaction, self).save(*args, **kwargs)
+
+    def calculate_fiat_amount(self):
+        merchant = self.merchant
+        currency_code = merchant.currency_code or 'USD'
+        url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
+        r = requests.get(url)
+        content = json.loads(r.content)
+        fiat_btc = content['last']
+        basis_points_markup = merchant.basis_points_markup
+        markup_fee = fiat_btc * basis_points_markup / 10000.00
+        fiat_btc = fiat_btc - markup_fee
+        return math.ceil(fiat_btc*100)/100
 
     @classmethod
     def process_forwarding_webhook(cls, txn_hash, satoshis, conf_num, forwarding_addr):

@@ -14,12 +14,14 @@ class APICall(models.Model):
 
     # api_name choices
     BCI_RECIEVE_PAYMENTS = 'BRP'
+    BLOCKCYPHER_ADDR_MONITORING = 'BAM'
     BCI_TXN_FROM_HASH = 'BTH'
     BCI_TXN_FROM_ADDR = 'BTA'
     API_NAME_CHOICES = (
             (BCI_RECIEVE_PAYMENTS, 'blockchain.info recieve payments API'),
             (BCI_TXN_FROM_HASH, 'blockchain.info txn data from hash'),
             (BCI_TXN_FROM_ADDR, 'blockchain.info txn data from address'),
+            (BLOCKCYPHER_ADDR_MONITORING, 'blockcypher address monitoring'),
             )
 
     # Main fields
@@ -34,7 +36,7 @@ class APICall(models.Model):
     api_results = models.CharField(max_length=100000, blank=True, null=True)
 
     # optional FK
-    user = models.ForeignKey('merchants.AppUser', null=True, blank=True)
+    merchant = models.ForeignKey('merchants.Merchant', null=True, blank=True)
 
 
 class WebHook(models.Model):
@@ -46,10 +48,10 @@ class WebHook(models.Model):
 
     # api_name choices
     BCI_PAYMENT_FORWARDED = 'BPF'
-    BLOCKCYPHER_TX_MONITORING = 'BTM'
+    BLOCKCYPHER_ADDR_MONITORING = 'BAM'
     API_NAME_CHOICES = (
             (BCI_PAYMENT_FORWARDED, 'blockchain.info payment forwarded'),
-            (BLOCKCYPHER_TX_MONITORING, 'blockcypher transaction monitoring'),
+            (BLOCKCYPHER_ADDR_MONITORING, 'blockcypher address monitoring'),
             )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -68,7 +70,7 @@ class WebHook(models.Model):
         return '%s from %s' % (self.id, self.api_name)
 
     @classmethod
-    def create_webhook(cls, request, api_name):
+    def log_webhook(cls, request, api_name):
         return WebHook.objects.create(
                 ip_address=get_client_ip(request),
                 user_agent=request.META.get('HTTP_USER_AGENT'),

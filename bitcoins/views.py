@@ -26,7 +26,7 @@ def poll_deposits(request):
             txns_grouped = forwarding_obj.get_and_group_all_transactions()
 
     json_response = json.dumps(txns_grouped)
-    return HttpResponse(json_response, mimetype='application/json')
+    return HttpResponse(json_response, content_type='application/json')
 
 
 @login_required
@@ -44,7 +44,7 @@ def get_bitcoin_price(request):
     fiat_rate_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:20,.2f}'.format(fiat_btc))
     percent_markup = basis_points_markup / 100.00
     json_response = json.dumps({"amount": fiat_rate_formatted, "markup": percent_markup})
-    return HttpResponse(json_response, mimetype='application/json')
+    return HttpResponse(json_response, content_type='application/json')
 
 
 @csrf_exempt
@@ -235,4 +235,4 @@ def get_next_deposit_address(request):
     address = merchant.get_new_forwarding_address()
     request.session['forwarding_address'] = address
     json_response = json.dumps({"address": address})
-    return HttpResponse(json_response, mimetype='application/json')
+    return HttpResponse(json_response, content_type='application/json')

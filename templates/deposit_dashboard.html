@@ -2,10 +2,16 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>{{merchant.business_name}}</h1>
+            <h1 class="pull-left">{{merchant.business_name}}</h1>
+
+            <h3 class="pull-right" id="last-polled" style="color: #72a53b; float:right;">
+            Last Updated: Now
+            </h3>
+            <div class="clearfix"></div>
+
         </div>
 
-        <div id="status" style="text-align: center; margin-top: 50px;">
+        <!-- <div id="status" style="text-align: center; margin-top: 50px;">
           {% if transaction %}
             {% if transaction.irreversible_by %}
               <h1>Status: Complete</h1>
@@ -13,37 +19,51 @@
               <h1>Status: Waiting On Confirmation</h1>
 
               <h3>Transaction Amount: {{transaction.fiat_ammount}} {{transaction.currency_code_when_created}} ({{transaction.satoshis}} satoshis)</h3>
-              <h3>Confirmations: {{transaction.conf_num}}</h3>
+              <h3>Confirmations: <span id="conf-num">{{transaction.conf_num}}</span></h3>
             {% endif %}
           {% else %}
             <h1>Status: Not Yet Detected</h1>
-            <h3 id="last-polled" style="color: #72a53b;">Last Polled: N/A</h3>
 
             <h3>Thanks you for your deposit.</h3>
             <h3>Your transaction has NOT been detected. To be notified when your deposit has been confirmed, please enter your contact info below.</h3>
 
             <a href="{% url "app.views.simulate_deposit_detected" %}">Simulate A Deposit Being Detected</a>
           {%endif %}
-        </div>
-        
-        {% if shopper %}
-            <h4>Shopper Info:</h4>
-            <ul>
-              <li>Name: {{shopper.name}}</li>
-              <li>Phone: {{shopper.phone_num}}</li>
-              <li>Email: {{shopper.email}}</li>
-            </ul>
-        {% else %}
+        </div> -->
 
-          <form class="form-horizontal" method="post" action="{% url "app.views.deposit_dashboard" %}" >
-              {% load crispy_forms_tags %}
-              {{ form|crispy }}
-              {% csrf_token %}
-              <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-              </div>
-          </form>
-        {% endif %}
+
+        <div class="row">
+        <div class="col-sm-12">
+        <br/>
+          <h3><i class="fa fa-map-marker"></i> Transactions</h3>
+          {% include "_deposit_dash_table.html" %}
+          <hr>
+        </div>
+      </div>
+      <br/>
+
+
+
+
+
+          {% if shopper %}
+              <h4>Shopper Info:</h4>
+              <ul>
+                <li>Name: {{shopper.name}}</li>
+                <li>Phone: {{shopper.phone_num}}</li>
+                <li>Email: {{shopper.email}}</li>
+              </ul>
+          {% else %}
+
+            <form class="form-horizontal" method="post" action="{% url "app.views.deposit_dashboard" %}" >
+                {% load crispy_forms_tags %}
+                {{ form|crispy }}
+                {% csrf_token %}
+                <div class="button-wrapper">
+                  <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                </div>
+            </form>
+          {% endif %}
         
     </div>
 {% endblock content %}
@@ -57,7 +77,6 @@
               url: '/poll-deposits/',
               success: function (data) {
                 LAST_POLL_TIME = new Date();
-                console.log(data);
                 var time_since = timeSince(LAST_POLL_TIME);
                 $('#last-polled').html(time_since);
                 var deposit = data['deposit']
@@ -79,8 +98,14 @@
               type: 'get',
               url: '/poll-deposits/',
               success: function (data) {
+                LAST_POLL_TIME = new Date();
+                var time_since = timeSince(LAST_POLL_TIME);
+                $('#last-polled').html(time_since);
                 var deposit = data['deposit'];
                 if(! deposit){
+                  setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+                }else if(! deposit['irreversible_by']){
+                  $('#conf-num').html(deposit['conf_num']);
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else{
                   location.reload(true);
@@ -92,14 +117,19 @@
               }
           });
       }
+
       function set_time_since() {
         console.log(LAST_POLL_TIME);
         var time_since = timeSince(LAST_POLL_TIME);
         console.log(time_since);
-        var time_since_text = "Last polled: "+time_since+" ago";
+        var time_since_text = "Last updated: "+time_since+" ago";
         $('#last-polled').html(time_since_text);
         {% if not transaction %}
           setTimeout(set_time_since,1000);
+        {% else %}
+          {% if not transaction.irreversible_by %}
+            setTimeout(set_time_since,1000);
+          {% endif %}
         {% endif %}
       }
 
@@ -118,7 +148,22 @@
               set_time_since();
             }, 1000);
 
+          {% else %}
+            {% if not transaction.irreversible_by %}
+              setTimeout(
+              function() 
+              {
+                poll_new_confirmations();
+              }, 15000);
+
+              setTimeout(
+              function() 
+              {
+                set_time_since();
+              }, 1000);
+            {% endif %}
           {% endif %}
+
 
           
       });    

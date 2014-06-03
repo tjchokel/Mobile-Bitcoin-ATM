@@ -3,10 +3,11 @@ from django.core.urlresolvers import reverse
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
+from countries import BFHCurrenciesList
 
 from bitcash.settings import BASE_URL
 
-from utils import uri_to_url, simple_random_generator
+from utils import uri_to_url, simple_random_generator, SATOSHIS_PER_BTC, satoshis_to_mbtc, format_mbtc
 
 import json
 import requests
@@ -69,6 +70,7 @@ class ForwardingAddress(models.Model):
     # technically, this is redundant through DestinationAddress
     # but having it here makes for easier querying
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
+    user_confirmed_deposit_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
@@ -131,4 +133,20 @@ class BTCTransaction(models.Model):
         basis_points_markup = merchant.basis_points_markup
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc - markup_fee
-        return math.ceil(fiat_btc*100)/100
+        fiat_total = fiat_btc * (self.satoshis / float(SATOSHIS_PER_BTC))
+        return math.floor(fiat_total*100)/100
+
+    def get_status(self):
+        if self.irreversible_by:
+            return 'Complete'
+        else:
+            return '%s confirmations' % (self.conf_num)
+
+    def get_currency_symbol(self):
+        if self.currency_code_when_created:
+            return BFHCurrenciesList[self.currency_code_when_created]['symbol']
+        else:
+            return '$'
+
+    def format_mbtc_amount(self):
+        return format_mbtc(satoshis_to_mbtc(self.satoshis))

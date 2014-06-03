@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="page-header">
+      <h1 class="pull-left">{{merchant.business_name}}</h1>
+      <h1 class="pull-right" id="fiat-amt" style="color: #72a53b; float:right;"><a class="active has-spinner hidden" id="fiat-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a></h1>
+      <div class="clearfix"></div>
+  </div>
+
+  {% include "customer_dash/_deposit_address_modal.html" %}
+  <span id='predeposit' style="text-align: center; margin-top: 50px;">
+      <p>Welcome to CloseCoin....</p>
+      <span style="margin-left: auto; margin-right: auto; display: block;">
+        <a class="btn btn-primary has-spinner" id="show-address-button" onclick="getNextAddress();">
+          <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+          Get Started
+        </a>
+  </span>
+</div>

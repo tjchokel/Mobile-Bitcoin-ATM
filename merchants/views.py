@@ -20,8 +20,6 @@ from services.models import WebHook
 def login_request(request):
     form = LoginForm()
 
-    WebHook.create_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
-
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():

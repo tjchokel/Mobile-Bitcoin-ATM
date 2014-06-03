@@ -13,8 +13,6 @@ from merchants.forms import (LoginForm, AccountRegistrationForm,
 from merchants.models import AppUser, Merchant
 from bitcash.decorators import confirm_registration_eligible
 
-from services.models import WebHook
-
 
 @render_to('login.html')
 def login_request(request):
@@ -84,20 +82,22 @@ def register_account(request):
         form = AccountRegistrationForm(data=request.POST)
         if form.is_valid():
 
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            # other fields
-            email = form.cleaned_data['email']
-
-            # create user
-            user = AppUser.objects.create_user(
-                    email,
-                    email=email,
-                    password=password
-                    )
-            user_to_login = authenticate(username=email, password=password)
-            login(request, user_to_login)
-            return HttpResponseRedirect(reverse_lazy('register_personal'))
+            if get_object_or_None(AppUser, username=email):
+                msg = 'That email is already taken, did you mean to login?'
+                messages.warning(request, msg, extra_tags='safe')
+            else:
+                # create user
+                user = AppUser.objects.create_user(
+                        email,
+                        email=email,
+                        password=password
+                        )
+                user_to_login = authenticate(username=email, password=password)
+                login(request, user_to_login)
+                return HttpResponseRedirect(reverse_lazy('register_personal'))
     return {'form': form, 'user': user}
 
 

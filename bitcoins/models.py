@@ -79,6 +79,45 @@ class ForwardingAddress(models.Model):
     def get_all_transactions(self):
         return self.btctransaction_set.all()
 
+    def get_and_group_all_transactions(self):
+        " Get forwarding and destination transactions grouped by txn pair "
+
+        txn_group_list = []
+
+        for dest_txn in self.btctransaction_set.filter(destination_address__isnull=False):
+            txn_dict = {
+                    'satoshis': dest_txn.satoshis,
+                    'destination_txn_hash': dest_txn.txn_hash,
+                    'destination_conf_num': dest_txn.conf_num,
+                    'destination_fiat_ammount': dest_txn.fiat_ammount,
+                    'currency_code_when_created': dest_txn.currency_code_when_created,
+                    }
+
+            fwd_txn = dest_txn.input_btc_transaction
+            if fwd_txn:
+                txn_dict['forwarding_txn_hash'] = fwd_txn.txn_hash
+                txn_dict['forwarding_conf_num'] = fwd_txn.conf_num
+                txn_dict['forwarding_fiat_ammount'] = fwd_txn.fiat_ammount
+
+            # add txn to list
+            txn_group_list.append(txn_dict)
+
+        fwd_txn_hashes = [x['forwarding_txn_hash'] for x in txn_group_list if x['forwarding_txn_hash']]
+
+        # loop through forwarding txns to get any that might be missing (no destination confirms)
+        for fwd_txn in self.btctransaction_set.filter(destination_address=None):
+            if fwd_txn.txn_hash not in fwd_txn_hashes:
+                txn_dict = {
+                        'satoshis': fwd_txn.satoshis,
+                        'forwarding_txn_hash': fwd_txn.txn_hash,
+                        'forwarding_conf_num': fwd_txn.conf_num,
+                        'forwarding_fiat_ammount': fwd_txn.fiat_ammount,
+                        'currency_code_when_created': fwd_txn.currency_code_when_created,
+                        }
+                txn_group_list.append(txn_dict)
+
+        return txn_group_list
+
     def get_current_shopper(self):
         return self.shopper_set.last()
 
@@ -97,13 +136,15 @@ class BTCTransaction(models.Model):
     conf_num = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True)
     irreversible_by = models.DateTimeField(blank=True, null=True, db_index=True)
     suspected_double_spend_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    # only ONE of these will ever have a match (the two txns are two separate entries)
+    # We will always have this when they use a forwarding address:
     forwarding_address = models.ForeignKey(ForwardingAddress, blank=True, null=True)
+    # We will not have this on the initial deposit to the forwarding address:
     destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
+    # We will only have this on a forwarding transaction to the deposit transaction
+    input_btc_transaction = models.ForeignKey('self', blank=True, null=True)
     # This is redundant through Address models, but having it here makes easier queries
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     # TODO: add shopper here?
-    # TODO: add currency (USD, EUR, etc)?
     fiat_ammount = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
     currency_code_when_created = models.CharField(max_length=5, blank=True, null=True, db_index=True)
 

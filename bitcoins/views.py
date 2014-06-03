@@ -9,26 +9,23 @@ from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction, DestinationAddress, ForwardingAddress
 from services.models import WebHook
 
+from emails.internal_msg import send_admin_email
+
 import json
 import requests
 
 
 def poll_deposits(request):
-    json_dict = {}
-    json_dict['deposit'] = None
-    json_dict['amount'] = None
-    if request.session.get('forwarding_address'):
-        address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
-        if address:
-            txn = address.get_transaction()
 
-            if txn:
-                txn_dict = {'amount': txn.satoshis}
-            else:
-                txn_dict = None
-            json_dict['deposit'] = txn_dict
+    txns_grouped = []
 
-    json_response = json.dumps(json_dict)
+    forwarding_address = request.session.get('forwarding_address')
+    if forwarding_address:
+        forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
+        if forwarding_obj:
+            txns_grouped = forwarding_obj.get_and_group_all_transactions()
+
+    json_response = json.dumps(txns_grouped)
     return HttpResponse(json_response, mimetype='application/json')
 
 
@@ -96,8 +93,36 @@ def process_bci_webhook(request, random_id):
     else:
         # Didn't have TXN in DB
 
-        # Lookup forwaring adress obj
+        # Lookup forwaring and destination address objects
+        forwarding_obj = ForwardingAddress.objects.get(b58_address=input_address)
         destination_obj = DestinationAddress.objects.get(b58_address=destination_address)
+
+        # Lookup input_btc_transaction based on input_txn_hash
+        input_btc_transaction = get_object_or_None(BTCTransaction, txn_hash=input_txn_hash)
+
+        # Run some safety checks and email us of discrepencies (but don't break)
+        if not input_btc_transaction:
+            # Blockcypher failed but blockchain.info has succeeded. Notify us.
+            send_admin_email(
+                    subject='Blockcypher Fail for %s' % input_txn_hash,
+                    message='Check the logs and get to the bottom of it ASAP.',
+                    recipient_list=['monitoring@coinsafe.com', ],
+                    )
+        else:
+            if input_btc_transaction.satoshis != satoshis:
+                send_admin_email(
+                        subject='Blockcypher BTC Discrepency for %s' % input_txn_hash,
+                        message='Blockcypher says %s satoshis and BCI says %s' % (
+                            input_btc_transaction.satoshis, satoshis),
+                        recipient_list=['monitoring@coinsafe.com', ],
+                        )
+            if input_btc_transaction.conf_num < num_confirmations:
+                send_admin_email(
+                        subject='Blockcypher Confirmations Discrepency for %s' % input_txn_hash,
+                        message='Blockcypher says %s confs and BCI says %s' % (
+                            input_btc_transaction.conf_num, num_confirmations),
+                        recipient_list=['monitoring@coinsafe.com', ],
+                        )
 
         # Confirmations logic
         if num_confirmations >= 6:
@@ -112,8 +137,10 @@ def process_bci_webhook(request, random_id):
                 satoshis=satoshis,
                 conf_num=num_confirmations,
                 irreversible_by=irreversible_by,
+                forwarding_address=forwarding_obj,
                 destination_address=destination_obj,
                 merchant=destination_obj.merchant,
+                input_btc_transaction=input_btc_transaction,
                 )
 
     if num_confirmations >= 6:

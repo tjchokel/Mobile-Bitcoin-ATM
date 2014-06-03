@@ -21,7 +21,7 @@
         </td>
         <td>{{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}</td>
         <td>{{transaction.format_mbtc_amount}} mbtc</td>
-        <td class="tx-status-{{transaction.id}}" id="status">{{transaction.get_status}}</td>
+        <td class="tx-status-{{transaction.id}}" id="txn-status">{{transaction.get_status}}</td>
       </tr>
         <!-- {% include "app/_transaction_row.html" %} -->
     {% else %}

@@ -49,7 +49,8 @@
                 if(! deposit){
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else if(! deposit['irreversible_by']){
-                  $('#conf-num').html(deposit['conf_num']);
+                  conf_num_text = deposit['conf_num'] + ' confirmations'
+                  $('#txn-status').html(conf_num_text);
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else{
                   location.reload(true);

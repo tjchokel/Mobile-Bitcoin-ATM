@@ -147,6 +147,20 @@
             console.log('FAILURE');
           }
         });
+    }
+
+    function cancelAddress() {
+      $.ajax({
+          type: 'get',
+          url: '/cancel-address/',
+          success: function (data) {
+            location.reload(true);
+          },
+          error: function(data) {
+            console.log('FAILURE');
+            // location.reload(true);
+          }
+        });
 
     }
 

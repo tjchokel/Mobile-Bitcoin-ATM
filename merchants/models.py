@@ -29,6 +29,9 @@ class AppUser(AbstractUser):
                 step += 1
         return step
 
+    def finished_registration(self):
+        return self.get_registration_step() == 3
+
 
 class Merchant(models.Model):
     app_user = models.ForeignKey(AppUser, blank=True, null=True)

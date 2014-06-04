@@ -7,11 +7,35 @@
 
   {% include "customer_dash/_deposit_address_modal.html" %}
   <span id='predeposit' style="text-align: center; margin-top: 50px;">
-      <p>Welcome to CloseCoin....</p>
-      <span style="margin-left: auto; margin-right: auto; display: block;">
-        <a class="btn btn-primary has-spinner" id="show-address-button" onclick="getNextAddress();">
-          <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-          Get Started
-        </a>
-  </span>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <br/>
+            <p class="lead text-center">Get cash for your bitcoin today.</p>
+            <br />
+          </div>
+        </div>
+        <div class="row">
+          <span style="margin-left: auto; margin-right: auto; display: block;">
+            <a class="btn btn-primary btn-lg has-spinner" id="show-address-button" onclick="getNextAddress();">
+              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+              Get Started
+            </a>
+          </span>
+        </div>
+        <br/><br/><br />
+        <table style="width:100%; table-layout:fixed;">
+          <tr>
+            <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-bitcoin"></i></div></th>
+            <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-envelope"></i></div></th>
+            <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-money"></i></div></th>
+          </tr>
+          <tr>
+            <td style="text-align:center;">1. Get Bitcoin Address</td>
+            <td style="text-align:center;">2. Send Bitcoin From Your Wallet</td>
+            <td style="text-align:center;">3. Receive Cash</td>
+          </tr>
+        </table>
+
+      </div>
 </div>

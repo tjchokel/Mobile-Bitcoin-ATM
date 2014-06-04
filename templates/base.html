@@ -100,16 +100,14 @@
         </div>
       </div>
     </div>
-    <div class="wrapper">
     <!-- Begin page content -->
-      {% block content %}{% endblock content %}
-    </div>
+    {% block content %}{% endblock content %}
     <!-- Foooter
     ================== -->
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.finished_registration %}
       
     
-      <div id="footer" style="background: white">
+      <div class="navbar navbar-inverse navbar-fixed-bottom" id="footer" style="background: white">
         <div class="container">
 
           <ul class="nav nav-tabs">

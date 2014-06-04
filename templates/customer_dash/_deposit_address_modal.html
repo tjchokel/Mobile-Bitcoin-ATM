@@ -10,14 +10,14 @@
         <div class="row">
           <div class="col-sm-12">
             <h3>1. Deposit to this address: 
-                <span id="current_address"></span>
-              </h3>
+            </h3>
+            <h3 id="current_address" class="text-center text-green">{{vault.get_current_address.b58_address}}</h3>
 
               <div id="qr_code_span" style="display:none;">
                 <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
 
-                <h3>2. Click this button after sending the funds </h3>
-                <a class="btn btn-primary btn-lg" onClick="confirmAddressDeposit();">Confirm My Deposit</a>
+                <h3>2. After depositing, click the following button: </h3>
+                <a class="btn btn-primary btn-lg" onClick="confirmAddressDeposit();" style="margin-left: auto; margin-right: auto; display: block;">Confirm My Deposit</a>
               </div>
             </span>
           </div>

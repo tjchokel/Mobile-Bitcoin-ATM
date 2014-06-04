@@ -243,3 +243,17 @@ def complete_deposit(request):
                 request.session['forwarding_address'] = None
 
     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
+
+@login_required
+def cancel_address(request):
+    user = request.user
+    merchant = user.get_merchant()
+    if request.session.get('forwarding_address'):
+        address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
+        if address and merchant.id == address.merchant.id:
+            address.retired_at = now()
+            address.save()
+            request.session['forwarding_address'] = None
+
+    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))

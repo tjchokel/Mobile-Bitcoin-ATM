@@ -4,13 +4,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import escape
-
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
+
+from merchants.models import Merchant
+from users.models import CashUser
+
 from merchants.forms import (LoginForm, AccountRegistrationForm,
         BitcoinRegistrationForm, PersonalInfoRegistrationForm,
         MerchantInfoRegistrationForm)
-from merchants.models import AppUser, Merchant
 from bitcash.decorators import confirm_registration_eligible
 
 
@@ -25,7 +27,7 @@ def login_request(request):
             username = form.cleaned_data['username'].lower()
             password = form.cleaned_data['password']
 
-            user_found = get_object_or_None(AppUser, username=username)
+            user_found = get_object_or_None(CashUser, username=username)
             if user_found:
                 user = authenticate(username=username, password=password)
                 if user:
@@ -85,12 +87,12 @@ def register_account(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            if get_object_or_None(AppUser, username=email):
+            if get_object_or_None(CashUser, username=email):
                 msg = 'That email is already taken, did you mean to login?'
                 messages.warning(request, msg, extra_tags='safe')
             else:
                 # create user
-                user = AppUser.objects.create_user(
+                user = CashUser.objects.create_user(
                         email,
                         email=email,
                         password=password
@@ -176,7 +178,7 @@ def register_merchant(request):
                 merchant.save()
             else:
                 merchant = Merchant.objects.create(
-                    app_user=user,
+                    user=user,
                     business_name=business_name,
                     address_1=address_1,
                     address_2=address_2,

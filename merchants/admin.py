@@ -1,17 +1,5 @@
 from django.contrib import admin
-from merchants.models import Merchant, AppUser
-
-
-class AppUserAdmin(admin.ModelAdmin):
-    list_display = (
-        'id', 'first_name', 'last_name', 'email',
-        'phone_num', 'username'
-    )
-
-    class Meta:
-        model = AppUser
-
-admin.site.register(AppUser, AppUserAdmin)
+from merchants.models import Merchant
 
 
 class MerchantAdmin(admin.ModelAdmin):
@@ -34,7 +22,7 @@ class MerchantAdmin(admin.ModelAdmin):
         'basis_points_markup',
         'hours',
     )
-    raw_id_fields = ('app_user', )
+    raw_id_fields = ('user', )
 
     class Meta:
         model = Merchant

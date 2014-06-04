@@ -8,28 +8,53 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Merchant'
-        db.create_table(u'merchants_merchant', (
+        # Adding model 'CashUser'
+        db.create_table(u'users_cashuser', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.CashUser'], null=True, blank=True)),
-            ('business_name', self.gf('django.db.models.fields.CharField')(max_length=256, db_index=True)),
-            ('address_1', self.gf('django.db.models.fields.CharField')(max_length=256, db_index=True)),
-            ('address_2', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=256, null=True, blank=True)),
-            ('city', self.gf('django.db.models.fields.CharField')(max_length=256, db_index=True)),
-            ('state', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=30, null=True, blank=True)),
-            ('country', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=256, null=True, blank=True)),
-            ('zip_code', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=256, null=True, blank=True)),
+            ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
+            ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
+            ('is_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('username', self.gf('django.db.models.fields.CharField')(unique=True, max_length=30)),
+            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
+            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
+            ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('is_active', self.gf('django.db.models.fields.BooleanField')(default=True)),
+            ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
+            ('full_name', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=60, null=True, blank=True)),
             ('phone_num', self.gf('phonenumber_field.modelfields.PhoneNumberField')(db_index=True, max_length=128, null=True, blank=True)),
-            ('hours', self.gf('django.db.models.fields.CharField')(max_length=256, db_index=True)),
-            ('currency_code', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=5, null=True, blank=True)),
-            ('basis_points_markup', self.gf('django.db.models.fields.IntegerField')(default=100, null=True, db_index=True, blank=True)),
+            ('phone_num_country', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=256, null=True, blank=True)),
         ))
-        db.send_create_signal(u'merchants', ['Merchant'])
+        db.send_create_signal(u'users', ['CashUser'])
+
+        # Adding M2M table for field groups on 'CashUser'
+        m2m_table_name = db.shorten_name(u'users_cashuser_groups')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('cashuser', models.ForeignKey(orm[u'users.cashuser'], null=False)),
+            ('group', models.ForeignKey(orm[u'auth.group'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['cashuser_id', 'group_id'])
+
+        # Adding M2M table for field user_permissions on 'CashUser'
+        m2m_table_name = db.shorten_name(u'users_cashuser_user_permissions')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('cashuser', models.ForeignKey(orm[u'users.cashuser'], null=False)),
+            ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['cashuser_id', 'permission_id'])
 
 
     def backwards(self, orm):
-        # Deleting model 'Merchant'
-        db.delete_table(u'merchants_merchant')
+        # Deleting model 'CashUser'
+        db.delete_table(u'users_cashuser')
+
+        # Removing M2M table for field groups on 'CashUser'
+        db.delete_table(db.shorten_name(u'users_cashuser_groups'))
+
+        # Removing M2M table for field user_permissions on 'CashUser'
+        db.delete_table(db.shorten_name(u'users_cashuser_user_permissions'))
 
 
     models = {
@@ -53,22 +78,6 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'merchants.merchant': {
-            'Meta': {'object_name': 'Merchant'},
-            'address_1': ('django.db.models.fields.CharField', [], {'max_length': '256', 'db_index': 'True'}),
-            'address_2': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'basis_points_markup': ('django.db.models.fields.IntegerField', [], {'default': '100', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'business_name': ('django.db.models.fields.CharField', [], {'max_length': '256', 'db_index': 'True'}),
-            'city': ('django.db.models.fields.CharField', [], {'max_length': '256', 'db_index': 'True'}),
-            'country': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'currency_code': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '5', 'null': 'True', 'blank': 'True'}),
-            'hours': ('django.db.models.fields.CharField', [], {'max_length': '256', 'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'phone_num': ('phonenumber_field.modelfields.PhoneNumberField', [], {'db_index': 'True', 'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'state': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '30', 'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.CashUser']", 'null': 'True', 'blank': 'True'}),
-            'zip_code': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'})
-        },
         u'users.cashuser': {
             'Meta': {'object_name': 'CashUser'},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -90,4 +99,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['merchants']
+    complete_apps = ['users']

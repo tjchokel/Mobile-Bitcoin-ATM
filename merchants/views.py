@@ -13,7 +13,10 @@ from users.models import AuthUser
 from merchants.forms import (LoginForm, AccountRegistrationForm,
         BitcoinRegistrationForm, PersonalInfoRegistrationForm,
         MerchantInfoRegistrationForm)
+
 from bitcash.decorators import confirm_registration_eligible
+
+from countries import COUNTRY3_TO_CURRENCY3
 
 
 @render_to('login.html')
@@ -24,12 +27,12 @@ def login_request(request):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             # Log in user
-            username = form.cleaned_data['username'].lower()
+            email = form.cleaned_data['email'].lower().strip()
             password = form.cleaned_data['password']
 
-            user_found = get_object_or_None(AuthUser, username=username)
+            user_found = get_object_or_None(AuthUser, username=email)
             if user_found:
-                user = authenticate(username=username, password=password)
+                user = authenticate(username=email, password=password)
                 if user:
                     login(request, user)
 
@@ -42,11 +45,16 @@ def login_request(request):
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     msg = "Sorry, that's not the right password for "
-                    msg += '<b>%s</b>.' % escape(username)
+                    msg += '<b>%s</b>.' % escape(email)
                     messages.warning(request, msg, extra_tags='safe')
             else:
-                msg = "No account found for <b>%s</b>." % escape(username)
+                msg = "No account found for <b>%s</b>." % escape(email)
                 messages.warning(request, msg, extra_tags='safe')
+
+    elif request.method == 'GET':
+        email = request.GET.get('e')
+        if email:
+            form = LoginForm(initial={'email': email})
 
     return {'form': form}
 
@@ -76,7 +84,7 @@ def register_router(request):
     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
 
-@render_to('register_account.html')
+@render_to('merchants/register_account.html')
 def register_account(request):
     user = request.user
     form = AccountRegistrationForm()
@@ -87,8 +95,11 @@ def register_account(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            if get_object_or_None(AuthUser, username=email):
-                msg = 'That email is already taken, did you mean to login?'
+            existing_user = get_object_or_None(AuthUser, username=email)
+            if existing_user:
+                login_url = '%s?e=%s' % (reverse_lazy('login_request'), existing_user.email)
+                msg = 'That email is already taken, do you want to '
+                msg += '<a href="%s">login</a>?' % login_url
                 messages.warning(request, msg, extra_tags='safe')
             else:
                 # create user
@@ -105,7 +116,7 @@ def register_account(request):
 
 @login_required
 @confirm_registration_eligible
-@render_to('register_personal.html')
+@render_to('merchants/register_personal.html')
 def register_personal(request):
     user = request.user
     initial = {}
@@ -135,7 +146,7 @@ def register_personal(request):
 
 @login_required
 @confirm_registration_eligible
-@render_to('register_merchant.html')
+@render_to('merchants/register_business_info.html')
 def register_merchant(request):
     user = request.user
     merchant = user.get_merchant()
@@ -143,13 +154,9 @@ def register_merchant(request):
     if merchant:
         initial['country'] = merchant.country
         initial['business_name'] = merchant.business_name
-        initial['address_1'] = merchant.address_1
-        initial['address_2'] = merchant.address_2
         initial['city'] = merchant.city
         initial['state'] = merchant.state
-        initial['zip_code'] = merchant.zip_code
         initial['country'] = merchant.country
-        initial['phone_num'] = merchant.phone_num
     else:
         initial['country'] = user.phone_num_country
     form = MerchantInfoRegistrationForm(initial=initial)
@@ -158,35 +165,23 @@ def register_merchant(request):
         if form.is_valid():
 
             business_name = form.cleaned_data['business_name']
-            address_1 = form.cleaned_data['address_1']
-            address_2 = form.cleaned_data['address_2']
             city = form.cleaned_data['city']
             state = form.cleaned_data['state']
             country = form.cleaned_data['country']
-            zip_code = form.cleaned_data['zip_code']
-            phone_num = form.cleaned_data['phone_num']
 
             if merchant:
                 merchant.business_name = business_name
-                merchant.address_1 = address_1
-                merchant.address_2 = address_2
                 merchant.city = city
                 merchant.state = state
                 merchant.country = country
-                merchant.zip_code = zip_code
-                merchant.phone_num = phone_num
                 merchant.save()
             else:
                 merchant = Merchant.objects.create(
                     user=user,
                     business_name=business_name,
-                    address_1=address_1,
-                    address_2=address_2,
                     city=city,
                     state=state,
                     country=country,
-                    zip_code=zip_code,
-                    phone_num=phone_num,
                 )
 
             return HttpResponseRedirect(reverse_lazy('register_bitcoins'))
@@ -195,7 +190,7 @@ def register_merchant(request):
 
 @login_required
 # @confirm_registration_eligible
-@render_to('register_bitcoins.html')
+@render_to('merchants/register_bitcoins.html')
 def register_bitcoins(request):
     user = request.user
     merchant = user.get_merchant()
@@ -203,6 +198,8 @@ def register_bitcoins(request):
     initial['btc_markup'] = merchant.basis_points_markup / 100.0
     if merchant.currency_code:
         initial['currency_code'] = merchant.currency_code
+    else:
+        initial['currency_code'] = COUNTRY3_TO_CURRENCY3.get(merchant.country)
     if merchant.has_destination_address():
         initial['btc_address'] = merchant.get_destination_address()
     form = BitcoinRegistrationForm(initial=initial)

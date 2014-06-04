@@ -5,7 +5,7 @@ from bitcoins.BCAddressField import is_valid_btc_address
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(required=True)
+    email = forms.CharField(required=True)
     password = forms.CharField(required=True,
         widget=forms.PasswordInput(render_value=False))
 
@@ -72,27 +72,10 @@ class MerchantInfoRegistrationForm(forms.Form):
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': "Mel's Diner"}),
     )
-
-    address_1 = forms.CharField(
-        label='Address Line 1',
-        min_length=5,
-        max_length=50,
+    country = forms.ChoiceField(
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Street address, P.O. box, company name, c/o '}),
-    )
-
-    address_2 = forms.CharField(
-        label='Address Line 2',
-        max_length=50,
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Apartment, suite, unit, building, floor, etc.'}),
-    )
-
-    city = forms.CharField(
-        label='City',
-        required=True,
-        max_length=30,
-        widget=forms.TextInput(),
+        choices=COUNTRY_DROPDOWN,
+        widget=forms.Select(attrs={'data-country': 'USA'}),
     )
     state = forms.CharField(
         label='State/Province/Region',
@@ -101,41 +84,18 @@ class MerchantInfoRegistrationForm(forms.Form):
         max_length=30,
         widget=forms.TextInput(),
     )
-
-    zip_code = forms.CharField(
-        label='Zip Code',
-        min_length=3,
-        max_length=30,
+    city = forms.CharField(
+        label='City',
         required=True,
+        max_length=30,
         widget=forms.TextInput(),
     )
-    country = forms.ChoiceField(
-        required=True,
-        choices=COUNTRY_DROPDOWN,
-        widget=forms.Select(attrs={'data-country': 'USA'}),
-    )
-
-    phone_num = forms.CharField(
-        label='Phone Number',
-        min_length=3,
-        max_length=30,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_country'}),
-    )
-
-    # hours = forms.CharField(
-    #     label='Hours',
-    #     min_length=3,
-    #     max_length=30,
-    #     required=True,
-    #     widget=forms.TextInput(),
-    # )
 
 
 class BitcoinRegistrationForm(forms.Form):
 
     currency_code = forms.CharField(
-        label='Currency',
+        label='The Currency You Want to Trade',
         min_length=3,
         max_length=30,
         required=True,
@@ -154,7 +114,7 @@ class BitcoinRegistrationForm(forms.Form):
     btc_markup = forms.DecimalField(
             label='Percent Markup',
             required=True,
-            help_text='The amount you want to charge above the exchange rate',
+            help_text='The percent you want to charge above the market rate.',
             widget=forms.TextInput(),
     )
 

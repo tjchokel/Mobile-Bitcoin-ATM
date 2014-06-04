@@ -21,3 +21,11 @@
         <br/><br/><br/><br/>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script>
+    $(document).ready(function(){
+      $('#id_business_name').focus()
+    });
+  </script>
+{% endblock %}

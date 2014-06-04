@@ -15,7 +15,18 @@
         </form>
 
         <hr>
-            <a href="/register-account" class="btn btn-primary btn-lg">Or Sign Up</a>
+          <a href="{% url 'register_router' %}" class="btn btn-primary btn-lg">Or Sign Up</a>
         </hr>
+
+
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#id_email').focus()
+    });
+  </script>
+
+{% endblock %}

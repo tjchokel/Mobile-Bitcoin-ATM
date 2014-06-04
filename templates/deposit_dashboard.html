@@ -27,7 +27,7 @@
             <h3>Thanks you for your deposit.</h3>
             <h3>Your transaction has NOT been detected. To be notified when your deposit has been confirmed, please enter your contact info below.</h3>
 
-            <a href="{% url "app.views.simulate_deposit_detected" %}">Simulate A Deposit Being Detected</a>
+            <a href="{% url "users.views.simulate_deposit_detected" %}">Simulate A Deposit Being Detected</a>
           {%endif %}
         </div> -->
 
@@ -55,7 +55,7 @@
               </ul>
           {% else %}
 
-            <form class="form-horizontal" method="post" action="{% url "app.views.deposit_dashboard" %}" >
+            <form class="form-horizontal" method="post" action="{% url "users.views.deposit_dashboard" %}" >
                 {% load crispy_forms_tags %}
                 {{ form|crispy }}
                 {% csrf_token %}

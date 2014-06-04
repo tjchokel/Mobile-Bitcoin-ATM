@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'Merchant'
         db.create_table(u'merchants_merchant', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.CashUser'], null=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.AuthUser'], null=True, blank=True)),
             ('business_name', self.gf('django.db.models.fields.CharField')(max_length=256, db_index=True)),
             ('address_1', self.gf('django.db.models.fields.CharField')(max_length=256, db_index=True)),
             ('address_2', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=256, null=True, blank=True)),
@@ -66,11 +66,11 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'phone_num': ('phonenumber_field.modelfields.PhoneNumberField', [], {'db_index': 'True', 'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'state': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '30', 'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.CashUser']", 'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.AuthUser']", 'null': 'True', 'blank': 'True'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'})
         },
-        u'users.cashuser': {
-            'Meta': {'object_name': 'CashUser'},
+        u'users.authuser': {
+            'Meta': {'object_name': 'AuthUser'},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),

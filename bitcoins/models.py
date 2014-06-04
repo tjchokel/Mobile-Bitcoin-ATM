@@ -133,7 +133,7 @@ class BTCTransaction(models.Model):
         basis_points_markup = merchant.basis_points_markup
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc - markup_fee
-        fiat_total = fiat_btc * (self.satoshis / float(SATOSHIS_PER_BTC))
+        fiat_total = fiat_btc * satoshis_to_btc(self.satoshis)
         return math.floor(fiat_total*100)/100
 
     def get_status(self):

@@ -31,7 +31,7 @@
       <h3>Thanks for you deposit! 
       Please enter your personal Info.
       </h3>
-      <form class="form-horizontal" method="post" action="{% url "app.views.customer_dashboard" %}" >
+      <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}
           {{ form|crispy }}
           {% csrf_token %}

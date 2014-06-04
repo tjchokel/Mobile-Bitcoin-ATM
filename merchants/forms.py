@@ -20,15 +20,8 @@ class AccountRegistrationForm(forms.Form):
     password = forms.CharField(
         required=True,
         label='Secure Password',
-        widget=forms.PasswordInput(attrs={'id': 'pass1'}),
-        min_length=6,
-    )
-
-    password_confirm = forms.CharField(
-        required=True,
-        label='Confirm Password',
-        widget=forms.PasswordInput(attrs={'id': 'pass2'}),
-        min_length=6
+        widget=forms.PasswordInput(),
+        min_length=7,
     )
 
 

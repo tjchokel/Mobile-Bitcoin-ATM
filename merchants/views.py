@@ -4,16 +4,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import escape
-
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
+
+from merchants.models import Merchant
+from users.models import AuthUser
+
 from merchants.forms import (LoginForm, AccountRegistrationForm,
         BitcoinRegistrationForm, PersonalInfoRegistrationForm,
         MerchantInfoRegistrationForm)
-from merchants.models import AppUser, Merchant
 from bitcash.decorators import confirm_registration_eligible
-
-from services.models import WebHook
 
 
 @render_to('login.html')
@@ -27,7 +27,7 @@ def login_request(request):
             username = form.cleaned_data['username'].lower()
             password = form.cleaned_data['password']
 
-            user_found = get_object_or_None(AppUser, username=username)
+            user_found = get_object_or_None(AuthUser, username=username)
             if user_found:
                 user = authenticate(username=username, password=password)
                 if user:
@@ -84,20 +84,22 @@ def register_account(request):
         form = AccountRegistrationForm(data=request.POST)
         if form.is_valid():
 
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            # other fields
-            email = form.cleaned_data['email']
-
-            # create user
-            user = AppUser.objects.create_user(
-                    email,
-                    email=email,
-                    password=password
-                    )
-            user_to_login = authenticate(username=email, password=password)
-            login(request, user_to_login)
-            return HttpResponseRedirect(reverse_lazy('register_personal'))
+            if get_object_or_None(AuthUser, username=email):
+                msg = 'That email is already taken, did you mean to login?'
+                messages.warning(request, msg, extra_tags='safe')
+            else:
+                # create user
+                user = AuthUser.objects.create_user(
+                        email,
+                        email=email,
+                        password=password
+                        )
+                user_to_login = authenticate(username=email, password=password)
+                login(request, user_to_login)
+                return HttpResponseRedirect(reverse_lazy('register_personal'))
     return {'form': form, 'user': user}
 
 
@@ -176,7 +178,7 @@ def register_merchant(request):
                 merchant.save()
             else:
                 merchant = Merchant.objects.create(
-                    app_user=user,
+                    user=user,
                     business_name=business_name,
                     address_1=address_1,
                     address_2=address_2,

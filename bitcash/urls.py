@@ -8,9 +8,9 @@ urlpatterns = patterns('',
     url(r'^login/$', 'merchants.views.login_request', name='login_request'),
     url(r'^logout/?$', 'merchants.views.logout_request', name='logout'),
 
-    url(r'^app/$', 'app.views.customer_dashboard', name='customer_dashboard'),
-    url(r'^simulate-deposit/$', 'app.views.simulate_deposit_detected', name='simulate_deposit_detected'),
-    url(r'^deposit/$', 'app.views.deposit_dashboard', name='deposit_dashboard'),
+    url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
+    url(r'^simulate-deposit/$', 'users.views.simulate_deposit_detected', name='simulate_deposit_detected'),
+    url(r'^deposit/$', 'users.views.deposit_dashboard', name='deposit_dashboard'),
 
     url(r'^register/$', 'merchants.views.register_router',
         name='register_router'),

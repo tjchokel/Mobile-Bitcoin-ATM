@@ -1,15 +1,15 @@
 from django.contrib import admin
 
-from users.models import CashUser
+from users.models import AuthUser
 
 
-class CashUserAdmin(admin.ModelAdmin):
+class AuthUserAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'first_name', 'last_name', 'email',
         'phone_num', 'username'
     )
 
     class Meta:
-        model = CashUser
+        model = AuthUser
 
-admin.site.register(CashUser, CashUserAdmin)
+admin.site.register(AuthUser, AuthUserAdmin)

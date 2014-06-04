@@ -8,7 +8,7 @@ from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
 from merchants.models import Merchant
-from users.models import CashUser
+from users.models import AuthUser
 
 from merchants.forms import (LoginForm, AccountRegistrationForm,
         BitcoinRegistrationForm, PersonalInfoRegistrationForm,
@@ -27,7 +27,7 @@ def login_request(request):
             username = form.cleaned_data['username'].lower()
             password = form.cleaned_data['password']
 
-            user_found = get_object_or_None(CashUser, username=username)
+            user_found = get_object_or_None(AuthUser, username=username)
             if user_found:
                 user = authenticate(username=username, password=password)
                 if user:
@@ -87,12 +87,12 @@ def register_account(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            if get_object_or_None(CashUser, username=email):
+            if get_object_or_None(AuthUser, username=email):
                 msg = 'That email is already taken, did you mean to login?'
                 messages.warning(request, msg, extra_tags='safe')
             else:
                 # create user
-                user = CashUser.objects.create_user(
+                user = AuthUser.objects.create_user(
                         email,
                         email=email,
                         password=password

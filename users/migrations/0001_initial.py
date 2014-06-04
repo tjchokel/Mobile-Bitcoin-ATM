@@ -8,8 +8,8 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'CashUser'
-        db.create_table(u'users_cashuser', (
+        # Adding model 'AuthUser'
+        db.create_table(u'users_authuser', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
             ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
@@ -25,36 +25,36 @@ class Migration(SchemaMigration):
             ('phone_num', self.gf('phonenumber_field.modelfields.PhoneNumberField')(db_index=True, max_length=128, null=True, blank=True)),
             ('phone_num_country', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=256, null=True, blank=True)),
         ))
-        db.send_create_signal(u'users', ['CashUser'])
+        db.send_create_signal(u'users', ['AuthUser'])
 
-        # Adding M2M table for field groups on 'CashUser'
-        m2m_table_name = db.shorten_name(u'users_cashuser_groups')
+        # Adding M2M table for field groups on 'AuthUser'
+        m2m_table_name = db.shorten_name(u'users_authuser_groups')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('cashuser', models.ForeignKey(orm[u'users.cashuser'], null=False)),
+            ('authuser', models.ForeignKey(orm[u'users.authuser'], null=False)),
             ('group', models.ForeignKey(orm[u'auth.group'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['cashuser_id', 'group_id'])
+        db.create_unique(m2m_table_name, ['authuser_id', 'group_id'])
 
-        # Adding M2M table for field user_permissions on 'CashUser'
-        m2m_table_name = db.shorten_name(u'users_cashuser_user_permissions')
+        # Adding M2M table for field user_permissions on 'AuthUser'
+        m2m_table_name = db.shorten_name(u'users_authuser_user_permissions')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('cashuser', models.ForeignKey(orm[u'users.cashuser'], null=False)),
+            ('authuser', models.ForeignKey(orm[u'users.authuser'], null=False)),
             ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['cashuser_id', 'permission_id'])
+        db.create_unique(m2m_table_name, ['authuser_id', 'permission_id'])
 
 
     def backwards(self, orm):
-        # Deleting model 'CashUser'
-        db.delete_table(u'users_cashuser')
+        # Deleting model 'AuthUser'
+        db.delete_table(u'users_authuser')
 
-        # Removing M2M table for field groups on 'CashUser'
-        db.delete_table(db.shorten_name(u'users_cashuser_groups'))
+        # Removing M2M table for field groups on 'AuthUser'
+        db.delete_table(db.shorten_name(u'users_authuser_groups'))
 
-        # Removing M2M table for field user_permissions on 'CashUser'
-        db.delete_table(db.shorten_name(u'users_cashuser_user_permissions'))
+        # Removing M2M table for field user_permissions on 'AuthUser'
+        db.delete_table(db.shorten_name(u'users_authuser_user_permissions'))
 
 
     models = {
@@ -78,8 +78,8 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'users.cashuser': {
-            'Meta': {'object_name': 'CashUser'},
+        u'users.authuser': {
+            'Meta': {'object_name': 'AuthUser'},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),

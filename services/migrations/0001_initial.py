@@ -80,7 +80,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'phone_num': ('phonenumber_field.modelfields.PhoneNumberField', [], {'db_index': 'True', 'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'state': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '30', 'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.CashUser']", 'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.AuthUser']", 'null': 'True', 'blank': 'True'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'})
         },
         u'services.apicall': {
@@ -108,8 +108,8 @@ class Migration(SchemaMigration):
             'user_agent': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '1024', 'blank': 'True'}),
             'uses_https': ('django.db.models.fields.BooleanField', [], {'db_index': 'True'})
         },
-        u'users.cashuser': {
-            'Meta': {'object_name': 'CashUser'},
+        u'users.authuser': {
+            'Meta': {'object_name': 'AuthUser'},
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),

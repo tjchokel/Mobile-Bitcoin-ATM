@@ -77,7 +77,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request'
 )
 
-AUTH_USER_MODEL = 'users.CashUser'
+AUTH_USER_MODEL = 'users.AuthUser'
 
 
 PRODUCTION_DOMAIN = 'www.coinsafe.com'

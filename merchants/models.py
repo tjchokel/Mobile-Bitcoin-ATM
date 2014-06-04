@@ -8,7 +8,7 @@ from countries import BFHCurrenciesList
 
 
 class Merchant(models.Model):
-    user = models.ForeignKey('users.CashUser', blank=True, null=True)
+    user = models.ForeignKey('users.AuthUser', blank=True, null=True)
     business_name = models.CharField(
         max_length=256, blank=False, null=False, db_index=True)
     address_1 = models.CharField(

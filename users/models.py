@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-class CashUser(AbstractUser):
+class AuthUser(AbstractUser):
     """
     Right now this is just merchants but it can support cashiers, shoppers,
     owners with multiple merchants and all types of things in the future.

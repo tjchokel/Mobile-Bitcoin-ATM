@@ -29,6 +29,8 @@ urlpatterns = patterns('',
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
     url(r'^get-deposit-address/$', 'bitcoins.views.get_next_deposit_address', name='get_next_deposit_address'),
+    url(r'^confirm-deposit/$', 'bitcoins.views.confirm_deposit', name='confirm_deposit'),
+    url(r'^complete-deposit/$', 'bitcoins.views.complete_deposit', name='complete_deposit'),
 
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),
     url(r'^blockcypher-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_blockcypher_webhook', name='process_blockcypher_webhook'),

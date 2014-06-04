@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if current_address.user_confirmed_deposit_at %}
+    {% if transaction.irreversible_by %}
+      {% include "customer_dash/_dash_deposit_complete.html" %}
+    {% else %}
+      {% include "customer_dash/_dash_deposit_confirm.html" %}
+    {% endif %}
+  {% else %}
+    {% include "customer_dash/_dash_no_deposit_confirm.html" %}
+  {% endif %}
+{% endblock content %}
+
+{% block extra_js %}
+  <script>
+    var TIMEOUT_LENGTH = 15000;
+      var LAST_POLL_TIME = new Date();
+      function poll_new_deposits() {
+          $.ajax({
+              type: 'get',
+              url: '/poll-deposits/',
+              success: function (data) {
+                LAST_POLL_TIME = new Date();
+                var time_since = timeSince(LAST_POLL_TIME);
+                $('#last-polled').html(time_since);
+                var deposit = data['deposit']
+                if(! deposit){
+                  setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+                }else{
+                  location.reload(true);
+                }
+                
+              },
+              error: function(data) {
+                setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+              }
+          });
+      }
+
+      function poll_new_confirmations() {
+          $.ajax({
+              type: 'get',
+              url: '/poll-deposits/',
+              success: function (data) {
+                LAST_POLL_TIME = new Date();
+                var time_since = timeSince(LAST_POLL_TIME);
+                $('#last-polled').html(time_since);
+                var deposit = data['deposit'];
+                if(! deposit){
+                  setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+                }else if(! deposit['irreversible_by']){
+                  conf_num_text = deposit['conf_num'] + ' confirmations'
+                  $('#txn-status').html(conf_num_text);
+                  setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+                }else{
+                  location.reload(true);
+                }
+                
+              },
+              error: function(data) {
+                setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+              }
+          });
+      }
+
+      function set_time_since() {
+        console.log(LAST_POLL_TIME);
+        var time_since = timeSince(LAST_POLL_TIME);
+        console.log(time_since);
+        var time_since_text = "Last updated: "+time_since+" ago";
+        $('#last-polled').html(time_since_text);
+        {% if not transaction %}
+          setTimeout(set_time_since,1000);
+        {% else %}
+          {% if not transaction.irreversible_by %}
+            setTimeout(set_time_since,1000);
+          {% endif %}
+        {% endif %}
+      }
+
+    function getNextAddress() {
+      $("#show-address-button").toggleClass("active");
+      $.ajax({
+          type: 'get',
+          url: '/get-deposit-address/',
+          success: function (data) {
+            $("#show-address-button").toggleClass("active");
+            var address = data['address'];
+            if (address){
+              $('#deposit-address-modal').modal();
+              $("#current_address").html(address);
+              var src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=300x300";
+              $("#qr_code").attr("src", src);
+
+              $("#qr_code_span").slideDown(500);
+            }
+          },
+          error: function(data) {
+            $("#show-address-button").toggleClass("active");
+            console.log('FAILURE');
+          }
+        });
+    }
+
+    function confirmAddressDeposit() {
+      $.ajax({
+          type: 'get',
+          url: '/confirm-deposit/',
+          success: function (data) {
+            location.reload(true);
+          },
+          error: function(data) {
+            console.log('FAILURE');
+          }
+        });
+    }
+
+    function getBtcPrice() {
+      $("#fiat-amt-loader").toggleClass("show hidden");
+      $.ajax({
+        type: 'get',
+        url: '/get-bitcoin-price/',
+        success: function (data) {
+          $("#fiat-amt-loader").toggleClass("show hidden");
+          var amount = data['amount']+"/BTC ("+data['markup']+"% markup)"
+          // $("#fiat-amt").toggleClass("show hidden");
+          $("#fiat-amt").text(amount);
+        },
+        error: function(data) {
+          $("#fiat-amt-loader").toggleClass("show hidden");
+        }
+      });
+
+    }
+  
+    function completeTransaction() {
+      $("#complete-transaction-button").toggleClass("active");
+      $.ajax({
+          type: 'get',
+          url: '/complete-deposit/',
+          success: function (data) {
+            $("#complete-transaction-button").toggleClass("active");
+            location.reload(true);
+          },
+          error: function(data) {
+            $("#complete-transaction-button").toggleClass("active");
+            console.log('FAILURE');
+          }
+        });
+
+    }
+
+    $(document).ready(function(){
+      {% if current_address.user_confirmed_deposit_at %}
+
+        {% if not transaction %}
+            setTimeout(
+            function() 
+            {
+              poll_new_deposits();
+            }, 15000);
+
+            setTimeout(
+            function() 
+            {
+              set_time_since();
+            }, 1000);
+
+          {% else %}
+            {% if not transaction.irreversible_by %}
+              setTimeout(
+              function() 
+              {
+                poll_new_confirmations();
+              }, 15000);
+
+              setTimeout(
+              function() 
+              {
+                set_time_since();
+              }, 1000);
+          {% endif %}
+        {% endif %}
+
+      {% else %}
+        getBtcPrice();
+        // setTimeout(
+        //   function() 
+        //   {
+        //     getBtcPrice();
+        //   }, 15000);
+
+      {% endif %}
+        // setTimeout(
+        //   function() 
+        //   {
+        //     poll_deposits();
+        //   }, 5000);
+    });    
+  </script>
+{% endblock %}

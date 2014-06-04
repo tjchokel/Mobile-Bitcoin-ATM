@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="page-header">
+      <h1 class="pull-left">{{merchant.business_name}}</h1>
+      <h3 class="pull-right" id="last-polled" style="color: #72a53b; float:right;">
+        Last Updated: Now
+        </h3>
+      <div class="clearfix"></div>
+  </div>
+  <div class="row">
+      <div class="col-sm-12">
+      {% if shopper %}
+        <h3>
+          The deposit of {{transaction.format_mbtc_amount}} mbtc made by {{shopper.name}} is now complete.
+          You owe {{shopper.name}} {{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}.
+        </h3>
+      {% else %}
+        <h3>
+          The deposit of {{transaction.format_mbtc_amount}} mbtc is now complete.
+          You owe the customer {{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}.
+        </h3>
+      {% endif %}
+      <span style="margin-left: auto; margin-right: auto; display: block;">
+        <a class="btn btn-primary has-spinner" id="complete-transaction-button" onclick="completeTransaction();">
+          <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+          I Have Paid The Customer
+        </a>
+      </span>
+      
+    </div>
+  </div>
+</div>

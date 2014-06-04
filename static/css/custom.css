@@ -1169,6 +1169,9 @@ table.get-started td {
 table.get-started i.fa {
     font-size: 1.5em;
 }
+table {
+    font-size: 20px;
+}
 
 /* ===== Pagination ===== */
 

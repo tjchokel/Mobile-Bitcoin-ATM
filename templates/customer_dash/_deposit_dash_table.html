@@ -1,0 +1,35 @@
+<table class="table table-condensed" style="border-collapse:collapse;">
+  <thead>
+    <tr>
+      <th></th>
+      {% if transaction %}
+        <th>Amount ({{transaction.currency_code_when_created}})</th>
+      {% else %}
+        <th>Amount ({{merchant.currency_code}})</th>
+      {% endif %}
+      <th>Amount (mbtc)</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if transaction %}
+      <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
+        <td>
+          <i class="fa fa-plus-square-o text-blue" style="font-size: 18px;cursor: pointer;">
+          </i>
+        </td>
+        <td>{{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}</td>
+        <td>{{transaction.format_mbtc_amount}} mbtc</td>
+        <td class="tx-status-{{transaction.id}}" id="txn-status">{{transaction.get_status}}</td>
+      </tr>
+        <!-- {% include "app/_transaction_row.html" %} -->
+    {% else %}
+      <tr>
+        <td colspan="5" style="text-align: center;">
+          Transaction not yet detected.
+        </td>
+      </tr>
+    {% endif %}
+  </tbody>
+</table>

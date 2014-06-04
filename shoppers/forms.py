@@ -4,7 +4,7 @@ from django.forms import extras
 
 class ShopperInformationForm(forms.Form):
     name = forms.CharField(
-        required=False,
+        required=True,
         label='Name',
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
         min_length=2,

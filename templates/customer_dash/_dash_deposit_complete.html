@@ -6,26 +6,32 @@
         </h3>
       <div class="clearfix"></div>
   </div>
-  <div class="row">
+  <span id='predeposit' style="text-align: center; margin-top: 50px;">
+    <div class="row">
       <div class="col-sm-12">
       {% if shopper %}
-        <h3>
-          The deposit of {{transaction.format_mbtc_amount}} mbtc made by {{shopper.name}} is now complete.
-          You owe {{shopper.name}} {{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}.
-        </h3>
+        <p class="lead text-center">
+          <i class="fa fa-check-circle" style="color: #81D685;"></i>
+          The deposit of <b>{{transaction.format_mbtc_amount}} mbtc</b> made by {{shopper.name}} is now complete.
+          You owe {{shopper.name}} <b>{{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}</b>.
+        </p>
       {% else %}
-        <h3>
-          The deposit of {{transaction.format_mbtc_amount}} mbtc is now complete.
-          You owe the customer {{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}.
-        </h3>
+        <p class="lead text-center">
+          <i class="fa fa-check-circle" style="color: #81D685;"></i>
+          The deposit of <b>{{transaction.format_mbtc_amount}} mbtc</b> is now complete.
+          You owe the customer <b>{{transaction.get_currency_symbol}}{{transaction.fiat_ammount}}</b>.
+        </p>
       {% endif %}
-      <span style="margin-left: auto; margin-right: auto; display: block;">
-        <a class="btn btn-primary has-spinner" id="complete-transaction-button" onclick="completeTransaction();">
-          <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-          I Have Paid The Customer
-        </a>
-      </span>
+      </div>
+      <div class="row">
+        <span style="margin-left: auto; margin-right: auto; display: block;">
+          <a class="btn btn-primary btn-lg has-spinner" id="complete-transaction-button" onclick="completeTransaction();">
+            <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+            I Have Paid The Customer
+          </a>
+        </span>
+      </div>
       
     </div>
-  </div>
+  </span>
 </div>

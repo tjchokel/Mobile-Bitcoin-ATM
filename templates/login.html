@@ -13,9 +13,12 @@
               <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
             </div>
         </form>
+        <br />
+
+        <h3>
+          To create a new account, please <a href="{% url "merchants.views.register_account" %}">click here</a>.
+        </h3>
 
         <hr>
-            <a href="/register-account" class="btn btn-primary btn-lg">Or Sign Up</a>
-        </hr>
     </div>
 {% endblock content %}

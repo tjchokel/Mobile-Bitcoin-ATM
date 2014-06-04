@@ -9,14 +9,14 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
-            <h3>1. Deposit to this address: 
-            </h3>
-            <h3 id="current_address" class="text-center text-green">{{vault.get_current_address.b58_address}}</h3>
+            <p class="lead text-center">1. Deposit to this address: 
+            </p>
+            <p class="lead text-center text-green" id="current_address"></p>
 
               <div id="qr_code_span" style="display:none;">
                 <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
 
-                <h3>2. After depositing, click the following button: </h3>
+                <p class="lead text-center">2. After depositing, click the following button: </p>
                 <a class="btn btn-primary btn-lg" onClick="confirmAddressDeposit();" style="margin-left: auto; margin-right: auto; display: block;">Confirm My Deposit</a>
               </div>
             </span>

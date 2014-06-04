@@ -24,12 +24,12 @@ def login_request(request):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             # Log in user
-            username = form.cleaned_data['username'].lower()
+            email = form.cleaned_data['email'].lower()
             password = form.cleaned_data['password']
 
-            user_found = get_object_or_None(AuthUser, username=username)
+            user_found = get_object_or_None(AuthUser, username=email)
             if user_found:
-                user = authenticate(username=username, password=password)
+                user = authenticate(username=email, password=password)
                 if user:
                     login(request, user)
 
@@ -42,10 +42,10 @@ def login_request(request):
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     msg = "Sorry, that's not the right password for "
-                    msg += '<b>%s</b>.' % escape(username)
+                    msg += '<b>%s</b>.' % escape(email)
                     messages.warning(request, msg, extra_tags='safe')
             else:
-                msg = "No account found for <b>%s</b>." % escape(username)
+                msg = "No account found for <b>%s</b>." % escape(email)
                 messages.warning(request, msg, extra_tags='safe')
 
     return {'form': form}

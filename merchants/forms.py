@@ -5,7 +5,7 @@ from bitcoins.BCAddressField import is_valid_btc_address
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(required=True)
+    email = forms.CharField(required=True)
     password = forms.CharField(required=True,
         widget=forms.PasswordInput(render_value=False))
 
@@ -19,7 +19,7 @@ class AccountRegistrationForm(forms.Form):
 
     password = forms.CharField(
         required=True,
-        label='Secure Password',
+        label='Password',
         widget=forms.PasswordInput(),
         min_length=7,
     )

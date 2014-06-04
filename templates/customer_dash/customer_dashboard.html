@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
   {% if current_address.user_confirmed_deposit_at %}
-    {% if transaction.irreversible_by %}
+    {% if current_address.all_transactions_complete %}
       {% include "customer_dash/_dash_deposit_complete.html" %}
     {% else %}
       {% include "customer_dash/_dash_deposit_confirm.html" %}
@@ -16,6 +16,7 @@
     var TIMEOUT_LENGTH = 15000;
       var LAST_POLL_TIME = new Date();
       function poll_new_deposits() {
+        console.log('poll_new_deposits');
           $.ajax({
               type: 'get',
               url: '/poll-deposits/',
@@ -23,8 +24,8 @@
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
                 $('#last-polled').html(time_since);
-                var deposit = data['deposit']
-                if(! deposit){
+                var deposits = data['deposits']['txns']
+                if(deposits.length == 0){
                   setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
                 }else{
                   location.reload(true);
@@ -45,11 +46,14 @@
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
                 $('#last-polled').html(time_since);
-                var deposit = data['deposit'];
-                if(! deposit){
+                
+                var deposits = data['deposits']
+                if(deposits['txns'].length == 0){
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
-                }else if(! deposit['irreversible_by']){
-                  conf_num_text = deposit['conf_num'] + ' confirmations'
+                }else if(! deposits['all_complete']){
+                  // TODO: FIX
+                  conf_num = deposits['txns'][0]['forwarding_conf_num']
+                  conf_num_text = conf_num + ' confirmations'
                   $('#txn-status').html(conf_num_text);
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else{
@@ -64,9 +68,7 @@
       }
 
       function set_time_since() {
-        console.log(LAST_POLL_TIME);
         var time_since = timeSince(LAST_POLL_TIME);
-        console.log(time_since);
         var time_since_text = "Last updated: "+time_since+" ago";
         $('#last-polled').html(time_since_text);
         {% if not transaction %}
@@ -89,7 +91,7 @@
             if (address){
               $('#deposit-address-modal').modal();
               $("#current_address").html(address);
-              var src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=300x300";
+              var src="https://chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=275x275";
               $("#qr_code").attr("src", src);
 
               $("#qr_code_span").slideDown(500);
@@ -166,8 +168,9 @@
 
     $(document).ready(function(){
       {% if current_address.user_confirmed_deposit_at %}
-
+        console.log('current_address.user_confirmed_deposit_at');
         {% if not transaction %}
+          console.log('not transaction');
             setTimeout(
             function() 
             {
@@ -181,7 +184,7 @@
             }, 1000);
 
           {% else %}
-            {% if not transaction.irreversible_by %}
+            {% if not current_address.all_transactions_complete %}
               setTimeout(
               function() 
               {

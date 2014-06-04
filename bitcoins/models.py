@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.timezone import now
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
@@ -123,6 +124,11 @@ class ForwardingAddress(models.Model):
     def get_current_shopper(self):
         return self.shopper_set.last()
 
+    def all_transactions_complete(self):
+        transactions = self.btctransaction_set.all()
+        incomplete_transactions = self.btctransaction_set.filter(met_minimum_confirmation_at__isnull=True)
+        return (len(transactions) > 0 and len(incomplete_transactions) == 0)
+
 
 class BTCTransaction(models.Model):
     """
@@ -135,7 +141,7 @@ class BTCTransaction(models.Model):
     txn_hash = models.CharField(max_length=64, blank=True, null=True,
             unique=True, db_index=True)
     satoshis = models.BigIntegerField(blank=True, null=True, db_index=True)
-    conf_num = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True)
+    conf_num = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=0)
     irreversible_by = models.DateTimeField(blank=True, null=True, db_index=True)
     suspected_double_spend_at = models.DateTimeField(blank=True, null=True, db_index=True)
     # We will always have this when they use a forwarding address:
@@ -149,6 +155,7 @@ class BTCTransaction(models.Model):
     # TODO: add shopper here?
     fiat_ammount = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
     currency_code_when_created = models.CharField(max_length=5, blank=True, null=True, db_index=True)
+    met_minimum_confirmation_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.txn_hash)
@@ -162,6 +169,8 @@ class BTCTransaction(models.Model):
             # This only happens if the objects isn't in the database yet.
             self.currency_code_when_created = self.merchant.currency_code
             self.fiat_ammount = self.calculate_fiat_amount()
+        if self.meets_minimum_confirmations():
+            self.met_minimum_confirmation_at = now()
         super(BTCTransaction, self).save(*args, **kwargs)
 
     def calculate_fiat_amount(self):
@@ -178,7 +187,7 @@ class BTCTransaction(models.Model):
         return math.floor(fiat_total*100)/100
 
     def get_status(self):
-        if self.irreversible_by:
+        if self.met_minimum_confirmation_at:
             return 'Complete'
         else:
             return '%s confirmations' % (self.conf_num)
@@ -191,3 +200,9 @@ class BTCTransaction(models.Model):
 
     def format_mbtc_amount(self):
         return format_mbtc(satoshis_to_mbtc(self.satoshis))
+
+    def meets_minimum_confirmations(self):
+        merchant = self.merchant
+        minimum_confirmations = merchant.minimum_confirmations
+        confirmations = self.conf_num
+        return (confirmations and confirmations >= minimum_confirmations)

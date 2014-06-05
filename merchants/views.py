@@ -156,8 +156,9 @@ def merchant_profile(request):
     transactions = merchant.get_all_transactions()
     initial = {}
     initial['full_name'] = user.full_name
+    initial['email'] = user.email
     initial['phone_num'] = user.phone_num
-    initial['phone_country'] = user.phone_num_country
+    initial['phone_country'] = user.phone_num_country or merchant.country
 
     initial['business_name'] = merchant.business_name
     initial['address_1'] = merchant.address_1
@@ -168,21 +169,15 @@ def merchant_profile(request):
     initial['country'] = merchant.country
     initial['phone_num'] = merchant.phone_num
 
-    initial['currency_code'] = merchant.currency_code
-    initial['btc_address'] = merchant.get_destination_address()
-    initial['btc_markup'] = merchant.basis_points_markup / 100.0
-
     personal_form = PersonalInfoRegistrationForm(initial=initial)
     merchant_form = MerchantInfoRegistrationForm(initial=initial)
-    bitcoin_form = BitcoinRegistrationForm(initial=initial)
     return {
         'user': user,
         'merchant': merchant,
         'transactions': transactions,
         'on_admin_page': True,
         'personal_form': personal_form,
-        'merchant_form': merchant_form,
-        'bitcoin_form': bitcoin_form
+        'merchant_form': merchant_form
     }
 
 
@@ -208,12 +203,15 @@ def edit_personal_info(request):
         if form.is_valid():
 
             full_name = form.cleaned_data['full_name']
+            email = form.cleaned_data['email']
             phone_num = form.cleaned_data['phone_num']
             phone_country = form.cleaned_data['phone_country']
 
             user.full_name = full_name
             user.phone_num = phone_num
             user.phone_num_country = phone_country
+            user.email = email
+            user.username = email
             user.save()
             msg = 'Your profile has been updated'
             messages.success(request, msg, extra_tags='safe')

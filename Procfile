@@ -1,1 +1,1 @@
-web: gunicorn bitcash.wsgi
+web: newrelic-admin run-program gunicorn bitcash.wsgi

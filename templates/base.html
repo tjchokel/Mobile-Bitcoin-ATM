@@ -42,7 +42,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">CoinSafe</a>
+          <a class="navbar-brand" href="{% url "customer_dashboard" %}">CoinSafe</a>
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -62,14 +62,37 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right ">
-            {% if user.is_authenticated %}
+            <!-- {% if user.is_authenticated %}
               <li class="navbar-nav navbar-right"><a href="{% url "logout" %}">Sign Out</a></li>
             {% else %}
               <li class="navbar-nav navbar-right"><a href="{% url "login_request" %}">Sign In</a></li>
+            {% endif %} -->
+            {% if user.is_authenticated %}
+              <li id="profile-menu" class="dropdown">
+                <a href="{% url "customer_dashboard" %}" class="dropdown-toggle" data-toggle="dropdown">{{user.email}} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li class="account">
+                    <p>{{user.full_name}}</p>
+                    <p><a href="{% url "customer_dashboard" %}">Dashboard</a> | <a href="{% url "logout" %}">Sign out</a></p>
+                    <div class="clearfix"></div>
+                  </li>
+                </ul>
+              </li>
+            {% else %}
+              <li id="sign-in2" class="show"><a href="{% url "login_request" %}">Sign In</a></li>
+              <!-- Sign Up Button -->
+              <li>
+                <a href="{% url "register_merchant" %}"><!-- <i class="fa" id="search-icon"> --></i>Sign Up</a>
+              </li>
             {% endif %}
           </ul>
         </div><!--/.nav-collapse -->
       </div>
+
+
+
+
+
       <div class="page-tip">
         <div class="container">
           <div class="row">

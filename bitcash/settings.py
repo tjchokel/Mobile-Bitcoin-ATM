@@ -80,8 +80,8 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 AUTH_USER_MODEL = 'users.AuthUser'
 
 
-PRODUCTION_DOMAIN = 'www.coinsafe.com'
-STAGING_DOMAIN = 'coinsafestaging.herokuapp.com'
+PRODUCTION_DOMAIN = 'www.closecoin.com'
+STAGING_DOMAIN = 'bitcashstaging.herokuapp.com'
 SITE_DOMAIN = os.getenv('SITE_DOMAIN', PRODUCTION_DOMAIN)
 
 # SSL and BASE_URL settings for Production, Staging and Local:

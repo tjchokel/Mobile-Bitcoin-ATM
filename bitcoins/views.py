@@ -116,14 +116,14 @@ def process_bci_webhook(request, random_id):
         else:
             if input_btc_transaction.satoshis != satoshis:
                 send_admin_email(
-                        subject='Blockcypher BTC Discrepency for %s' % input_txn_hash,
+                        subject='BTC Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s satoshis and BCI says %s' % (
                             input_btc_transaction.satoshis, satoshis),
                         recipient_list=['monitoring@coinsafe.com', ],
                         )
-            if input_btc_transaction.conf_num < num_confirmations:
+            if input_btc_transaction.conf_num < num_confirmations and num_confirmations <= 6:
                 send_admin_email(
-                        subject='Blockcypher Confirmations Discrepency for %s' % input_txn_hash,
+                        subject='Confirmations Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s confs and BCI says %s' % (
                             input_btc_transaction.conf_num, num_confirmations),
                         recipient_list=['monitoring@coinsafe.com', ],

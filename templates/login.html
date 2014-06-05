@@ -16,9 +16,18 @@
         <br />
 
         <h3>
-          To create a new account, please <a href="{% url "merchants.views.register_account" %}">click here</a>.
+          To create a new account, please <a href="{% url "merchants.views.register_merchant" %}">click here</a>.
         </h3>
 
-        <hr>
+        <hr />
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#id_email').focus()
+    });
+  </script>
+
+{% endblock %}

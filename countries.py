@@ -10,10 +10,10 @@ BIGGEST_COUNTRIES = (
     ('CAN', 'Canada'),
     ('BRA', 'Brazil'),
     ('RUS', 'Russian Federation'),
-    )
+)
 
 ALL_COUNTRIES = (
-    ('AFG', 'Afghanistan'), 
+    ('AFG', 'Afghanistan'),
     ('ALA', 'Aland Islands'),
     ('ALB', 'Albania'),
     ('DZA', 'Algeria'),
@@ -413,10 +413,6 @@ BFHCurrenciesList = {
   'ZMW':{'label':'Zambian kwacha','currencyflag':'','symbol':'ZK'},
   'ZWL':{'label':'Zimbabwean dollar','currencyflag':'','symbol':'$'}
 }
-
-
-
-
 
 # Put main countries first in dropdown (duplicates)
 COUNTRY_DROPDOWN = [('', '--- Most Common Countries:'), ]

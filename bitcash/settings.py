@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 
-# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 # Another good one: https://github.com/etianen/django-herokuapp#validating-your-heroku-setup
 
@@ -20,7 +19,6 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
 if os.getenv('DEBUG') == 'True':
     DEBUG = True
 else:
@@ -77,11 +75,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request'
 )
 
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
 AUTH_USER_MODEL = 'users.AuthUser'
 
 
-PRODUCTION_DOMAIN = 'www.coinsafe.com'
-STAGING_DOMAIN = 'coinsafestaging.herokuapp.com'
+PRODUCTION_DOMAIN = 'www.closecoin.com'
+STAGING_DOMAIN = 'bitcashstaging.herokuapp.com'
 SITE_DOMAIN = os.getenv('SITE_DOMAIN', PRODUCTION_DOMAIN)
 
 # SSL and BASE_URL settings for Production, Staging and Local:
@@ -90,7 +90,7 @@ if SITE_DOMAIN in (PRODUCTION_DOMAIN, STAGING_DOMAIN):
     # SSL stuff:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    MIDDLEWARE_CLASSES += ('bitvault.middleware.SSLMiddleware',)
+    MIDDLEWARE_CLASSES += ('bitcash.middleware.SSLMiddleware',)
 else:
     BASE_URL = 'http://%s' % SITE_DOMAIN
 

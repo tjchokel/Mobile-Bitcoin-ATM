@@ -9,6 +9,13 @@ from shoppers.models import Shopper
 from shoppers.forms import ShopperInformationForm
 
 
+@render_to('index.html')
+def home(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+    return {}
+
+
 @login_required
 @render_to('customer_dash/customer_dashboard.html')
 def customer_dashboard(request):

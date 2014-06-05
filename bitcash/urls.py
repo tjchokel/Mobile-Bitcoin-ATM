@@ -4,6 +4,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    # homepage
+    url(r'^$', 'users.views.home', name='home'),
 
     url(r'^login/$', 'merchants.views.login_request', name='login_request'),
     url(r'^logout/?$', 'merchants.views.logout_request', name='logout'),

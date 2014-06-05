@@ -1,13 +1,91 @@
 from django import forms
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 from countries import COUNTRY_DROPDOWN
-import phonenumbers
+
 from bitcoins.BCAddressField import is_valid_btc_address
+
+import phonenumbers
 
 
 class LoginForm(forms.Form):
     email = forms.CharField(required=True)
     password = forms.CharField(required=True,
         widget=forms.PasswordInput(render_value=False))
+
+
+class MerchantRegistrationForm(forms.Form):
+    email = forms.EmailField(
+        label='Email Address',
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
+    )
+    password = forms.CharField(
+        required=True,
+        label='Secure Password',
+        widget=forms.PasswordInput(),
+        min_length=7,
+    )
+    full_name = forms.CharField(
+        label='Your Name',
+        required=True,
+        min_length=2,
+        max_length=256,
+        widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
+    )
+    business_name = forms.CharField(
+        label='Business Name',
+        required=True,
+        min_length=5,
+        max_length=256,
+        widget=forms.TextInput(attrs={'placeholder': "Mel's Diner"}),
+    )
+    country = forms.ChoiceField(
+        required=True,
+        choices=COUNTRY_DROPDOWN,
+        widget=forms.Select(attrs={'data-country': 'USA'}),
+    )
+    currency_code = forms.CharField(
+        label='The Currency You Want to Trade',
+        min_length=3,
+        max_length=30,
+        required=True,
+        widget=forms.Select(attrs={'class': 'bfh-currencies', 'data-currency': 'EUR'}),
+    )
+    btc_address = forms.CharField(
+            label='Bitcoin Deposit Address',
+            required=True,
+            min_length=27,
+            max_length=34,
+            help_text='The wallet address where you want your bitcoin sent',
+            widget=forms.TextInput(),
+    )
+    btc_markup = forms.DecimalField(
+            label='Percent Markup',
+            required=True,
+            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+            help_text='The percent you want to charge above the market rate.',
+            widget=forms.TextInput(),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(MerchantRegistrationForm, self).__init__(*args, **kwargs)
+        if kwargs and 'initial' in kwargs and 'currency_code' in kwargs['initial']:
+            self.fields['currency_code'].widget.attrs['data-currency'] = kwargs['initial']['currency_code']
+
+    def clean_btc_address(self):
+        address = self.cleaned_data.get('btc_address')
+        if not is_valid_btc_address(address):
+            msg = "Sorry, that's not a valid bitcoin address"
+            raise forms.ValidationError(msg)
+        return address
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if len(email) > 30:
+            msg = 'Sorry, your email address must be less than 31 characters'
+            raise forms.ValidationError(msg)
+        return email
 
 
 class AccountRegistrationForm(forms.Form):
@@ -103,7 +181,7 @@ class BitcoinRegistrationForm(forms.Form):
     )
 
     btc_address = forms.CharField(
-            label='Bitcoin Address',
+            label='Bitcoin Deposit Address',
             required=True,
             min_length=27,
             max_length=34,
@@ -114,6 +192,7 @@ class BitcoinRegistrationForm(forms.Form):
     btc_markup = forms.DecimalField(
             label='Percent Markup',
             required=True,
+            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
             help_text='The percent you want to charge above the market rate.',
             widget=forms.TextInput(),
     )

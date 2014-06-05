@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -8,15 +8,11 @@ from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
 from merchants.models import Merchant
-from users.models import AuthUser
+from users.models import AuthUser, LoggedLogin
 
-from merchants.forms import (LoginForm, AccountRegistrationForm,
+from merchants.forms import (LoginForm, MerchantRegistrationForm,
         BitcoinRegistrationForm, PersonalInfoRegistrationForm,
         MerchantInfoRegistrationForm)
-
-from bitcash.decorators import confirm_registration_eligible
-
-from countries import COUNTRY3_TO_CURRENCY3
 
 
 @render_to('login.html')
@@ -37,6 +33,7 @@ def login_request(request):
                     login(request, user)
 
                     # Log the login
+                    LoggedLogin.record_login(request)
 
                     msg = 'Welcome <b>%s</b>,' % user.username
                     msg += ' you are now logged in.'
@@ -67,33 +64,23 @@ def logout_request(request):
     return HttpResponseRedirect(reverse_lazy('login_request'))
 
 
-def register_router(request):
+@render_to('merchants/register.html')
+def register_merchant(request):
     user = request.user
-    if not user.is_authenticated():  # if user is not authenticated
-        return HttpResponsePermanentRedirect(reverse_lazy('register_account'))
-
-    # onboarding steps
-    reg_step = user.get_registration_step()
-    if reg_step == 0:
-        return HttpResponseRedirect(reverse_lazy('register_personal'))
-    elif reg_step == 1:
-        return HttpResponseRedirect(reverse_lazy('register_merchant'))
-    elif reg_step == 2:
-        return HttpResponseRedirect(reverse_lazy('register_bitcoins'))
-
-    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
-
-
-@render_to('merchants/register_account.html')
-def register_account(request):
-    user = request.user
-    form = AccountRegistrationForm()
+    form = MerchantRegistrationForm(initial={'btc_markup': 2.0})
+    form_valid = True  # used to decide whether we run the JS or not
     if request.method == 'POST':
-        form = AccountRegistrationForm(data=request.POST)
+        form = MerchantRegistrationForm(data=request.POST)
         if form.is_valid():
 
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            full_name = form.cleaned_data['full_name']
+            business_name = form.cleaned_data['business_name']
+            country = form.cleaned_data['country']
+            currency_code = form.cleaned_data['currency_code']
+            btc_address = form.cleaned_data['btc_address']
+            basis_points_markup = form.cleaned_data['btc_markup']
 
             existing_user = get_object_or_None(AuthUser, username=email)
             if existing_user:
@@ -106,117 +93,38 @@ def register_account(request):
                 user = AuthUser.objects.create_user(
                         email,
                         email=email,
-                        password=password
+                        password=password,
+                        full_name=full_name,
                         )
+
+                # Create merchant
+                merchant = Merchant.objects.create(
+                        user=user,
+                        business_name=business_name,
+                        country=country,
+                        currency_code=currency_code,
+                        basis_points_markup=basis_points_markup * 100,
+                        )
+                merchant.set_destination_address(btc_address)
+
+                # login user
                 user_to_login = authenticate(username=email, password=password)
                 login(request, user_to_login)
-                return HttpResponseRedirect(reverse_lazy('register_personal'))
-    return {'form': form, 'user': user}
 
+                # Log the login
+                LoggedLogin.record_login(request)
 
-@login_required
-@confirm_registration_eligible
-@render_to('merchants/register_personal.html')
-def register_personal(request):
-    user = request.user
-    initial = {}
-    if user.full_name:
-        initial['full_name'] = user.full_name
-        initial['phone_num'] = user.phone_num
-        initial['phone_country'] = user.phone_num_country
-    else:
-        initial['phone_country'] = 'USA'
-    form = PersonalInfoRegistrationForm(initial=initial)
-    if request.method == 'POST':
-        form = PersonalInfoRegistrationForm(data=request.POST)
-        if form.is_valid():
+                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
-            full_name = form.cleaned_data['full_name']
-            phone_num = form.cleaned_data['phone_num']
-            phone_country = form.cleaned_data['phone_country']
+        else:
+            form_valid = False
 
-            user.full_name = full_name
-            user.phone_num = phone_num
-            user.phone_num_country = phone_country
-            user.save()
+    elif request.method == 'GET':
+        email = request.GET.get('e')
+        if email:
+            form = MerchantRegistrationForm(initial={'email': email})
 
-            return HttpResponseRedirect(reverse_lazy('register_merchant'))
-    return {'form': form, 'user': user}
-
-
-@login_required
-@confirm_registration_eligible
-@render_to('merchants/register_business_info.html')
-def register_merchant(request):
-    user = request.user
-    merchant = user.get_merchant()
-    initial = {}
-    if merchant:
-        initial['country'] = merchant.country
-        initial['business_name'] = merchant.business_name
-        initial['city'] = merchant.city
-        initial['state'] = merchant.state
-        initial['country'] = merchant.country
-    else:
-        initial['country'] = user.phone_num_country
-    form = MerchantInfoRegistrationForm(initial=initial)
-    if request.method == 'POST':
-        form = MerchantInfoRegistrationForm(data=request.POST)
-        if form.is_valid():
-
-            business_name = form.cleaned_data['business_name']
-            city = form.cleaned_data['city']
-            state = form.cleaned_data['state']
-            country = form.cleaned_data['country']
-
-            if merchant:
-                merchant.business_name = business_name
-                merchant.city = city
-                merchant.state = state
-                merchant.country = country
-                merchant.save()
-            else:
-                merchant = Merchant.objects.create(
-                    user=user,
-                    business_name=business_name,
-                    city=city,
-                    state=state,
-                    country=country,
-                )
-
-            return HttpResponseRedirect(reverse_lazy('register_bitcoins'))
-    return {'form': form, 'user': user}
-
-
-@login_required
-# @confirm_registration_eligible
-@render_to('merchants/register_bitcoins.html')
-def register_bitcoins(request):
-    user = request.user
-    merchant = user.get_merchant()
-    initial = {}
-    initial['btc_markup'] = merchant.basis_points_markup / 100.0
-    if merchant.currency_code:
-        initial['currency_code'] = merchant.currency_code
-    else:
-        initial['currency_code'] = COUNTRY3_TO_CURRENCY3.get(merchant.country)
-    if merchant.has_destination_address():
-        initial['btc_address'] = merchant.get_destination_address()
-    form = BitcoinRegistrationForm(initial=initial)
-    if request.method == 'POST':
-        form = BitcoinRegistrationForm(data=request.POST)
-        if form.is_valid():
-            currency_code = form.cleaned_data['currency_code']
-            btc_address = form.cleaned_data['btc_address']
-            basis_points_markup = form.cleaned_data['btc_markup']
-            merchant.currency_code = currency_code
-            merchant.basis_points_markup = basis_points_markup * 100
-            merchant.save()
-
-            merchant.set_destination_address(btc_address)
-
-            return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
-    return {'form': form, 'user': user}
+    return {'form': form, 'user': user, 'form_valid': form_valid}
 
 
 @login_required

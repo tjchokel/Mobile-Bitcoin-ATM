@@ -24,11 +24,11 @@ def customer_dashboard(request):
         return HttpResponseRedirect(reverse_lazy('register_router'))
     merchant = user.get_merchant()
     current_address = None
-    transaction = None
+    transactions = None
     shopper = None
     if request.session.get('forwarding_address'):
         current_address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
-        transaction = current_address.get_transaction()
+        transactions = current_address.get_all_transactions()
         shopper = current_address.get_current_shopper()
         form = ShopperInformationForm()
         if request.method == 'POST':
@@ -53,13 +53,13 @@ def customer_dashboard(request):
             'merchant': merchant,
             'shopper': shopper,
             'current_address': current_address,
-            'transaction': transaction}
+            'transactions': transactions}
 
     return {
         'user': user,
         'merchant': merchant,
         'current_address': current_address,
-        'transaction': transaction,
+        'transactions': transactions,
         'shopper': shopper,
     }
 

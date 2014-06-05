@@ -85,3 +85,20 @@ class Merchant(models.Model):
             return BFHCurrenciesList[self.currency_code]['label']
         else:
             return 'United States dollar'
+
+    def get_registration_percent_complete(self):
+        percent_complete = 60
+        if self.address_1:
+            percent_complete += 10
+        if self.city:
+            percent_complete += 10
+        if self.state:
+            percent_complete += 10
+        if self.phone_num:
+            percent_complete += 10
+        # if self.hours:
+        #     percent_complete += 10
+        return percent_complete
+
+    def finished_registration(self):
+        return self.get_registration_percent_complete() == 100

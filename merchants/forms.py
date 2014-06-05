@@ -112,9 +112,15 @@ class PersonalInfoRegistrationForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
     )
 
+    email = forms.EmailField(
+        label='Email Address',
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
+    )
+
     phone_country = forms.ChoiceField(
             label='Phone Country',
-            required=True,
+            required=False,
             choices=COUNTRY_DROPDOWN,
             widget=forms.Select(attrs={'data-country': 'USA'}),
     )
@@ -122,7 +128,7 @@ class PersonalInfoRegistrationForm(forms.Form):
     phone_num = forms.CharField(
             label='Cell Phone Number in International Format',
             min_length=10,
-            required=True,
+            required=False,
             widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_phone_country'}),
     )
 
@@ -150,23 +156,55 @@ class MerchantInfoRegistrationForm(forms.Form):
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': "Mel's Diner"}),
     )
+
+    address_1 = forms.CharField(
+        label='Address Line 1',
+        min_length=5,
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Street address, P.O. box, company name, c/o '}),
+    )
+
+    address_2 = forms.CharField(
+        label='Address Line 2',
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Apartment, suite, unit, building, floor, etc.'}),
+    )
+
+    city = forms.CharField(
+        label='City',
+        required=False,
+        max_length=30,
+        widget=forms.TextInput(),
+    )
+    state = forms.CharField(
+        label='State/Province/Region',
+        required=False,
+        min_length=2,
+        max_length=30,
+        widget=forms.TextInput(),
+    )
+
+    zip_code = forms.CharField(
+        label='Zip Code',
+        min_length=3,
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(),
+    )
     country = forms.ChoiceField(
         required=True,
         choices=COUNTRY_DROPDOWN,
         widget=forms.Select(attrs={'data-country': 'USA'}),
     )
-    state = forms.CharField(
-        label='State/Province/Region',
-        required=True,
-        min_length=2,
+
+    phone_num = forms.CharField(
+        label='Phone Number',
+        min_length=3,
         max_length=30,
-        widget=forms.TextInput(),
-    )
-    city = forms.CharField(
-        label='City',
-        required=True,
-        max_length=30,
-        widget=forms.TextInput(),
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_country'}),
     )
 
 

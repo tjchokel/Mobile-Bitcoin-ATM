@@ -169,8 +169,8 @@
     $(document).ready(function(){
       {% if current_address.user_confirmed_deposit_at %}
         console.log('current_address.user_confirmed_deposit_at');
-        {% if not transaction %}
-          console.log('not transaction');
+        {% if not transactions %}
+          console.log('not transactions');
             setTimeout(
             function() 
             {

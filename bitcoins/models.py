@@ -7,7 +7,7 @@ from bitcoins.blockcypher import set_blockcypher_webhook
 from countries import BFHCurrenciesList
 
 from bitcash.settings import BASE_URL
-
+from emails.trigger import send_and_log
 from utils import uri_to_url, simple_random_generator, SATOSHIS_PER_BTC, satoshis_to_mbtc, format_mbtc
 
 import json
@@ -129,6 +129,22 @@ class ForwardingAddress(models.Model):
         incomplete_transactions = self.btctransaction_set.filter(met_minimum_confirmation_at__isnull=True)
         return (len(transactions) > 0 and len(incomplete_transactions) == 0)
 
+    def get_mbtc_transactions_total(self):
+        transactions = self.get_all_transactions()
+        total = 0
+        for txn in transactions:
+            if txn.met_minimum_confirmation_at:
+                total += txn.satoshis
+        return format_mbtc(satoshis_to_mbtc(total))
+
+    def get_fiat_transactions_total(self):
+        transactions = self.get_all_transactions()
+        total = 0
+        for txn in transactions:
+            if txn.met_minimum_confirmation_at:
+                total += txn.fiat_ammount
+        return total
+
 
 class BTCTransaction(models.Model):
     """
@@ -167,11 +183,35 @@ class BTCTransaction(models.Model):
         """
         if not self.pk:
             # This only happens if the objects isn't in the database yet.
-            self.currency_code_when_created = self.merchant.currency_code
-            self.fiat_ammount = self.calculate_fiat_amount()
-        if self.meets_minimum_confirmations():
-            self.met_minimum_confirmation_at = now()
+            self.handle_new_transaction()
+        if not self.met_minimum_confirmation_at and self.meets_minimum_confirmations():
+            self.mark_transaction_confirmed()
         super(BTCTransaction, self).save(*args, **kwargs)
+
+    def mark_transaction_confirmed(self):
+        self.met_minimum_confirmation_at = now()
+        self.save()
+        shopper = self.get_shopper()
+        if shopper:
+            return send_and_log(
+                    to_email=shopper.email,
+                    subject="Your Transaction Is Complete",
+                    body_template='transaction_confirmed.html',
+                    body_context={'salutation': shopper.name},
+                  )
+
+    def handle_new_transaction(self):
+        self.currency_code_when_created = self.merchant.currency_code
+        self.fiat_ammount = self.calculate_fiat_amount()
+        self.save()
+        shopper = self.get_shopper()
+        if shopper:
+            return send_and_log(
+                    to_email=shopper.email,
+                    subject="Your Transaction Has Been Detected",
+                    body_template='transaction_detected.html',
+                    body_context={'salutation': shopper.name},
+                  )
 
     def calculate_fiat_amount(self):
         merchant = self.merchant
@@ -187,6 +227,8 @@ class BTCTransaction(models.Model):
         return math.floor(fiat_total*100)/100
 
     def get_status(self):
+        if self.forwarding_address.retired_at:
+            return 'Paid Out'
         if self.met_minimum_confirmation_at:
             return 'Complete'
         else:
@@ -206,3 +248,6 @@ class BTCTransaction(models.Model):
         minimum_confirmations = merchant.minimum_confirmations
         confirmations = self.conf_num
         return (confirmations and confirmations >= minimum_confirmations)
+
+    def get_shopper(self):
+        return self.forwarding_address.get_current_shopper()

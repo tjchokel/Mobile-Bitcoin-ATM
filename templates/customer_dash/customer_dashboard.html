@@ -16,7 +16,6 @@
     var TIMEOUT_LENGTH = 15000;
       var LAST_POLL_TIME = new Date();
       function poll_new_deposits() {
-        console.log('poll_new_deposits');
           $.ajax({
               type: 'get',
               url: '/poll-deposits/',
@@ -168,9 +167,7 @@
 
     $(document).ready(function(){
       {% if current_address.user_confirmed_deposit_at %}
-        console.log('current_address.user_confirmed_deposit_at');
         {% if not transactions %}
-          console.log('not transactions');
             setTimeout(
             function() 
             {

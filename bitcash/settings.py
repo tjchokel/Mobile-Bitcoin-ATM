@@ -90,7 +90,7 @@ if SITE_DOMAIN in (PRODUCTION_DOMAIN, STAGING_DOMAIN):
     # SSL stuff:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    MIDDLEWARE_CLASSES += ('bitvault.middleware.SSLMiddleware',)
+    MIDDLEWARE_CLASSES += ('bitcash.middleware.SSLMiddleware',)
 else:
     BASE_URL = 'http://%s' % SITE_DOMAIN
 

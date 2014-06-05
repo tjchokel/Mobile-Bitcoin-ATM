@@ -1,0 +1,24 @@
+{% extends "base_email.html" %}
+
+{% block content %}
+Your deposit of <b>{{ btc_ammount_formatted }}</b> has been confirmed!
+<br /><br />
+
+The exchange rate when you sent the bitcoin was <b>{{ exchange_rate_in_local_currency }} {{ local_currency3 }} / BTC </b> for a total value of <b>{{ local_currency_ammount }} {{ local_currency3 }}</b>.
+<br /><br />
+
+{{ merchant_name }} should now give you your <b>{{ local_currency_ammount }} {{ local_currency3 }}</b>.
+Please remind them politely if they haven't already noticed that the transaction is complete.
+<br /><br />
+
+You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see your transaction on the bitcoin blockchain here</a>.
+<br /><br />
+
+When you have some time, here's a link for you to review {{ merchant_name }}:<br />
+<a href="{{ BASE_URL }}{{ review_link }}">{{ BASE_URL }}{{ review_link }}</a><br />
+
+{% endblock content %}
+
+{% block ps %}
+P.S. If you'd like to know more about how bitcoin transactions work, please check out <a href="http://www.coindesk.com/information/how-do-bitcoin-transactions-work/">CoinDesk's Article on Bitcoin Transactions</a>.
+{% endblock ps %}

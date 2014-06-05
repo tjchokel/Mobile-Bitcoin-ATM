@@ -19,7 +19,6 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
 if os.getenv('DEBUG') == 'True':
     DEBUG = True
 else:
@@ -75,6 +74,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request'
 )
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 AUTH_USER_MODEL = 'users.AuthUser'
 

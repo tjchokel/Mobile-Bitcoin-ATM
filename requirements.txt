@@ -9,6 +9,7 @@ django-phonenumber-field==0.5
 gnureadline==6.3.3
 ipython==2.1.0
 jsonfield==0.9.20
+newrelic==2.20.0.17
 phonenumbers==6.1.0
 psycopg2==2.5.3
 pycrypto==2.6.1

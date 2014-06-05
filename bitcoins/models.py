@@ -4,11 +4,15 @@ from django.utils.timezone import now
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
+
+from emails.trigger import send_and_log
+
 from countries import BFHCurrenciesList
 
 from bitcash.settings import BASE_URL
 
-from utils import uri_to_url, simple_random_generator, SATOSHIS_PER_BTC, satoshis_to_mbtc, format_mbtc
+from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
+        satoshis_to_mbtc, format_mbtc)
 
 import json
 import requests
@@ -206,3 +210,37 @@ class BTCTransaction(models.Model):
         minimum_confirmations = merchant.minimum_confirmations
         confirmations = self.conf_num
         return (confirmations and confirmations >= minimum_confirmations)
+
+    # FIXME: FILL THESE IN WITH REAL INFO
+    def send_shopper_newtx_email(self):
+        body_context = {}
+        return send_and_log(
+                subject='____ Sent',
+                body_template='shopper_newtx.html',
+                to_merchant=None,
+                to_email='foo',
+                to_name='bar',
+                body_context=body_context,
+                )
+
+    def send_shopper_txconfirmed_email(self):
+        body_context = {}
+        return send_and_log(
+                subject='____ Confirmed',
+                body_template='shopper_txconfirmed.html',
+                to_merchant=None,
+                to_email='foo',
+                to_name='bar',
+                body_context=body_context,
+                )
+
+    def send_merchant_txconfirmed_email(self):
+        body_context = {}
+        return send_and_log(
+                subject='____ Recieved',
+                body_template='merchant_txconfirmed.html',
+                to_merchant=None,
+                to_email='foo',
+                to_name='bar',
+                body_context=body_context,
+                )

@@ -33,6 +33,9 @@ class AuthUser(AbstractUser):
                 step += 1
         return step
 
+    def finished_registration(self):
+        return self.get_registration_step() == 3
+
 
 class LoggedLogin(models.Model):
     login_at = models.DateTimeField(auto_now_add=True, db_index=True)

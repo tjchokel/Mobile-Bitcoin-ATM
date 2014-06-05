@@ -97,7 +97,7 @@ class AccountRegistrationForm(forms.Form):
 
     password = forms.CharField(
         required=True,
-        label='Secure Password',
+        label='Password',
         widget=forms.PasswordInput(),
         min_length=7,
     )

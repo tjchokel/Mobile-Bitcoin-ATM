@@ -1,6 +1,6 @@
 <div class="container">
   <div class="page-header">
-      <h1 class="pull-left">{{merchant.business_name}}</h1>
+      <h3 class="pull-left">{{merchant.business_name}}</h3>
       <h3 class="pull-right" id="last-polled" style="color: #72a53b; float:right;">
         Last Updated: Now
         </h3>
@@ -10,7 +10,7 @@
   <div class="row">
     {% if shopper %}
       {% if not transaction %}
-        <h3>Waiting on deposit to <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="#">(Cancel)</a></h3>
+        <h3>Waiting on deposit to <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">(Cancel)</a></h3>
       {% endif %}
       <div class="col-sm-12">
       <br/>
@@ -28,9 +28,9 @@
           <li>Email: {{shopper.email}}</li>
         </ul>
     {% else %}
-      <h3>Thanks for you deposit! 
+      <p class="lead text-center">Thanks for you deposit! 
       Please enter your personal Info.
-      </h3>
+      </p>
       <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}
           {{ form|crispy }}

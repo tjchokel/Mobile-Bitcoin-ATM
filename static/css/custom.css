@@ -26,10 +26,13 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 .wrapper {
     min-height: 100%;
     height: auto !important; /* for older versions of IE */
-    height: 100%;
-    margin-bottom: -347px; /* showing the footer */
+    height: 100% !important;
+    margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+    
     padding-top: 50px;
-    padding-bottom: 347px; /* avoiding content go behind the footer */
+    /*margin-bottom: -150px;*/ /* showing the footer */
+    /*padding-top: 50px;*/
+    /*padding-bottom: 150px;*/ /* avoiding content go behind the footer */
 }
 
 /* ===== Navbar ===== */
@@ -952,11 +955,15 @@ a.carousel-arrow-next {
 /* ===== Footer ===== */
 
 footer {
-    margin-top: 60px;
-    padding: 20px 0;
+    /*margin-top: 60px;
+    padding: 20px 0;*/
+    height: 155px;
     background: #3E7A8C;
     color: white;
     font-weight: 300;
+}
+.push {
+    height: 155px; /* .push must be the same height as .footer */
 }
 footer a {
     color: #81D685;

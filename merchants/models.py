@@ -28,6 +28,7 @@ class Merchant(models.Model):
     currency_code = models.CharField(
         max_length=5, blank=True, null=True, db_index=True)
     basis_points_markup = models.IntegerField(blank=True, null=True, db_index=True, default=100)
+    minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
 
     def get_new_forwarding_address(self):
         return self.get_destination_address().create_new_forwarding_address()
@@ -46,7 +47,7 @@ class Merchant(models.Model):
         return '%s: %s' % (self.id, self.business_name)
 
     def has_destination_address(self):
-        return bool(self.get_destination_address)
+        return bool(self.get_destination_address())
 
     def set_destination_address(self, dest_address):
         matching_address = self.destinationaddress_set.filter(b58_address=dest_address)

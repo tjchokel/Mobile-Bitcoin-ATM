@@ -10,7 +10,6 @@ urlpatterns = patterns('',
 
     url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
     url(r'^simulate-deposit/$', 'users.views.simulate_deposit_detected', name='simulate_deposit_detected'),
-    url(r'^deposit/$', 'users.views.deposit_dashboard', name='deposit_dashboard'),
 
     url(r'^register/$', 'merchants.views.register_router',
         name='register_router'),
@@ -31,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^get-deposit-address/$', 'bitcoins.views.get_next_deposit_address', name='get_next_deposit_address'),
     url(r'^confirm-deposit/$', 'bitcoins.views.confirm_deposit', name='confirm_deposit'),
     url(r'^complete-deposit/$', 'bitcoins.views.complete_deposit', name='complete_deposit'),
+    url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
 
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),
     url(r'^blockcypher-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_blockcypher_webhook', name='process_blockcypher_webhook'),

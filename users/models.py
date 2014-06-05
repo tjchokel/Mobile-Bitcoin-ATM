@@ -30,3 +30,6 @@ class AuthUser(AbstractUser):
             if merchant.has_destination_address():
                 step += 1
         return step
+
+    def finished_registration(self):
+        return self.get_registration_step() == 3

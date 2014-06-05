@@ -4,6 +4,7 @@ $(document).ajaxComplete(function(e, xhr, settings) {
         var json = $.parseJSON(xhr.responseText);
 
         $.each(json.django_messages, function (i, item) {
+            console.log('ADDMESSAGE1');
             addMessage(item.message, item.extra_tags);
         });
     }
@@ -21,7 +22,6 @@ function addMessage(text, extra_tags) {
     }
 
     var message = $('<div class="'+div_class+'">'+text+'<a class="close" data-dismiss="alert">×</a></div>').hide().fadeIn(500);
-    
     $("#messages").append(message);
     $(".page-tip").slideDown();
 }
@@ -67,3 +67,11 @@ function timeSince(date) {
     }
     return Math.floor(seconds) + " seconds";
 }
+
+$(document).ready(function(){
+    // messages timeout for 10 sec 
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 5000); // <-- time in milliseconds, 1000 =  1 sec
+
+});

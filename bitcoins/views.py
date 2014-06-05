@@ -4,6 +4,7 @@ from annoying.functions import get_object_or_None
 from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse_lazy
+from django.core.serializers.json import DjangoJSONEncoder
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
@@ -20,12 +21,16 @@ def poll_deposits(request):
     txns_grouped = []
 
     forwarding_address = request.session.get('forwarding_address')
+    all_complete = False
     if forwarding_address:
         forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
         if forwarding_obj:
             txns_grouped = forwarding_obj.get_and_group_all_transactions()
+            if forwarding_obj.all_transactions_complete():
+                all_complete = True
 
-    json_response = json.dumps(txns_grouped)
+    json_dict = {'deposits': {'txns': txns_grouped, 'all_complete': all_complete}}
+    json_response = json.dumps(json_dict, cls=DjangoJSONEncoder)
     return HttpResponse(json_response, content_type='application/json')
 
 
@@ -258,10 +263,23 @@ def complete_deposit(request):
     if request.session.get('forwarding_address'):
         address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
         if address and merchant.id == address.merchant.id:
-            transaction = address.get_transaction()
-            if transaction.irreversible_by:
+            if address.all_transactions_complete():
                 address.retired_at = now()
                 address.save()
                 request.session['forwarding_address'] = None
+
+    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
+
+@login_required
+def cancel_address(request):
+    user = request.user
+    merchant = user.get_merchant()
+    if request.session.get('forwarding_address'):
+        address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
+        if address and merchant.id == address.merchant.id:
+            address.retired_at = now()
+            address.save()
+            request.session['forwarding_address'] = None
 
     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))

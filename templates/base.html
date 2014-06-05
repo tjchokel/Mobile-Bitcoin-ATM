@@ -91,7 +91,7 @@
                   {{ message }}
                 {% endif %}
 
-                <a class="close" data-dismiss="alert">×</a>
+                <a class="close" data-dismiss="alert" style="font-size: 24px;">×</a>
                 </div>
               {% endfor %}
 
@@ -100,35 +100,33 @@
         </div>
       </div>
     </div>
-    <div class="wrapper">
     <!-- Begin page content -->
-      {% block content %}{% endblock content %}
-    </div>
+    {% block content %}{% endblock content %}
     <!-- Foooter
     ================== -->
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.finished_registration %}
       
     
-      <div id="footer" style="background: white">
+      <div class="navbar navbar-inverse navbar-fixed-bottom" id="footer" style="background: white">
         <div class="container">
 
           <ul class="nav nav-tabs">
             {% if on_admin_page %}
               <li style="width:50%;">
-                <a href="{% url "customer_dashboard" %}" style="text-align: center;font-size: 24px; border-top-left-radius: 10px;
+                <a href="{% url "customer_dashboard" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
     border-top-right-radius: 10px;">Customers</a>
               </li>
               <li class="active" style="width:50%">
-                <a href="{% url "merchant_settings" %}" style="text-align: center;font-size: 24px; border-top-left-radius: 10px;
+                <a href="{% url "merchant_settings" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
     border-top-right-radius: 10px;">Admin</a>
               </li>
             {% else %}
             <li class="active" style="width:50%;">
-              <a href="#" style="text-align: center;font-size: 24px; border-top-left-radius: 10px;
+              <a href="#" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
     border-top-right-radius: 10px;">Customers</a>
             </li>
             <li style="width:50%">
-              <a href="{% url "merchant_settings" %}" style="text-align: center;font-size: 24px; border-top-left-radius: 10px;
+              <a href="{% url "merchant_settings" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
     border-top-right-radius: 10px;">Admin</a>
             </li>
             {% endif %}

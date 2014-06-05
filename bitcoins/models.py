@@ -190,7 +190,6 @@ class BTCTransaction(models.Model):
 
     def mark_transaction_confirmed(self):
         self.met_minimum_confirmation_at = now()
-        self.save()
         shopper = self.get_shopper()
         if shopper:
             return send_and_log(
@@ -203,7 +202,6 @@ class BTCTransaction(models.Model):
     def handle_new_transaction(self):
         self.currency_code_when_created = self.merchant.currency_code
         self.fiat_ammount = self.calculate_fiat_amount()
-        self.save()
         shopper = self.get_shopper()
         if shopper:
             return send_and_log(

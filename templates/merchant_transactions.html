@@ -27,7 +27,7 @@
           </li>
         </ul>
       </div>
-
+      {% include "merchants/_registration_status_bar.html" %}
   </div>
   <div class="col-sm-8 col-md-9">
 
@@ -35,25 +35,22 @@
           <table class="table table-condensed" style="border-collapse:collapse;">
             <thead>
               <tr>
-                <th></th>
                 <th>Date</th>
-                <th>Amount (btc)</th>
+                <th>Shopper</th>
+                <th>Amount (mbtc)</th>
                 <th>Amount (fiat)</th>
-                <th>Confirmations</th>
+                <th>Status</th>
               </tr>
             </thead>
           <tbody>
             {% if transactions %}
               {% for transaction in transactions %}
                 <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
-                  <td>
-                    <i class="fa fa-plus-square-o text-blue" style="font-size: 18px;cursor: pointer;">
-                    </i>
-                  </td>
                   <td>{{transaction.added_at}}</td>
-                  <td>{{transaction.satoshis}}</td>
-                  <td>{{transaction.fiat_amount}}</td>
-                  <td>{{transaction.conf_num}}</td>
+                  <td>{{transaction.shopper.name}}</td>
+                  <td>{{transaction.format_mbtc_amount}} mbtc</td>
+                  <td>{{transaction.get_currency_symbol}}{{transaction.fiat_amount}}</td>
+                  <td>{{transaction.get_status}}</td>
                   
                 </tr>
               {% endfor %}

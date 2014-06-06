@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'shoppers',
     'services',
     'emails',
+    'phones',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -158,6 +159,10 @@ POSTMARK_API_KEY = os.getenv('POSTMARK_API_KEY')
 assert POSTMARK_API_KEY, 'Must have a Postmark API Key'
 
 EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
+
+PLIVO_AUTH_TOKEN = os.getenv('PLIVO_AUTH_TOKEN')
+PLIVO_AUTH_ID = os.getenv('PLIVO_AUTH_ID')
+assert PLIVO_AUTH_ID, 'Must have plivo API access'
 
 # Keep this at the end
 if DEBUG:

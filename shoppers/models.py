@@ -11,3 +11,16 @@ class Shopper(models.Model):
     email = models.EmailField(blank=True, null=True, db_index=True)
     phone_num = PhoneNumberField(blank=True, null=True, db_index=True)
     btc_address = models.ForeignKey('bitcoins.ForwardingAddress', blank=True, null=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.name)
+
+    def get_notification_methods_formatted(self):
+        if self.email and self.phone_num:
+            return 'email and phone'
+        elif self.email:
+            return 'email'
+        elif self.phone:
+            return 'phone'
+        else:
+            return ''

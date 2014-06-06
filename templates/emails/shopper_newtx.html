@@ -1,12 +1,12 @@
 {% extends "base_email.html" %}
 
 {% block content %}
-Your deposit of <b>{{ btc_ammount_formatted }}</b> was just sent to {{ merchant_name }}.
-Your transaction has been locked in at the current exchange rate of <b>{{ exchange_rate_in_local_currency }} {{ local_currency3 }} / BTC </b> for a total value of <b>{{ local_currency_ammount }} {{ local_currency3 }}</b>.
+You just sent <b>{{ satoshis_formatted }}</b> to {{ merchant_name }}.
+Your transaction has been locked in at the current exchange rate of <b>{{ exchange_rate_formatted }} / BTC </b> for a total value of <b>{{ fiat_amount_formatted }}</b>.
 <br /><br />
 
-It will take approximately <b>{{ time_range_in_minutes }} minutes</b> for this transaction to recieve the neccesary {{ confirmations_needed }} confirmations on the bitcoin blockchain, and then {{ merchant_name }} will give your <b>{{ currency_amount_in_local_currency }}</b>.
-We'll notify you by {{ notification_methods_formatted }} once that happens.
+It will take approximately <b>{{ time_range_in_minutes }} minutes</b> for this transaction to receive the neccesary {{ confirmations_needed }} confirmations on the bitcoin blockchain, and then {{ merchant_name }} will give your <b>{{ fiat_amount_formatted }}</b>.
+{% if notification_methods_formatted %}We'll notify you by {{ notification_methods_formatted }} once that happens.{% endif %}
 You can <a href="https://blockchain.info/tx/{{ tx_hash }}">track the progress of your transaction on the bitcoin blockchain here</a>.
 <br /><br />
 

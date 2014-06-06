@@ -1,13 +1,13 @@
 {% extends "base_email.html" %}
 
 {% block content %}
-Your deposit of <b>{{ btc_ammount_formatted }}</b> has been confirmed!
+Your deposit of <b>{{ satoshis_formatted }}</b> has been confirmed!
 <br /><br />
 
-The exchange rate when you sent the bitcoin was <b>{{ exchange_rate_in_local_currency }} {{ local_currency3 }} / BTC </b> for a total value of <b>{{ local_currency_ammount }} {{ local_currency3 }}</b>.
+The exchange rate when you sent the bitcoin was <b>{{ exchange_rate_formatted }} / BTC </b> for a total value of <b>{{ fiat_amount_formatted }}</b>.
 <br /><br />
 
-{{ merchant_name }} should now give you your <b>{{ local_currency_ammount }} {{ local_currency3 }}</b>.
+{{ merchant_name }} should now give you your <b>{{ fiat_amount_formatted }}</b>.
 Please remind them politely if they haven't already noticed that the transaction is complete.
 <br /><br />
 

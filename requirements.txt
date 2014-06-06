@@ -13,6 +13,7 @@ ipython==2.1.0
 jsonfield==0.9.20
 newrelic==2.20.0.17
 phonenumbers==6.1.0
+plivo==0.9.6
 psycopg2==2.5.3
 pycrypto==2.6.1
 pystache==0.5.4

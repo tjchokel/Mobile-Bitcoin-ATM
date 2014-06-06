@@ -165,6 +165,39 @@ PLIVO_AUTH_TOKEN = os.getenv('PLIVO_AUTH_TOKEN')
 PLIVO_AUTH_ID = os.getenv('PLIVO_AUTH_ID')
 assert PLIVO_AUTH_ID, 'Must have plivo API access'
 
+
+# https://github.com/etianen/django-herokuapp#outputting-logs-to-heroku-logplex
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            # mail_admins intentionally disabled
+            # was causing request.META (with API credentials!) to be sent via email
+            # re-enable here if Sentry isn't working and you can solve this problem
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+        },
+    },
+}
+
 # Keep this at the end
 if DEBUG:
     print '-' * 75

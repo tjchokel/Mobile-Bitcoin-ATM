@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import extras
 
+from countries import COUNTRY_DROPDOWN
+
 
 class ShopperInformationForm(forms.Form):
     name = forms.CharField(
@@ -16,10 +18,16 @@ class ShopperInformationForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
     )
 
+    phone_country = forms.ChoiceField(
+            label='Phone Country',
+            required=False,
+            choices=COUNTRY_DROPDOWN,
+            widget=forms.Select(attrs={'data-country': 'USA'}),
+    )
+
     phone_num = forms.CharField(
-        label='Phone Number',
-        min_length=3,
-        max_length=30,
-        required=False,
-        widget=forms.TextInput(),
+            label='Cell Phone Number in International Format',
+            min_length=10,
+            required=False,
+            widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_phone_country'}),
     )

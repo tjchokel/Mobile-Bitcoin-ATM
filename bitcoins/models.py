@@ -65,7 +65,7 @@ class ForwardingAddress(models.Model):
     generated_at = models.DateTimeField(auto_now_add=True, db_index=True)
     b58_address = models.CharField(blank=False, null=False, max_length=34,
             db_index=True, unique=True)
-    retired_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    paid_out_at = models.DateTimeField(blank=True, null=True, db_index=True)
     destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
 
     # technically, this is redundant through DestinationAddress
@@ -225,7 +225,7 @@ class BTCTransaction(models.Model):
         return math.floor(fiat_total*100)/100
 
     def get_status(self):
-        if self.forwarding_address.retired_at:
+        if self.forwarding_address.paid_out_at:
             return 'Paid Out'
         if self.met_minimum_confirmation_at:
             return 'Complete'

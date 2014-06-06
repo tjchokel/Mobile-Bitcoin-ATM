@@ -32,7 +32,9 @@ def customer_dashboard(request):
         current_address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
         transactions = current_address.get_all_transactions()
         shopper = current_address.get_current_shopper()
-        form = ShopperInformationForm()
+        initial = {}
+        initial['phone_country'] = merchant.country
+        form = ShopperInformationForm(initial=initial)
         if request.method == 'POST':
             form = ShopperInformationForm(data=request.POST)
             if form.is_valid():

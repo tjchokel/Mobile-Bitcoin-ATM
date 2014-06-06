@@ -24,6 +24,9 @@ function addMessage(text, extra_tags) {
     var message = $('<div class="'+div_class+'">'+text+'<a class="close" data-dismiss="alert">×</a></div>').hide().fadeIn(500);
     $("#messages").append(message);
     $(".page-tip").slideDown();
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 5000);
 }
 
 function csrfSafeMethod(method) {

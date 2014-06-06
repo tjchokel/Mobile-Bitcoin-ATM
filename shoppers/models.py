@@ -10,7 +10,6 @@ class Shopper(models.Model):
         blank=True, null=True, max_length=34, db_index=True)
     email = models.EmailField(blank=True, null=True, db_index=True)
     phone_num = PhoneNumberField(blank=True, null=True, db_index=True)
-    btc_address = models.ForeignKey('bitcoins.ForwardingAddress', blank=True, null=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.name)

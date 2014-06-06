@@ -76,8 +76,9 @@ class ForwardingAddress(models.Model):
     destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
 
     # technically, this is redundant through DestinationAddress
-    # but having it here makes for easier querying
+    # but having it here makes for easier querying (especially before there is a destination address)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
+    shopper = models.ForeignKey('shoppers.Shopper', blank=True, null=True)
     user_confirmed_deposit_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
@@ -112,7 +113,7 @@ class ForwardingAddress(models.Model):
             # add txn to list
             txn_group_list.append(txn_dict)
 
-        fwd_txn_hashes = [x['forwarding_txn_hash'] for x in txn_group_list if x['forwarding_txn_hash']]
+        fwd_txn_hashes = [x['forwarding_txn_hash'] for x in txn_group_list if 'forwarding_txn_hash' in x]
 
         # loop through forwarding txns to get any that might be missing (no destination confirms)
         for fwd_txn in self.btctransaction_set.filter(destination_address=None):
@@ -127,9 +128,6 @@ class ForwardingAddress(models.Model):
                 txn_group_list.append(txn_dict)
 
         return txn_group_list
-
-    def get_current_shopper(self):
-        return self.shopper_set.last()
 
     def all_transactions_complete(self):
         transactions = self.btctransaction_set.all()
@@ -167,15 +165,12 @@ class BTCTransaction(models.Model):
     conf_num = models.PositiveSmallIntegerField(blank=False, null=False, db_index=True)
     irreversible_by = models.DateTimeField(blank=True, null=True, db_index=True)
     suspected_double_spend_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    # We will always have this when they use a forwarding address:
+    # We will always have this when they use a forwarding address (100% of the time until MPKs):
     forwarding_address = models.ForeignKey(ForwardingAddress, blank=True, null=True)
     # We will not have this on the initial deposit to the forwarding address:
     destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
     # We will only have this on a forwarding transaction to the deposit transaction
     input_btc_transaction = models.ForeignKey('self', blank=True, null=True)
-    # This is redundant through Address models, but having it here makes easier queries
-    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
-    shopper = models.ForeignKey('shoppers.Shopper', blank=True, null=True)
     fiat_amount = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
     currency_code_when_created = models.CharField(max_length=5, blank=True, null=True, db_index=True)
     met_minimum_confirmation_at = models.DateTimeField(blank=True, null=True, db_index=True)
@@ -183,28 +178,36 @@ class BTCTransaction(models.Model):
     def __str__(self):
         return '%s: %s' % (self.id, self.txn_hash)
 
+    def get_merchant(self):
+        return self.forwarding_address.merchant
+
+    def get_shopper(self):
+        return self.forwarding_address.shopper
+
     def save(self, *args, **kwargs):
         """
         Set fiat_amount when this object is first created
         http://stackoverflow.com/a/2311499/1754586
         """
-        if not self.pk:
-            # This only happens if the objects isn't in the database yet.
-            self.currency_code_when_created = self.merchant.currency_code
-            self.fiat_amount = self.calculate_fiat_amount()
-            if not self.met_minimum_confirmation_at:
-                self.send_shopper_newtx_email()
-                self.send_shopper_newtx_sms()
-        if not self.met_minimum_confirmation_at and self.meets_minimum_confirmations():
-            self.met_minimum_confirmation_at = now()
-            self.send_merchant_txconfirmed_email()
-            self.send_merchant_txconfirmed_sms()
-            self.send_shopper_txconfirmed_email()
-            self.send_shopper_txconfirmed_sms()
+        if not self.destination_address:
+            # Only do this for blockcypher and not BCI
+            if not self.pk:
+                # This only happens if the objects isn't in the database yet.
+                self.currency_code_when_created = self.get_merchant().currency_code
+                self.fiat_amount = self.calculate_fiat_amount()
+                if not self.met_minimum_confirmation_at:
+                    self.send_shopper_newtx_email()
+                    self.send_shopper_newtx_sms()
+            if not self.met_minimum_confirmation_at and self.meets_minimum_confirmations():
+                self.met_minimum_confirmation_at = now()
+                self.send_merchant_txconfirmed_email()
+                self.send_merchant_txconfirmed_sms()
+                self.send_shopper_txconfirmed_email()
+                self.send_shopper_txconfirmed_sms()
         super(BTCTransaction, self).save(*args, **kwargs)
 
     def calculate_fiat_amount(self):
-        merchant = self.merchant
+        merchant = self.get_merchant()
         currency_code = merchant.currency_code or 'USD'
         url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
         r = requests.get(url)
@@ -217,7 +220,7 @@ class BTCTransaction(models.Model):
         return math.floor(fiat_total*100)/100
 
     def calculate_exchange_rate(self):
-        return format_num_for_printing(satoshis_to_btc(self.satoshis) / self.fiat_amount, 2)
+        return format_num_for_printing(float(self.fiat_amount) / satoshis_to_btc(self.satoshis), 2)
 
     def get_exchange_rate_formatted(self):
         return '%s %s %s' % (
@@ -247,7 +250,7 @@ class BTCTransaction(models.Model):
         return format_satoshis_with_units(self.satoshis)
 
     def meets_minimum_confirmations(self):
-        merchant = self.merchant
+        merchant = self.get_merchant()
         minimum_confirmations = merchant.minimum_confirmations
         confirmations = self.conf_num
         return (confirmations and confirmations >= minimum_confirmations)
@@ -257,15 +260,15 @@ class BTCTransaction(models.Model):
                 self.currency_code_when_created)
 
     def get_time_range_in_minutes(self):
-        additional_confs_needed = self.merchant.minimum_confirmations - self.conf_num
+        additional_confs_needed = self.get_merchant().minimum_confirmations - self.conf_num
         min_time = 10 * additional_confs_needed
         max_time = 20 * additional_confs_needed
         return '%s-%s' % (min_time, max_time)
 
     def send_shopper_newtx_email(self, force=False):
-        shopper = self.shopper
+        shopper = self.get_shopper()
         if shopper and shopper.email:
-            merchant = self.merchant
+            merchant = self.get_merchant()
             satoshis_formatted = self.format_satoshis_amount()
             body_context = {
                     'salutation': shopper.name,
@@ -288,13 +291,13 @@ class BTCTransaction(models.Model):
                     )
 
     def send_shopper_newtx_sms(self):
-        shopper = self.shopper
-        if shopper.phone_num:
+        shopper = self.get_shopper()
+        if shopper and shopper.phone_num:
             msg = 'You just sent %s to %s. '
             msg += 'You will receive %s when this transaction confirms in %s mins.'
             msg = msg % (
                     self.format_satoshis_amount(),
-                    self.merchant.business_name,
+                    self.get_merchant().business_name,
                     self.get_fiat_amount_formatted(),
                     self.get_time_range_in_minutes()
                     )
@@ -306,9 +309,9 @@ class BTCTransaction(models.Model):
                     to_shopper=shopper)
 
     def send_shopper_txconfirmed_email(self):
-        shopper = self.shopper
+        shopper = self.get_shopper()
         if shopper and shopper.email:
-            merchant = self.merchant
+            merchant = self.get_merchant()
             satoshis_formatted = self.format_satoshis_amount()
             body_context = {
                     'salutation': shopper.name,
@@ -329,12 +332,12 @@ class BTCTransaction(models.Model):
                     )
 
     def send_shopper_txconfirmed_sms(self):
-        shopper = self.shopper
-        if shopper.phone_num:
+        shopper = self.get_shopper()
+        if shopper and shopper.phone_num:
             msg = 'The %s you sent to %s has been confirmed. They now owe you %s.'
             msg = msg % (
                     self.format_satoshis_amount(),
-                    self.merchant.business_name,
+                    self.get_merchant().business_name,
                     self.get_fiat_amount_formatted(),
                     )
             return SentSMS.send_and_log(
@@ -345,8 +348,8 @@ class BTCTransaction(models.Model):
                     to_shopper=shopper)
 
     def send_merchant_txconfirmed_email(self):
-        merchant = self.merchant
-        shopper = self.shopper
+        merchant = self.get_merchant()
+        shopper = self.get_shopper()
         satoshis_formatted = self.format_satoshis_amount()
         body_context = {
                 'satoshis_formatted': satoshis_formatted,
@@ -355,23 +358,23 @@ class BTCTransaction(models.Model):
                 'tx_hash': self.txn_hash,
                 }
         subject = '%s Received' % satoshis_formatted
-        if shopper.name:
+        if shopper and shopper.name:
             subject += 'from %s' % shopper.name
             body_context['shopper_name'] = shopper.name
         return send_and_log(
-                subject='%s Received',
+                subject='%s Received' % satoshis_formatted,
                 body_template='merchant_txconfirmed.html',
                 to_merchant=merchant,
-                to_user=merchant.user,
                 body_context=body_context,
                 )
 
     def send_merchant_txconfirmed_sms(self):
-        if self.merchant.phone_num:
+        if self.get_merchant().phone_num:
             # TODO: allow for notification settings
             msg = 'The %s you received from %s has been confirmed. Please pay them %s immediately.'
-            if self.shopper.name:
-                customer_string = self.shopper.name
+            shopper = self.get_shopper()
+            if shopper and shopper.name:
+                customer_string = shopper.name
             else:
                 customer_string = 'the customer'
             msg = msg % (
@@ -385,4 +388,4 @@ class BTCTransaction(models.Model):
                     message=msg,
                     to_user=self.merchant.user,
                     to_merchant=self.merchant,
-                    to_shopper=self.shopper)
+                    to_shopper=shopper)

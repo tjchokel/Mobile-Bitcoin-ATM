@@ -25,14 +25,13 @@ def customer_dashboard(request):
     if not user.finished_registration():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
-    current_address = None
+    forwarding_address_obj = None
     transactions = None
     shopper = None
     forwarding_address = request.session.get('forwarding_address')
     if forwarding_address:
-        current_address = ForwardingAddress.objects.get(b58_address=forwarding_address)
-        transactions = current_address.get_all_transactions()
-        shopper = current_address.get_current_shopper()
+        forwarding_address_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
+        transactions = forwarding_address_obj.get_all_transactions()
         form = ShopperInformationForm()
         if request.method == 'POST':
             form = ShopperInformationForm(data=request.POST)
@@ -47,28 +46,39 @@ def customer_dashboard(request):
                     name=name,
                     email=email,
                     phone_num=phone_num,
-                    btc_address=current_address,
                 )
 
-                # Tie shopper to BTCTransaction model
-                current_tx = current_address.get_transaction()
-                if not current_tx.shopper:
-                    current_tx.shopper = shopper
-                    current_tx.save()
+                forwarding_address_obj.shopper = shopper
+                shopper.save()
 
-                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                # Fetch existing TXs if they exist
+                existing_txns = BTCTransaction.objects.filter(
+                        forwarding_address=forwarding_address_obj,
+                        destination_address__isnull=True)
+
+                # If we have an TX then send a notification to the shopper
+                # They are probably unconfirmed but they may be confirmed by now
+                for existing_txn in existing_txns:
+                    if existing_txn.met_minimum_confirmation_at:
+                        existing_txn.send_shopper_txconfirmed_email()
+                        existing_txn.send_shopper_txconfirmed_sms()
+                    else:
+                        existing_txn.send_shopper_newtx_email()
+                        existing_txn.send_shopper_newtx_sms()
+
+                return HttpResponseRedirect(reverse_lazy('merchant_profile'))
         return {
             'form': form,
             'user': user,
             'merchant': merchant,
             'shopper': shopper,
-            'current_address': current_address,
+            'current_address': forwarding_address_obj,
             'transactions': transactions}
 
     return {
         'user': user,
         'merchant': merchant,
-        'current_address': current_address,
+        'current_address': forwarding_address_obj,
         'transactions': transactions,
         'shopper': shopper,
     }

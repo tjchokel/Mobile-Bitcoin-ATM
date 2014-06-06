@@ -8,7 +8,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
-from bitcoins.models import BTCTransaction, DestinationAddress, ForwardingAddress
+from bitcoins.models import BTCTransaction, ForwardingAddress
 from services.models import WebHook
 
 from emails.internal_msg import send_admin_email
@@ -100,20 +100,16 @@ def process_bci_webhook(request, random_id):
 
         # Lookup forwaring and destination address objects
         forwarding_obj = ForwardingAddress.objects.get(b58_address=input_address)
-        destination_obj = DestinationAddress.objects.get(b58_address=destination_address)
+        destination_obj = forwarding_obj.destination_address
+
+        msg = '%s != %s' % (destination_obj.b58_address, destination_address)
+        assert destination_obj.b58_address == destination_address
 
         # Lookup input_btc_transaction based on input_txn_hash
         input_btc_transaction = get_object_or_None(BTCTransaction, txn_hash=input_txn_hash)
 
         # Run some safety checks and email us of discrepencies (but don't break)
-        if not input_btc_transaction:
-            # Blockcypher failed but blockchain.info has succeeded. Notify us.
-            send_admin_email(
-                    subject='Blockcypher Fail for %s' % input_txn_hash,
-                    message='Check the logs and get to the bottom of it ASAP.',
-                    recipient_list=['monitoring@coinsafe.com', ],
-                    )
-        else:
+        if input_btc_transaction:
             if input_btc_transaction.satoshis != satoshis:
                 send_admin_email(
                         subject='BTC Discrepency for %s' % input_txn_hash,
@@ -144,7 +140,6 @@ def process_bci_webhook(request, random_id):
                 irreversible_by=irreversible_by,
                 forwarding_address=forwarding_obj,
                 destination_address=destination_obj,
-                merchant=destination_obj.merchant,
                 input_btc_transaction=input_btc_transaction,
                 )
 
@@ -227,7 +222,6 @@ def process_blockcypher_webhook(request, random_id):
                     conf_num=confirmations,
                     irreversible_by=irreversible_by,
                     forwarding_address=forwarding_obj,
-                    merchant=forwarding_obj.merchant,
                     )
 
     return HttpResponse("*ok*")

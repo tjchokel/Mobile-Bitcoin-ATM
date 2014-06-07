@@ -123,7 +123,7 @@
         url: '/get-bitcoin-price/',
         success: function (data) {
           $("#fiat-amt-loader").toggleClass("show hidden");
-          var amount = data['amount']+"/BTC ("+data['markup']+"% markup)"
+          var amount = "BTC Price: "+data['amount']+" "+data['currency_code']+" ("+data['markup']+"% markup)"
           // $("#fiat-amt").toggleClass("show hidden");
           $("#fiat-amt").text(amount);
         },

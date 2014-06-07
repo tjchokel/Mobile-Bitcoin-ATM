@@ -48,7 +48,11 @@ def get_bitcoin_price(request):
     fiat_btc = fiat_btc - markup_fee
     fiat_rate_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:20,.2f}'.format(fiat_btc))
     percent_markup = basis_points_markup / 100.00
-    json_response = json.dumps({"amount": fiat_rate_formatted, "markup": percent_markup})
+    json_response = json.dumps({
+                "amount": fiat_rate_formatted,
+                "markup": percent_markup,
+                "currency_code": currency_code,
+                })
     return HttpResponse(json_response, content_type='application/json')
 
 

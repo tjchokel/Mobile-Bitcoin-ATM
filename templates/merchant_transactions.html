@@ -50,8 +50,7 @@
                   <td>{{transaction.shopper.name}}</td>
                   <td>{{transaction.format_mbtc_amount}} mbtc</td>
                   <td>{{transaction.get_currency_symbol}}{{transaction.fiat_amount}}</td>
-                  <td>{{transaction.get_status}}</td>
-                  
+                  <td><a href="https://blockchain.info/address/{{ transaction.forwarding_address.b58_address }}" target="_blank" >{{transaction.get_status}}</a></td>
                 </tr>
               {% endfor %}
             {% else %}

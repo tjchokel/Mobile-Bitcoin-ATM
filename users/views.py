@@ -49,7 +49,7 @@ def customer_dashboard(request):
                 )
 
                 forwarding_address_obj.shopper = shopper
-                shopper.save()
+                forwarding_address_obj.save()
 
                 # Fetch existing TXs if they exist
                 existing_txns = BTCTransaction.objects.filter(

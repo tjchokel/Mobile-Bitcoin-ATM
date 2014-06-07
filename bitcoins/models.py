@@ -223,7 +223,7 @@ class BTCTransaction(models.Model):
         return format_num_for_printing(float(self.fiat_amount) / satoshis_to_btc(self.satoshis), 2)
 
     def get_exchange_rate_formatted(self):
-        return '%s %s %s' % (
+        return '%s%s %s' % (
                 self.get_currency_symbol(),
                 self.calculate_exchange_rate(),
                 self.currency_code_when_created

@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 
 from annoying.decorators import render_to
+from annoying.functions import get_object_or_None
 
 from bitcoins.models import BTCTransaction, ForwardingAddress
 from shoppers.models import Shopper
@@ -25,13 +26,11 @@ def customer_dashboard(request):
     if not user.finished_registration():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
-    forwarding_address_obj = None
-    transactions = None
-    shopper = None
-    forwarding_address = request.session.get('forwarding_address')
-    if forwarding_address:
-        forwarding_address_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
-        transactions = forwarding_address_obj.get_all_transactions()
+    transactions, shopper = None, None
+    forwarding_address_obj = get_object_or_None(ForwardingAddress,
+            b58_address=request.session.get('forwarding_address'))
+    if forwarding_address_obj:
+        transactions = forwarding_address_obj.get_all_forwarding_transactions()
         form = ShopperInformationForm()
         if request.method == 'POST':
             form = ShopperInformationForm(data=request.POST)

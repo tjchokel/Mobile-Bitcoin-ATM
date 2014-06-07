@@ -87,8 +87,8 @@ class ForwardingAddress(models.Model):
     def get_transaction(self):
         return self.btctransaction_set.last()
 
-    def get_all_transactions(self):
-        return self.btctransaction_set.all()
+    def get_all_forwarding_transactions(self):
+        return self.btctransaction_set.filter(destination_address__isnull=True).order_by('-id')
 
     def get_and_group_all_transactions(self):
         " Get forwarding and destination transactions grouped by txn pair "
@@ -130,12 +130,12 @@ class ForwardingAddress(models.Model):
         return txn_group_list
 
     def all_transactions_complete(self):
-        transactions = self.btctransaction_set.all()
-        incomplete_transactions = self.btctransaction_set.filter(met_minimum_confirmation_at__isnull=True)
-        return (len(transactions) > 0 and len(incomplete_transactions) == 0)
+        transactions = self.btctransaction_set.filter(destination_address__isnull=True)
+        incomplete_transactions = transactions.filter(met_minimum_confirmation_at__isnull=True)
+        return (transactions.count() > 0 and incomplete_transactions.count() == 0)
 
     def get_mbtc_transactions_total(self):
-        transactions = self.get_all_transactions()
+        transactions = self.get_all_forwarding_transactions()
         total = 0
         for txn in transactions:
             if txn.met_minimum_confirmation_at:
@@ -143,7 +143,7 @@ class ForwardingAddress(models.Model):
         return format_mbtc(satoshis_to_mbtc(total))
 
     def get_fiat_transactions_total(self):
-        transactions = self.get_all_transactions()
+        transactions = self.get_all_forwarding_transactions()
         total = 0
         for txn in transactions:
             if txn.met_minimum_confirmation_at:

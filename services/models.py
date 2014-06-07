@@ -4,6 +4,8 @@ from jsonfield import JSONField
 
 from utils import get_client_ip
 
+import json
+
 
 class APICall(models.Model):
     """
@@ -71,6 +73,11 @@ class WebHook(models.Model):
 
     @classmethod
     def log_webhook(cls, request, api_name):
+        try:
+            data_from_post = json.loads(request.body)
+        except Exception:
+            # TODO: better edge case handling
+            data_from_post = None
         return WebHook.objects.create(
                 ip_address=get_client_ip(request),
                 user_agent=request.META.get('HTTP_USER_AGENT'),
@@ -79,5 +86,5 @@ class WebHook(models.Model):
                 request_path=request.path,
                 uses_https=request.is_secure(),
                 data_from_get=request.GET,
-                data_from_post=request.POST,
+                data_from_post=data_from_post,
                 )

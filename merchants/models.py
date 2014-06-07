@@ -68,8 +68,11 @@ class Merchant(models.Model):
     def get_all_forwarding_addresses(self):
         return self.forwardingaddress_set.all()
 
-    def get_all_transactions(self):
-        return self.btctransaction_set.all()
+    def get_all_forwarding_transactions(self):
+        txns = []
+        for forwarding_addr in self.forwardingaddress_set.order_by('-id'):
+            txns.extend(forwarding_addr.btctransaction_set.filter(destination_address__isnull=True).order_by('-id'))
+        return txns
 
     def get_percent_markup(self):
         return self.basis_points_markup / 100.00

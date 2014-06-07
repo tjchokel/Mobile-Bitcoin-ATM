@@ -68,6 +68,9 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     Send and log an email
     """
 
+    print '-' * 75
+    print 'send_and_log called...'
+
     #TODO: find a better way to handle the circular dependency
     from emails.models import SentEmail
 
@@ -86,14 +89,14 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     if to_merchant:
         # set to_name and to_email from user if neccesary
         if not to_email:
-            to_email = to_merchant.email
+            to_email = to_merchant.user.email
         if not to_name:
             to_name = to_merchant.business_name
 
         # append ?e=email to all links in email
         html_body = append_qs(
                 html=html_body,
-                qs_dict={'e': to_merchant.email},
+                qs_dict={'e': to_merchant.user.email},
                 link_text=BASE_URL,
                 )
 
@@ -130,5 +133,8 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
 
     # Send email object
     pm.send()
+
+    print 'EMAIL SENT TO', to_email
+    print '-' * 75
 
     return se

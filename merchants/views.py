@@ -153,7 +153,7 @@ def merchant_settings(request):
 def merchant_profile(request):
     user = request.user
     merchant = user.get_merchant()
-    transactions = merchant.get_all_transactions()
+    transactions = merchant.get_all_forwarding_transactions()
     initial = {}
     initial['full_name'] = user.full_name
     initial['email'] = user.email
@@ -186,7 +186,7 @@ def merchant_profile(request):
 def transactions(request):
     user = request.user
     merchant = user.get_merchant()
-    transactions = merchant.get_all_transactions()
+    transactions = merchant.get_all_forwarding_transactions()
     return {
         'user': user,
         'merchant': merchant,

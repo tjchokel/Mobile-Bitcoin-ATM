@@ -13,12 +13,12 @@ class APICall(models.Model):
     """
 
     # api_name choices
-    BCI_RECIEVE_PAYMENTS = 'BRP'
+    BCI_RECEIVE_PAYMENTS = 'BRP'
     BLOCKCYPHER_ADDR_MONITORING = 'BAM'
     BCI_TXN_FROM_HASH = 'BTH'
     BCI_TXN_FROM_ADDR = 'BTA'
     API_NAME_CHOICES = (
-            (BCI_RECIEVE_PAYMENTS, 'blockchain.info recieve payments API'),
+            (BCI_RECEIVE_PAYMENTS, 'blockchain.info receive payments API'),
             (BCI_TXN_FROM_HASH, 'blockchain.info txn data from hash'),
             (BCI_TXN_FROM_ADDR, 'blockchain.info txn data from address'),
             (BLOCKCYPHER_ADDR_MONITORING, 'blockcypher address monitoring'),

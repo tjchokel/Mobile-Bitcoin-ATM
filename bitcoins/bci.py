@@ -12,7 +12,7 @@ from urllib import urlencode
 
 def set_bci_webhook(dest_address, callback_url, merchant=None):
     '''
-    Set a blockchain.info webhook to generate a recieving address that will forward to dest_address
+    Set a blockchain.info webhook to generate a receiving address that will forward to dest_address
 
     Note: the minimum supported transaction size is 0.001 BTC
     https://blockchain.info/api/api_receive
@@ -27,7 +27,7 @@ def set_bci_webhook(dest_address, callback_url, merchant=None):
 
     # Log the API call
     APICall.objects.create(
-            api_name=APICall.BCI_RECIEVE_PAYMENTS,
+            api_name=APICall.BCI_RECEIVE_PAYMENTS,
             url_hit=bci_url,
             response_code=r.status_code,
             post_params=None,

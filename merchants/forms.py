@@ -46,7 +46,7 @@ class MerchantRegistrationForm(forms.Form):
         widget=forms.Select(attrs={'data-country': 'USA'}),
     )
     currency_code = forms.CharField(
-        label='The Currency You Want to Trade',
+        label='The Currency You Want to Trade for BTC',
         min_length=3,
         max_length=30,
         required=True,
@@ -211,7 +211,7 @@ class MerchantInfoRegistrationForm(forms.Form):
 class BitcoinRegistrationForm(forms.Form):
 
     currency_code = forms.CharField(
-        label='The Currency You Want to Trade',
+        label='The Currency You Want to Trade for BTC',
         min_length=3,
         max_length=30,
         required=True,

@@ -41,6 +41,17 @@ def format_mbtc(mbtc):
     return format_num_for_printing(mbtc, 6)
 
 
+def format_satoshis_with_units(satoshis):
+    '''
+    Great function for displaying to user (BTC or mBTC, which makes more sense)
+    Not invertible
+    '''
+    if satoshis >= SATOSHIS_PER_BTC:
+        return '%s BTC' % format_btc(satoshis_to_btc(satoshis))
+    else:
+        return '%s mBTC' % format_mbtc(satoshis_to_mbtc(satoshis))
+
+
 def get_client_ip(request):
     """
     Get IP from a request

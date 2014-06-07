@@ -37,7 +37,7 @@ class BTCTransactionAdmin(admin.ModelAdmin):
         'suspected_double_spend_at',
         'forwarding_address',
         'destination_address',
-        'fiat_ammount',
+        'fiat_amount',
         'currency_code_when_created',
     )
 

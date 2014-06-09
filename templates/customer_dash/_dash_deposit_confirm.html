@@ -43,8 +43,10 @@
       </div>
 
     {% else %}
-      <p class="lead text-center">Thanks for you deposit! 
-      Please enter your personal Info.
+      <p class="lead text-center">
+        Thanks for you deposit!
+        Please enter a name for your order.
+        If you leave your email and/or phone we'll send you a receipt.
       </p>
       <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}

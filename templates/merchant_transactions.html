@@ -37,8 +37,8 @@
               <tr>
                 <th>Date</th>
                 <th>Shopper</th>
-                <th>Amount (mbtc)</th>
-                <th>Amount (fiat)</th>
+                <th>Bitcoin</th>
+                <th>Cash</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -47,9 +47,9 @@
               {% for transaction in transactions %}
                 <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
                   <td>{{transaction.added_at}}</td>
-                  <td>{{transaction.shopper.name}}</td>
-                  <td>{{transaction.format_mbtc_amount}} mbtc</td>
-                  <td>{{transaction.get_currency_symbol}}{{transaction.fiat_amount}}</td>
+                  <td>{{ transaction.get_shopper.name }}</td>
+                  <td>{{transaction.format_satoshis_amount}}</td>
+                  <td>{{transaction.get_fiat_amount_formatted}}</td>
                   <td><a href="https://blockchain.info/address/{{ transaction.forwarding_address.b58_address }}" target="_blank" >{{transaction.get_status}}</a></td>
                 </tr>
               {% endfor %}

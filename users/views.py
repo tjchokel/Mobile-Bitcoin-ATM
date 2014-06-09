@@ -15,8 +15,7 @@ def home(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     else:
-        return HttpResponseRedirect(reverse_lazy('login_request'))
-    return {}
+        return {}
 
 
 @login_required

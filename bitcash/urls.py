@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.views.generic import TemplateView
 
 from django.contrib import admin
 admin.autodiscover()
@@ -31,6 +32,11 @@ urlpatterns = patterns('',
 
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),
     url(r'^blockcypher-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_blockcypher_webhook', name='process_blockcypher_webhook'),
+
+    # Static Pages
+    url(r'^help/', TemplateView.as_view(template_name='fixed_pages/help.html'), name='help'),
+    url(r'^team/', TemplateView.as_view(template_name='fixed_pages/team.html'), name='team'),
+    url(r'^contact/', TemplateView.as_view(template_name='fixed_pages/contact.html'), name='contact'),
 
     url(r'^admin/', include(admin.site.urls)),
 )

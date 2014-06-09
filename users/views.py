@@ -26,12 +26,14 @@ def customer_dashboard(request):
     if not user.finished_registration():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
-    transactions, shopper = None, None
+    current_address, transactions, shopper = None, None, None
     forwarding_address_obj = get_object_or_None(ForwardingAddress,
             b58_address=request.session.get('forwarding_address'))
     if forwarding_address_obj:
         transactions = forwarding_address_obj.get_all_forwarding_transactions()
-        form = ShopperInformationForm()
+        shopper = forwarding_address_obj.get_current_shopper()
+        form = ShopperInformationForm(initial={'phone_country': merchant.country})
+
         if request.method == 'POST':
             form = ShopperInformationForm(data=request.POST)
             if form.is_valid():

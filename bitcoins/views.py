@@ -262,7 +262,7 @@ def complete_deposit(request):
         address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
         if address and merchant.id == address.merchant.id:
             if address.all_transactions_complete():
-                address.retired_at = now()
+                address.paid_out_at = now()
                 address.save()
                 request.session['forwarding_address'] = None
 
@@ -276,7 +276,7 @@ def cancel_address(request):
     if request.session.get('forwarding_address'):
         address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
         if address and merchant.id == address.merchant.id:
-            address.retired_at = now()
+            address.paid_out_at = now()
             address.save()
             request.session['forwarding_address'] = None
 

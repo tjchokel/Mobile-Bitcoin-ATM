@@ -16,7 +16,7 @@ class ForwardingAddressAdmin(admin.ModelAdmin):
             'id',
             'generated_at',
             'b58_address',
-            'retired_at',
+            'paid_out_at',
             'destination_address',
             'merchant',
             )

@@ -1,3 +1,4 @@
+var ALERT_FADEOUT_TIME = 5000;
 $(document).ajaxComplete(function(e, xhr, settings) {
     var contentType = xhr.getResponseHeader("Content-Type");
     if (contentType == "application/javascript" || contentType == "application/json") {
@@ -24,6 +25,9 @@ function addMessage(text, extra_tags) {
     var message = $('<div class="'+div_class+'">'+text+'<a class="close" data-dismiss="alert">×</a></div>').hide().fadeIn(500);
     $("#messages").append(message);
     $(".page-tip").slideDown();
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, ALERT_FADEOUT_TIME);
 }
 
 function csrfSafeMethod(method) {
@@ -72,6 +76,6 @@ $(document).ready(function(){
     // messages timeout for 10 sec 
     setTimeout(function() {
         $('.alert').fadeOut('slow');
-    }, 5000); // <-- time in milliseconds, 1000 =  1 sec
+    }, ALERT_FADEOUT_TIME); // <-- time in milliseconds, 1000 =  1 sec
 
 });

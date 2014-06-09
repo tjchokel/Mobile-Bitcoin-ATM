@@ -233,12 +233,9 @@ class BTCTransaction(models.Model):
         if self.forwarding_address.paid_out_at:
             return 'Paid Out'
         if self.met_minimum_confirmation_at:
-            return 'Confirmed'
+            return 'Sent'
         else:
-            return 'Do Not Release Cash (%s of %s Confirmations)' % (
-                    self.conf_num,
-                    self.get_total_confirmations_required(),
-                    )
+            return 'BTC In Transit (Do Not Release Cash)'
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:

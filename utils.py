@@ -3,6 +3,7 @@ import random
 
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
+CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']
 
 
 def satoshis_to_btc(satoshis):

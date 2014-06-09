@@ -15,7 +15,7 @@ from bitcash.settings import BASE_URL
 
 from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
-        format_num_for_printing)
+        format_num_for_printing, CAPITAL_CONTROL_COUNTRIES)
 
 import json
 import requests
@@ -208,11 +208,20 @@ class BTCTransaction(models.Model):
 
     def calculate_fiat_amount(self):
         merchant = self.get_merchant()
-        currency_code = merchant.currency_code or 'USD'
-        url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
-        r = requests.get(url)
-        content = json.loads(r.content)
-        fiat_btc = content['last']
+        currency_code = merchant.currency_code
+        if not currency_code:
+            currency_code = 'USD'
+        if currency_code in CAPITAL_CONTROL_COUNTRIES:
+            url = 'https://conectabitcoin.com/en/market_prices.json'
+            r = requests.get(url)
+            content = json.loads(r.content)
+            key = 'btc_'+currency_code.lower()
+            fiat_btc = content[key]['sell']
+        else:
+            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
+            r = requests.get(url)
+            content = json.loads(r.content)
+            fiat_btc = content['last']
         basis_points_markup = merchant.basis_points_markup
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc - markup_fee

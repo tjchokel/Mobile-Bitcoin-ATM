@@ -1,14 +1,86 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="container">
-    <div class="page-header">
-        <h1>Index</h1>
-    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1>Welcome to CloseCoin</h1>
+        </div>
 
-       
-  </div>
+
+        <h3>For Merchants</h3>
+        <p>
+          CloseCoin makes it easy for owners of any store to <b>buy bitcoin for cash</b>.
+          Some of our happiest customers are money changers, restaurants, hostels, convenience stores, and gas stations.
+          It works great anywhere there is a cash register, an internet connection, and a desire to buy bitcoin at the best prices.
+          It's kind of like an ATM, only instead of using expensive hardware, we use a simple app and the cash register that's already in your store.
+        </p>
+
+        <p>Benefits:</p>
+        <ul>
+          <li>
+            <b>Set Your Own Prices</b>.
+            Since your business has regular hours and pays out in cash, you get rewarded with better prices.
+            It's a much better experience than messaging someone back and forth to meetup at a coffee shop or in a dark alley.
+          </li>
+          <li>
+            <b>Get Your Money to a Safer Location</b>.
+            Every time your cashier reaches into the cash register to pay a customer for their bitcoin, money leaves the premises.
+            The address that recieves the bitcoin can be kept anywhere you like: in your safe, at your home, or even in another country.
+            Moving cash into bitcoins can minimize theft and reduce robberies.
+          </li>
+          <li>
+            <b>Sell or Spend Your Bitcoin Immediately</b>.
+            As soon as you recieve the bitcoin it's yours to sell or spend however you like.
+            If you don't want to hold bitcoin, you can set your prices so that you're able to sell it right away for a profit.
+          </li>
+          <li>
+            <b>Very Easy to Use</b>.
+            Your employees can buy bitcoin for you without having to know anything about bitcoin.
+            You set the price and the app notifies your cashier/employee when it's safe to pay out cash to the customer.
+            Our mobile-optimized website requires only an internet connection and works on any smartphone, tablet, or desktop computer.
+            No training needed.
+          </li>
+          <li>
+            <b>Get New Customers</b>.
+            Customers who come to your business and recieve cash for their bitcoin are likley to stick around and spend some of that money.
+          </li>
+          <li>
+            <b>You Control Your Private Keys</b>.
+            We couldn't steal your money even if we wanted to.
+          </li>
+          <li>
+            <b>Works Anywhere In the World</b>.
+            From Argentina to Australia, CloseCoin works everywhere in the world with the currency of your choice.
+            More languages coming soon!
+          </li>
+          <li>
+            <b>Free during our Beta and cheap after</b>.
+            There's no lock-in or contract and you can leave at any time.
+            Remember, you are always in full control of your private keys.
+          </li>
+        </ul>
+
+        <br />
+        {# yes, i actually used a center tag. That's how bad my html is #}
+        <center>
+          <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">List Your Business on CloseCoin for Free</a>
+        </center>
+        <br />
+
+        <hr />
+
+        <h3>For Customers</h3>
+
+        <p>
+          CloseCoin makes it easy to find someone close by to give you cash for your bitcoin.
+          You can check their price, hours and location in advance, no messaging back and forth.
+          Just show up with your bitcoin wallet app and recieve cash for your bitcoin.
+          CloseCoin is great for converting your remmitance into cash, or for travellers in foreign countries who need local currency.
+        </p>
+
+        <p>
+          During our private beta, CloseCoin is only available from select merchants.
+          <a href="https://docs.google.com/forms/d/1h7Z996Y5vIHE-uOc03vxnFa6jN-vRNF_CFW4e89MdTk/viewform?usp=send_form">Sign up to be notified when CloseCoin merchants are available in your city.</a>
+        </p>
+
+    </div>
 {% endblock content %}
-{% block extra_js %}
-  <script>
-  </script>
-{% endblock %}

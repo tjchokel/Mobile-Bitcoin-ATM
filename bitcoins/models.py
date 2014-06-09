@@ -235,7 +235,7 @@ class BTCTransaction(models.Model):
         if self.met_minimum_confirmation_at:
             return 'Confirmed'
         else:
-            return '%s of %s Confirmations Needed (Do Not Release Cash Yet)' % (
+            return 'Do Not Release Cash (%s of %s Confirmations)' % (
                     self.conf_num,
                     self.get_total_confirmations_required(),
                     )

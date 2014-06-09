@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 
 from annoying.decorators import render_to
+from annoying.functions import get_object_or_None
 
 from bitcoins.models import BTCTransaction, ForwardingAddress
 from shoppers.models import Shopper
@@ -23,18 +24,16 @@ def home(request):
 def customer_dashboard(request):
     user = request.user
     if not user.finished_registration():
-        return HttpResponseRedirect(reverse_lazy('register_router'))
+        return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
-    current_address = None
-    transactions = None
-    shopper = None
-    if request.session.get('forwarding_address'):
-        current_address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
-        transactions = current_address.get_all_transactions()
-        shopper = current_address.get_current_shopper()
-        initial = {}
-        initial['phone_country'] = merchant.country
-        form = ShopperInformationForm(initial=initial)
+    current_address, transactions, shopper = None, None, None
+    forwarding_address_obj = get_object_or_None(ForwardingAddress,
+            b58_address=request.session.get('forwarding_address'))
+    if forwarding_address_obj:
+        transactions = forwarding_address_obj.get_all_forwarding_transactions()
+        shopper = forwarding_address_obj.get_current_shopper()
+        form = ShopperInformationForm(initial={'phone_country': merchant.country})
+
         if request.method == 'POST':
             form = ShopperInformationForm(data=request.POST)
             if form.is_valid():
@@ -43,26 +42,44 @@ def customer_dashboard(request):
                 email = form.cleaned_data['email']
                 phone_num = form.cleaned_data['phone_num']
 
+                # Create shopper object
                 shopper = Shopper.objects.create(
                     name=name,
                     email=email,
                     phone_num=phone_num,
-                    btc_address=current_address,
                 )
 
-                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                forwarding_address_obj.shopper = shopper
+                forwarding_address_obj.save()
+
+                # Fetch existing TXs if they exist
+                existing_txns = BTCTransaction.objects.filter(
+                        forwarding_address=forwarding_address_obj,
+                        destination_address__isnull=True)
+
+                # If we have an TX then send a notification to the shopper
+                # They are probably unconfirmed but they may be confirmed by now
+                for existing_txn in existing_txns:
+                    if existing_txn.met_minimum_confirmation_at:
+                        existing_txn.send_shopper_txconfirmed_email()
+                        existing_txn.send_shopper_txconfirmed_sms()
+                    else:
+                        existing_txn.send_shopper_newtx_email()
+                        existing_txn.send_shopper_newtx_sms()
+
+                return HttpResponseRedirect(reverse_lazy('merchant_profile'))
         return {
             'form': form,
             'user': user,
             'merchant': merchant,
             'shopper': shopper,
-            'current_address': current_address,
+            'current_address': forwarding_address_obj,
             'transactions': transactions}
 
     return {
         'user': user,
         'merchant': merchant,
-        'current_address': current_address,
+        'current_address': forwarding_address_obj,
         'transactions': transactions,
         'shopper': shopper,
     }

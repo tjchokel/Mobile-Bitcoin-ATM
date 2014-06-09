@@ -65,7 +65,7 @@ def customer_dashboard(request):
                         existing_txn.send_shopper_newtx_email()
                         existing_txn.send_shopper_newtx_sms()
 
-                return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
         return {
             'form': form,
             'user': user,

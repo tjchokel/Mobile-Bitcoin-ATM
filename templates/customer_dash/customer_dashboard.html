@@ -27,7 +27,7 @@
                 if(deposits.length == 0){
                   setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
                 }else{
-                  location.reload(true);
+                  window.location.reload(true);
                 }
                 
               },
@@ -56,7 +56,7 @@
                   $('#txn-status').html(conf_num_text);
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else{
-                  location.reload(true);
+                  window.location.reload(true);
                 }
                 
               },
@@ -108,7 +108,7 @@
           type: 'get',
           url: '/confirm-deposit/',
           success: function (data) {
-            location.reload(true);
+            window.location.reload(true);
           },
           error: function(data) {
             console.log('FAILURE');
@@ -141,7 +141,7 @@
           url: '/complete-deposit/',
           success: function (data) {
             $("#complete-transaction-button").toggleClass("active");
-            location.reload(true);
+            window.location.reload(true);
           },
           error: function(data) {
             $("#complete-transaction-button").toggleClass("active");
@@ -155,7 +155,7 @@
           type: 'get',
           url: '/cancel-address/',
           success: function (data) {
-            location.reload(true);
+            window.location.reload(true);
           },
           error: function(data) {
             console.log('FAILURE');

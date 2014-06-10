@@ -8,11 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-09 16:47-0300\n"
+"POT-Creation-Date: 2014-06-10 12:16-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"To create a new account
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -129,7 +129,7 @@ msgstr ""
 msgid "Sign out"
 msgstr ""
 
-#: templates/base.html:83
+#: templates/base.html:83 templates/login.html:6 templates/login.html.py:14
 msgid "Sign In"
 msgstr ""
 
@@ -149,6 +149,12 @@ msgstr ""
 #: templates/base.html:177 templates/base.html.py:186
 msgid "Admin"
 msgstr ""
+
+#: templates/login.html:21
+#, python-format
+msgid ""
+"To create a new account, please <a href=\"%(register_url)s\"> click here</a>."
+msgstr "Para crear una nueva cuenta, haga <a href=\"%(register_url)s\">clic aquí</a>."
 
 #: templates/customer_dash/_dash_deposit_confirm.html:6
 msgid "Last Updated: Now"

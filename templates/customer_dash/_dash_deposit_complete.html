@@ -1,8 +1,9 @@
+{% load i18n %}
 <div class="container">
   <div class="page-header">
       <h1 class="pull-left">{{merchant.business_name}}</h1>
       <h3 class="pull-right" id="last-polled" style="color: #72a53b; float:right;">
-        Transaction Complete
+        {% trans "Transaction Complete" %}
         </h3>
       <div class="clearfix"></div>
   </div>
@@ -12,14 +13,18 @@
       {% if shopper %}
         <p class="lead text-center">
           <i class="fa fa-check-circle" style="color: #81D685;"></i>
-          The deposit of <b>{{current_address.get_mbtc_transactions_total}} mbtc</b> made by {{shopper.name}} is now complete.
-          You owe {{shopper.name}} <b>{{merchant.get_currency_symbol}}{{current_address.get_fiat_transactions_total}}</b>.
+          {% blocktrans %}
+            The deposit of <b>{{current_address.get_mbtc_transactions_total}} mbtc</b> made by {{shopper.name}} is now complete.
+            You owe {{shopper.name}} <b>{{merchant.get_currency_symbol}}{{current_address.get_fiat_transactions_total}}</b>.
+          {% endblocktrans %}
         </p>
       {% else %}
         <p class="lead text-center">
           <i class="fa fa-check-circle" style="color: #81D685;"></i>
-          The deposit of <b>{{current_address.get_mbtc_transactions_total}} mbtc</b> is now complete.
-          You owe the customer <b>{{merchant.get_currency_symbol}}{{current_address.get_fiat_transactions_total}}</b>.
+          {% blocktrans %}
+            The deposit of <b>{{current_address.get_mbtc_transactions_total}} mbtc</b> is now complete.
+            You owe the customer <b>{{merchant.get_currency_symbol}}{{current_address.get_fiat_transactions_total}}</b>.
+          {% endblocktrans %}
         </p>
       {% endif %}
       {% for transaction in transactions %}

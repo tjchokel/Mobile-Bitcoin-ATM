@@ -17,9 +17,8 @@
         <br />
         
         <h3>
-        {% blocktrans with anchor=url "merchants.views.register_merchant">'|safe %}
-          To create a new account, please <a href="{{ anchor }}"> click here</a>.
-        {% endblocktrans %}
+        {% url 'merchants.views.register_merchant' as register_url %}
+        {% blocktrans %}To create a new account, please <a href="{{ register_url }}"> click here</a>.{% endblocktrans %}
         </h3>
 
         <hr />

@@ -38,7 +38,7 @@
               </tr>
               <tr>
                 <td class="text-muted">Country</td>
-                <td align="right">{{merchant.country}}</td>
+                <td align="right">{{merchant.get_country_display}}</td>
               </tr>
               <tr>
                 <td class="text-muted">Zip Code</td>
@@ -46,7 +46,7 @@
               </tr>
               <tr>
                 <td class="text-muted">Phone Number</td>
-                <td align="right">{{merchant.phone_num}}</td>
+                <td align="right">{{merchant.phone_num.as_international}}</td>
               </tr>
             </tbody>
           </table>

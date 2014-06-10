@@ -235,7 +235,7 @@ class BTCTransaction(models.Model):
         if self.met_minimum_confirmation_at:
             return 'Sent'
         else:
-            return 'BTC In Transit (Do Not Release Cash)'
+            return 'Do Not Release Cash (BTC In Transit)'
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:

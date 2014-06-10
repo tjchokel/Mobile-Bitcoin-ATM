@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6 {
 h1.hl, h2.hl, h3.hl, h4.hl, h5.hl, h6.hl {
     color: #515151;
     font-weight: 300;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
     text-transform: none;
@@ -56,7 +56,7 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 }
 .navbar-inverse {
     font-family: 'Lato', sans-serif;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     font-size: 12px;
 }
 .navbar-inverse .navbar-nav > .dropdown > a .caret {
@@ -112,7 +112,7 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
     font-weight: 100;
     font-size: 48px;
     margin-top: 70px;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     margin-left: 70px;
     text-shadow: 1px 1px 3px #666;
     filter: Shadow(Color=#666666, Direction=45, Strength=3);

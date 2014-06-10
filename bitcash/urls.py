@@ -33,4 +33,5 @@ urlpatterns = patterns('',
     url(r'^blockcypher-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_blockcypher_webhook', name='process_blockcypher_webhook'),
 
     url(r'^admin/', include(admin.site.urls)),
+    (r'^i18n/', include('django.conf.urls.i18n')),
 )

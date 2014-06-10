@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>Sign In</h1>
+            <h1>{% trans "Sign In" %}</h1>
         </div>
 
         <form class="form-horizontal" method="post" action="{% url "merchants.views.login_request" %}" >
@@ -10,13 +11,15 @@
             {{ form|crispy }}
             {% csrf_token %}
             <div class="button-wrapper">
-              <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
+              <button type="submit" class="btn btn-primary btn-lg">{% trans "Sign In" %}</button>
             </div>
         </form>
         <br />
-
+        
         <h3>
-          To create a new account, please <a href="{% url "merchants.views.register_merchant" %}">click here</a>.
+        {% blocktrans with anchor=url "merchants.views.register_merchant">'|safe %}
+          To create a new account, please <a href="{{ anchor }}"> click here</a>.
+        {% endblocktrans %}
         </h3>
 
         <hr />

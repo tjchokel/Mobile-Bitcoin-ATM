@@ -2,7 +2,7 @@
   <thead>
     <tr>    
       <th>Amount ({{merchant.currency_code}})</th>
-      <th>Amount (mbtc)</th>
+      <th>Bitcoin</th>
       <th>Status</th>
       <th></th>
     </tr>
@@ -15,8 +15,8 @@
             <i class="fa fa-plus-square-o text-blue" style="font-size: 18px;cursor: pointer;">
             </i>
           </td> -->
-          <td>{{transaction.get_currency_symbol}}{{transaction.fiat_amount}}</td>
-          <td>{{transaction.format_mbtc_amount}} mbtc</td>
+          <td>{{transaction.get_fiat_amount_formatted}}</td>
+          <td>{{transaction.format_satoshis_amount}}</td>
           <td class="tx-status-{{transaction.id}}" id="txn-status">{{transaction.get_status}}</td>
         </tr>
       {% endfor %}

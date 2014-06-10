@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load humanize %}
 {% block content %}
     <div class="container">
         <div class="page-header">
@@ -46,11 +47,11 @@
             {% if transactions %}
               {% for transaction in transactions %}
                 <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
-                  <td>{{transaction.added_at}}</td>
+                  <td>{{transaction.added_at|naturaltime}}</td>
                   <td>{{ transaction.get_shopper.name }}</td>
-                  <td>{{transaction.format_satoshis_amount}}</td>
+                  <td><a href="https://blockchain.info/address/{{ transaction.forwarding_address.b58_address }}" target="_blank" >{{transaction.format_satoshis_amount}}</a></td>
                   <td>{{transaction.get_fiat_amount_formatted}}</td>
-                  <td><a href="https://blockchain.info/address/{{ transaction.forwarding_address.b58_address }}" target="_blank" >{{transaction.get_status}}</a></td>
+                  <td>{{transaction.get_status}}</td>
                 </tr>
               {% endfor %}
             {% else %}

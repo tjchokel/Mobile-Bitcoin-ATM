@@ -134,21 +134,29 @@ class ForwardingAddress(models.Model):
         incomplete_transactions = transactions.filter(met_minimum_confirmation_at__isnull=True)
         return (transactions.count() > 0 and incomplete_transactions.count() == 0)
 
-    def get_mbtc_transactions_total(self):
+    def get_satoshis_and_fiat_transactions_total(self):
         transactions = self.get_all_forwarding_transactions()
-        total = 0
+        satoshis, fiat = 0, 0
         for txn in transactions:
             if txn.met_minimum_confirmation_at:
-                total += txn.satoshis
-        return format_mbtc(satoshis_to_mbtc(total))
+                satoshis += txn.satoshis
+                fiat += txn.fiat_amount
+        return satoshis, fiat
+
+    def get_satoshis_transactions_total(self):
+        return self.get_satoshis_and_fiat_transactions_total()[0]
+
+    def get_satoshis_transactions_total_formatted(self):
+        return format_satoshis_with_units(self.get_satoshis_transactions_total())
 
     def get_fiat_transactions_total(self):
-        transactions = self.get_all_forwarding_transactions()
-        total = 0
-        for txn in transactions:
-            if txn.met_minimum_confirmation_at:
-                total += txn.fiat_amount
-        return total
+        return self.get_satoshis_and_fiat_transactions_total()[1]
+
+    def get_fiat_transactions_total_formatted(self):
+        ' Assumes that all deposits to a forwarding address use the same currency '
+        return '%s%s %s' % (self.merchant.get_currency_symbol(),
+                self.get_fiat_transactions_total(),
+                self.currency_code_when_created)
 
 
 class BTCTransaction(models.Model):

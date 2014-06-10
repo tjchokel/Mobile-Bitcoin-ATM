@@ -240,9 +240,9 @@ class BTCTransaction(models.Model):
         if self.forwarding_address.paid_out_at:
             return 'Paid Out'
         if self.met_minimum_confirmation_at:
-            return 'Complete'
+            return 'Sent'
         else:
-            return '%s confirmations' % (self.conf_num)
+            return 'Do Not Release Cash (BTC In Transit)'
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
@@ -258,19 +258,21 @@ class BTCTransaction(models.Model):
 
     def meets_minimum_confirmations(self):
         merchant = self.get_merchant()
-        minimum_confirmations = merchant.minimum_confirmations
         confirmations = self.conf_num
-        return (confirmations and confirmations >= minimum_confirmations)
+        return (confirmations and confirmations >= merchant.minimum_confirmations)
 
     def get_fiat_amount_formatted(self):
-        return '%s %s %s' % (self.get_currency_symbol(), self.fiat_amount,
+        return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,
                 self.currency_code_when_created)
 
     def get_time_range_in_minutes(self):
-        additional_confs_needed = self.get_merchant().minimum_confirmations - self.conf_num
+        additional_confs_needed = self.get_total_confirmations_required() - self.conf_num
         min_time = 10 * additional_confs_needed
         max_time = 20 * additional_confs_needed
         return '%s-%s' % (min_time, max_time)
+
+    def get_total_confirmations_required(self):
+        return self.get_merchant().minimum_confirmations
 
     def send_shopper_newtx_email(self, force=False):
         shopper = self.get_shopper()

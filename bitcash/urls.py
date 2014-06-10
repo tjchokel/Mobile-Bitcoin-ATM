@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'^complete-deposit/$', 'bitcoins.views.complete_deposit', name='complete_deposit'),
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
 
-    # Inbounc Webhooks
+    # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),
     url(r'^blockcypher-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_blockcypher_webhook', name='process_blockcypher_webhook'),
 

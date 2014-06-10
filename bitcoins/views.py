@@ -12,7 +12,8 @@ from bitcoins.models import BTCTransaction, ForwardingAddress
 from services.models import WebHook
 
 from emails.internal_msg import send_admin_email
-from utils import CAPITAL_CONTROL_COUNTRIES
+from bitcash.settings import CAPITAL_CONTROL_COUNTRIES
+
 import json
 import requests
 
@@ -39,8 +40,6 @@ def get_bitcoin_price(request):
     user = request.user
     merchant = user.get_merchant()
     currency_code = merchant.currency_code
-    if not currency_code:
-        currency_code = 'USD'
     if currency_code in CAPITAL_CONTROL_COUNTRIES:
         url = 'https://conectabitcoin.com/en/market_prices.json'
         r = requests.get(url)

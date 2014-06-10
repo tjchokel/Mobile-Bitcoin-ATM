@@ -11,11 +11,11 @@ from phones.models import SentSMS
 
 from countries import BFHCurrenciesList
 
-from bitcash.settings import BASE_URL
+from bitcash.settings import BASE_URL, CAPITAL_CONTROL_COUNTRIES
 
 from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
-        format_num_for_printing, CAPITAL_CONTROL_COUNTRIES)
+        format_num_for_printing)
 
 import json
 import requests
@@ -209,8 +209,6 @@ class BTCTransaction(models.Model):
     def calculate_fiat_amount(self):
         merchant = self.get_merchant()
         currency_code = merchant.currency_code
-        if not currency_code:
-            currency_code = 'USD'
         if currency_code in CAPITAL_CONTROL_COUNTRIES:
             url = 'https://conectabitcoin.com/en/market_prices.json'
             r = requests.get(url)

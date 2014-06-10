@@ -365,14 +365,15 @@ class BTCTransaction(models.Model):
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
                 'fiat_amount_formatted': self.get_fiat_amount_formatted(),
                 'tx_hash': self.txn_hash,
+                'closecoin_tx_uri': reverse('transactions'),
                 }
         subject = '%s Received' % satoshis_formatted
         if shopper and shopper.name:
             subject += 'from %s' % shopper.name
             body_context['shopper_name'] = shopper.name
         return send_and_log(
-                subject='%s Received' % satoshis_formatted,
                 body_template='merchant_txconfirmed.html',
+                subject='%s Received' % satoshis_formatted,
                 to_merchant=merchant,
                 body_context=body_context,
                 )

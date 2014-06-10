@@ -90,6 +90,12 @@ class ForwardingAddress(models.Model):
     def get_all_forwarding_transactions(self):
         return self.btctransaction_set.filter(destination_address__isnull=True).order_by('-id')
 
+    def get_first_forwarding_transaction(self):
+        forwarding_txns = self.get_all_forwarding_transactions()
+        if forwarding_txns:
+            return forwarding_txns[0]
+        return None
+
     def get_and_group_all_transactions(self):
         " Get forwarding and destination transactions grouped by txn pair "
 
@@ -156,7 +162,7 @@ class ForwardingAddress(models.Model):
         ' Assumes that all deposits to a forwarding address use the same currency '
         return '%s%s %s' % (self.merchant.get_currency_symbol(),
                 self.get_fiat_transactions_total(),
-                self.currency_code_when_created)
+                self.get_first_forwarding_transaction().currency_code_when_created)
 
 
 class BTCTransaction(models.Model):

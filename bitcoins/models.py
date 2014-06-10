@@ -146,7 +146,7 @@ class ForwardingAddress(models.Model):
     def get_satoshis_transactions_total(self):
         return self.get_satoshis_and_fiat_transactions_total()[0]
 
-    def get_satoshis_transactions_total_formatted(self):
+    def get_btc_transactions_total_formatted(self):
         return format_satoshis_with_units(self.get_satoshis_transactions_total())
 
     def get_fiat_transactions_total(self):

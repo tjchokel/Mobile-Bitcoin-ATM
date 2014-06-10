@@ -23,7 +23,7 @@ class Merchant(models.Model):
     zip_code = models.CharField(
         max_length=256, blank=True, null=True, db_index=True)
     phone_num = PhoneNumberField(blank=True, null=True, db_index=True)
-    hours = models.CharField(max_length=256, blank=False, null=False, db_index=True)
+    hours = models.CharField(max_length=256, blank=True, null=True, db_index=True)
     currency_code = models.CharField(max_length=5, blank=False, null=False, db_index=True)
     basis_points_markup = models.IntegerField(blank=True, null=True, db_index=True, default=100)
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)

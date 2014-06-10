@@ -128,7 +128,7 @@ def register_merchant(request):
 
 
 @login_required
-@render_to('merchant_settings.html')
+@render_to('merchants/settings.html')
 def merchant_settings(request):
     user = request.user
     merchant = user.get_merchant()
@@ -149,7 +149,7 @@ def merchant_settings(request):
 
 
 @login_required
-@render_to('merchant_profile.html')
+@render_to('merchants/profile.html')
 def merchant_profile(request):
     user = request.user
     merchant = user.get_merchant()
@@ -182,8 +182,8 @@ def merchant_profile(request):
 
 
 @login_required
-@render_to('merchant_transactions.html')
-def transactions(request):
+@render_to('merchants/transactions.html')
+def merchant_transactions(request):
     user = request.user
     merchant = user.get_merchant()
     transactions = merchant.get_all_forwarding_transactions()

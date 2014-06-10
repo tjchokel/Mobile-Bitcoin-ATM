@@ -1,34 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container">
-        <div class="page-header">
-            <h1>Admin</h1>
-        </div>
+  <div class="container">
+    <!-- Profile Menu -->
+    {% with current_tab='profile' %}
+      {% include "merchants/breadcrumb.html" %}
+    {% endwith %}
 
-        <div class="row">
-      <!-- Profile Menu -->
-    <div class="col-sm-4 col-md-3">
-      <div class="user-menu bottom-15">
-        <ul>
-          <li>
-            <a href="{% url "merchants.views.merchant_settings" %}">
-            <i class="sign fa fa-gears bg-green"></i>Settings <i class="fa fa-chevron-right pull-right"></i>
-            </a>  
-          </li>
-          <li>
-            <a href="#" class="active">
-            <i class="sign fa fa-user bg-blue"></i>Profile <i class="fa fa-chevron-right pull-right"></i>
-          </a>  
-          </li>
-          <li>
-            <a href="{% url "merchants.views.transactions" %}">
-            <i class="sign fa fa-bitcoin bg-amethyst"></i> Transactions <i class="fa fa-chevron-right pull-right"></i>
-          </a>  
-          </li>
-        </ul>
-      </div>
-      {% include "merchants/_registration_status_bar.html" %}
-  </div>
   <div class="col-sm-8 col-md-9">
 
       <div class="row">

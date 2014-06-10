@@ -12,6 +12,7 @@ from bitcoins.models import BTCTransaction, ForwardingAddress
 from services.models import WebHook
 
 from emails.internal_msg import send_admin_email
+from bitcash.settings import CAPITAL_CONTROL_COUNTRIES
 
 import json
 import requests
@@ -38,11 +39,18 @@ def poll_deposits(request):
 def get_bitcoin_price(request):
     user = request.user
     merchant = user.get_merchant()
-    currency_code = merchant.currency_code or 'USD'
-    url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
-    r = requests.get(url)
-    content = json.loads(r.content)
-    fiat_btc = content['last']
+    currency_code = merchant.currency_code
+    if currency_code in CAPITAL_CONTROL_COUNTRIES:
+        url = 'https://conectabitcoin.com/en/market_prices.json'
+        r = requests.get(url)
+        content = json.loads(r.content)
+        key = 'btc_'+currency_code.lower()
+        fiat_btc = content[key]['sell']
+    else:
+        url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
+        r = requests.get(url)
+        content = json.loads(r.content)
+        fiat_btc = content['last']
     basis_points_markup = merchant.basis_points_markup
     markup_fee = fiat_btc * basis_points_markup / 10000.00
     fiat_btc = fiat_btc - markup_fee

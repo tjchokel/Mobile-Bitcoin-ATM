@@ -31,7 +31,7 @@ def set_blockcypher_webhook(monitoring_address, callback_url, merchant=None):
     if BLOCKCYPHER_API_KEY:
         payload['token'] = BLOCKCYPHER_API_KEY
 
-    POST_URL = 'https://api.blockcypher.com/v1/btc/main/hooks'
+    POST_URL = 'http://api.blockcypher.com/v1/btc/main/hooks'
 
     r = requests.post(POST_URL, data=json.dumps(payload))
 

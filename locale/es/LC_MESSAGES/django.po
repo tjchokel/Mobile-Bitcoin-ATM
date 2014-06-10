@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-10 12:16-0300\n"
+"POT-Creation-Date: 2014-06-10 12:40-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -138,7 +138,7 @@ msgid "Sign Up"
 msgstr ""
 
 #: templates/base.html:111
-#: templates/customer_dash/_dash_deposit_confirm.html:54
+#: templates/customer_dash/_dash_deposit_confirm.html:59
 msgid "Submit"
 msgstr ""
 
@@ -154,7 +154,28 @@ msgstr ""
 #, python-format
 msgid ""
 "To create a new account, please <a href=\"%(register_url)s\"> click here</a>."
-msgstr "Para crear una nueva cuenta, haga <a href=\"%(register_url)s\">clic aquí</a>."
+msgstr ""
+"Para crear una nueva cuenta, haga <a href=\"%(register_url)s\">clic aquí</a>."
+
+#: templates/customer_dash/_dash_deposit_complete.html:6
+msgid "Transaction Complete"
+msgstr ""
+
+#: templates/customer_dash/_dash_deposit_complete.html:16
+#, python-format
+msgid ""
+"The deposit of <b>%(mbtc)s mbtc</b> made by %(shopper_name)s is now complete."
+"You owe %(shopper_name)s <b>%(currency_symbol)s%(fiat)s</b>.\n"
+"            "
+msgstr ""
+
+#: templates/customer_dash/_dash_deposit_complete.html:22
+#, python-format
+msgid ""
+"The deposit of <b>%(mbtc)s mbtc</b> is now complete. You owe the customer <b>"
+"%(currency_symbol)s%(fiat)s</b>.\n"
+"            "
+msgstr ""
 
 #: templates/customer_dash/_dash_deposit_confirm.html:6
 msgid "Last Updated: Now"
@@ -186,8 +207,13 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
-#: templates/customer_dash/_dash_deposit_confirm.html:47
-msgid "Thanks for you deposit! Please enter your personal Info."
+#: templates/customer_dash/_dash_deposit_confirm.html:48
+msgid ""
+"\n"
+"        Thanks for you deposit!\n"
+"        Please enter a name for your order.\n"
+"        If you leave your email and/or phone we'll send you a receipt.\n"
+"      "
 msgstr ""
 
 #: templates/customer_dash/_dash_no_deposit_confirm.html:15

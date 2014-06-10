@@ -203,6 +203,7 @@ LOGGING = {
         },
     },
 }
+CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']
 
 # Keep this at the end
 if DEBUG:

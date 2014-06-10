@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>{% trans "CloseCoin Contact" %}</h1>
+        </div>
+
+        <p>
+          {% blocktrans %}We are here to help! Please feel free to contact us any time at <a href="mailto:support@coinsafe.com?Subject=CloseCoin%20Support" target="_top">support@closecoin.com</a>{% endblocktrans %}
+        </p>
+
+    </div>
+{% endblock content %}

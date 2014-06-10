@@ -11,7 +11,7 @@ from phones.models import SentSMS
 
 from countries import BFHCurrenciesList
 
-from bitcash.settings import BASE_URL
+from bitcash.settings import BASE_URL, CAPITAL_CONTROL_COUNTRIES
 
 from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
@@ -208,11 +208,18 @@ class BTCTransaction(models.Model):
 
     def calculate_fiat_amount(self):
         merchant = self.get_merchant()
-        currency_code = merchant.currency_code or 'USD'
-        url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
-        r = requests.get(url)
-        content = json.loads(r.content)
-        fiat_btc = content['last']
+        currency_code = merchant.currency_code
+        if currency_code in CAPITAL_CONTROL_COUNTRIES:
+            url = 'https://conectabitcoin.com/en/market_prices.json'
+            r = requests.get(url)
+            content = json.loads(r.content)
+            key = 'btc_'+currency_code.lower()
+            fiat_btc = content[key]['sell']
+        else:
+            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
+            r = requests.get(url)
+            content = json.loads(r.content)
+            fiat_btc = content['last']
         basis_points_markup = merchant.basis_points_markup
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc - markup_fee
@@ -233,9 +240,9 @@ class BTCTransaction(models.Model):
         if self.forwarding_address.paid_out_at:
             return 'Paid Out'
         if self.met_minimum_confirmation_at:
-            return 'Complete'
+            return 'Sent'
         else:
-            return '%s confirmations' % (self.conf_num)
+            return 'Do Not Release Cash (BTC In Transit)'
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
@@ -251,19 +258,21 @@ class BTCTransaction(models.Model):
 
     def meets_minimum_confirmations(self):
         merchant = self.get_merchant()
-        minimum_confirmations = merchant.minimum_confirmations
         confirmations = self.conf_num
-        return (confirmations and confirmations >= minimum_confirmations)
+        return (confirmations and confirmations >= merchant.minimum_confirmations)
 
     def get_fiat_amount_formatted(self):
-        return '%s %s %s' % (self.get_currency_symbol(), self.fiat_amount,
+        return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,
                 self.currency_code_when_created)
 
     def get_time_range_in_minutes(self):
-        additional_confs_needed = self.get_merchant().minimum_confirmations - self.conf_num
+        additional_confs_needed = self.get_total_confirmations_required() - self.conf_num
         min_time = 10 * additional_confs_needed
         max_time = 20 * additional_confs_needed
         return '%s-%s' % (min_time, max_time)
+
+    def get_total_confirmations_required(self):
+        return self.get_merchant().minimum_confirmations
 
     def send_shopper_newtx_email(self, force=False):
         shopper = self.get_shopper()

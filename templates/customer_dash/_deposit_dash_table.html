@@ -1,9 +1,10 @@
+{% load i18n %}
 <table class="table table-condensed" style="border-collapse:collapse;">
   <thead>
     <tr>    
-      <th>Amount ({{merchant.currency_code}})</th>
-      <th>Amount (mbtc)</th>
-      <th>Status</th>
+      <th>{% trans "Amount" %}({{merchant.currency_code}})</th>
+      <th>{% trans "Amount" %} (mbtc)</th>
+      <th>{% trans "Status" %}</th>
       <th></th>
     </tr>
   </thead>
@@ -23,7 +24,7 @@
     {% else %}
       <tr>
         <td colspan="5" style="text-align: center;">
-          Transaction not yet detected.
+          {% trans "Transaction not yet detected"%}.
         </td>
       </tr>
     {% endif %}

@@ -1,23 +1,24 @@
+{% load i18n %}
 <div class="modal fade" id="deposit-address-modal" tabindex="-1" role="dialog" aria-labelledby="sendemailtitle" aria-hidden="true" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="sendemailtitle">Send Bitcoin</h4>
+        <h4 class="modal-title" id="sendemailtitle">{% trans "Send Bitcoin" %}</h4>
         <div class="clearfix"></div>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
-            <p class="lead text-center">1. Deposit to this address: 
+            <p class="lead text-center">1. {% trans "Deposit to this address"%}: 
             </p>
             <p class="lead text-center text-green" id="current_address"></p>
 
               <div id="qr_code_span" style="display:none;">
                 <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
 
-                <p class="lead text-center">2. After depositing, click the following button: </p>
-                <a class="btn btn-primary btn-lg" onClick="confirmAddressDeposit();" style="margin-left: auto; margin-right: auto; display: block;">Confirm My Deposit</a>
+                <p class="lead text-center">2. {% trans "After depositing, click the following button"%}: </p>
+                <a class="btn btn-primary btn-lg" onClick="confirmAddressDeposit();" style="margin-left: auto; margin-right: auto; display: block;">{% trans "Confirm My Deposit" %}</a>
               </div>
             </span>
           </div>

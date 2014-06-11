@@ -69,7 +69,7 @@
             {% endif %} -->
             {% if user.is_authenticated %}
               <li id="profile-menu" class="dropdown">
-                <a href="{% url "customer_dashboard" %}" class="dropdown-toggle" data-toggle="dropdown">{{user.email}} <b class="caret"></b></a>
+              <a href="{% url "customer_dashboard" %}" class="dropdown-toggle" data-toggle="dropdown">{% if user.get_merchant %}{{ user.get_merchant.business_name }}{% else %}{{ user.name }}{% endif%}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li class="account">
                     <p>{{user.full_name}}</p>

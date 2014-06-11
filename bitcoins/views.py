@@ -22,14 +22,19 @@ def poll_deposits(request):
 
     forwarding_address = request.session.get('forwarding_address')
     all_complete = False
+    confs_needed = 6
     if forwarding_address:
         forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
         if forwarding_obj:
+            confs_needed = forwarding_obj.get_confs_needed()
             txns_grouped = forwarding_obj.get_and_group_all_transactions()
             if forwarding_obj.all_transactions_complete():
                 all_complete = True
 
-    json_dict = {'deposits': {'txns': txns_grouped, 'all_complete': all_complete}}
+    json_dict = {
+            'deposits': {'txns': txns_grouped, 'all_complete': all_complete},
+            'confs_needed': confs_needed,
+            }
     json_response = json.dumps(json_dict, cls=DjangoJSONEncoder)
     return HttpResponse(json_response, content_type='application/json')
 

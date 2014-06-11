@@ -27,9 +27,8 @@
                 if(deposits.length == 0){
                   setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
                 }else{
-                  window.location.reload(true);
+                  location.reload(true);
                 }
-                
               },
               error: function(data) {
                 setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
@@ -45,7 +44,6 @@
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
                 $('#last-polled').html(time_since);
-                
                 var deposits = data['deposits']
                 if(deposits['txns'].length == 0){
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
@@ -56,9 +54,8 @@
                   $('#txn-status').html(conf_num_text);
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else{
-                  window.location.reload(true);
+                  location.reload(true);
                 }
-                
               },
               error: function(data) {
                 setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
@@ -108,7 +105,7 @@
           type: 'get',
           url: '/confirm-deposit/',
           success: function (data) {
-            window.location.reload(true);
+            location.reload(true);
           },
           error: function(data) {
             console.log('FAILURE');
@@ -133,7 +130,7 @@
       });
 
     }
-  
+
     function completeTransaction() {
       $("#complete-transaction-button").toggleClass("active");
       $.ajax({
@@ -141,7 +138,7 @@
           url: '/complete-deposit/',
           success: function (data) {
             $("#complete-transaction-button").toggleClass("active");
-            window.location.reload(true);
+            location.reload(true);
           },
           error: function(data) {
             $("#complete-transaction-button").toggleClass("active");
@@ -155,7 +152,7 @@
           type: 'get',
           url: '/cancel-address/',
           success: function (data) {
-            window.location.reload(true);
+            location.reload(true);
           },
           error: function(data) {
             console.log('FAILURE');
@@ -210,6 +207,6 @@
         //   {
         //     poll_deposits();
         //   }, 5000);
-    });    
+    });
   </script>
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
     <div class="container">
         <div class="page-header">
@@ -12,17 +13,17 @@
         <ul>
           <li>
             <a href="{% url "merchants.views.merchant_settings" %}">
-            <i class="sign fa fa-gears bg-green"></i>Settings <i class="fa fa-chevron-right pull-right"></i>
+            <i class="sign fa fa-gears bg-green"></i>{% trans "Settings" %} <i class="fa fa-chevron-right pull-right"></i>
             </a>  
           </li>
           <li>
             <a href="{% url "merchants.views.merchant_profile"%}">
-            <i class="sign fa fa-user bg-blue"></i>Profile <i class="fa fa-chevron-right pull-right"></i>
+            <i class="sign fa fa-user bg-blue"></i>{% trans "Profile" %} <i class="fa fa-chevron-right pull-right"></i>
           </a>  
           </li>
           <li>
             <a href="#" class="active">
-            <i class="sign fa fa-bitcoin bg-amethyst"></i> Transactions <i class="fa fa-chevron-right pull-right"></i>
+            <i class="sign fa fa-bitcoin bg-amethyst"></i> {% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i>
           </a>  
           </li>
         </ul>
@@ -31,15 +32,15 @@
   </div>
   <div class="col-sm-8 col-md-9">
 
-        <h4 class="hl"><i class="fa fa-map-marker"></i> Transactions</h4>
+        <h4 class="hl"><i class="fa fa-map-marker"></i> {% trans "Transactions" %}</h4>
           <table class="table table-condensed" style="border-collapse:collapse;">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Shopper</th>
-                <th>Bitcoin</th>
-                <th>Cash</th>
-                <th>Status</th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Shopper" %}</th>
+                <th>{% trans "Bitcoin" %}</th>
+                <th>{% trans "Cash" %}</th>
+                <th>{% trans "Status" %}</th>
               </tr>
             </thead>
           <tbody>
@@ -56,7 +57,7 @@
             {% else %}
               <tr>
                 <td colspan="5" style="text-align: center;">
-                  You have no transactions yet.
+                  {% trans "You have no transactions yet"%}.
                 </td>
               </tr>
             {% endif %}

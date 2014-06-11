@@ -69,6 +69,8 @@ def register_merchant(request):
     user = request.user
     form = MerchantRegistrationForm(initial={'btc_markup': 2.0})
     form_valid = True  # used to decide whether we run the JS or not
+    print request.LANGUAGE_CODE
+    print '!!!!!!'
     if request.method == 'POST':
         form = MerchantRegistrationForm(data=request.POST)
         if form.is_valid():

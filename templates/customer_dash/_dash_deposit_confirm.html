@@ -45,11 +45,7 @@
 
     {% else %}
       <p class="lead text-center">
-      {% blocktrans %}
-        Thanks for you deposit!
-        Please enter a name for your order.
-        If you leave your email and/or phone we'll send you a receipt.
-      {% endblocktrans %}
+      {% blocktrans %}Thanks for you deposit! Please enter a name for your order. If you leave your email and/or phone we'll send you a receipt.{% endblocktrans %}
       </p>
       <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}

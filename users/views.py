@@ -25,11 +25,13 @@ def customer_dashboard(request):
     if not user.finished_registration():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
-    transactions, shopper = None, None
+    transactions, shopper, form = None, None, None
     forwarding_address_obj = get_object_or_None(ForwardingAddress,
             b58_address=request.session.get('forwarding_address'))
-    shopper = forwarding_address_obj.shopper
     if forwarding_address_obj:
+        # In case of refreshing the page later
+        # Will be None on first use and be overwritten below
+        shopper = forwarding_address_obj.shopper
         transactions = forwarding_address_obj.get_all_forwarding_transactions()
         form = ShopperInformationForm(initial={'phone_country': merchant.country})
 
@@ -67,15 +69,8 @@ def customer_dashboard(request):
                         existing_txn.send_shopper_newtx_sms()
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
-        return {
-            'form': form,
-            'user': user,
-            'merchant': merchant,
-            'shopper': shopper,
-            'current_address': forwarding_address_obj,
-            'transactions': transactions}
-
     return {
+        'form': form,
         'user': user,
         'merchant': merchant,
         'current_address': forwarding_address_obj,

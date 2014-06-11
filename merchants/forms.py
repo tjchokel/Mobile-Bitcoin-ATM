@@ -8,9 +8,15 @@ import phonenumbers
 
 
 class LoginForm(forms.Form):
-    email = forms.CharField(required=True)
-    password = forms.CharField(required=True,
-        widget=forms.PasswordInput(render_value=False))
+    email = forms.CharField(
+        label=_('Email'),
+        required=True
+    )
+    password = forms.CharField(
+        label=_('Password'),
+        required=True,
+        widget=forms.PasswordInput(render_value=False)
+    )
 
 
 class MerchantRegistrationForm(forms.Form):
@@ -40,6 +46,7 @@ class MerchantRegistrationForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': "Mel's Diner"}),
     )
     country = forms.ChoiceField(
+        label=_('Country'),
         required=True,
         choices=COUNTRY_DROPDOWN,
         widget=forms.Select(attrs={'data-country': 'USA'}),
@@ -49,7 +56,7 @@ class MerchantRegistrationForm(forms.Form):
         min_length=3,
         max_length=30,
         required=True,
-        widget=forms.Select(attrs={'class': 'bfh-currencies', 'data-currency': 'EUR'}),
+        widget=forms.Select(attrs={}),
     )
     btc_address = forms.CharField(
             label=_('Bitcoin Deposit Address'),

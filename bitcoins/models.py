@@ -281,7 +281,7 @@ class BTCTransaction(models.Model):
 
     def meets_minimum_confirmations(self):
         confirmations = self.conf_num
-        confs_needed = self.get_confs_needed
+        confs_needed = self.get_confs_needed()
         return (confirmations and confirmations >= confs_needed)
 
     def get_fiat_amount_formatted(self):

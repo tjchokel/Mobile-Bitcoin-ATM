@@ -90,6 +90,12 @@ class ForwardingAddress(models.Model):
     def get_all_forwarding_transactions(self):
         return self.btctransaction_set.filter(destination_address__isnull=True).order_by('-id')
 
+    def get_first_forwarding_transaction(self):
+        forwarding_txns = self.get_all_forwarding_transactions()
+        if forwarding_txns:
+            return forwarding_txns[0]
+        return None
+
     def get_and_group_all_transactions(self):
         " Get forwarding and destination transactions grouped by txn pair "
 
@@ -134,21 +140,29 @@ class ForwardingAddress(models.Model):
         incomplete_transactions = transactions.filter(met_minimum_confirmation_at__isnull=True)
         return (transactions.count() > 0 and incomplete_transactions.count() == 0)
 
-    def get_mbtc_transactions_total(self):
+    def get_satoshis_and_fiat_transactions_total(self):
         transactions = self.get_all_forwarding_transactions()
-        total = 0
+        satoshis, fiat = 0, 0
         for txn in transactions:
             if txn.met_minimum_confirmation_at:
-                total += txn.satoshis
-        return format_mbtc(satoshis_to_mbtc(total))
+                satoshis += txn.satoshis
+                fiat += txn.fiat_amount
+        return satoshis, fiat
+
+    def get_satoshis_transactions_total(self):
+        return self.get_satoshis_and_fiat_transactions_total()[0]
+
+    def get_btc_transactions_total_formatted(self):
+        return format_satoshis_with_units(self.get_satoshis_transactions_total())
 
     def get_fiat_transactions_total(self):
-        transactions = self.get_all_forwarding_transactions()
-        total = 0
-        for txn in transactions:
-            if txn.met_minimum_confirmation_at:
-                total += txn.fiat_amount
-        return total
+        return self.get_satoshis_and_fiat_transactions_total()[1]
+
+    def get_fiat_transactions_total_formatted(self):
+        ' Assumes that all deposits to a forwarding address use the same currency '
+        return '%s%s %s' % (self.merchant.get_currency_symbol(),
+                self.get_fiat_transactions_total(),
+                self.get_first_forwarding_transaction().currency_code_when_created)
 
 
 class BTCTransaction(models.Model):
@@ -242,7 +256,7 @@ class BTCTransaction(models.Model):
         if self.met_minimum_confirmation_at:
             return 'Sent'
         else:
-            return 'Do Not Release Cash (BTC In Transit)'
+            return 'Pending (Do Not Release Cash)'
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
@@ -365,7 +379,7 @@ class BTCTransaction(models.Model):
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
                 'fiat_amount_formatted': self.get_fiat_amount_formatted(),
                 'tx_hash': self.txn_hash,
-                'closecoin_tx_uri': reverse('transactions'),
+                'closecoin_tx_uri': reverse('merchant_transactions'),
                 }
         subject = '%s Received' % satoshis_formatted
         if shopper and shopper.name:

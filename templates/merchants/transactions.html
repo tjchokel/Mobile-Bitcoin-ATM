@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load humanize %}
+{% block content %}
+  <div class="container">
+    <!-- Profile Menu -->
+    {% with current_tab='transactions' %}
+      {% include "merchants/breadcrumb.html" %}
+    {% endwith %}
+  <div class="col-sm-8 col-md-9">
+
+        <h4 class="hl"><i class="fa fa-map-marker"></i> {% trans "Transactions" %}</h4>
+          <table class="table table-condensed" style="border-collapse:collapse;">
+            <thead>
+              <tr>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Shopper" %}</th>
+                <th>{% trans "Bitcoin" %}</th>
+                <th>{% trans "Cash" %}</th>
+                <th>{% trans "Status" %}</th>
+              </tr>
+            </thead>
+          <tbody>
+            {% if transactions %}
+              {% for transaction in transactions %}
+                <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
+                  <td>{{transaction.added_at|naturaltime}}</td>
+                  <td>{{ transaction.get_shopper.name }}</td>
+                  <td><a href="https://blockchain.info/address/{{ transaction.forwarding_address.b58_address }}" target="_blank" >{{transaction.format_satoshis_amount}}</a></td>
+                  <td>{{transaction.get_fiat_amount_formatted}}</td>
+                  <td>{{transaction.get_status}}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="5" style="text-align: center;">
+                  {% trans "You have no transactions yet"%}.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+          </table>
+    </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+{% endblock %}

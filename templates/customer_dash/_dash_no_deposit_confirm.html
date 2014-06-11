@@ -15,19 +15,10 @@
         <div class="row">
           <div class="col-md-12">
             <br/>
-            <p class="lead text-center"><strong>{% trans "Get cash for your bitcoin today." %}</strong></p>
-            <br />
+            <p class="lead text-center"><strong>{% trans "Get Cash for Your Bitcoin Today" %}</strong></p>
           </div>
         </div>
-        <div class="row">
-          <span style="margin-left: auto; margin-right: auto; display: block;">
-            <a class="btn btn-primary btn-lg has-spinner" id="show-address-button" onclick="getNextAddress();">
-              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-              {% trans "Get Started" %}
-            </a>
-          </span>
-        </div>
-        <br/><br/><br />
+        <br/>
         <table style="width:100%; table-layout:fixed;">
           <tr>
             <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-bitcoin"></i></div></th>
@@ -36,15 +27,26 @@
           </tr>
           <tr>
             <td><p class="lead text-center">
-              1. {% trans "Get Bitcoin Address" %}
+              1. {% trans "Send Bitcoin" %}
                </p></td>
             <td><p class="lead text-center">
-            2. {% trans "Send Bitcoin From Your Wallet" %}</p></td>
+              2. {% trans "Wait for Confirmation" %}</p></td>
             <td><p class="lead text-center">
-            3. {% trans "Receive Cash" %}
+              3. {% trans "Receive Cash" %}
             </p></td>
+
           </tr>
         </table>
+
+        <br /><br />
+        <div class="row">
+          <span style="margin-left: auto; margin-right: auto; display: block;">
+            <a class="btn btn-primary btn-lg has-spinner" id="show-address-button" onclick="getNextAddress();">
+              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+              {% trans "Get Started" %}
+            </a>
+          </span>
+        </div>
 
       </div>
 </div>

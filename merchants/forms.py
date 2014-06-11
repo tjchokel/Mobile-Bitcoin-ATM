@@ -57,14 +57,14 @@ class MerchantRegistrationForm(forms.Form):
             required=True,
             min_length=27,
             max_length=34,
-            help_text='The wallet address where you want your bitcoin sent',
+            help_text='The wallet address where you want your bitcoin sent to',
             widget=forms.TextInput(),
     )
     btc_markup = forms.DecimalField(
             label='Percent Markup',
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text='The percent you want to charge above the market rate.',
+            help_text='The percent you want to charge above the market rate',
             widget=forms.TextInput(),
     )
 

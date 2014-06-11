@@ -87,6 +87,9 @@ class ForwardingAddress(models.Model):
     def get_transaction(self):
         return self.btctransaction_set.last()
 
+    def get_confs_needed(self):
+        return self.merchant.minimum_confirmations
+
     def get_all_forwarding_transactions(self):
         return self.btctransaction_set.filter(destination_address__isnull=True).order_by('-id')
 
@@ -122,7 +125,7 @@ class ForwardingAddress(models.Model):
         fwd_txn_hashes = [x['forwarding_txn_hash'] for x in txn_group_list if 'forwarding_txn_hash' in x]
 
         # loop through forwarding txns to get any that might be missing (no destination confirms)
-        for fwd_txn in self.btctransaction_set.filter(destination_address=None):
+        for fwd_txn in self.btctransaction_set.filter(destination_address__isnull=True):
             if fwd_txn.txn_hash not in fwd_txn_hashes:
                 txn_dict = {
                         'satoshis': fwd_txn.satoshis,
@@ -256,7 +259,10 @@ class BTCTransaction(models.Model):
         if self.met_minimum_confirmation_at:
             return 'Sent'
         else:
-            return 'Pending (Do Not Release Cash)'
+            return 'Pending (%s of %s Confirms Needed)' % (
+                    self.conf_num,
+                    self.get_confs_needed(),
+                    )
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
@@ -270,10 +276,13 @@ class BTCTransaction(models.Model):
     def format_satoshis_amount(self):
         return format_satoshis_with_units(self.satoshis)
 
+    def get_confs_needed(self):
+        return self.get_merchant().minimum_confirmations
+
     def meets_minimum_confirmations(self):
-        merchant = self.get_merchant()
         confirmations = self.conf_num
-        return (confirmations and confirmations >= merchant.minimum_confirmations)
+        confs_needed = self.get_confs_needed
+        return (confirmations and confirmations >= confs_needed)
 
     def get_fiat_amount_formatted(self):
         return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,

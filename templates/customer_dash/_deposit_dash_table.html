@@ -17,7 +17,7 @@
           </td> -->
           <td>{{transaction.get_fiat_amount_formatted}}</td>
           <td>{{transaction.format_satoshis_amount}}</td>
-          <td class="tx-status-{{transaction.id}}" id="txn-status">{{transaction.get_status}}</td>
+          <td class="txn-status" id="tx-status-{{transaction.txn_hash}}">{{transaction.get_status}}</td>
         </tr>
       {% endfor %}
     {% else %}

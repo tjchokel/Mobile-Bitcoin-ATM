@@ -127,7 +127,6 @@ class PersonalInfoRegistrationForm(forms.Form):
 
     phone_num = forms.CharField(
             label='Cell Phone Number in International Format',
-            min_length=10,
             required=False,
             widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_phone_country'}),
     )
@@ -189,8 +188,6 @@ class MerchantInfoRegistrationForm(forms.Form):
 
     phone_num = forms.CharField(
         label='Phone Number',
-        min_length=3,
-        max_length=30,
         required=False,
         widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_country'}),
     )

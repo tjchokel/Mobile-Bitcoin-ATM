@@ -204,20 +204,20 @@ def edit_personal_info(request):
         form = PersonalInfoRegistrationForm(data=request.POST)
         if form.is_valid():
 
-            full_name = form.cleaned_data['full_name']
-            email = form.cleaned_data['email']
-            phone_num = form.cleaned_data['phone_num']
-            phone_country = form.cleaned_data['phone_country']
-
-            user.full_name = full_name
-            user.phone_num = phone_num
-            user.phone_num_country = phone_country
-            user.email = email
-            user.username = email
+            user.full_name = form.cleaned_data['full_name']
+            user.phone_num = form.cleaned_data['phone_num']
+            user.phone_num_country = form.cleaned_data['phone_country']
+            user.email = form.cleaned_data['email']
+            user.username = form.cleaned_data['email']
             user.save()
+
             msg = 'Your profile has been updated'
-            messages.success(request, msg, extra_tags='safe')
+            messages.success(request, msg)
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+
+    msg = 'Your profile was not updated'
+    messages.warning(request, msg)
+    return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
 
 @login_required
@@ -238,8 +238,10 @@ def edit_merchant_info(request):
             merchant.phone_num = form.cleaned_data['phone_num']
             merchant.save()
 
-            msg = 'Your profile has been updated'
-            messages.success(request, msg, extra_tags='safe')
+            messages.success(request, 'Your business info has been updated')
+            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+
+    messages.warning(request, 'Your business info was not updated')
     return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
 
@@ -247,17 +249,17 @@ def edit_merchant_info(request):
 def edit_bitcoin_info(request):
     user = request.user
     merchant = user.get_merchant()
-    if request.method == 'POST':
+    if request.method == 'POST' and merchant:
         form = BitcoinRegistrationForm(data=request.POST)
         if form.is_valid():
-            currency_code = form.cleaned_data['currency_code']
-            btc_address = form.cleaned_data['btc_address']
-            markup = form.cleaned_data['btc_markup']
-            if merchant:
-                merchant.currency_code = currency_code
-                merchant.set_destination_address(btc_address)
-                merchant.basis_points_markup = markup * 100
-                merchant.save()
-                msg = 'Your profile has been updated'
-                messages.success(request, msg, extra_tags='safe')
+
+            merchant.currency_code = form.cleaned_data['currency_code']
+            merchant.set_destination_address(form.cleaned_data['btc_address'])
+            merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
+            merchant.save()
+
+            messages.success(request, 'Your bitcoin info has been updated')
             return HttpResponseRedirect(reverse_lazy('merchant_settings'))
+
+    messages.warning(request, 'Your bitcoin info was not updated')
+    return HttpResponseRedirect(reverse_lazy('merchant_settings'))

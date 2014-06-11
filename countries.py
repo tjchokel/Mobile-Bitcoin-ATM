@@ -419,3 +419,6 @@ COUNTRY_DROPDOWN = [('', '--- Most Common Countries:'), ]
 COUNTRY_DROPDOWN.extend(tuple(BIGGEST_COUNTRIES))
 COUNTRY_DROPDOWN.append(('', '--- All Countries:'))
 COUNTRY_DROPDOWN.extend(tuple(ALL_COUNTRIES))
+
+BFH_CURRENCY_DROPDOWN = [(x, '%s - %s (%s)' % (x, BFHCurrenciesList[x]['label'], BFHCurrenciesList[x]['symbol'])) for x in BFHCurrenciesList]
+BFH_CURRENCY_DROPDOWN.sort(key=lambda x: x[1])

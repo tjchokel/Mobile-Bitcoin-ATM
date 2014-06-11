@@ -11,15 +11,15 @@
             {{ form|crispy }}
             {% csrf_token %}
             <div class="button-wrapper">
-              <button type="submit" class="btn btn-primary btn-lg">{% trans "Sign Up" %}</button>
+              <button type="submit" class="btn btn-primary btn-lg">{% trans "Create Free Account" %}</button>
             </div>
         </form>
     </div>
 {% endblock content %}
 
-{% if form_valid %}
 
-  {% block extra_js %}
+{% block extra_js %}
+  {% if form_valid == True %}
 
     <script>
       $(document).ready(function(){
@@ -530,19 +530,14 @@
 
         $.getJSON('https://freegeoip.net/json/', function(data) {
           var response = data;
-          console.log(data);
           var country3 = country2_to_country3[response.country_code]
-          console.log(country3);
           $('#id_country').val(country3);
           var currency3 = country3_to_currency3[country3];
-          console.log(currency3);
           $('#id_currency_code').val(currency3);
-          console.log('after val');
         });
 
       });
     </script>
 
-  {% endblock %}
-
-{% endif %}
+  {% endif %}
+{% endblock %}

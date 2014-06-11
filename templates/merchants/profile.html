@@ -37,26 +37,16 @@
                 <td align="right">{{merchant.state}}</td>
               </tr>
               <tr>
-<<<<<<< HEAD:templates/merchant_profile.html
                 <td class="text-muted">{% trans "Country" %}</td>
-                <td align="right">{{merchant.country}}</td>
-=======
-                <td class="text-muted">Country</td>
                 <td align="right">{{merchant.get_country_display}}</td>
->>>>>>> fb9ee3046c2587146e5e27fefe15e0f3801342e6:templates/merchants/profile.html
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Zip Code" %}</td>
                 <td align="right">{{merchant.zip_code}}</td>
               </tr>
               <tr>
-<<<<<<< HEAD:templates/merchant_profile.html
                 <td class="text-muted">{% trans "Phone Number" %}</td>
-                <td align="right">{{merchant.phone_num}}</td>
-=======
-                <td class="text-muted">Phone Number</td>
                 <td align="right">{{merchant.phone_num.as_international}}</td>
->>>>>>> fb9ee3046c2587146e5e27fefe15e0f3801342e6:templates/merchants/profile.html
               </tr>
             </tbody>
           </table>
@@ -76,7 +66,7 @@
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Personal Info" %}</a>
+            <a style="color:#515151;" href="#">{% trans "Owner Info"%} <small>({% trans "for Transaction Notifications"%})</small></a>
             <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="personal-info-list" class="table">
@@ -91,7 +81,7 @@
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Phone Number" %}</td>
-                <td align="right">{{user.phone_num}}</td>
+                <td align="right">{{user.phone_num.as_international}}</td>
               </tr>
             </tbody>
           </table>

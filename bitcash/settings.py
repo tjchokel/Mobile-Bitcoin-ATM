@@ -172,6 +172,8 @@ PLIVO_AUTH_TOKEN = os.getenv('PLIVO_AUTH_TOKEN')
 PLIVO_AUTH_ID = os.getenv('PLIVO_AUTH_ID')
 assert PLIVO_AUTH_ID, 'Must have plivo API access'
 
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/app/'
 
 # https://github.com/etianen/django-herokuapp#outputting-logs-to-heroku-logplex
 LOGGING = {

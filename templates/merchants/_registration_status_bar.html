@@ -13,7 +13,9 @@
         </div>
     {% endif %}
 </div>
+{% url 'merchants.views.merchant_profile' as profile_url %}
 {% if not merchant.address_1 %}
-    {% url 'merchants.views.merchant_profile' as profile_url %}
-    {% blocktrans %}Next step: <a href="{{profile_url}}">Complete your business profile</a>{% endblocktrans %}
+  {% blocktrans %}Next step: <a href="{{profile_url}}">List your business address</a>{% endblocktrans %}
+{% elif not merchant.phone_num %}
+  {% blocktrans %}Next step: <a href="{{profile_url}}">List your business phone number</a>{% endblocktrans %}
 {% endif %}

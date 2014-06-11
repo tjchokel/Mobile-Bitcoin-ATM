@@ -1,6 +1,10 @@
 import re
 import random
 
+import phonenumbers
+from django import forms
+from django.utils.translation import ugettext_lazy as _
+
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
 
@@ -127,3 +131,28 @@ def simple_random_generator(num_chars=32, eligible_chars='abcdefghjkmnpqrstuvwxy
     """
     #FIXME: switch to CSPRNG
     return ''.join(random.choice(eligible_chars) for x in range(num_chars))
+
+
+def clean_phone_num(self):
+    """
+    Helper function for cleaning phone numbers (that may just be a country code)
+
+    Phone Number field must be called `phone_num`
+
+    Kept in utils.py so it can be in only one place and called from everywhere.
+    """
+    # TODO: restrict phone number to one of Plivo's serviced countries:
+    # https://s3.amazonaws.com/mf-tmp/plivo_countries.txt
+    phone_num = self.cleaned_data['phone_num']
+    print 'phone_num', phone_num, type(phone_num), len(phone_num)
+    if not phone_num or len(phone_num.strip()) < 4:
+        return None
+    try:
+        pn_parsed = phonenumbers.parse(phone_num, None)
+        if not phonenumbers.is_valid_number(pn_parsed):
+            err_msg = _("Sorry, that number isn't valid")
+            raise forms.ValidationError(err_msg)
+    except phonenumbers.NumberParseException:
+        err_msg = _("Sorry, that number doesn't look like a real number")
+        raise forms.ValidationError(err_msg)
+    return phone_num

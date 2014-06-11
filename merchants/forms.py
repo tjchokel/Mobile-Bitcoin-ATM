@@ -5,7 +5,7 @@ from countries import COUNTRY_DROPDOWN
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
-import phonenumbers
+from utils import clean_phone_num
 
 
 class LoginForm(forms.Form):
@@ -132,19 +132,7 @@ class PersonalInfoRegistrationForm(forms.Form):
             widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_phone_country'}),
     )
 
-    def clean_phone_num(self):
-        # TODO: restrict phone number to one of Plivo's serviced countries:
-        # https://s3.amazonaws.com/mf-tmp/plivo_countries.txt
-        phone_num = self.cleaned_data['phone_num']
-        try:
-            pn_parsed = phonenumbers.parse(phone_num, None)
-            if not phonenumbers.is_valid_number(pn_parsed):
-                err_msg = "Sorry, that number isn't valid"
-                raise forms.ValidationError(err_msg)
-        except phonenumbers.NumberParseException:
-            err_msg = "Sorry, that number doesn't look like a real number"
-            raise forms.ValidationError(err_msg)
-        return phone_num
+    clean_phone_num = clean_phone_num
 
 
 class MerchantInfoRegistrationForm(forms.Form):
@@ -206,6 +194,8 @@ class MerchantInfoRegistrationForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_country'}),
     )
+
+    clean_phone_num = clean_phone_num
 
 
 class BitcoinRegistrationForm(forms.Form):

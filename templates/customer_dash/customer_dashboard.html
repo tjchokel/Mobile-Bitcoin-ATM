@@ -56,7 +56,7 @@
                     var conf_num = txn['forwarding_conf_num']
                     var txn_hash = txn['forwarding_txn_hash']
                     var conf_num_text = 'Pending ('+conf_num+' of '+confs_needed+' Confirms Needed)';
-                    $('#txn-status-'+txn_hash).html(conf_num_text);
+                    $('#tx-status-'+txn_hash).html(conf_num_text);
                   }
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else{

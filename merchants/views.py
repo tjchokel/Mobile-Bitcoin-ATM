@@ -66,7 +66,11 @@ def logout_request(request):
 @render_to('merchants/register.html')
 def register_merchant(request):
     user = request.user
-    initial = {'btc_markup': 2.0}
+    initial = {
+            'btc_markup': 2.0,
+            'country': 'USA',
+            'currency_code': 'USD',
+            }
     form = MerchantRegistrationForm(initial=initial)
     form_valid = True  # used to decide whether we run the JS or not
     if request.method == 'POST':

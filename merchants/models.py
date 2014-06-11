@@ -10,9 +10,9 @@ from countries import BFHCurrenciesList, ALL_COUNTRIES
 class Merchant(models.Model):
     user = models.ForeignKey('users.AuthUser', blank=True, null=True)
     business_name = models.CharField(max_length=256, blank=False, null=False, db_index=True)
-    address_1 = models.CharField(max_length=256, blank=False, null=False, db_index=True)
+    address_1 = models.CharField(max_length=256, blank=True, null=True, db_index=True)
     address_2 = models.CharField(max_length=256, blank=True, null=True, db_index=True)
-    city = models.CharField(max_length=256, blank=False, null=False, db_index=True)
+    city = models.CharField(max_length=256, blank=True, null=True, db_index=True)
     state = models.CharField(max_length=30, null=True, blank=True, db_index=True)
     country = models.CharField(max_length=256, blank=True, null=True, db_index=True, choices=ALL_COUNTRIES)
     zip_code = models.CharField(max_length=256, blank=True, null=True, db_index=True)

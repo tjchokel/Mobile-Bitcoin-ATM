@@ -8,10 +8,10 @@
   </div>
 
   <div class="row">
+    {% if not transactions %}
+      <p class="lead text-center">Waiting on deposit to <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">(Cancel)</a></p>
+    {% endif %}
     {% if shopper %}
-      {% if not transactions %}
-        <p class="lead text-center">Waiting on deposit to <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">(Cancel)</a></p>
-      {% endif %}
       <div class="col-sm-12">
       <br/>
         <h3><i class="fa fa-map-marker"></i> Transactions</h3>

@@ -1,9 +1,8 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from annoying.functions import get_object_or_None
 from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
-from django.core.urlresolvers import reverse_lazy
 from django.core.serializers.json import DjangoJSONEncoder
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -259,7 +258,7 @@ def confirm_deposit(request):
             address.user_confirmed_deposit_at = now()
             address.save()
 
-    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+    return HttpResponse(json.dumps({}), content_type='application/json')
 
 
 @login_required
@@ -274,7 +273,7 @@ def complete_deposit(request):
                 address.save()
                 request.session['forwarding_address'] = None
 
-    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+    return HttpResponse(json.dumps({}), content_type='application/json')
 
 
 @login_required
@@ -288,4 +287,4 @@ def cancel_address(request):
             address.save()
             request.session['forwarding_address'] = None
 
-    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+    return HttpResponse(json.dumps({}), content_type='application/json')

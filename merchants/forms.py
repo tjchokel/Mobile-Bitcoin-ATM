@@ -103,7 +103,7 @@ class AccountRegistrationForm(forms.Form):
     )
 
 
-class PersonalInfoRegistrationForm(forms.Form):
+class OwnerInfoForm(forms.Form):
     full_name = forms.CharField(
         label='Your Name',
         required=True,
@@ -134,7 +134,7 @@ class PersonalInfoRegistrationForm(forms.Form):
     clean_phone_num = clean_phone_num
 
 
-class MerchantInfoRegistrationForm(forms.Form):
+class MerchantInfoForm(forms.Form):
 
     business_name = forms.CharField(
         label='Business Name',
@@ -195,7 +195,7 @@ class MerchantInfoRegistrationForm(forms.Form):
     clean_phone_num = clean_phone_num
 
 
-class BitcoinRegistrationForm(forms.Form):
+class BitcoinInfoForm(forms.Form):
 
     currency_code = forms.CharField(
         label='The Currency You Want to Trade for BTC',
@@ -223,7 +223,7 @@ class BitcoinRegistrationForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        super(BitcoinRegistrationForm, self).__init__(*args, **kwargs)
+        super(BitcoinInfoForm, self).__init__(*args, **kwargs)
         if kwargs and 'initial' in kwargs and 'currency_code' in kwargs['initial']:
             self.fields['currency_code'].widget.attrs['data-currency'] = kwargs['initial']['currency_code']
 

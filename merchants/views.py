@@ -11,8 +11,7 @@ from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm,
-        BitcoinRegistrationForm, PersonalInfoRegistrationForm,
-        MerchantInfoRegistrationForm)
+        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm)
 
 
 @render_to('login.html')
@@ -140,7 +139,7 @@ def merchant_settings(request):
     initial['currency_code'] = merchant.currency_code
     initial['btc_address'] = dest_address.b58_address
     initial['btc_markup'] = merchant.basis_points_markup / 100.0
-    bitcoin_form = BitcoinRegistrationForm(initial=initial)
+    bitcoin_form = BitcoinInfoForm(initial=initial)
     return {
         'user': user,
         'merchant': merchant,
@@ -171,8 +170,8 @@ def merchant_profile(request):
     initial['country'] = merchant.country
     initial['phone_num'] = merchant.phone_num
 
-    personal_form = PersonalInfoRegistrationForm(initial=initial)
-    merchant_form = MerchantInfoRegistrationForm(initial=initial)
+    personal_form = OwnerInfoForm(initial=initial)
+    merchant_form = MerchantInfoForm(initial=initial)
     return {
         'user': user,
         'merchant': merchant,
@@ -201,7 +200,7 @@ def merchant_transactions(request):
 def edit_personal_info(request):
     user = request.user
     if request.method == 'POST':
-        form = PersonalInfoRegistrationForm(data=request.POST)
+        form = OwnerInfoForm(data=request.POST)
         if form.is_valid():
 
             user.full_name = form.cleaned_data['full_name']
@@ -225,7 +224,7 @@ def edit_merchant_info(request):
     user = request.user
     merchant = user.get_merchant()
     if request.method == 'POST' and merchant:
-        form = MerchantInfoRegistrationForm(data=request.POST)
+        form = MerchantInfoForm(data=request.POST)
         if form.is_valid():
 
             merchant.business_name = form.cleaned_data['business_name']
@@ -250,7 +249,7 @@ def edit_bitcoin_info(request):
     user = request.user
     merchant = user.get_merchant()
     if request.method == 'POST' and merchant:
-        form = BitcoinRegistrationForm(data=request.POST)
+        form = BitcoinInfoForm(data=request.POST)
         if form.is_valid():
 
             merchant.currency_code = form.cleaned_data['currency_code']

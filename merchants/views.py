@@ -67,7 +67,8 @@ def logout_request(request):
 @render_to('merchants/register.html')
 def register_merchant(request):
     user = request.user
-    form = MerchantRegistrationForm(initial={'btc_markup': 2.0})
+    initial = {'btc_markup': 2.0}
+    form = MerchantRegistrationForm(initial=initial)
     form_valid = True  # used to decide whether we run the JS or not
     if request.method == 'POST':
         form = MerchantRegistrationForm(data=request.POST)
@@ -122,7 +123,8 @@ def register_merchant(request):
     elif request.method == 'GET':
         email = request.GET.get('e')
         if email:
-            form = MerchantRegistrationForm(initial={'email': email})
+            initial['email'] = email
+            form = MerchantRegistrationForm(initial=initial)
 
     return {'form': form, 'user': user, 'form_valid': form_valid}
 

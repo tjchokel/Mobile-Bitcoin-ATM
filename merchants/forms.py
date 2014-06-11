@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from annoying.functions import get_object_or_None
 
-from countries import COUNTRY_DROPDOWN
+from countries import COUNTRY_DROPDOWN, BFH_CURRENCY_DROPDOWN
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
@@ -48,12 +48,11 @@ class MerchantRegistrationForm(forms.Form):
         choices=COUNTRY_DROPDOWN,
         widget=forms.Select(attrs={'data-country': 'USA'}),
     )
-    currency_code = forms.CharField(
+    currency_code = forms.ChoiceField(
         label='The Currency You Want to Trade for BTC',
-        min_length=3,
-        max_length=30,
+        choices=BFH_CURRENCY_DROPDOWN,
         required=True,
-        widget=forms.Select(attrs={'class': 'bfh-currencies', 'data-currency': 'EUR'}),
+        widget=forms.Select(),
     )
     btc_address = forms.CharField(
             label='Bitcoin Deposit Address',
@@ -209,12 +208,11 @@ class MerchantInfoForm(forms.Form):
 
 class BitcoinInfoForm(forms.Form):
 
-    currency_code = forms.CharField(
+    currency_code = forms.ChoiceField(
         label='The Currency You Want to Trade for BTC',
-        min_length=3,
-        max_length=30,
         required=True,
-        widget=forms.Select(attrs={'class': 'bfh-currencies', 'data-currency': 'EUR'}),
+        choices=BFH_CURRENCY_DROPDOWN,
+        widget=forms.Select(),
     )
 
     btc_address = forms.CharField(

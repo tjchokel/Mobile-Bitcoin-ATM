@@ -12,7 +12,12 @@
       <div class="col-sm-12">
         <p class="lead text-center">
           <i class="fa fa-check-circle" style="color: #81D685;"></i>
-          {% blocktrans with mbtc=current_address.get_btc_transactions_total_formatted shopper_name=shopper.name  fiat=current_address.get_fiat_transactions_total_formatted %}The deposit of <b>{{mbtc}}</b> {% if shopper %}made by {{shopper_name}}{% endif %} is now complete. You owe {% firstof shopper_name 'the customer'%} <b>{{fiat}}</b>.{% endblocktrans %}
+          {% if shopper %}
+            {% blocktrans with mbtc=current_address.get_btc_transactions_total_formatted shopper_name=shopper.name  fiat=current_address.get_fiat_transactions_total_formatted %}The deposit of <b>{{mbtc}}</b> made by {{shopper_name}} is now complete. You owe {{shopper_name}} <b>{{fiat}}</b>.{% endblocktrans %}
+          {% else %}
+            {% blocktrans with mbtc=current_address.get_btc_transactions_total_formatted fiat=current_address.get_fiat_transactions_total_formatted %}The deposit of <b>{{mbtc}}</b> is now complete. You owe the customer <b>{{fiat}}</b>.{% endblocktrans %}
+          {% endif %}
+          
       {% for transaction in transactions %}
         <p class="lead text-center"><a href="https://blockchain.info/tx/{{transaction.txn_hash }}" target="_blank">
         {% blocktrans with mbtc=transaction.format_satoshis_amount %}Verify {{ mbtc }} on Blockchain.info{% endblocktrans %}

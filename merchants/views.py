@@ -141,6 +141,7 @@ def merchant_settings(request):
     initial['btc_address'] = dest_address.b58_address
     initial['btc_markup'] = merchant.basis_points_markup / 100.0
     bitcoin_form = BitcoinRegistrationForm(initial=initial)
+    
     return {
         'user': user,
         'merchant': merchant,

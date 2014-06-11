@@ -1,6 +1,6 @@
 from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from countries import COUNTRY_DROPDOWN
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -56,7 +56,7 @@ class MerchantRegistrationForm(forms.Form):
         min_length=3,
         max_length=30,
         required=True,
-        widget=forms.Select(attrs={}),
+        widget=forms.Select(attrs={'class': 'bfh-currencies', 'data-currency': 'EUR'}),
     )
     btc_address = forms.CharField(
             label=_('Bitcoin Deposit Address'),

@@ -7713,7 +7713,7 @@ var BFHLanguagesList = {
   'et': 'eesti',
   'na': 'Ekakairũ Naoero',
   'en': 'English',
-  'es': 'español',
+  'es': 'Español',
   'eo': 'Esperanto',
   'eu': 'euskara',
   'ee': 'Eʋegbe',

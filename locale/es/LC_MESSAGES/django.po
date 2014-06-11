@@ -436,8 +436,8 @@ msgid "Trying to figure out why this bullshit doesn't work %(business_name)s"
 msgstr "Tratando de averiguar por qué esta mierda no funciona %(business_name)s"
 
 #: templates/customer_dash/_dash_no_deposit_confirm.html:18
-msgid "Get cash for your bitcoin today."
-msgstr "Obtener dinero en efectivo para su bitcoin hoy."
+msgid "Get Cash for Your Bitcoin Today"
+msgstr "Obtener Dinero en Efectivo para Su Bitcoin Hoy"
 
 #: templates/customer_dash/_dash_no_deposit_confirm.html:26
 msgid "Get Started"

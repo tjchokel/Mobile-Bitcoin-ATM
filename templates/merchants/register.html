@@ -10,15 +10,15 @@
             {{ form|crispy }}
             {% csrf_token %}
             <div class="button-wrapper">
-              <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
+              <button type="submit" class="btn btn-primary btn-lg">Create Free Account</button>
             </div>
         </form>
     </div>
 {% endblock content %}
 
-{% if form_valid %}
 
-  {% block extra_js %}
+{% block extra_js %}
+  {% if form_valid == True %}
 
     <script>
       $(document).ready(function(){
@@ -537,6 +537,5 @@
       });
     </script>
 
-  {% endblock %}
-
-{% endif %}
+  {% endif %}
+{% endblock %}

@@ -13,5 +13,7 @@
     {% endif %}
 </div>
 {% if not merchant.address_1 %}
-  Next step: <a href="{% url "merchants.views.merchant_profile" %}">Complete your business profile</a>
+  Next step: <a href="{% url "merchants.views.merchant_profile" %}">List your business address</a>
+{% elif not merchant.phone_num %}
+  Next step: <a href="{% url "merchants.views.merchant_profile" %}">List your business phone number</a>
 {% endif %}

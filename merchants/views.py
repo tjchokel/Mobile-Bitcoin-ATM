@@ -224,33 +224,23 @@ def edit_personal_info(request):
 def edit_merchant_info(request):
     user = request.user
     merchant = user.get_merchant()
-    if request.method == 'POST':
+    if request.method == 'POST' and merchant:
         form = MerchantInfoRegistrationForm(data=request.POST)
         if form.is_valid():
 
-            business_name = form.cleaned_data['business_name']
-            address_1 = form.cleaned_data['address_1']
-            address_2 = form.cleaned_data['address_2']
-            city = form.cleaned_data['city']
-            state = form.cleaned_data['state']
-            country = form.cleaned_data['country']
-            zip_code = form.cleaned_data['zip_code']
-            phone_num = form.cleaned_data['phone_num']
+            merchant.business_name = form.cleaned_data['business_name']
+            merchant.address_1 = form.cleaned_data['address_1']
+            merchant.address_2 = form.cleaned_data['address_2']
+            merchant.city = form.cleaned_data['city']
+            merchant.state = form.cleaned_data['state']
+            merchant.country = form.cleaned_data['country']
+            merchant.zip_code = form.cleaned_data['zip_code']
+            merchant.phone_num = form.cleaned_data['phone_num']
+            merchant.save()
 
-            if merchant:
-                merchant.business_name = business_name
-                merchant.address_1 = address_1
-                merchant.address_2 = address_2
-                merchant.city = city
-                merchant.state = state
-                merchant.country = country
-                merchant.zip_code = zip_code
-                merchant.phone_num = phone_num
-                merchant.save()
-
-                msg = 'Your profile has been updated'
-                messages.success(request, msg, extra_tags='safe')
-            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+            msg = 'Your profile has been updated'
+            messages.success(request, msg, extra_tags='safe')
+    return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
 
 @login_required

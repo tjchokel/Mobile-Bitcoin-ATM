@@ -71,10 +71,10 @@ def register_merchant(request):
             'country': 'USA',
             'currency_code': 'USD',
             }
-    form = MerchantRegistrationForm(initial=initial)
+    form = MerchantRegistrationForm(AuthUser=AuthUser, initial=initial)
     form_valid = True  # used to decide whether we run the JS or not
     if request.method == 'POST':
-        form = MerchantRegistrationForm(data=request.POST)
+        form = MerchantRegistrationForm(AuthUser=AuthUser, data=request.POST)
         if form.is_valid():
 
             email = form.cleaned_data['email']
@@ -86,39 +86,32 @@ def register_merchant(request):
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
 
-            existing_user = get_object_or_None(AuthUser, username=email)
-            if existing_user:
-                login_url = '%s?e=%s' % (reverse_lazy('login_request'), existing_user.email)
-                msg = 'That email is already taken, do you want to '
-                msg += '<a href="%s">login</a>?' % login_url
-                messages.warning(request, msg, extra_tags='safe')
-            else:
-                # create user
-                user = AuthUser.objects.create_user(
-                        email,
-                        email=email,
-                        password=password,
-                        full_name=full_name,
-                        )
+            # create user
+            user = AuthUser.objects.create_user(
+                    email,
+                    email=email,
+                    password=password,
+                    full_name=full_name,
+                    )
 
-                # Create merchant
-                merchant = Merchant.objects.create(
-                        user=user,
-                        business_name=business_name,
-                        country=country,
-                        currency_code=currency_code,
-                        basis_points_markup=basis_points_markup * 100,
-                        )
-                merchant.set_destination_address(btc_address)
+            # Create merchant
+            merchant = Merchant.objects.create(
+                    user=user,
+                    business_name=business_name,
+                    country=country,
+                    currency_code=currency_code,
+                    basis_points_markup=basis_points_markup * 100,
+                    )
+            merchant.set_destination_address(btc_address)
 
-                # login user
-                user_to_login = authenticate(username=email, password=password)
-                login(request, user_to_login)
+            # login user
+            user_to_login = authenticate(username=email, password=password)
+            login(request, user_to_login)
 
-                # Log the login
-                LoggedLogin.record_login(request)
+            # Log the login
+            LoggedLogin.record_login(request)
 
-                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+            return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
         else:
             form_valid = False
@@ -127,7 +120,7 @@ def register_merchant(request):
         email = request.GET.get('e')
         if email:
             initial['email'] = email
-            form = MerchantRegistrationForm(initial=initial)
+            form = MerchantRegistrationForm(AuthUser=AuthUser, initial=initial)
 
     return {'form': form, 'user': user, 'form_valid': form_valid}
 

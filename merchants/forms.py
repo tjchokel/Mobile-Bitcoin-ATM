@@ -1,5 +1,8 @@
 from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.urlresolvers import reverse
+from django.utils.safestring import mark_safe
+from annoying.functions import get_object_or_None
 
 from countries import COUNTRY_DROPDOWN
 
@@ -68,7 +71,8 @@ class MerchantRegistrationForm(forms.Form):
             widget=forms.TextInput(),
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, AuthUser, *args, **kwargs):
+        self.AuthUser = AuthUser
         super(MerchantRegistrationForm, self).__init__(*args, **kwargs)
         if kwargs and 'initial' in kwargs and 'currency_code' in kwargs['initial']:
             self.fields['currency_code'].widget.attrs['data-currency'] = kwargs['initial']['currency_code']
@@ -82,6 +86,14 @@ class MerchantRegistrationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+        existing_user = get_object_or_None(self.AuthUser, username=email)
+        if existing_user:
+            # TODO: move this to clean_email
+            login_url = '%s?e=%s' % (reverse('login_request'), existing_user.email)
+            msg = 'That email is already taken, do you want to '
+            msg += '<a href="%s">login</a>?' % login_url
+            raise forms.ValidationError(mark_safe(msg))
+
         if len(email) > 30:
             msg = 'Sorry, your email address must be less than 31 characters'
             raise forms.ValidationError(msg)

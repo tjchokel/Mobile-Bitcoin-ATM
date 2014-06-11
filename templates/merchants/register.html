@@ -16,9 +16,9 @@
     </div>
 {% endblock content %}
 
-{% if form_valid %}
 
-  {% block extra_js %}
+{% block extra_js %}
+  {% if form_valid == True %}
 
     <script>
       $(document).ready(function(){
@@ -537,6 +537,5 @@
       });
     </script>
 
-  {% endblock %}
-
-{% endif %}
+  {% endif %}
+{% endblock %}

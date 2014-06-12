@@ -87,6 +87,9 @@ class ForwardingAddress(models.Model):
     def get_transaction(self):
         return self.btctransaction_set.last()
 
+    def get_confs_needed(self):
+        return self.merchant.minimum_confirmations
+
     def get_all_forwarding_transactions(self):
         return self.btctransaction_set.filter(destination_address__isnull=True).order_by('-id')
 
@@ -106,8 +109,6 @@ class ForwardingAddress(models.Model):
                     'satoshis': dest_txn.satoshis,
                     'destination_txn_hash': dest_txn.txn_hash,
                     'destination_conf_num': dest_txn.conf_num,
-                    'destination_fiat_amount': dest_txn.fiat_amount,
-                    'currency_code_when_created': dest_txn.currency_code_when_created,
                     }
 
             fwd_txn = dest_txn.input_btc_transaction
@@ -115,6 +116,7 @@ class ForwardingAddress(models.Model):
                 txn_dict['forwarding_txn_hash'] = fwd_txn.txn_hash
                 txn_dict['forwarding_conf_num'] = fwd_txn.conf_num
                 txn_dict['forwarding_fiat_amount'] = fwd_txn.fiat_amount
+                txn_dict['currency_code_when_created'] = fwd_txn.currency_code_when_created
 
             # add txn to list
             txn_group_list.append(txn_dict)
@@ -122,7 +124,7 @@ class ForwardingAddress(models.Model):
         fwd_txn_hashes = [x['forwarding_txn_hash'] for x in txn_group_list if 'forwarding_txn_hash' in x]
 
         # loop through forwarding txns to get any that might be missing (no destination confirms)
-        for fwd_txn in self.btctransaction_set.filter(destination_address=None):
+        for fwd_txn in self.btctransaction_set.filter(destination_address__isnull=True):
             if fwd_txn.txn_hash not in fwd_txn_hashes:
                 txn_dict = {
                         'satoshis': fwd_txn.satoshis,
@@ -209,15 +211,21 @@ class BTCTransaction(models.Model):
                 # This only happens if the objects isn't in the database yet.
                 self.currency_code_when_created = self.get_merchant().currency_code
                 self.fiat_amount = self.calculate_fiat_amount()
-                if not self.met_minimum_confirmation_at:
-                    self.send_shopper_newtx_email()
-                    self.send_shopper_newtx_sms()
-            if not self.met_minimum_confirmation_at and self.meets_minimum_confirmations():
+
+            if self.meets_minimum_confirmations() and not self.met_minimum_confirmation_at:
+                # Mark it as such
                 self.met_minimum_confirmation_at = now()
+
+                # Send out emails
                 self.send_merchant_txconfirmed_email()
                 self.send_merchant_txconfirmed_sms()
                 self.send_shopper_txconfirmed_email()
                 self.send_shopper_txconfirmed_sms()
+            elif not self.pk:
+                # New (not in DB) and doesn't meet threshold
+                self.send_shopper_newtx_email()
+                self.send_shopper_newtx_sms()
+
         super(BTCTransaction, self).save(*args, **kwargs)
 
     def calculate_fiat_amount(self):
@@ -256,7 +264,10 @@ class BTCTransaction(models.Model):
         if self.met_minimum_confirmation_at:
             return 'Sent'
         else:
-            return 'Pending (Do Not Release Cash)'
+            return 'Pending (%s of %s Confirms Needed)' % (
+                    self.conf_num,
+                    self.get_confs_needed(),
+                    )
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
@@ -270,10 +281,11 @@ class BTCTransaction(models.Model):
     def format_satoshis_amount(self):
         return format_satoshis_with_units(self.satoshis)
 
+    def get_confs_needed(self):
+        return self.get_merchant().minimum_confirmations
+
     def meets_minimum_confirmations(self):
-        merchant = self.get_merchant()
-        confirmations = self.conf_num
-        return (confirmations and confirmations >= merchant.minimum_confirmations)
+        return (self.conf_num >= self.get_confs_needed())
 
     def get_fiat_amount_formatted(self):
         return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,

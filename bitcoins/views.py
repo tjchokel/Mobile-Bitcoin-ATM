@@ -22,14 +22,19 @@ def poll_deposits(request):
 
     forwarding_address = request.session.get('forwarding_address')
     all_complete = False
+    confs_needed = 6
     if forwarding_address:
         forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
         if forwarding_obj:
+            confs_needed = forwarding_obj.get_confs_needed()
             txns_grouped = forwarding_obj.get_and_group_all_transactions()
             if forwarding_obj.all_transactions_complete():
                 all_complete = True
 
-    json_dict = {'deposits': {'txns': txns_grouped, 'all_complete': all_complete}}
+    json_dict = {
+            'deposits': {'txns': txns_grouped, 'all_complete': all_complete},
+            'confs_needed': confs_needed,
+            }
     json_response = json.dumps(json_dict, cls=DjangoJSONEncoder)
     return HttpResponse(json_response, content_type='application/json')
 
@@ -81,31 +86,31 @@ def process_bci_webhook(request, random_id):
     msg = '%s == %s' % (input_txn_hash, destination_txn_hash)
     assert input_txn_hash != destination_txn_hash, msg
 
-    btc_txn = get_object_or_None(BTCTransaction, txn_hash=destination_txn_hash)
+    dest_btc_txn = get_object_or_None(BTCTransaction, txn_hash=destination_txn_hash)
 
-    if btc_txn:
+    if dest_btc_txn:
         # already had txn in database
 
         # defensive check
-        msg = '%s != %s' % (btc_txn.satoshis, satoshis)
-        assert btc_txn.satoshis == satoshis, msg
+        msg = '%s != %s' % (dest_btc_txn.satoshis, satoshis)
+        assert dest_btc_txn.satoshis == satoshis, msg
 
         # update # confirms
-        if num_confirmations < btc_txn.conf_num:
+        if num_confirmations < dest_btc_txn.conf_num:
             msg = 'BCI Reports %s confirms and previously reported %s confirms for txn %s'
-            msg = msg % (num_confirmations, btc_txn.conf_num, destination_txn_hash)
+            msg = msg % (num_confirmations, dest_btc_txn.conf_num, destination_txn_hash)
             raise Exception(msg)
 
-        elif num_confirmations == btc_txn.conf_num:
+        elif num_confirmations == dest_btc_txn.conf_num:
             # Same #, no need to update
             pass
 
         else:
             # Increase conf_num
-            btc_txn.conf_num = num_confirmations
-            if num_confirmations >= 6 and not btc_txn.irreversible_by:
-                btc_txn.irreversible_by = now()
-            btc_txn.save()
+            dest_btc_txn.conf_num = num_confirmations
+            if num_confirmations >= 6 and not dest_btc_txn.irreversible_by:
+                dest_btc_txn.irreversible_by = now()
+            dest_btc_txn.save()
     else:
         # Didn't have TXN in DB
 
@@ -116,23 +121,23 @@ def process_bci_webhook(request, random_id):
         msg = '%s != %s' % (destination_obj.b58_address, destination_address)
         assert destination_obj.b58_address == destination_address
 
-        # Lookup input_btc_transaction based on input_txn_hash
-        input_btc_transaction = get_object_or_None(BTCTransaction, txn_hash=input_txn_hash)
+        # Lookup fwd_btc_txn based on input_txn_hash
+        fwd_btc_txn = get_object_or_None(BTCTransaction, txn_hash=input_txn_hash)
 
         # Run some safety checks and email us of discrepencies (but don't break)
-        if input_btc_transaction:
-            if input_btc_transaction.satoshis != satoshis:
+        if fwd_btc_txn:
+            if fwd_btc_txn.satoshis != satoshis:
                 send_admin_email(
                         subject='BTC Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s satoshis and BCI says %s' % (
-                            input_btc_transaction.satoshis, satoshis),
+                            fwd_btc_txn.satoshis, satoshis),
                         recipient_list=['monitoring@coinsafe.com', ],
                         )
-            if input_btc_transaction.conf_num < num_confirmations and num_confirmations <= 6:
+            if fwd_btc_txn.conf_num < num_confirmations and num_confirmations <= 6:
                 send_admin_email(
                         subject='Confirmations Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s confs and BCI says %s' % (
-                            input_btc_transaction.conf_num, num_confirmations),
+                            fwd_btc_txn.conf_num, num_confirmations),
                         recipient_list=['monitoring@coinsafe.com', ],
                         )
 
@@ -151,7 +156,7 @@ def process_bci_webhook(request, random_id):
                 irreversible_by=irreversible_by,
                 forwarding_address=forwarding_obj,
                 destination_address=destination_obj,
-                input_btc_transaction=input_btc_transaction,
+                input_btc_transaction=fwd_btc_txn,
                 )
 
     if num_confirmations >= 6:
@@ -191,31 +196,31 @@ def process_blockcypher_webhook(request, random_id):
             # skip this entry
             continue
 
-        btc_txn = get_object_or_None(BTCTransaction, txn_hash=txn_hash)
+        fwd_btc_txn = get_object_or_None(BTCTransaction, txn_hash=txn_hash)
 
-        if btc_txn:
+        if fwd_btc_txn:
             # already had txn in database
 
             # defensive check
-            msg = '%s != %s' % (btc_txn.satoshis, output['value'])
-            assert btc_txn.satoshis == output['value'], msg
+            msg = '%s != %s' % (fwd_btc_txn.satoshis, output['value'])
+            assert fwd_btc_txn.satoshis == output['value'], msg
 
             # update # confirms
-            if confirmations < btc_txn.conf_num:
+            if confirmations < fwd_btc_txn.conf_num:
                 msg = 'Blockcypher reports %s confirms and previously reported %s confirms for txn %s'
-                msg = msg % (confirmations, btc_txn.conf_num, txn_hash)
+                msg = msg % (confirmations, fwd_btc_txn.conf_num, txn_hash)
                 raise Exception(msg)
 
-            elif confirmations == btc_txn.conf_num:
+            elif confirmations == fwd_btc_txn.conf_num:
                 # Same #, no need to update
                 pass
 
             else:
                 # Increase conf_num
-                btc_txn.conf_num = confirmations
-                if confirmations >= 6 and not btc_txn.irreversible_by:
-                    btc_txn.irreversible_by = now()
-                btc_txn.save()
+                fwd_btc_txn.conf_num = confirmations
+                if confirmations >= 6 and not fwd_btc_txn.irreversible_by:
+                    fwd_btc_txn.irreversible_by = now()
+                fwd_btc_txn.save()
         else:
             # Didn't have TXN in DB
 

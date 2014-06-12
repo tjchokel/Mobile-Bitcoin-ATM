@@ -48,10 +48,16 @@
                 if(deposits['txns'].length == 0){
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else if(! deposits['all_complete']){
-                  // TODO: FIX
-                  conf_num = deposits['txns'][0]['forwarding_conf_num']
-                  conf_num_text = conf_num + ' confirmations'
-                  $('#txn-status').html(conf_num_text);
+                  var confs_needed = data['confs_needed'];
+                  var txns = deposits['txns'];
+                  var txns_length = txns.length;
+                  for (var i = 0; i < txns_length; i++) {
+                    var txn = txns[i];
+                    var conf_num = txn['forwarding_conf_num']
+                    var txn_hash = txn['forwarding_txn_hash']
+                    var conf_num_text = 'Pending ('+conf_num+' of '+confs_needed+' Confirms Needed)';
+                    $('#tx-status-'+txn_hash).html(conf_num_text);
+                  }
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
                 }else{
                   location.reload(true);

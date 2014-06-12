@@ -22,7 +22,7 @@ def home(request):
 @render_to('customer_dash/customer_dashboard.html')
 def customer_dashboard(request):
     user = request.user
-    if not user.finished_registration():
+    if not user.get_merchant():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
     transactions, shopper, form = None, None, None

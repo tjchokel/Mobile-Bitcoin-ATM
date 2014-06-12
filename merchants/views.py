@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import escape
+from django.utils.translation import ugettext_lazy as _
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
@@ -34,17 +35,18 @@ def login_request(request):
                     # Log the login
                     LoggedLogin.record_login(request)
 
-                    msg = 'Welcome <b>%s</b>,' % user.username
-                    msg += ' you are now logged in.'
+                    msg = _('Welcome') + '<b>%s</b>, ' % user.username
+                    msg += _('you are now logged in.')
                     messages.success(request, msg, extra_tags='safe')
 
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
-                    msg = "Sorry, that's not the right password for "
+                    msg = _("Sorry, that's not the right password for ")
                     msg += '<b>%s</b>.' % escape(email)
                     messages.warning(request, msg, extra_tags='safe')
             else:
-                msg = "No account found for <b>%s</b>." % escape(email)
+                msg = _("No account found for ")
+                msg += "<b>%s</b>." % escape(email)
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':
@@ -58,7 +60,7 @@ def login_request(request):
 def logout_request(request):
     " Log a user out using Django's logout function and redirect them "
     logout(request)
-    msg = "You Are Now Logged Out"
+    msg = _("You Are Now Logged Out")
     messages.success(request, msg)
     return HttpResponseRedirect(reverse_lazy('login_request'))
 
@@ -207,11 +209,11 @@ def edit_personal_info(request):
             user.username = form.cleaned_data['email']
             user.save()
 
-            msg = 'Your profile has been updated'
+            msg = _('Your profile has been updated')
             messages.success(request, msg)
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
-    msg = 'Your profile was not updated'
+    msg = _('Your profile was not updated')
     messages.warning(request, msg)
     return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
@@ -234,10 +236,10 @@ def edit_merchant_info(request):
             merchant.phone_num = form.cleaned_data['phone_num']
             merchant.save()
 
-            messages.success(request, 'Your business info has been updated')
+            messages.success(request, _('Your business info has been updated'))
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
-    messages.warning(request, 'Your business info was not updated')
+    messages.warning(request, _('Your business info was not updated'))
     return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
 
@@ -254,8 +256,8 @@ def edit_bitcoin_info(request):
             merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
             merchant.save()
 
-            messages.success(request, 'Your bitcoin info has been updated')
+            messages.success(request, _('Your bitcoin info has been updated'))
             return HttpResponseRedirect(reverse_lazy('merchant_settings'))
 
-    messages.warning(request, 'Your bitcoin info was not updated')
+    messages.warning(request, _('Your bitcoin info was not updated'))
     return HttpResponseRedirect(reverse_lazy('merchant_settings'))

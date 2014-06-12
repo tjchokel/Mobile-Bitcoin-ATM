@@ -19,7 +19,7 @@ def home(request):
 
 
 @login_required
-@render_to('customer_dash/customer_dashboard.html')
+@render_to('customer_dash/main.html')
 def customer_dashboard(request):
     user = request.user
     if not user.get_merchant():
@@ -69,6 +69,7 @@ def customer_dashboard(request):
                         existing_txn.send_shopper_newtx_sms()
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
     return {
         'form': form,
         'user': user,

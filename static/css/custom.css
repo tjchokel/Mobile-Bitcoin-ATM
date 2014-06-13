@@ -6,11 +6,11 @@ Last change:    04/01/2014
 -------------------------------------------------------------------*/
 
 html, body {
-    font-family: 'Lato', sans-serif;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
     height: 100%;
 }
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lato', sans-serif;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
 }
 h1.hl, h2.hl, h3.hl, h4.hl, h5.hl, h6.hl {
     color: #515151;
@@ -38,7 +38,7 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 /* ===== Navbar ===== */
 
 .navbar-inverse {
-  background-color: #515151;
+  background-color: #2a3b48;
   border: none;
 }
 .navbar-inverse .navbar-nav > .active > a,
@@ -49,19 +49,18 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
   background-color: #515151;
 }
 .navbar-inverse .navbar-brand {
-  color: #EEEEEE;
+  color: white;
 }
 .navbar-inverse .navbar-nav > li > a {
-  color: #EEEEEE;
+  color: white;
 }
 .navbar-inverse {
-    font-family: 'Lato', sans-serif;
-    text-transform: uppercase;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
     font-size: 12px;
 }
 .navbar-inverse .navbar-nav > .dropdown > a .caret {
-  border-top-color: #EEEEEE;
-  border-bottom-color: #EEEEEE;
+  border-top-color: white;
+  border-bottom-color: white;
 }
 .navbar-inverse .navbar-nav > .open > a .caret,
 .navbar-inverse .navbar-nav > .open > a:hover .caret,
@@ -98,7 +97,7 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 
 #wrap {
     height: 480px;
-    background: url(../img/bg3.jpg);
+    background: url(../img/background-phone.png);
     background-size: cover;
     filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg3.jpg', sizingMethod='scale');
     -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg3.jpg', sizingMethod='scale')";
@@ -108,12 +107,11 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
     color: #fff;
 }
 #wrap h1 {
-    font-family: 'Lato', sans-serif;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
     font-weight: 100;
-    font-size: 48px;
-    margin-top: 70px;
-    text-transform: uppercase;
-    margin-left: 70px;
+    font-size: 40px;
+    margin-top: 130px;
+    margin-left: -30px;
     text-shadow: 1px 1px 3px #666;
     filter: Shadow(Color=#666666, Direction=45, Strength=3);
 }
@@ -1500,7 +1498,6 @@ table {
 }
 
 .sign-up-box {
-    position: absolute;
     padding: 1em;
     margin-top: 230px;
     background: #515151;
@@ -1516,15 +1513,20 @@ table {
     text-align: center;
 }
 
+.btn {
+    background-color:#49c3ab;
+    border-color:#49c3ab;
+}
+
 .tagline {
-    background: rgba(0, 0, 0, 0.75);
+    /*background: rgba(0, 0, 0, 0.75);*/
     text-align:center;
 }
 
 .divider-bar {
     background: #f5f5f5;
     border-bottom: 1px solid #dedede;
-    padding: 3px 0;
+    padding: 5px 0;
 }
 
 .submitted-message {
@@ -1537,7 +1539,7 @@ i.fa {
     padding-top: 60px;
 }
 .page-tip #messages{
-    font-family: 'Lato', sans-serif;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
     font-size: 14px;
     text-transform: none;
     margin-top: 0px;
@@ -1579,6 +1581,10 @@ a.anchor{
 .has-spinner.active .spinner {
   opacity: 1;
   max-width: 50px; /* More than it will ever come, notice that this affects on animation duration */
+}
+
+.green-color {
+    color:#49c3ab;
 }
 
 /* Show and affix the side nav for ui elements when space allows it */

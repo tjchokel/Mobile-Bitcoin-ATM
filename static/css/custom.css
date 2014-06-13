@@ -1519,6 +1519,13 @@ table {
     border-color:#49c3ab;
 }
 
+/* http://stackoverflow.com/a/21663096/1754586 */
+.btn-xl {
+    padding: 18px 28px;
+    font-size: 22px;
+    border-radius: 8px;
+}
+
 .tagline {
     /*background: rgba(0, 0, 0, 0.75);*/
     text-align:center;

@@ -79,7 +79,7 @@ class ForwardingAddress(models.Model):
     # but having it here makes for easier querying (especially before there is a destination address)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     shopper = models.ForeignKey('shoppers.Shopper', blank=True, null=True)
-    user_confirmed_deposit_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    customer_confirmed_deposit_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
@@ -199,6 +199,18 @@ class BTCTransaction(models.Model):
 
     def get_shopper(self):
         return self.forwarding_address.shopper
+
+    def get_forwarding_txns(self):
+        ''' Will include self if self is a forwarding txn '''
+        return BTCTransaction.objects.filter(
+                forwarding_address=self.forwarding_address,
+                destination_address=None)
+
+    def get_destination_txns(self):
+        ''' Will include self if self is a destination txn '''
+        return BTCTransaction.objects.filter(
+                forwarding_address=self.forwarding_address,
+                destination_address__isnull=False)
 
     def save(self, *args, **kwargs):
         """
@@ -405,7 +417,8 @@ class BTCTransaction(models.Model):
                 )
 
     def send_merchant_txconfirmed_sms(self):
-        if self.get_merchant().phone_num:
+        merchant = self.get_merchant()
+        if merchant.phone_num:
             # TODO: allow for notification settings
             msg = 'The %s you received from %s has been confirmed. Please pay them %s immediately.'
             shopper = self.get_shopper()
@@ -416,12 +429,12 @@ class BTCTransaction(models.Model):
             msg = msg % (
                     self.format_satoshis_amount(),
                     customer_string,
-                    self.merchant.business_name,
+                    merchant.business_name,
                     self.get_fiat_amount_formatted(),
                     )
             return SentSMS.send_and_log(
                     phone_num=self.merchant.phone_num,
                     message=msg,
-                    to_user=self.merchant.user,
-                    to_merchant=self.merchant,
+                    to_user=merchant.user,
+                    to_merchant=merchant,
                     to_shopper=shopper)

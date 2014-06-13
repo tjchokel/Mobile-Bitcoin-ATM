@@ -128,7 +128,7 @@
     {% block content %}{% endblock content %}
     <!-- Foooter
     ================== -->
-    {% if user.is_authenticated and user.finished_registration %}
+    {% if user.is_authenticated and user.get_merchant %}
       
     
       <div class="navbar navbar-inverse navbar-fixed-bottom" id="footer" style="background: white">
@@ -165,5 +165,6 @@
     <script src="{% static "js/custom.js" %}"></script>
     {% block extra_js %}
     {% endblock extra_js %}
+    {% include "partials/ga.html" %}
   </body>
 </html>

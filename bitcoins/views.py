@@ -58,7 +58,7 @@ def get_bitcoin_price(request):
     basis_points_markup = merchant.basis_points_markup
     markup_fee = fiat_btc * basis_points_markup / 10000.00
     fiat_btc = fiat_btc - markup_fee
-    fiat_rate_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:20,.2f}'.format(fiat_btc))
+    fiat_rate_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:,.2f}'.format(fiat_btc))
     percent_markup = basis_points_markup / 100.00
     json_response = json.dumps({
                 "amount": fiat_rate_formatted,
@@ -193,7 +193,7 @@ def process_blockcypher_webhook(request, random_id):
         # Make sure it has an address we care about:
         forwarding_obj = get_forwarding_obj_from_address_list(output['addresses'])
         if not forwarding_obj:
-            # skip this entry
+            # skip this entry (it's the destination txn)
             continue
 
         fwd_btc_txn = get_object_or_None(BTCTransaction, txn_hash=txn_hash)
@@ -254,29 +254,40 @@ def get_next_deposit_address(request):
 
 
 @login_required
-def confirm_deposit(request):
+def customer_confirm_deposit(request):
     user = request.user
     merchant = user.get_merchant()
-    if request.session.get('forwarding_address'):
-        address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
-        if address and merchant.id == address.merchant.id:
-            address.user_confirmed_deposit_at = now()
-            address.save()
+
+    forwarding_address = request.session.get('forwarding_address')
+    assert forwarding_address, 'No forwarding address'
+    address = ForwardingAddress.objects.get(b58_address=forwarding_address)
+
+    msg = '%s != %s' % (merchant.id, address.merchant.id)
+    assert merchant.id == address.merchant.id, msg
+
+    address.customer_confirmed_deposit_at = now()
+    address.save()
 
     return HttpResponse(json.dumps({}), content_type='application/json')
 
 
 @login_required
-def complete_deposit(request):
+def merchant_complete_deposit(request):
     user = request.user
     merchant = user.get_merchant()
-    if request.session.get('forwarding_address'):
-        address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
-        if address and merchant.id == address.merchant.id:
-            if address.all_transactions_complete():
-                address.paid_out_at = now()
-                address.save()
-                request.session['forwarding_address'] = None
+
+    forwarding_address = request.session.get('forwarding_address')
+    assert forwarding_address, 'No forwarding address'
+
+    address = ForwardingAddress.objects.get(b58_address=forwarding_address)
+
+    msg = '%s != %s' % (merchant.id, address.merchant.id)
+    assert merchant.id == address.merchant.id, msg
+
+    if address.all_transactions_complete():
+        address.paid_out_at = now()
+        address.save()
+        del request.session['forwarding_address']
 
     return HttpResponse(json.dumps({}), content_type='application/json')
 
@@ -285,11 +296,17 @@ def complete_deposit(request):
 def cancel_address(request):
     user = request.user
     merchant = user.get_merchant()
-    if request.session.get('forwarding_address'):
-        address = ForwardingAddress.objects.get(b58_address=request.session.get('forwarding_address'))
-        if address and merchant.id == address.merchant.id:
-            address.paid_out_at = now()
-            address.save()
-            request.session['forwarding_address'] = None
+
+    forwarding_address = request.session.get('forwarding_address')
+    assert forwarding_address, 'No forwarding address'
+
+    address = ForwardingAddress.objects.get(b58_address=forwarding_address)
+
+    msg = '%s != %s' % (merchant.id, address.merchant.id)
+    assert merchant.id == address.merchant.id, msg
+
+    address.paid_out_at = now()
+    address.save()
+    del request.session['forwarding_address']
 
     return HttpResponse(json.dumps({}), content_type='application/json')

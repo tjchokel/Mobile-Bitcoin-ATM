@@ -1,7 +1,16 @@
 <div class="container">
   <div class="page-header">
       <h3 class="pull-left">{{merchant.business_name}}</h3>
-      <h3 class="pull-right" id="fiat-amt" style="color: #72a53b; float:right;"><a class="active has-spinner hidden" id="fiat-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a></h3>
+      <h3 class="pull-right" style="float:right;">
+        <a class="active has-spinner" id="fiat-amt-loader">
+          <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+        </a>
+        <span id="fiat-amt-section" class="hidden">
+          <span>BTC Price =</span>
+          <span style="color: #72a53b;" id="fiat-amt"></span>
+          <span>({{ merchant.get_percent_markup }}% markup)</span>
+        </span>
+      </h3>
       <div class="clearfix"></div>
   </div>
 
@@ -11,7 +20,7 @@
         <div class="row">
           <div class="col-md-12">
             <br/>
-            <p class="lead text-center"><strong>Get Cash for Your Bitcoin Today</strong></p>
+            <p class="lead text-center"><strong>Get Cash for Your Bitcoin Now</strong></p>
           </div>
         </div>
         <br/>

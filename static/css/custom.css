@@ -1502,6 +1502,7 @@ table {
     margin-top: 230px;
     background: #515151;
     background: rgba(0, 0, 0, 0.65);
+    border-radius: 10px;
 }
 .sign-up-box .input-group{
     display: block;
@@ -1516,6 +1517,13 @@ table {
 .btn {
     background-color:#49c3ab;
     border-color:#49c3ab;
+}
+
+/* http://stackoverflow.com/a/21663096/1754586 */
+.btn-xl {
+    padding: 18px 28px;
+    font-size: 22px;
+    border-radius: 8px;
 }
 
 .tagline {

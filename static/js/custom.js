@@ -10,7 +10,12 @@ $(document).ajaxComplete(function(e, xhr, settings) {
         });
     }
 }).ajaxError(function(e, xhr, settings, exception) {
-    addMessage("There was an error processing your request, please try again.", "error");
+    if (settings.url.search('freegeoip.net') >= 0) {
+        console.log(settings.url+' Error');
+    }
+    else {
+      addMessage("There was an error processing your request, please try again.", "error");
+    }
 });
 
 function addMessage(text, extra_tags) {

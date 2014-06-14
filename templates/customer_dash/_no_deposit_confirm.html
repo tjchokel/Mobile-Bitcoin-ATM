@@ -1,6 +1,7 @@
 {% load i18n %}
 <div class="container">
   <div class="page-header">
+
       <h3 class="pull-left">{{merchant.business_name}}
       </h3>
       <h3 class="pull-right" style="color: #72a53b; float:right;">
@@ -12,6 +13,18 @@
             <i class="fa fa-spinner fa-spin"></i>
           </span>
         </a>
+<!-- =======
+      <h3 class="pull-left">{{merchant.business_name}}</h3>
+      <h3 class="pull-right" style="float:right;">
+        <a class="active has-spinner" id="fiat-amt-loader">
+          <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+        </a>
+        <span id="fiat-amt-section" class="hidden">
+          <span>BTC Price =</span>
+          <span style="color: #72a53b;" id="fiat-amt"></span>
+          <span>({{ merchant.get_percent_markup }}% markup)</span>
+        </span>
+>>>>>>> 192637c7e9dfe603f86932084b77c572b8325832:templates/customer_dash/_no_deposit_confirm.html -->
       </h3>
       <div class="clearfix"></div>
   </div>
@@ -22,7 +35,7 @@
         <div class="row">
           <div class="col-md-12">
             <br/>
-            <p class="lead text-center"><strong>{% trans "Get Cash for Your Bitcoin Today" %}</strong></p>
+            <h2 class="text-center">{% trans "Get Cash for Your Bitcoin Now" %}</h2>
           </div>
         </div>
         <br/>
@@ -48,7 +61,7 @@
         <br /><br />
         <div class="row">
           <span style="margin-left: auto; margin-right: auto; display: block;">
-            <a class="btn btn-primary btn-lg has-spinner" id="show-address-button" onclick="getNextAddress();">
+            <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
               <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
               {% trans "Get Started" %}
             </a>

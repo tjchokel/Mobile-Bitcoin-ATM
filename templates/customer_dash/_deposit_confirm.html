@@ -10,7 +10,7 @@
 
   <div class="row">
     {% if not transactions %}
-      <p class="lead text-center">{% trans "Waiting on deposit to" %} <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">({% trans "Cancel" %})</a></p>
+      <p class="lead text-center">{% trans "Waiting for deposit to" %} <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">({% trans "Cancel" %})</a></p>
     {% endif %}
     {% if shopper %}
       <div class="col-sm-12">
@@ -32,7 +32,7 @@
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Phone" %}</td>
-                <td align="right">{{shopper.phone_num}}</td>
+                <td align="right">{{shopper.phone_num.as_international}}</td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Email" %}</td>
@@ -45,7 +45,7 @@
 
     {% else %}
       <p class="lead text-center">
-      {% blocktrans %}Thanks for you deposit! Please enter a name for your order. If you leave your email and/or phone we'll send you a receipt.{% endblocktrans %}
+        {% trans "Please enter a name for your receipt" %}.
       </p>
       <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}

@@ -1,74 +1,101 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load app_extras %}
+{% load staticfiles %}
 {% block content %}
-    <div class="container">
-        <div class="page-header">
-            <h1>{% trans "Welcome to CloseCoin" %}</h1>
-        </div>
+    <!-- <div class="container"> -->
+<div id="wrap">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5 col-sm-5">
+        <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
+      </div>
 
+      <div class="col-sm-4 col-sm-offset-3 sign-up-box">
+        <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="padding-right: 5px;padding-left:5px;width: 100%;">{% trans "List Your Business for Free" %}</a>
+      </div>
+      <!-- <div class="sign-up-box" id="sign-up-box" style="width:24%; position:relative;left:70%">
 
-        <h3>{% trans "For Merchants" %}</h3>
-        <p>
-          {% blocktrans %}CloseCoin makes it easy for owners of any store to <b>buy bitcoin for cash</b>. Some of our happiest customers are money changers, restaurants, hostels, convenience stores, and gas stations. It works great anywhere there is a cash register, an internet connection, and a desire to buy bitcoin at the best prices. It's kind of like an ATM, only instead of using expensive hardware, we use a simple app and the cash register that's already in your store.
-          {% endblocktrans %}
-        </p>
-
-        <p>{% trans "Benefits"%}:</p>
-        <ul>
-          <li>
-            <b>{% trans "Set Your Own Prices"%}</b>.
-            {% blocktrans %}Since your business has regular hours and pays out in cash, you get rewarded with better prices. It's a much better experience than messaging someone back and forth to meetup at a coffee shop or in a dark alley.{% endblocktrans %}
-          </li>
-          <li>
-            <b>{% trans "Get Your Money to a Safer Location"%}</b>.
-            {% blocktrans %}Every time your cashier reaches into the cash register to pay a customer for their bitcoin, money leaves the premises. The address that recieves the bitcoin can be kept anywhere you like: in your safe, at your home, or even in another country. Moving cash into bitcoins can minimize theft and reduce robberies.{% endblocktrans %}
-          </li>
-          <li>
-            <b>{% trans "Sell or Spend Your Bitcoin Immediately"%}</b>.
-            {% blocktrans %}As soon as you recieve the bitcoin it's yours to sell or spend however you like. If you don't want to hold bitcoin, you can set your prices so that you're able to sell it right away for a profit.{% endblocktrans %}
-          </li>
-          <li>
-            <b>{% trans "Very Easy to Use"%}</b>.
-            {% blocktrans %}Your employees can buy bitcoin for you without having to know anything about bitcoin. You set the price and the app notifies your cashier/employee when it's safe to pay out cash to the customer. Our mobile-optimized website requires only an internet connection and works on any smartphone, tablet, or desktop computer. No training needed.{% endblocktrans %}
-          </li>
-          <li>
-
-            <b>{% trans "Get New Customers"%}</b>.
-            {% trans "Customers who come to your business and recieve cash for their bitcoin are likely to stick around and spend some of that money"%}.
-
-          </li>
-          <li>
-            <b>{% trans "You Control Your Private Keys"%}</b>.
-            {% trans "Securely buy and sell bitcoin without trusting us or anyone else"%}.
-          </li>
-          <li>
-            <b>{% trans "Works Anywhere In the World"%}</b>.
-            {% trans "From Argentina to Australia, CloseCoin works everywhere in the world with the currency of your choice. More languages coming soon!"%}
-          </li>
-          <li>
-            <b>{% trans "Free during our Beta and cheap after"%}</b>.
-            {% trans "There's no lock-in or contract and you can leave at any time. Remember, you are always in full control of your private keys"%}.
-          </li>
-        </ul>
-
-        <br />
-        <span style="text-align: center;">
-          <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "List Your Business on CloseCoin for Free"%}</a>
-        </span>
-        <br />
-
-        <hr />
-
-        <h3>{% trans "For Customers"%}</h3>
-
-        <p>
-          {% trans "CloseCoin makes it easy to find someone close by to give you cash for your bitcoin. You can check their price, hours and location in advance, no messaging back and forth. Just show up with your bitcoin wallet app and recieve cash for your bitcoin. CloseCoin is great for converting your remmitance into cash, or for travellers in foreign countries who need local currency"%}.
-        </p>
-
-        <p>
-          {% blocktrans %}During our private beta, CloseCoin is only available from select merchants. <a href="https://docs.google.com/forms/d/1h7Z996Y5vIHE-uOc03vxnFa6jN-vRNF_CFW4e89MdTk/viewform?usp=send_form">Sign up to be notified when CloseCoin merchants are available in your city.</a>{% endblocktrans %}
-        </p>
-
+        <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="padding-right: 5px;padding-left:5px;width: 100%;">List Your Business for Free</a>
+      </div> -->
     </div>
+  </div>
+</div>
+<div class="divider-bar">
+  <div class="container">
+    <h3 class="green-color" style="text-align:center;">{% trans "Your Bitcoin Point Of Sale System" %}</h3>
+    <p class="lead text-center">
+      {% trans "CloseCoin makes it easy for owners of any store to <b>buy bitcoin for cash</b>.Some of our happiest customers are money changers, restaurants, hostels, convenience stores, and gas stations.It works great anywhere there is a cash register, an internet connection, and a desire to buy bitcoin at wholesale prices." %}
+    </p>
+  </div>
+</div>
+<div class="container">
+    <div class="row" style="margin-top: -50px;">
+
+      <div class="col-lg-7">
+            <h2>{% trans "Store Owners" %}</h2>
+            <p style="padding-left:15px; font-size: 16px; padding-top:8px;">
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Set Your Own Prices" %}</b><br/>
+              {% trans "Since your business has regular hours and pays out quickly in cash, you get rewarded with better prices." %}
+              <br/>
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Attract New Customers" %}</b><br/>
+              {% trans "Prime placement on the CloseCoin map will send more foot traffic into your store." %}
+              <br/>
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Sell or Spend Your Bitcoin Immediately" %}</b><br/>
+              {% trans "If you don't want to hold bitcoin, you can set your prices so that you're able to sell it right away for a profit." %}
+              <br/>
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Get Your Money to a Safer Location" %}</b><br/>
+              {% trans "Moving cash into bitcoins can minimize theft and reduce robberies." %}
+              <br/>
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Simple to Use" %}</b><br/>
+              {% trans "Mobile-optimized and user friendly, CloseCoin is designed so that even an employee with no Bitcoin knowledge can operate it." %}  <br/>
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Works Anywhere In the World" %}</b><br/>
+              {% trans "From Argentina to Australia, CloseCoin works everywhere in the world with the currency of your choice. More languages coming soon!" %}
+              <br/>
+            </p>
+            <a class="btn btn-primary btn-lg" href="#" role="button" style="margin-left: 15px;">{% trans "List Your Business Today" %}</a>
+
+      </div>
+      <div class="col-lg-4 col-lg-offset-1">
+        </span>
+        <img src="{%static "img/shop.png" %}" style="margin-top: 25%;" width="80%" height="80%" />
+        <!-- <img class="img-circle" data-src="holder.js/140x140" alt="140x140" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj48cmVjdCB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjcwIiB5PSI3MCIgc3R5bGU9ImZpbGw6I2FhYTtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjE0MHgxNDA8L3RleHQ+PC9zdmc+" style="margin-top: 40%;"> -->
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+
+      <div class="col-lg-7">
+            <h2>{% trans "Customers" %}</h2>
+            <p style="padding-left:15px; font-size: 16px; padding-top:8px;">
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Transparent Pricing" %}</b><br/>
+              {% trans "Businesses publish their prices online so you can shop around for the best rate. There are never any surprises when you get to the store." %}
+              <br/>
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "No Messaging" %}</b><br/>
+              {% trans "Businesses list their hours and location in advance, just show up with your bitcoin and receive cash." %}
+              <br/>
+              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Businesses You Can Trust" %}</b><br/>
+              {% trans "Each merchant is rated by their users to ensure that the continue to provide the best service." %}
+              <br/>
+            </p>
+            <p><a class="btn btn-primary btn-lg" href="https://docs.google.com/forms/d/1h7Z996Y5vIHE-uOc03vxnFa6jN-vRNF_CFW4e89MdTk/viewform?usp=send_form" role="button" style="margin-left: 15px;" target="_blank">{% trans "Get Notified of New Merchants Nearby" %}</a></p>
+
+      </div>
+      <div class="col-lg-4 col-lg-offset-1">
+        <img src="{%static "img/money.png" %}" style="margin-top: 10%;" width="80%" height="80%" />
+      </div>
+    </div>
+</div>
+<footer style="background-color:#2a3b48;position:absolute;width:100%;height:300px; text-align:center;">
+  <div class="container">
+    <div class="row">
+      <h1 style="color:white; padding-top:30px;padding-bottom:30px;">
+      {% trans "Turn Your Phone Into a Bitcoin ATM Now!" %}
+      </h1>
+      <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-xl" style="margin-bottom:40px;" >{% trans "Join The CloseCoin Network" %}</a>
+    </div>
+  </div>
+  <br/><br/><br/>
+  © 2014 CoinSafe Inc.
+</footer>
 {% endblock content %}

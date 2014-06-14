@@ -25,8 +25,8 @@ urlpatterns = patterns('',
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
     url(r'^get-deposit-address/$', 'bitcoins.views.get_next_deposit_address', name='get_next_deposit_address'),
-    url(r'^confirm-deposit/$', 'bitcoins.views.confirm_deposit', name='confirm_deposit'),
-    url(r'^complete-deposit/$', 'bitcoins.views.complete_deposit', name='complete_deposit'),
+    url(r'^customer-confirm-deposit/$', 'bitcoins.views.customer_confirm_deposit', name='customer_confirm_deposit'),
+    url(r'^merchant-complete-deposit/$', 'bitcoins.views.merchant_complete_deposit', name='merchant_complete_deposit'),
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
 
     # Inbound Webhooks

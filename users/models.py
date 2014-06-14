@@ -22,20 +22,6 @@ class AuthUser(AbstractUser):
     def get_merchant(self):
         return self.merchant_set.last()
 
-    def get_registration_step(self):
-        step = 0
-        merchant = self.get_merchant()
-        if self.full_name:
-            step += 1
-        if merchant:
-            step += 1
-            if merchant.has_destination_address():
-                step += 1
-        return step
-
-    def finished_registration(self):
-        return self.get_registration_step() == 3
-
 
 class LoggedLogin(models.Model):
     login_at = models.DateTimeField(auto_now_add=True, db_index=True)

@@ -2,15 +2,12 @@ from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
 
-from countries import COUNTRY_DROPDOWN
 from bitcoins.BCAddressField import is_valid_btc_address
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from annoying.functions import get_object_or_None
 
 from countries import COUNTRY_DROPDOWN, BFH_CURRENCY_DROPDOWN
-
-from bitcoins.BCAddressField import is_valid_btc_address
 
 from utils import clean_phone_num
 
@@ -102,7 +99,9 @@ class MerchantRegistrationForm(forms.Form):
             # TODO: move this to clean_email
             login_url = '%s?e=%s' % (reverse('login_request'), existing_user.email)
             msg = _('That email is already taken, do you want to ')
-            msg += '<a href="%s">login</a>?' % login_url
+            msg += '<a href="%s">' % login_url
+            msg += _('login')
+            msg += '</a>?'
             raise forms.ValidationError(mark_safe(msg))
 
         if len(email) > 30:

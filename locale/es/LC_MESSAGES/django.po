@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-14 13:56-0300\n"
+"POT-Creation-Date: 2014-06-14 19:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -199,7 +199,7 @@ msgstr "Se déconnecter"
 msgid "Sign In"
 msgstr "Acceder"
 
-#: templates/base.html:87
+#: templates/base.html:87 templates/index.html:94
 msgid "Sign Up"
 msgstr "Registrarse"
 
@@ -301,7 +301,7 @@ msgid ""
 "Mobile-optimized and user friendly, CloseCoin is designed so that even an "
 "employee with no Bitcoin knowledge can operate it."
 msgstr ""
-"-Móvil optimizada y fácil de usar, CloseCoin está diseñado para que un "
+"Móvil optimizada y fácil de usar, CloseCoin está diseñado para que un "
 "empleado sin conocimiento Bitcoin pueda operar el sitio."
 
 #: templates/index.html:52
@@ -362,13 +362,9 @@ msgid "Get Notified of New Merchants Nearby"
 msgstr "Informarte de Nuevos Negocios Cercanos"
 
 #: templates/index.html:92
-msgid "Join The CloseCoin Network"
-msgstr "Únase a la red CloseCoin"
-
-#: templates/index.html:94
-#: fuzzy
-msgid "Sign Up Today"
-msgstr "Registrarse"
+#, fuzzy
+msgid "Join The CloseCoin Network!"
+msgstr "¡Únase a la red CloseCoin!"
 
 #: templates/login.html:21
 #, python-format
@@ -376,10 +372,10 @@ msgid ""
 "To create a new account, please <a href=\"%(register_url)s\"> click here</a>."
 msgstr ""
 "Para crear una nueva cuenta, por favor, <a href=\"%(register_url)s\"> haga "
-"clic aquí </ a>."
+"clic aquí </a>."
 
 #: templates/customer_dash/_deposit_address_modal.html:7
-#: templates/customer_dash/_no_deposit_confirm.html:50
+#: templates/customer_dash/_no_deposit_confirm.html:38
 msgid "Send Bitcoin"
 msgstr "Enviar Bitcoin"
 
@@ -482,19 +478,19 @@ msgstr "Precio BTC"
 msgid "markup"
 msgstr "marcado"
 
-#: templates/customer_dash/_no_deposit_confirm.html:38
+#: templates/customer_dash/_no_deposit_confirm.html:26
 msgid "Get Cash for Your Bitcoin Now"
 msgstr "Obtener dinero en efectivo para su Bitcoin Ahora"
 
-#: templates/customer_dash/_no_deposit_confirm.html:53
+#: templates/customer_dash/_no_deposit_confirm.html:41
 msgid "Wait for Confirmation"
 msgstr "Espere para Confirmaciones"
 
-#: templates/customer_dash/_no_deposit_confirm.html:55
+#: templates/customer_dash/_no_deposit_confirm.html:43
 msgid "Receive Cash"
 msgstr "Recibir Efectivo"
 
-#: templates/customer_dash/_no_deposit_confirm.html:66
+#: templates/customer_dash/_no_deposit_confirm.html:54
 msgid "Get Started"
 msgstr "Comenzar"
 
@@ -680,6 +676,9 @@ msgstr "Efectivo"
 #: templates/merchants/transactions.html:37
 msgid "You have no transactions yet"
 msgstr "No tiene transacciones aún"
+
+#~ msgid "Sign Up Today"
+#~ msgstr "Registrarse"
 
 #~ msgid "Turn Your Phone Into a Bitcoin ATM Now!"
 #~ msgstr "Convierte Su Móvil en un Bitcoin ATM Ahora!"

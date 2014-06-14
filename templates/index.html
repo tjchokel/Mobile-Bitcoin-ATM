@@ -56,9 +56,9 @@
             <a class="btn btn-primary btn-lg" href="#" role="button" style="margin-left: 15px;">{% trans "List Your Business Today" %}</a>
 
       </div>
-      <div class="col-lg-4 col-lg-offset-1 hidden-med">
+      <div class="col-lg-4 col-lg-offset-1 hidden-sm hidden-xs">
         </span>
-        <img src="{%static "img/shop.png" %}" style="margin-top: 25%;" />
+        <img src="{%static "img/shop.png" %}" style="margin-top: 30%;" width="90%" height="90%" />
       </div>
     </div>
     <hr>
@@ -77,21 +77,21 @@
               {% trans "Each merchant is rated by their users to ensure that the continue to provide the best service." %}
               <br/>
             </p>
-            <p><a class="btn btn-primary btn-lg" href="https://docs.google.com/forms/d/1h7Z996Y5vIHE-uOc03vxnFa6jN-vRNF_CFW4e89MdTk/viewform?usp=send_form" role="button" style="margin-left: 15px;" target="_blank">{% trans "Get Notified of New Merchants Nearby" %}</a></p>
+            <p><a class="btn btn-primary btn-lg" href="https://docs.google.com/forms/d/1h7Z996Y5vIHE-uOc03vxnFa6jN-vRNF_CFW4e89MdTk/viewform?usp=send_form" role="button" style="margin-left: 15px;white-space: normal !important;max-width: 300px;" target="_blank">{% trans "Get Notified of New Merchants Nearby" %}</a></p>
 
       </div>
-      <div class="col-lg-4 col-lg-offset-1 hidden-med">
-        <img src="{%static "img/money.png" %}" style="margin-top: 10%;" width="80%" height="80%" />
+      <div class="col-lg-4 col-lg-offset-1 hidden-sm hidden-xs">
+        <img src="{%static "img/money.png" %}" style="margin-top: 5%;" width="90%" height="90%" />
       </div>
     </div>
 </div>
-<footer style="background-color:#2a3b48;position:absolute;width:100%;height:320px; text-align:center;">
+<footer style="background-color:#2a3b48;position:absolute;width:100%;height:400px; text-align:center;">
   <div class="container">
     <div class="row">
       <h1 style="color:white; padding-top:30px;padding-bottom:30px;">
-      {% trans "Turn Your Phone Into a Bitcoin ATM Now!" %}
+      {% trans "Join The CloseCoin Network"%}!
       </h1>
-      <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-xl" style="margin-bottom:40px;" >{% trans "Join The CloseCoin Network" %}</a>
+      <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="margin-bottom:40px;" >{% trans "Sign Up" %}</a>
     </div>
   </div>
   <br/><br/><br/>

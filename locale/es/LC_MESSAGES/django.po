@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-12 13:12-0300\n"
+"POT-Creation-Date: 2014-06-14 15:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr ""
 
 #: merchants/forms.py:20 merchants/forms.py:32 merchants/forms.py:116
 #: merchants/forms.py:139 shoppers/forms.py:18
-#: templates/customer_dash/_dash_deposit_confirm.html:38
+#: templates/customer_dash/_deposit_confirm.html:38
 #: templates/merchants/profile.html:79
 msgid "Email"
 msgstr ""
@@ -172,177 +172,169 @@ msgstr ""
 msgid "Your bitcoin info was not updated"
 msgstr ""
 
-#: shoppers/forms.py:12 templates/customer_dash/_dash_deposit_confirm.html:30
+#: shoppers/forms.py:12 templates/customer_dash/_deposit_confirm.html:30
 #: templates/merchants/profile.html:75
 msgid "Name"
 msgstr ""
 
-#: templates/base.html:77
+#: templates/base.html:78
 msgid "Dashboard"
 msgstr ""
 
-#: templates/base.html:77
+#: templates/base.html:78
 msgid "Sign out"
 msgstr ""
 
-#: templates/base.html:83 templates/login.html:6 templates/login.html.py:14
+#: templates/base.html:84 templates/login.html:6 templates/login.html.py:14
 msgid "Sign In"
 msgstr ""
 
-#: templates/base.html:86
+#: templates/base.html:87
 msgid "Sign Up"
 msgstr ""
 
-#: templates/base.html:111
-#: templates/customer_dash/_dash_deposit_confirm.html:55
+#: templates/base.html:112 templates/customer_dash/_deposit_confirm.html:55
 #: templates/merchants/profile.html:59 templates/merchants/profile.html:95
 #: templates/merchants/settings.html:41
 msgid "Submit"
 msgstr ""
 
-#: templates/base.html:173 templates/base.html.py:182
+#: templates/base.html:171 templates/base.html.py:180 templates/index.html:68
 msgid "Customers"
 msgstr ""
 
-#: templates/base.html:177 templates/base.html.py:186
+#: templates/base.html:175 templates/base.html.py:184
 #: templates/merchants/breadcrumb.html:3
 msgid "Admin"
 msgstr ""
 
-#: templates/index.html:7
-msgid "Welcome to CloseCoin"
-msgstr ""
-
 #: templates/index.html:11
-msgid "For Merchants"
+msgid "Turn Your Phone Into a Bitcoin ATM"
 msgstr ""
 
-#: templates/index.html:13
-msgid ""
-"CloseCoin makes it easy for owners of any store to <b>buy bitcoin for cash</"
-"b>. Some of our happiest customers are money changers, restaurants, hostels, "
-"convenience stores, and gas stations. It works great anywhere there is a "
-"cash register, an internet connection, and a desire to buy bitcoin at the "
-"best prices. It's kind of like an ATM, only instead of using expensive "
-"hardware, we use a simple app and the cash register that's already in your "
-"store.\n"
-"          "
+#: templates/index.html:15
+msgid "List Your Business for Free"
 msgstr ""
 
-#: templates/index.html:17
-msgid "Benefits"
-msgstr ""
-
-#: templates/index.html:20
-msgid "Set Your Own Prices"
-msgstr ""
-
-#: templates/index.html:21
-msgid ""
-"Since your business has regular hours and pays out in cash, you get rewarded "
-"with better prices. It's a much better experience than messaging someone "
-"back and forth to meetup at a coffee shop or in a dark alley."
-msgstr ""
-
-#: templates/index.html:24
-msgid "Get Your Money to a Safer Location"
-msgstr ""
-
-#: templates/index.html:25
-msgid ""
-"Every time your cashier reaches into the cash register to pay a customer for "
-"their bitcoin, money leaves the premises. The address that recieves the "
-"bitcoin can be kept anywhere you like: in your safe, at your home, or even "
-"in another country. Moving cash into bitcoins can minimize theft and reduce "
-"robberies."
+#: templates/index.html:26
+msgid "Your Bitcoin Point Of Sale System"
 msgstr ""
 
 #: templates/index.html:28
-msgid "Sell or Spend Your Bitcoin Immediately"
-msgstr ""
-
-#: templates/index.html:29
 msgid ""
-"As soon as you recieve the bitcoin it's yours to sell or spend however you "
-"like. If you don't want to hold bitcoin, you can set your prices so that "
-"you're able to sell it right away for a profit."
+"CloseCoin makes it easy for owners of any store to <b>buy bitcoin for cash</"
+"b>.Some of our happiest customers are money changers, restaurants, hostels, "
+"convenience stores, and gas stations.It works great anywhere there is a cash "
+"register, an internet connection, and a desire to buy bitcoin at wholesale "
+"prices."
 msgstr ""
 
-#: templates/index.html:32
-msgid "Very Easy to Use"
-msgstr ""
-
-#: templates/index.html:33
-msgid ""
-"Your employees can buy bitcoin for you without having to know anything about "
-"bitcoin. You set the price and the app notifies your cashier/employee when "
-"it's safe to pay out cash to the customer. Our mobile-optimized website "
-"requires only an internet connection and works on any smartphone, tablet, or "
-"desktop computer. No training needed."
-msgstr ""
-
-#: templates/index.html:37
-msgid "Get New Customers"
+#: templates/index.html:36
+msgid "Store Owners"
 msgstr ""
 
 #: templates/index.html:38
+msgid "Set Your Own Prices"
+msgstr ""
+
+#: templates/index.html:39
 msgid ""
-"Customers who come to your business and recieve cash for their bitcoin are "
-"likely to stick around and spend some of that money"
+"Since your business has regular hours and pays out quickly in cash, you get "
+"rewarded with better prices."
+msgstr ""
+
+#: templates/index.html:41
+msgid "Attract New Customers"
 msgstr ""
 
 #: templates/index.html:42
-msgid "You Control Your Private Keys"
+msgid ""
+"Prime placement on the CloseCoin map will send more foot traffic into your "
+"store."
 msgstr ""
 
-#: templates/index.html:43
-msgid "Securely buy and sell bitcoin without trusting us or anyone else"
+#: templates/index.html:44
+msgid "Sell or Spend Your Bitcoin Immediately"
 msgstr ""
 
-#: templates/index.html:46
-msgid "Works Anywhere In the World"
+#: templates/index.html:45
+msgid ""
+"If you don't want to hold bitcoin, you can set your prices so that you're "
+"able to sell it right away for a profit."
 msgstr ""
 
 #: templates/index.html:47
+msgid "Get Your Money to a Safer Location"
+msgstr ""
+
+#: templates/index.html:48
+msgid "Moving cash into bitcoins can minimize theft and reduce robberies."
+msgstr ""
+
+#: templates/index.html:50
+msgid "Simple to Use"
+msgstr ""
+
+#: templates/index.html:51
+msgid ""
+"Mobile-optimized and user friendly, CloseCoin is designed so that even an "
+"employee with no Bitcoin knowledge can operate it."
+msgstr ""
+
+#: templates/index.html:52
+msgid "Works Anywhere In the World"
+msgstr ""
+
+#: templates/index.html:53
 msgid ""
 "From Argentina to Australia, CloseCoin works everywhere in the world with "
 "the currency of your choice. More languages coming soon!"
 msgstr ""
 
-#: templates/index.html:50
-msgid "Free during our Beta and cheap after"
-msgstr ""
-
-#: templates/index.html:51
-msgid ""
-"There's no lock-in or contract and you can leave at any time. Remember, you "
-"are always in full control of your private keys"
-msgstr ""
-
-#: templates/index.html:57
-msgid "List Your Business on CloseCoin for Free"
-msgstr ""
-
-#: templates/index.html:63
-msgid "For Customers"
-msgstr ""
-
-#: templates/index.html:66
-msgid ""
-"CloseCoin makes it easy to find someone close by to give you cash for your "
-"bitcoin. You can check their price, hours and location in advance, no "
-"messaging back and forth. Just show up with your bitcoin wallet app and "
-"recieve cash for your bitcoin. CloseCoin is great for converting your "
-"remmitance into cash, or for travellers in foreign countries who need local "
-"currency"
+#: templates/index.html:56
+msgid "List Your Business Today"
 msgstr ""
 
 #: templates/index.html:70
+msgid "Transparent Pricing"
+msgstr ""
+
+#: templates/index.html:71
 msgid ""
-"During our private beta, CloseCoin is only available from select merchants. "
-"<a href=\"https://docs.google.com/forms/d/1h7Z996Y5vIHE-uOc03vxnFa6jN-"
-"vRNF_CFW4e89MdTk/viewform?usp=send_form\">Sign up to be notified when "
-"CloseCoin merchants are available in your city.</a>"
+"Businesses publish their prices online so you can shop around for the best "
+"rate. There are never any surprises when you get to the store."
+msgstr ""
+
+#: templates/index.html:73
+msgid "No Messaging"
+msgstr ""
+
+#: templates/index.html:74
+msgid ""
+"Businesses list their hours and location in advance, just show up with your "
+"bitcoin and receive cash."
+msgstr ""
+
+#: templates/index.html:76
+msgid "Businesses You Can Trust"
+msgstr ""
+
+#: templates/index.html:77
+msgid ""
+"Each merchant is rated by their users to ensure that the continue to provide "
+"the best service."
+msgstr ""
+
+#: templates/index.html:80
+msgid "Get Notified of New Merchants Nearby"
+msgstr ""
+
+#: templates/index.html:92
+msgid "Turn Your Phone Into a Bitcoin ATM Now!"
+msgstr ""
+
+#: templates/index.html:94
+msgid "Join The CloseCoin Network"
 msgstr ""
 
 #: templates/login.html:21
@@ -351,97 +343,9 @@ msgid ""
 "To create a new account, please <a href=\"%(register_url)s\"> click here</a>."
 msgstr ""
 
-#: templates/customer_dash/_dash_deposit_complete.html:6
-msgid "Transaction Complete"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_complete.html:16
-#, python-format
-msgid ""
-"The deposit of <b>%(mbtc)s</b> made by %(shopper_name)s is now complete. You "
-"owe %(shopper_name)s <b>%(fiat)s</b>."
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_complete.html:18
-#, python-format
-msgid ""
-"The deposit of <b>%(mbtc)s</b> is now complete. You owe the customer <b>"
-"%(fiat)s</b>."
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_complete.html:23
-#, python-format
-msgid "Verify %(mbtc)s on Blockchain.info"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_complete.html:33
-msgid "I Have Paid The Customer"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:6
-msgid "Last Updated"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:6
-msgid "seconds ago"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:13
-msgid "Waiting on deposit to"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:13
-msgid "Cancel"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:18
-#: templates/merchants/breadcrumb.html:12
-#: templates/merchants/breadcrumb.html:14
-#: templates/merchants/transactions.html:12
-msgid "Transactions"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:26
-msgid "Shopper Information"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:34
-msgid "Phone"
-msgstr ""
-
-#: templates/customer_dash/_dash_deposit_confirm.html:48
-msgid ""
-"Thanks for you deposit! Please enter a name for your order. If you leave "
-"your email and/or phone we'll send you a receipt."
-msgstr ""
-
-#: templates/customer_dash/_dash_no_deposit_confirm.html:8
-msgid "BTC Price"
-msgstr ""
-
-#: templates/customer_dash/_dash_no_deposit_confirm.html:8
-msgid "markup"
-msgstr ""
-
-#: templates/customer_dash/_dash_no_deposit_confirm.html:25
-msgid "Get Cash for Your Bitcoin Today"
-msgstr ""
-
-#: templates/customer_dash/_dash_no_deposit_confirm.html:37
 #: templates/customer_dash/_deposit_address_modal.html:7
+#: templates/customer_dash/_no_deposit_confirm.html:50
 msgid "Send Bitcoin"
-msgstr ""
-
-#: templates/customer_dash/_dash_no_deposit_confirm.html:40
-msgid "Wait for Confirmation"
-msgstr ""
-
-#: templates/customer_dash/_dash_no_deposit_confirm.html:42
-msgid "Receive Cash"
-msgstr ""
-
-#: templates/customer_dash/_dash_no_deposit_confirm.html:53
-msgid "Get Started"
 msgstr ""
 
 #: templates/customer_dash/_deposit_address_modal.html:13
@@ -456,6 +360,68 @@ msgstr ""
 msgid "Confirm My Deposit"
 msgstr ""
 
+#: templates/customer_dash/_deposit_complete.html:6
+msgid "Transaction Complete"
+msgstr ""
+
+#: templates/customer_dash/_deposit_complete.html:16
+#, python-format
+msgid ""
+"The deposit of <b>%(mbtc)s</b> made by %(shopper_name)s is now complete. You "
+"owe %(shopper_name)s <b>%(fiat)s</b>."
+msgstr ""
+
+#: templates/customer_dash/_deposit_complete.html:18
+#, python-format
+msgid ""
+"The deposit of <b>%(mbtc)s</b> is now complete. You owe the customer <b>"
+"%(fiat)s</b>."
+msgstr ""
+
+#: templates/customer_dash/_deposit_complete.html:23
+#, python-format
+msgid "Verify %(mbtc)s on Blockchain.info"
+msgstr ""
+
+#: templates/customer_dash/_deposit_complete.html:33
+msgid "I Have Paid The Customer"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:6
+msgid "Last Updated"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:6
+msgid "seconds ago"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:13
+msgid "Waiting for deposit to"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:13
+msgid "Cancel"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:18
+#: templates/merchants/breadcrumb.html:12
+#: templates/merchants/breadcrumb.html:14
+#: templates/merchants/transactions.html:12
+msgid "Transactions"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:26
+msgid "Shopper Information"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:34
+msgid "Phone"
+msgstr ""
+
+#: templates/customer_dash/_deposit_confirm.html:48
+msgid "Please enter a name for your receipt"
+msgstr ""
+
 #: templates/customer_dash/_deposit_dash_table.html:5
 msgid "Amount"
 msgstr ""
@@ -467,6 +433,30 @@ msgstr ""
 
 #: templates/customer_dash/_deposit_dash_table.html:27
 msgid "Transaction not yet detected"
+msgstr ""
+
+#: templates/customer_dash/_no_deposit_confirm.html:9
+msgid "BTC Price"
+msgstr ""
+
+#: templates/customer_dash/_no_deposit_confirm.html:9
+msgid "markup"
+msgstr ""
+
+#: templates/customer_dash/_no_deposit_confirm.html:38
+msgid "Get Cash for Your Bitcoin Now"
+msgstr ""
+
+#: templates/customer_dash/_no_deposit_confirm.html:53
+msgid "Wait for Confirmation"
+msgstr ""
+
+#: templates/customer_dash/_no_deposit_confirm.html:55
+msgid "Receive Cash"
+msgstr ""
+
+#: templates/customer_dash/_no_deposit_confirm.html:66
+msgid "Get Started"
 msgstr ""
 
 #: templates/customer_dash/_transaction_row.html:12
@@ -510,32 +500,32 @@ msgstr ""
 msgid "Back to Top"
 msgstr ""
 
-#: templates/fixed_pages/team.html:9
+#: templates/fixed_pages/team.html:10
 msgid "Team"
 msgstr ""
 
-#: templates/fixed_pages/team.html:10
+#: templates/fixed_pages/team.html:11
 msgid ""
 "We are Bitcoin enthusiasts who believe that bitcoin's success requires "
-"transactional use and decentralized way to get into and out of bitcoin."
+"transactional use and decentralized way to get in and out of bitcoin"
 msgstr ""
 
 #: templates/fixed_pages/team.html:23
 msgid ""
 "Michael has built two venture funded companies (<a href=\"http://www."
-"thumbtack.com\">thumbtack.com</a> and <a href=\"http://priceonomics.com"
-"\">priceonomics.com</a>) that have each raised money from top VCs like "
-"Sequoia, Andreesen Horowitz, and Spark Capital. Michael graduated from Brown "
-"University with a degree in Economics."
+"thumbtack.com\" target=\"_blank\">thumbtack.com</a> and <a href=\"http://"
+"priceonomics.com\" target=\"_blank\">priceonomics.com</a>) that have each "
+"raised money from top VCs like Sequoia, Andreesen Horowitz, and Spark "
+"Capital. Michael graduated from Brown University with a degree in Economics."
 msgstr ""
 
-#: templates/fixed_pages/team.html:35
+#: templates/fixed_pages/team.html:33
 msgid ""
 "Tom is a former Google Engineer who worked on the AdWords fraud team. He "
 "left Google to build Semply, a company focused on building advertising tools "
 "for small businesses, which was later acquired by <a href=\"https://www."
-"adstage.io/\">AdStage</a>. Tom graduated from Georgetown University with "
-"degrees in Computer Science and Economics."
+"adstage.io/\" target=\"_blank\">AdStage</a>. Tom graduated from Georgetown "
+"University with degrees in Computer Science and Economics"
 msgstr ""
 
 #: templates/merchants/_registration_status_bar.html:3

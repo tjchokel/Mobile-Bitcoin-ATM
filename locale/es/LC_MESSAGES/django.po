@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-14 19:38+0000\n"
+"POT-Creation-Date: 2014-06-14 20:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,107 +26,115 @@ msgstr "Lo siento, pero ese número no es válido"
 msgid "Sorry, that number doesn't look like a real number"
 msgstr "Lo siento, pero ese número no se ve como un número real"
 
-#: merchants/forms.py:20 merchants/forms.py:32 merchants/forms.py:116
-#: merchants/forms.py:139 shoppers/forms.py:18
+#: merchants/forms.py:17 merchants/forms.py:29 merchants/forms.py:115
+#: merchants/forms.py:138 shoppers/forms.py:18
 #: templates/customer_dash/_deposit_confirm.html:38
 #: templates/merchants/profile.html:79
 msgid "Email"
 msgstr "Correo electrónico"
 
-#: merchants/forms.py:24 merchants/forms.py:123
+#: merchants/forms.py:21 merchants/forms.py:122
 msgid "Password"
 msgstr "Contraseña"
 
-#: merchants/forms.py:38
+#: merchants/forms.py:35
 msgid "Secure Password"
 msgstr "Contraseña"
 
-#: merchants/forms.py:43 merchants/forms.py:131
+#: merchants/forms.py:40 merchants/forms.py:130
 msgid "Your Name"
 msgstr "Nombre"
 
-#: merchants/forms.py:50 merchants/forms.py:163
+#: merchants/forms.py:47 merchants/forms.py:162
 #: templates/merchants/profile.html:20
 msgid "Business Name"
 msgstr "Razón Social"
 
-#: merchants/forms.py:57 templates/merchants/profile.html:40
+#: merchants/forms.py:54 templates/merchants/profile.html:40
 msgid "Country"
 msgstr "País"
 
-#: merchants/forms.py:64 merchants/forms.py:224
+#: merchants/forms.py:61 merchants/forms.py:223
 msgid "The Currency You Want to Trade for BTC"
 msgstr "Moneda que desea cambiar para BTC"
 
-#: merchants/forms.py:70 merchants/forms.py:231
+#: merchants/forms.py:67 merchants/forms.py:230
 msgid "Bitcoin Deposit Address"
 msgstr "Bitcoin Dirección de Depósito"
 
-#: merchants/forms.py:74 merchants/forms.py:235
+#: merchants/forms.py:71 merchants/forms.py:234
 msgid "The wallet address where you want your bitcoin sent"
 msgstr "La dirección de la cartera donde quieres recibir bitcoin"
 
-#: merchants/forms.py:78 merchants/forms.py:240
+#: merchants/forms.py:75 merchants/forms.py:239
 #: templates/merchants/settings.html:25
 msgid "Percent Markup"
 msgstr "Marcado (porcentaje)"
 
-#: merchants/forms.py:81
+#: merchants/forms.py:78
 msgid "The percent you want to charge above the market rate"
 msgstr "El porcentaje para cargar encima de la tasa del mercado"
 
-#: merchants/forms.py:94 merchants/forms.py:255
+#: merchants/forms.py:91 merchants/forms.py:254
 msgid "Sorry, that's not a valid bitcoin address"
 msgstr "Lo siento, pero eso no es una válida dirección bitcoin"
 
-#: merchants/forms.py:109
+#: merchants/forms.py:101
+msgid "That email is already taken, do you want to "
+msgstr ""
+
+#: merchants/forms.py:103
+msgid "login"
+msgstr ""
+
+#: merchants/forms.py:108
 msgid "Sorry, your email address must be less than 31 characters"
 msgstr ""
 "Lo siento, tu dirección de correo electrónico debe ser inferior a 31 "
 "caracteres"
 
-#: merchants/forms.py:145 shoppers/forms.py:24
+#: merchants/forms.py:144 shoppers/forms.py:24
 msgid "Phone Country"
 msgstr "País del Teléfono"
 
-#: merchants/forms.py:152 shoppers/forms.py:31
+#: merchants/forms.py:151 shoppers/forms.py:31
 msgid "Cell Phone Number in International Format"
 msgstr "Número de teléfono celular (en formato internacional)"
 
-#: merchants/forms.py:167
+#: merchants/forms.py:166
 msgid "Mel's Diner"
 msgstr "Hostal Bellavista"
 
-#: merchants/forms.py:171 templates/merchants/profile.html:24
+#: merchants/forms.py:170 templates/merchants/profile.html:24
 msgid "Address Line 1"
 msgstr "Dirección 1"
 
-#: merchants/forms.py:175
+#: merchants/forms.py:174
 msgid "Street address, P.O. box, company name, c/o "
 msgstr "Dirección 1 "
 
-#: merchants/forms.py:179 templates/merchants/profile.html:28
+#: merchants/forms.py:178 templates/merchants/profile.html:28
 msgid "Address Line 2"
 msgstr "Dirección 2"
 
-#: merchants/forms.py:182
+#: merchants/forms.py:181
 msgid "Apartment, suite, unit, building, floor, etc."
 msgstr "Departamento, habitación, unidad, edificio, piso, etc"
 
-#: merchants/forms.py:192
+#: merchants/forms.py:191
 msgid "State/Province/Region"
 msgstr "Estado / Provincia / Región"
 
-#: merchants/forms.py:200 templates/merchants/profile.html:44
+#: merchants/forms.py:199 templates/merchants/profile.html:44
 msgid "Zip Code"
 msgstr "Código Postal"
 
-#: merchants/forms.py:213 templates/merchants/profile.html:48
+#: merchants/forms.py:212 templates/merchants/profile.html:48
 #: templates/merchants/profile.html:83
 msgid "Phone Number"
 msgstr "Número Telefono"
 
-#: merchants/forms.py:243
+#: merchants/forms.py:242
 msgid "The percent you want to charge above the market rate."
 msgstr "El porcentaje para cargar encima de la tasa del mercado"
 

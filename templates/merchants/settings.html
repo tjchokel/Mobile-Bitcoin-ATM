@@ -1,32 +1,32 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
-  <div class="container">
+<div class="container">
     <!-- Profile Menu -->
     {% with current_tab='settings' %}
       {% include "merchants/breadcrumb.html" %}
     {% endwith %}
-
   <div class="col-sm-8 col-md-9">
 
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">Bitcoin Settings</a>
+            <a style="color:#515151;" href="#">{% trans "Bitcoin Settings" %}</a>
             <a href="#" onclick="editBitcoinInfo();" id="bitcoin-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
           </h4>
 
           <table id="bitcoin-info-list" class="table">
             <tbody>
               <tr>
-                <td class="text-muted">Currency</td>
+                <td class="text-muted">{% trans "Currency" %}</td>
                 <td align="right">{{merchant.get_currency_code_display}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Percent Markup</td>
+                <td class="text-muted">{% trans "Percent Markup" %}</td>
                 <td align="right">{{merchant.get_percent_markup}}%</td>
               </tr>
               <tr>
-                <td class="text-muted">Your BTC Address</td>
+                <td class="text-muted">{% trans "Your BTC Address" %}</td>
                 <td align="right">{{dest_address.b58_address}}</td>
               </tr>
             </tbody>
@@ -38,7 +38,7 @@
               {{ bitcoin_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
               </div>
             </form>
           </span>

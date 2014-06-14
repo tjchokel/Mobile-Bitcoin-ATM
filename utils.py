@@ -3,6 +3,7 @@ import random
 
 import phonenumbers
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
@@ -149,9 +150,9 @@ def clean_phone_num(self):
     try:
         pn_parsed = phonenumbers.parse(phone_num, None)
         if not phonenumbers.is_valid_number(pn_parsed):
-            err_msg = "Sorry, that number isn't valid"
+            err_msg = _("Sorry, that number isn't valid")
             raise forms.ValidationError(err_msg)
     except phonenumbers.NumberParseException:
-        err_msg = "Sorry, that number doesn't look like a real number"
+        err_msg = _("Sorry, that number doesn't look like a real number")
         raise forms.ValidationError(err_msg)
     return phone_num

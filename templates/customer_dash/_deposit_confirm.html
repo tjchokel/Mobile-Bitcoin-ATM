@@ -1,20 +1,21 @@
+{% load i18n %}
 <div class="container">
   <div class="page-header">
       <h3 class="pull-left">{{merchant.business_name}}</h3>
       <h3 class="pull-right" id="last-polled" style="color: #72a53b; float:right;">
-        Last Updated: Now
+        {% trans "Last Updated" %}: <span id='last-polled-time'>0</span> {% trans "seconds ago" %}
         </h3>
       <div class="clearfix"></div>
   </div>
 
   <div class="row">
     {% if not transactions %}
-      <p class="lead text-center">Waiting for deposit to <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">(Cancel)</a></p>
+      <p class="lead text-center">{% trans "Waiting for deposit to" %} <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">({% trans "Cancel" %})</a></p>
     {% endif %}
     {% if shopper %}
       <div class="col-sm-12">
       <br/>
-        <h3><i class="fa fa-map-marker"></i> Transactions</h3>
+        <h3><i class="fa fa-map-marker"></i>{% trans "Transactions" %}</h3>
         {% include "customer_dash/_deposit_dash_table.html" %}
         <hr>
       </div>
@@ -22,19 +23,19 @@
     <br/>
       <div class="row">
         <div class="col-sm-12">
-          <h4 class="hl">Shopper Information</h4>
+          <h4 class="hl">{% trans "Shopper Information" %}</h4>
           <table class="table">
             <tbody>
               <tr>
-                <td class="text-muted">Name</td>
+                <td class="text-muted">{% trans "Name" %}</td>
                 <td align="right">{{shopper.name}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Phone</td>
+                <td class="text-muted">{% trans "Phone" %}</td>
                 <td align="right">{{shopper.phone_num.as_international}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Email</td>
+                <td class="text-muted">{% trans "Email" %}</td>
                 <td align="right">{{shopper.email}}</td>
               </tr>
             </tbody>
@@ -44,14 +45,14 @@
 
     {% else %}
       <p class="lead text-center">
-        Please enter a name for your receipt.
+        {% trans "Please enter a name for your receipt" %}.
       </p>
       <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}
           {{ form|crispy }}
           {% csrf_token %}
           <div class="button-wrapper">
-            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+            <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
           </div>
       </form>
     {% endif %}

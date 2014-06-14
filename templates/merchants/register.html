@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>Register Account</h1>
+            <h1>{% trans "Register Account" %}</h1>
         </div>
 
         <form class="form-horizontal" method="post" action="{% url "merchants.views.register_merchant" %}" >
@@ -10,7 +11,7 @@
             {{ form|crispy }}
             {% csrf_token %}
             <div class="button-wrapper">
-              <button type="submit" class="btn btn-primary btn-lg">Create Free Account</button>
+              <button type="submit" class="btn btn-primary btn-lg">{% trans "Create Free Account" %}</button>
             </div>
         </form>
     </div>
@@ -22,13 +23,13 @@
 
     <script>
       $(document).ready(function(){
-        $('#id_email').focus()
+        $('#id_email').focus();
       });
     </script>
 
     <script>
       $(document).ready(function(){
-        {# Copied 2014-06-04 from http://www.nationsonline.org/oneworld/country_code_list.htm #}
+        {# Copied 2014-06-04 from www.nationsonline.org/oneworld/country_code_list.htm #}
         var country2_to_country3 = {
           'AF': 'AFG',
           'AX': 'ALA',
@@ -525,12 +526,13 @@
           'ZMB': 'ZMK',
           'ZWE': 'ZWL',
         };
+        
+
         $.getJSON('https://freegeoip.net/json/', function(data) {
           var response = data;
-          console.log(response.country_code);
           var country3 = country2_to_country3[response.country_code]
           $('#id_country').val(country3);
-          var currency3 = country3_to_currency3[country3]
+          var currency3 = country3_to_currency3[country3];
           $('#id_currency_code').val(currency3);
         });
 

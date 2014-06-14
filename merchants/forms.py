@@ -1,5 +1,9 @@
 from django import forms
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils.translation import ugettext_lazy as _
+
+from countries import COUNTRY_DROPDOWN
+from bitcoins.BCAddressField import is_valid_btc_address
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from annoying.functions import get_object_or_None
@@ -12,61 +16,69 @@ from utils import clean_phone_num
 
 
 class LoginForm(forms.Form):
-    email = forms.CharField(required=True)
-    password = forms.CharField(required=True,
-        widget=forms.PasswordInput(render_value=False))
+    email = forms.CharField(
+        label=_('Email'),
+        required=True
+    )
+    password = forms.CharField(
+        label=_('Password'),
+        required=True,
+        widget=forms.PasswordInput(render_value=False)
+    )
 
 
 class MerchantRegistrationForm(forms.Form):
     email = forms.EmailField(
-        label='Email Address',
+        label=_('Email'),
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
     )
     password = forms.CharField(
         required=True,
-        label='Secure Password',
+        label=_('Secure Password'),
         widget=forms.PasswordInput(),
         min_length=7,
     )
     full_name = forms.CharField(
-        label='Your Name',
+        label=_('Your Name'),
         required=True,
         min_length=2,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
     )
     business_name = forms.CharField(
-        label='Business Name',
+        label=_('Business Name'),
         required=True,
         min_length=5,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': "Mel's Diner"}),
     )
     country = forms.ChoiceField(
+        label=_('Country'),
         required=True,
         choices=COUNTRY_DROPDOWN,
         widget=forms.Select(attrs={'data-country': 'USA'}),
     )
+
     currency_code = forms.ChoiceField(
-        label='The Currency You Want to Trade for BTC',
+        label=_('The Currency You Want to Trade for BTC'),
         choices=BFH_CURRENCY_DROPDOWN,
         required=True,
         widget=forms.Select(),
     )
     btc_address = forms.CharField(
-            label='Bitcoin Deposit Address',
+            label=_('Bitcoin Deposit Address'),
             required=True,
             min_length=27,
             max_length=34,
-            help_text='The wallet address where you want your bitcoin sent to',
+            help_text=_('The wallet address where you want your bitcoin sent'),
             widget=forms.TextInput(),
     )
     btc_markup = forms.DecimalField(
-            label='Percent Markup',
+            label=_('Percent Markup'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text='The percent you want to charge above the market rate',
+            help_text=_('The percent you want to charge above the market rate'),
             widget=forms.TextInput(),
     )
 
@@ -79,7 +91,7 @@ class MerchantRegistrationForm(forms.Form):
     def clean_btc_address(self):
         address = self.cleaned_data.get('btc_address')
         if not is_valid_btc_address(address):
-            msg = "Sorry, that's not a valid bitcoin address"
+            msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address
 
@@ -89,26 +101,26 @@ class MerchantRegistrationForm(forms.Form):
         if existing_user:
             # TODO: move this to clean_email
             login_url = '%s?e=%s' % (reverse('login_request'), existing_user.email)
-            msg = 'That email is already taken, do you want to '
+            msg = _('That email is already taken, do you want to ')
             msg += '<a href="%s">login</a>?' % login_url
             raise forms.ValidationError(mark_safe(msg))
 
         if len(email) > 30:
-            msg = 'Sorry, your email address must be less than 31 characters'
+            msg = _('Sorry, your email address must be less than 31 characters')
             raise forms.ValidationError(msg)
         return email
 
 
 class AccountRegistrationForm(forms.Form):
     email = forms.EmailField(
-        label='Email Address',
+        label=_('Email'),
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
     )
 
     password = forms.CharField(
         required=True,
-        label='Password',
+        label=_('Password'),
         widget=forms.PasswordInput(),
         min_length=7,
     )
@@ -116,7 +128,7 @@ class AccountRegistrationForm(forms.Form):
 
 class OwnerInfoForm(forms.Form):
     full_name = forms.CharField(
-        label='Your Name',
+        label=_('Your Name'),
         required=True,
         min_length=2,
         max_length=256,
@@ -124,20 +136,20 @@ class OwnerInfoForm(forms.Form):
     )
 
     email = forms.EmailField(
-        label='Email Address',
+        label=_('Email'),
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
     )
 
     phone_country = forms.ChoiceField(
-            label='Phone Country',
+            label=_('Phone Country'),
             required=False,
             choices=COUNTRY_DROPDOWN,
             widget=forms.Select(attrs={'data-country': 'USA'}),
     )
 
     phone_num = forms.CharField(
-            label='Cell Phone Number in International Format',
+            label=_('Cell Phone Number in International Format'),
             required=False,
             widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_phone_country'}),
     )
@@ -148,26 +160,26 @@ class OwnerInfoForm(forms.Form):
 class MerchantInfoForm(forms.Form):
 
     business_name = forms.CharField(
-        label='Business Name',
+        label=_('Business Name'),
         required=True,
         min_length=5,
         max_length=256,
-        widget=forms.TextInput(attrs={'placeholder': "Mel's Diner"}),
+        widget=forms.TextInput(attrs={'placeholder': _("Mel's Diner")}),
     )
 
     address_1 = forms.CharField(
-        label='Address Line 1',
+        label=_('Address Line 1'),
         min_length=5,
         max_length=50,
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Street address, P.O. box, company name, c/o '}),
+        widget=forms.TextInput(attrs={'placeholder': _('Street address, P.O. box, company name, c/o ')}),
     )
 
     address_2 = forms.CharField(
-        label='Address Line 2',
+        label=_('Address Line 2'),
         max_length=50,
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Apartment, suite, unit, building, floor, etc.'}),
+        widget=forms.TextInput(attrs={'placeholder': _('Apartment, suite, unit, building, floor, etc.')}),
     )
 
     city = forms.CharField(
@@ -177,7 +189,7 @@ class MerchantInfoForm(forms.Form):
         widget=forms.TextInput(),
     )
     state = forms.CharField(
-        label='State/Province/Region',
+        label=_('State/Province/Region'),
         required=False,
         min_length=2,
         max_length=30,
@@ -185,7 +197,7 @@ class MerchantInfoForm(forms.Form):
     )
 
     zip_code = forms.CharField(
-        label='Zip Code',
+        label=_('Zip Code'),
         min_length=3,
         max_length=30,
         required=False,
@@ -198,7 +210,7 @@ class MerchantInfoForm(forms.Form):
     )
 
     phone_num = forms.CharField(
-        label='Phone Number',
+        label=_('Phone Number'),
         required=False,
         widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_country'}),
     )
@@ -209,26 +221,26 @@ class MerchantInfoForm(forms.Form):
 class BitcoinInfoForm(forms.Form):
 
     currency_code = forms.ChoiceField(
-        label='The Currency You Want to Trade for BTC',
+        label=_('The Currency You Want to Trade for BTC'),
         required=True,
         choices=BFH_CURRENCY_DROPDOWN,
         widget=forms.Select(),
     )
 
     btc_address = forms.CharField(
-            label='Bitcoin Deposit Address',
+            label=_('Bitcoin Deposit Address'),
             required=True,
             min_length=27,
             max_length=34,
-            help_text='The wallet address where you want your bitcoin sent',
+            help_text=_('The wallet address where you want your bitcoin sent'),
             widget=forms.TextInput(),
     )
 
     btc_markup = forms.DecimalField(
-            label='Percent Markup',
+            label=_('Percent Markup'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text='The percent you want to charge above the market rate.',
+            help_text=_('The percent you want to charge above the market rate.'),
             widget=forms.TextInput(),
     )
 
@@ -240,6 +252,6 @@ class BitcoinInfoForm(forms.Form):
     def clean_btc_address(self):
         address = self.cleaned_data.get('btc_address')
         if not is_valid_btc_address(address):
-            msg = "Sorry, that's not a valid bitcoin address"
+            msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address

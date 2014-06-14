@@ -40,4 +40,5 @@ urlpatterns = patterns('',
     url(r'^contact/', TemplateView.as_view(template_name='fixed_pages/contact.html'), name='contact'),
 
     url(r'^admin/', include(admin.site.urls)),
+    (r'^i18n/', include('django.conf.urls.i18n')),
 )

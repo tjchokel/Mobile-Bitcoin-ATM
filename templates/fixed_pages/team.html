@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load staticfiles %}
 
 {% block content %}
@@ -6,8 +7,8 @@
   <div class="row">
     <div class="col-xs-12">
       <br/><br/>
-      <h1 class="hl text-center top-zero">Team</h1>
-      <p class="lead text-center">We are Bitcoin enthusiasts who believe that bitcoin's success requires transactional use and decentralized way to get in and out of bitcoin.</p>
+      <h1 class="hl text-center top-zero">{% trans "Team" %}</h1>
+      <p class="lead text-center">{% trans "We are Bitcoin enthusiasts who believe that bitcoin's success requires transactional use and decentralized way to get in and out of bitcoin" %}.</p>
     </div>
   </div>
 
@@ -18,26 +19,19 @@
           <img src="{%static "img/michael.jpg" %}" alt="Michael Flaxman" class="left" />
           <h4><a href="http://www.linkedin.com/in/flaxman" target="_blank">Michael Flaxman</a></h4>
           <p class="position">CEO</p>
-
           <p>
-            Michael has built two venture funded companies (<a href="http://www.thumbtack.com" target="_blank">thumbtack.com</a> and <a href="http://priceonomics.com" target="_blank">priceonomics.com</a>) that have each raised money from top VCs like Sequoia, Andreesen Horowitz, and Spark Capital.
-            Michael graduated from Brown University with a degree in Economics.
+            {% trans 'Michael has built two venture funded companies (<a href="http://www.thumbtack.com" target="_blank">thumbtack.com</a> and <a href="http://priceonomics.com" target="_blank">priceonomics.com</a>) that have each raised money from top VCs like Sequoia, Andreesen Horowitz, and Spark Capital. Michael graduated from Brown University with a degree in Economics.' %}
           </p>
         </div>
-
         <div class="member-right">
           <img src="{%static "img/tom.jpg" %}" alt="Tom Chokel" class="right" />
 
           <h4><a href="http://www.linkedin.com/pub/tom-chokel/8/58b/722" target="_blank">Tom Chokel</a></h4>
 
           <p class="position">CTO</p>
-
           <p>
-            Tom is a former Google Engineer who worked on the AdWords fraud team.
-            He left Google to build Semply, a company focused on building advertising tools for small businesses, which was later acquired by <a href="https://www.adstage.io/" target="_blank">AdStage</a>.
-            Tom graduated from Georgetown University with degrees in Computer Science and Economics.
+            {% trans 'Tom is a former Google Engineer who worked on the AdWords fraud team. He left Google to build Semply, a company focused on building advertising tools for small businesses, which was later acquired by <a href="https://www.adstage.io/" target="_blank">AdStage</a>. Tom graduated from Georgetown University with degrees in Computer Science and Economics' %}.
           </p>
-
         </div>
 
       </div>

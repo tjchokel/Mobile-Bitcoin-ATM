@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load humanize %}
 <tr >
   <td colspan="6" class="hiddenRow" style="padding:0px;border-top:none;">
@@ -8,7 +9,7 @@
                 <tbody>
                     <tr>
                         <td style="text-align: left;">
-                          Detected:
+                          {% trans "Detected"%}:
                         </td>
                         <td style="text-align: left;">
                           {{ transaction.added_at|naturaltime }}

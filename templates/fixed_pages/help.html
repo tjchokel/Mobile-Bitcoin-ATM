@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
 <div class="container">
   <!-- Help Center -->
   <div class="row">
     <div class="col-sm-12">
-      <h2 class="hl top-zero">Frequently Asked Questions</h2>
+      <h2 class="hl top-zero">{% trans "Frequently Asked Questions" %}</h2>
       <hr>
     </div>
   </div>
@@ -13,11 +14,11 @@
     <div class="col-md-12 col-sm-9">
 
       <ul>
-        <li><a href="#overview">What Does CloseCoin Do?</a></li>
+        <li><a href="#overview">{% trans "What Does CloseCoin Do?" %}</a></li>
       </ul>
       <br/>
-
-      <h4>If you have additional questions, please don't hesitate to <a href="{% url "contact" %}">contact us</a>.</h4>
+      {% url 'contact' as contact_url %}
+      <h4>{% blocktrans %}If you have additional questions, please don't hesitate to <a href="{{ contract_url}}">contact us</a>{% endblocktrans %}.</h4>
       <hr>
 
       <div class="panel-group">
@@ -25,18 +26,18 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="overview">What Does CloseCoin Do?</a>
+              <a class="anchor" id="overview">{% trans "What Does CloseCoin Do?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                CloseCoin makes it easy for people individuals and small businesses to connect offline to buy and sell bitcoin.
+                {% trans "CloseCoin makes it easy for people individuals and small businesses to connect offline to buy and sell bitcoin." %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
       </div>
       <br />

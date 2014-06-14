@@ -23,7 +23,7 @@
               success: function (data) {
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
-                $('#last-polled').html(time_since);
+                $('#last-polled-time').html(time_since);
                 var deposits = data['deposits']['txns']
                 if(deposits.length == 0){
                   setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
@@ -44,7 +44,7 @@
               success: function (data) {
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
-                $('#last-polled').html(time_since);
+                $('#last-polled-time').html(time_since);
                 var deposits = data['deposits']
                 if(deposits['txns'].length == 0){
                   setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
@@ -72,8 +72,7 @@
 
       function set_time_since() {
         var time_since = timeSince(LAST_POLL_TIME);
-        var time_since_text = "Last Updated: "+time_since+" ago";
-        $('#last-polled').html(time_since_text);
+        $('#last-polled-time').html(time_since);
         {% if not transaction %}
           setTimeout(set_time_since,1000);
         {% elif not transaction.irreversible_by %}
@@ -124,18 +123,13 @@
         type: 'get',
         url: '/get-bitcoin-price/',
         success: function (data) {
-
           $("#fiat-amt-loader").addClass("hidden");
-          $("#fiat-amt-section").removeClass("hidden");
+          $("#pricing-info").removeClass("hidden");
+          $("#fiat-amt").text(data['amount']);
+          $("#currency-code").text(data['currency_code']);
+          $("#markup").text(data['markup']);
 
-          var amount_string = data['amount']+" "+data['currency_code'];
-          $("#fiat-amt").text(amount_string)
-
-          // Run this again but increase the interval
-          // Exponential growth will reduce data usage to 0
-
-          // console.log('checking price after ' + BTC_PRICE_TIMEOUT_MS + ' ms');
-          BTC_PRICE_TIMEOUT_MS *= 1.1;
+          BTC_PRICE_TIMEOUT_MS *= 1.3;
           setTimeout(getBtcPrice,BTC_PRICE_TIMEOUT_MS);
         },
         error: function(data) {

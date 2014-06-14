@@ -1,19 +1,21 @@
+{% load i18n %}
 <hr/>
-<p style="margin-top:50px;">Registration Status</p>
+<p style="margin-top:50px;">{% trans "Registration Status" %}</p>
 <div class="progress">
     {%if merchant.finished_registration %}
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{merchant.get_registration_percent_complete}}" aria-valuemin="0" aria-valuemax="100" style="width: {{merchant.get_registration_percent_complete}}%;">
-            {{merchant.get_registration_percent_complete}}% Complete
+            {{merchant.get_registration_percent_complete}}% {% trans "Complete" %}
         </div>
     {% else %}
 
         <div class="progress-bar" role="progressbar" aria-valuenow="{{merchant.get_registration_percent_complete}}" aria-valuemin="0" aria-valuemax="100" style="width: {{merchant.get_registration_percent_complete}}%;">
-          {{merchant.get_registration_percent_complete}}% Complete
+          {{merchant.get_registration_percent_complete}}% {% trans "Complete" %}
         </div>
     {% endif %}
 </div>
+{% url 'merchants.views.merchant_profile' as profile_url %}
 {% if not merchant.address_1 %}
-  Next step: <a href="{% url "merchants.views.merchant_profile" %}">List your business address</a>
+  {% blocktrans %}Next step: <a href="{{profile_url}}">List your business address</a>{% endblocktrans %}
 {% elif not merchant.phone_num %}
-  Next step: <a href="{% url "merchants.views.merchant_profile" %}">List your business phone number</a>
+  {% blocktrans %}Next step: <a href="{{profile_url}}">List your business phone number</a>{% endblocktrans %}
 {% endif %}

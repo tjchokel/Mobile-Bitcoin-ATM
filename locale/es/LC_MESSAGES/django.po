@@ -1,0 +1,685 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-14 13:56-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: utils.py:153
+msgid "Sorry, that number isn't valid"
+msgstr "Lo siento, pero ese número no es válido"
+
+#: utils.py:156
+msgid "Sorry, that number doesn't look like a real number"
+msgstr "Lo siento, pero ese número no se ve como un número real"
+
+#: merchants/forms.py:20 merchants/forms.py:32 merchants/forms.py:116
+#: merchants/forms.py:139 shoppers/forms.py:18
+#: templates/customer_dash/_deposit_confirm.html:38
+#: templates/merchants/profile.html:79
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: merchants/forms.py:24 merchants/forms.py:123
+msgid "Password"
+msgstr "Contraseña"
+
+#: merchants/forms.py:38
+msgid "Secure Password"
+msgstr "Contraseña"
+
+#: merchants/forms.py:43 merchants/forms.py:131
+msgid "Your Name"
+msgstr "Nombre"
+
+#: merchants/forms.py:50 merchants/forms.py:163
+#: templates/merchants/profile.html:20
+msgid "Business Name"
+msgstr "Razón Social"
+
+#: merchants/forms.py:57 templates/merchants/profile.html:40
+msgid "Country"
+msgstr "País"
+
+#: merchants/forms.py:64 merchants/forms.py:224
+msgid "The Currency You Want to Trade for BTC"
+msgstr "Moneda que desea cambiar para BTC"
+
+#: merchants/forms.py:70 merchants/forms.py:231
+msgid "Bitcoin Deposit Address"
+msgstr "Bitcoin Dirección de Depósito"
+
+#: merchants/forms.py:74 merchants/forms.py:235
+msgid "The wallet address where you want your bitcoin sent"
+msgstr "La dirección de la cartera donde quieres recibir bitcoin"
+
+#: merchants/forms.py:78 merchants/forms.py:240
+#: templates/merchants/settings.html:25
+msgid "Percent Markup"
+msgstr "Marcado (porcentaje)"
+
+#: merchants/forms.py:81
+msgid "The percent you want to charge above the market rate"
+msgstr "El porcentaje para cargar encima de la tasa del mercado"
+
+#: merchants/forms.py:94 merchants/forms.py:255
+msgid "Sorry, that's not a valid bitcoin address"
+msgstr "Lo siento, pero eso no es una válida dirección bitcoin"
+
+#: merchants/forms.py:109
+msgid "Sorry, your email address must be less than 31 characters"
+msgstr ""
+"Lo siento, tu dirección de correo electrónico debe ser inferior a 31 "
+"caracteres"
+
+#: merchants/forms.py:145 shoppers/forms.py:24
+msgid "Phone Country"
+msgstr "País del Teléfono"
+
+#: merchants/forms.py:152 shoppers/forms.py:31
+msgid "Cell Phone Number in International Format"
+msgstr "Número de teléfono celular (en formato internacional)"
+
+#: merchants/forms.py:167
+msgid "Mel's Diner"
+msgstr "Hostal Bellavista"
+
+#: merchants/forms.py:171 templates/merchants/profile.html:24
+msgid "Address Line 1"
+msgstr "Dirección 1"
+
+#: merchants/forms.py:175
+msgid "Street address, P.O. box, company name, c/o "
+msgstr "Dirección 1 "
+
+#: merchants/forms.py:179 templates/merchants/profile.html:28
+msgid "Address Line 2"
+msgstr "Dirección 2"
+
+#: merchants/forms.py:182
+msgid "Apartment, suite, unit, building, floor, etc."
+msgstr "Departamento, habitación, unidad, edificio, piso, etc"
+
+#: merchants/forms.py:192
+msgid "State/Province/Region"
+msgstr "Estado / Provincia / Región"
+
+#: merchants/forms.py:200 templates/merchants/profile.html:44
+msgid "Zip Code"
+msgstr "Código Postal"
+
+#: merchants/forms.py:213 templates/merchants/profile.html:48
+#: templates/merchants/profile.html:83
+msgid "Phone Number"
+msgstr "Número Telefono"
+
+#: merchants/forms.py:243
+msgid "The percent you want to charge above the market rate."
+msgstr "El porcentaje para cargar encima de la tasa del mercado"
+
+#: merchants/views.py:38
+msgid "Welcome"
+msgstr "Bienvenido"
+
+#: merchants/views.py:39
+msgid "you are now logged in."
+msgstr "ahora estás registrado"
+
+#: merchants/views.py:44
+msgid "Sorry, that's not the right password for "
+msgstr "Lo siento, pero esa no es la contraseña correcta para "
+
+#: merchants/views.py:48
+msgid "No account found for "
+msgstr "No hay resultados para la cuenta "
+
+#: merchants/views.py:63
+msgid "You Are Now Logged Out"
+msgstr "Usted se ha desconectado"
+
+#: merchants/views.py:212
+msgid "Your profile has been updated"
+msgstr "Su perfil ha sido actualizado"
+
+#: merchants/views.py:216
+msgid "Your profile was not updated"
+msgstr "Su perfil no fue actualizado"
+
+#: merchants/views.py:239
+msgid "Your business info has been updated"
+msgstr "La información de su negocio ha sido actualizado"
+
+#: merchants/views.py:242
+msgid "Your business info was not updated"
+msgstr "La información de su negocio no ha sido actualizado"
+
+#: merchants/views.py:259
+msgid "Your bitcoin info has been updated"
+msgstr "Su información de bitcoin ha sido actualizado"
+
+#: merchants/views.py:262
+msgid "Your bitcoin info was not updated"
+msgstr "Su información de bitcoin no ha sido actualizado"
+
+#: shoppers/forms.py:12 templates/customer_dash/_deposit_confirm.html:30
+#: templates/merchants/profile.html:75
+msgid "Name"
+msgstr "Nombre"
+
+#: templates/base.html:50 templates/fixed_pages/team.html:10
+msgid "Team"
+msgstr "Equipo"
+
+#: templates/base.html:51
+msgid "Contact Us"
+msgstr "Contáctenos"
+
+#: templates/base.html:78
+msgid "Dashboard"
+msgstr "Escritorio"
+
+#: templates/base.html:78
+msgid "Sign out"
+msgstr "Se déconnecter"
+
+#: templates/base.html:84 templates/login.html:6 templates/login.html.py:14
+msgid "Sign In"
+msgstr "Acceder"
+
+#: templates/base.html:87
+msgid "Sign Up"
+msgstr "Registrarse"
+
+#: templates/base.html:112 templates/customer_dash/_deposit_confirm.html:55
+#: templates/merchants/profile.html:59 templates/merchants/profile.html:95
+#: templates/merchants/settings.html:41
+msgid "Submit"
+msgstr "Enviar"
+
+#: templates/base.html:171 templates/base.html.py:180 templates/index.html:68
+msgid "Customers"
+msgstr "Clientes"
+
+#: templates/base.html:175 templates/base.html.py:184
+#: templates/merchants/breadcrumb.html:3
+msgid "Admin"
+msgstr "Administración"
+
+#: templates/index.html:11
+msgid "Turn Your Phone Into a Bitcoin ATM"
+msgstr "Convierte tu móvil a un Bitcoin ATM"
+
+#: templates/index.html:15
+msgid "List Your Business for Free"
+msgstr "Incluya Su Negocio de Forma Gratuita"
+
+#: templates/index.html:26
+msgid "Your Bitcoin Point Of Sale System"
+msgstr "Su Sistema Punto de Venta de Bitcoin"
+
+#: templates/index.html:28
+msgid ""
+"CloseCoin makes it easy for owners of any store to <b>buy bitcoin for cash</"
+"b>.Some of our happiest customers are money changers, restaurants, hostels, "
+"convenience stores, and gas stations.It works great anywhere there is a cash "
+"register, an internet connection, and a desire to buy bitcoin at wholesale "
+"prices."
+msgstr ""
+"CloseCoin hace que sea fácil para los propietarios de cualquier tienda a "
+"<b>comprar bitcoin por dinero en efectivo</b>. Algunos de nuestros clientes "
+"más felices son cambistas, restaurantes, hostales, tiendas de conveniencia, "
+"y gasolineras. Se funciona muy bien en cualquier lugar hay una caja, "
+"internet, y un deseo de comprar bitcoin a precios de mayorista."
+
+#: templates/index.html:36
+msgid "Store Owners"
+msgstr "Propietarios de la Tienda"
+
+#: templates/index.html:38
+msgid "Set Your Own Prices"
+msgstr "Establecer Sus Propios Precios"
+
+#: templates/index.html:39
+msgid ""
+"Since your business has regular hours and pays out quickly in cash, you get "
+"rewarded with better prices."
+msgstr ""
+"Debido a que su negocio tiene horas regulares y paga rápidamente en "
+"efectivo, que se ven recompensados ​​con mejores precios."
+
+#: templates/index.html:41
+msgid "Attract New Customers"
+msgstr "Atraer Nuevos Clientes"
+
+#: templates/index.html:42
+msgid ""
+"Prime placement on the CloseCoin map will send more foot traffic into your "
+"store."
+msgstr ""
+"Ubicación privilegiada en el mapa CloseCoin enviará más tráfico a pie en su "
+"tienda."
+
+#: templates/index.html:44
+msgid "Sell or Spend Your Bitcoin Immediately"
+msgstr "Vender o Pasar Sus Bitcoin Inmediatamente"
+
+#: templates/index.html:45
+msgid ""
+"If you don't want to hold bitcoin, you can set your prices so that you're "
+"able to sell it right away for a profit."
+msgstr ""
+"Si no desea mantener bitcoin, usted puede fijar sus precios de modo que "
+"tiene capaz de vender de inmediato para un beneficio."
+
+#: templates/index.html:47
+msgid "Get Your Money to a Safer Location"
+msgstr "Mandar Su Dinero a Una Ubicación Mas Segura"
+
+#: templates/index.html:48
+msgid "Moving cash into bitcoins can minimize theft and reduce robberies."
+msgstr "Cambiar efectivo a bitcoin puede minimizar el robo."
+
+#: templates/index.html:50
+msgid "Simple to Use"
+msgstr "Fácil de Usar"
+
+#: templates/index.html:51
+msgid ""
+"Mobile-optimized and user friendly, CloseCoin is designed so that even an "
+"employee with no Bitcoin knowledge can operate it."
+msgstr ""
+"-Móvil optimizada y fácil de usar, CloseCoin está diseñado para que un "
+"empleado sin conocimiento Bitcoin pueda operar el sitio."
+
+#: templates/index.html:52
+msgid "Works Anywhere In the World"
+msgstr "Funciona en Todo el Mundo"
+
+#: templates/index.html:53
+msgid ""
+"From Argentina to Australia, CloseCoin works everywhere in the world with "
+"the currency of your choice. More languages coming soon!"
+msgstr ""
+"Desde Argentina hasta Australia, CloseCoin funciona en todas partes del "
+"mundo, con la moneda de su elección. ¡Estamos trabajando en añadir mas "
+"lenguas!"
+
+#: templates/index.html:56
+msgid "List Your Business Today"
+msgstr "Incluya Su Negocio Hoy"
+
+#: templates/index.html:70
+msgid "Transparent Pricing"
+msgstr "Precios Transparentes"
+
+#: templates/index.html:71
+msgid ""
+"Businesses publish their prices online so you can shop around for the best "
+"rate. There are never any surprises when you get to the store."
+msgstr ""
+"Las empresas publican sus precios en línea para que pueda encontrar la mejor "
+"tarifa. Nunca hay sorpresas cuando llegas a la tienda."
+
+#: templates/index.html:73
+msgid "No Messaging"
+msgstr "No Mensajes"
+
+#: templates/index.html:74
+msgid ""
+"Businesses list their hours and location in advance, just show up with your "
+"bitcoin and receive cash."
+msgstr ""
+"Las empresas listan sus horarios y la ubicación en avance, simplemente venga "
+"con su bitcoin y recibe dinero en efectivo."
+
+#: templates/index.html:76
+msgid "Businesses You Can Trust"
+msgstr "Empresas que Se Puede Confiar"
+
+#: templates/index.html:77
+msgid ""
+"Each merchant is rated by their users to ensure that the continue to provide "
+"the best service."
+msgstr ""
+"Cada comerciante es evaluado por sus usuarios para asegurar que siguen "
+"ofreciendo el mejor servicio."
+
+#: templates/index.html:80
+msgid "Get Notified of New Merchants Nearby"
+msgstr "Informarte de Nuevos Negocios Cercanos"
+
+#: templates/index.html:92
+msgid "Join The CloseCoin Network"
+msgstr "Únase a la red CloseCoin"
+
+#: templates/index.html:94
+#: fuzzy
+msgid "Sign Up Today"
+msgstr "Registrarse"
+
+#: templates/login.html:21
+#, python-format
+msgid ""
+"To create a new account, please <a href=\"%(register_url)s\"> click here</a>."
+msgstr ""
+"Para crear una nueva cuenta, por favor, <a href=\"%(register_url)s\"> haga "
+"clic aquí </ a>."
+
+#: templates/customer_dash/_deposit_address_modal.html:7
+#: templates/customer_dash/_no_deposit_confirm.html:50
+msgid "Send Bitcoin"
+msgstr "Enviar Bitcoin"
+
+#: templates/customer_dash/_deposit_address_modal.html:13
+msgid "Deposit to this address"
+msgstr "Depósito a esta dirección"
+
+#: templates/customer_dash/_deposit_address_modal.html:20
+msgid "After depositing, click the following button"
+msgstr "Después de depositar, haga clic en el siguiente botón"
+
+#: templates/customer_dash/_deposit_address_modal.html:21
+msgid "Confirm My Deposit"
+msgstr "Confirmar Mi Depósito"
+
+#: templates/customer_dash/_deposit_complete.html:6
+msgid "Transaction Complete"
+msgstr "Transacción Completa"
+
+#: templates/customer_dash/_deposit_complete.html:16
+#, python-format
+msgid ""
+"The deposit of <b>%(mbtc)s</b> made by %(shopper_name)s is now complete. You "
+"owe %(shopper_name)s <b>%(fiat)s</b>."
+msgstr ""
+"El depósito de <b>%(mbtc)s</b>hecha por %(shopper_name)s ahora está "
+"completa. Tienes una deuda con %(shopper_name)s<b>%(fiat)s</ b>."
+
+#: templates/customer_dash/_deposit_complete.html:18
+#, python-format
+msgid ""
+"The deposit of <b>%(mbtc)s</b> is now complete. You owe the customer <b>"
+"%(fiat)s</b>."
+msgstr ""
+"El depósito de <b>%(mbtc)s</b> ha finalizado. Debes al cliente <b>%(fiat)s</"
+"b>."
+
+#: templates/customer_dash/_deposit_complete.html:23
+#, python-format
+msgid "Verify %(mbtc)s on Blockchain.info"
+msgstr "Verifique %(mbtc)s en Blockchain.info"
+
+#: templates/customer_dash/_deposit_complete.html:33
+msgid "I Have Paid The Customer"
+msgstr "He Pagado el Cliente"
+
+#: templates/customer_dash/_deposit_confirm.html:6
+msgid "Last Updated"
+msgstr "Última Actualización"
+
+#: templates/customer_dash/_deposit_confirm.html:6
+msgid "seconds ago"
+msgstr "hace unos segundos"
+
+#: templates/customer_dash/_deposit_confirm.html:13
+msgid "Waiting for deposit to"
+msgstr "Esperando depósito a"
+
+#: templates/customer_dash/_deposit_confirm.html:13
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/customer_dash/_deposit_confirm.html:18
+#: templates/merchants/breadcrumb.html:12
+#: templates/merchants/breadcrumb.html:14
+#: templates/merchants/transactions.html:12
+msgid "Transactions"
+msgstr "Transacciones"
+
+#: templates/customer_dash/_deposit_confirm.html:26
+msgid "Shopper Information"
+msgstr "Información del Cliente"
+
+#: templates/customer_dash/_deposit_confirm.html:34
+msgid "Phone"
+msgstr "Teléfono"
+
+#: templates/customer_dash/_deposit_confirm.html:48
+msgid "Please enter a name for your receipt"
+msgstr "Por favor, introduzca un nombre para el recibo"
+
+#: templates/customer_dash/_deposit_dash_table.html:5
+msgid "Amount"
+msgstr "Cantidad"
+
+#: templates/customer_dash/_deposit_dash_table.html:7
+#: templates/merchants/transactions.html:20
+msgid "Status"
+msgstr "Estado"
+
+#: templates/customer_dash/_deposit_dash_table.html:27
+msgid "Transaction not yet detected"
+msgstr "Transacción no ha sido detectada"
+
+#: templates/customer_dash/_no_deposit_confirm.html:9
+msgid "BTC Price"
+msgstr "Precio BTC"
+
+#: templates/customer_dash/_no_deposit_confirm.html:9
+msgid "markup"
+msgstr "marcado"
+
+#: templates/customer_dash/_no_deposit_confirm.html:38
+msgid "Get Cash for Your Bitcoin Now"
+msgstr "Obtener dinero en efectivo para su Bitcoin Ahora"
+
+#: templates/customer_dash/_no_deposit_confirm.html:53
+msgid "Wait for Confirmation"
+msgstr "Espere para Confirmaciones"
+
+#: templates/customer_dash/_no_deposit_confirm.html:55
+msgid "Receive Cash"
+msgstr "Recibir Efectivo"
+
+#: templates/customer_dash/_no_deposit_confirm.html:66
+msgid "Get Started"
+msgstr "Comenzar"
+
+#: templates/customer_dash/_transaction_row.html:12
+msgid "Detected"
+msgstr "Detectado"
+
+#: templates/fixed_pages/contact.html:6
+msgid "CloseCoin Contact"
+msgstr "CloseCoin Contacto"
+
+#: templates/fixed_pages/contact.html:10
+#, python-format
+msgid ""
+"We are here to help! Please feel free to contact us any time at <a href="
+"\"mailto:support@coinsafe.com?Subject=CloseCoin%%20Support\" target=\"_top"
+"\">support@closecoin.com</a>"
+msgstr ""
+"Estamos aquí para ayudar! No dude en contactarnos en cualquier momento a <a "
+"href =\"mailto:Support@coinsafe.com?Subject=CloseCoin%%20Support \"target = "
+"\"_top \">support@closecoin.com</a>"
+
+#: templates/fixed_pages/help.html:8
+msgid "Frequently Asked Questions"
+msgstr "Preguntas Frecuentes"
+
+#: templates/fixed_pages/help.html:17 templates/fixed_pages/help.html.py:29
+msgid "What Does CloseCoin Do?"
+msgstr "¿Qué hace CloseCoin?"
+
+#: templates/fixed_pages/help.html:21
+#, python-format
+msgid ""
+"If you have additional questions, please don't hesitate to <a href="
+"\"%(contract_url)s\">contact us</a>"
+msgstr ""
+"Si usted tiene preguntas adicionales, por favor no dude en <a href="
+"\"%(contract_url)s\">ponerse en contacto con nosotros</ a>"
+
+#: templates/fixed_pages/help.html:35
+msgid ""
+"CloseCoin makes it easy for people individuals and small businesses to "
+"connect offline to buy and sell bitcoin."
+msgstr ""
+"CloseCoin hace que sea fácil para las personas particulares y pequeñas "
+"empresas se conecten en línea para comprar y vender bitcoin."
+
+#: templates/fixed_pages/help.html:40
+msgid "Back to Top"
+msgstr "Volver al Principio"
+
+#: templates/fixed_pages/team.html:11
+msgid ""
+"We are Bitcoin enthusiasts who believe that bitcoin's success requires "
+"transactional use and decentralized way to get in and out of bitcoin"
+msgstr ""
+"Estamos entusiastas de Bitcoin que creen que el éxito de bitcoin requiere el "
+"uso transaccional y de manera descentralizada para entrar y salir de bitcoin"
+
+#: templates/fixed_pages/team.html:23
+msgid ""
+"Michael has built two venture funded companies (<a href=\"http://www."
+"thumbtack.com\" target=\"_blank\">thumbtack.com</a> and <a href=\"http://"
+"priceonomics.com\" target=\"_blank\">priceonomics.com</a>) that have each "
+"raised money from top VCs like Sequoia, Andreesen Horowitz, and Spark "
+"Capital. Michael graduated from Brown University with a degree in Economics."
+msgstr ""
+"Michael ha construido dos companías (<a href=\"http://www.thumbtack.com\" "
+"target=\"_blank\">thumbtack.com</ a> y <a href =\"http://priceonomics.com "
+"\"target=\" _blank\">priceonomics.com</ a>) que han recibido dinero de los "
+"mejores inversionistas institucionales como Sequoia, Andreesen Horowitz, y "
+"Spark Capital. Michael estudió Economía en Brown University."
+
+#: templates/fixed_pages/team.html:33
+msgid ""
+"Tom is a former Google Engineer who worked on the AdWords fraud team. He "
+"left Google to build Semply, a company focused on building advertising tools "
+"for small businesses, which was later acquired by <a href=\"https://www."
+"adstage.io/\" target=\"_blank\">AdStage</a>. Tom graduated from Georgetown "
+"University with degrees in Computer Science and Economics"
+msgstr ""
+"Tom es un ex ingeniero de Google que trabajó en el equipo de fraude AdWords. "
+"Salió de Google para construir Semply, una empresa enfocada en la creación "
+"de herramientas de publicidad para las pequeñas empresas, que más tarde fue "
+"adquirida por <a href=\"https://www.adstage.io/\" target=\"_blank"
+"\">AdStage</ a>. Tom se graduó de la Universidad de Georgetown con un título "
+"en Ciencias de la Computación y Economía."
+
+#: templates/merchants/_registration_status_bar.html:3
+msgid "Registration Status"
+msgstr "Estado Del Registro"
+
+#: templates/merchants/_registration_status_bar.html:7
+#: templates/merchants/_registration_status_bar.html:12
+msgid "Complete"
+msgstr "Completado"
+
+#: templates/merchants/_registration_status_bar.html:18
+#, python-format
+msgid "Next step: <a href=\"%(profile_url)s\">List your business address</a>"
+msgstr ""
+"Siguiente paso: <a href=\"%(profile_url)s\">Lista su dirección de negocios</"
+"a>"
+
+#: templates/merchants/_registration_status_bar.html:20
+#, python-format
+msgid ""
+"Next step: <a href=\"%(profile_url)s\">List your business phone number</a>"
+msgstr ""
+"Siguiente paso: <a href=\"%(profile_url)s\">Lista el número de teléfono de "
+"la empresa </a>"
+
+#: templates/merchants/breadcrumb.html:19
+#: templates/merchants/breadcrumb.html:21
+msgid "Settings"
+msgstr "Configuración"
+
+#: templates/merchants/breadcrumb.html:26
+#: templates/merchants/breadcrumb.html:28
+msgid "Profile"
+msgstr "Perfil"
+
+#: templates/merchants/profile.html:14
+msgid "Business Info"
+msgstr "Información del Negocio"
+
+#: templates/merchants/profile.html:15 templates/merchants/profile.html:70
+msgid "Edit"
+msgstr "Editar"
+
+#: templates/merchants/profile.html:32
+msgid "City"
+msgstr "Ciudad"
+
+#: templates/merchants/profile.html:36
+msgid "State"
+msgstr "Estado "
+
+#: templates/merchants/profile.html:69
+msgid "Owner Info"
+msgstr "Información del Dueño"
+
+#: templates/merchants/profile.html:69
+msgid "for Transaction Notifications"
+msgstr "para la transacción notificaciones"
+
+#: templates/merchants/register.html:6
+msgid "Register Account"
+msgstr "Registrar Cuenta"
+
+#: templates/merchants/register.html:14
+msgid "Create Free Account"
+msgstr "Crear Cuenta Gratis"
+
+#: templates/merchants/settings.html:14
+msgid "Bitcoin Settings"
+msgstr "Ajustes Bitcoin"
+
+#: templates/merchants/settings.html:21
+msgid "Currency"
+msgstr "Moneda"
+
+#: templates/merchants/settings.html:29
+msgid "Your BTC Address"
+msgstr "Su BTC Dirección"
+
+#: templates/merchants/transactions.html:16
+msgid "Date"
+msgstr "Fecha"
+
+#: templates/merchants/transactions.html:17
+msgid "Shopper"
+msgstr "Cliente"
+
+#: templates/merchants/transactions.html:18
+msgid "Bitcoin"
+msgstr "Bitcoin"
+
+#: templates/merchants/transactions.html:19
+msgid "Cash"
+msgstr "Efectivo"
+
+#: templates/merchants/transactions.html:37
+msgid "You have no transactions yet"
+msgstr "No tiene transacciones aún"
+
+#~ msgid "Turn Your Phone Into a Bitcoin ATM Now!"
+#~ msgstr "Convierte Su Móvil en un Bitcoin ATM Ahora!"

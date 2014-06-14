@@ -1,51 +1,51 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
-  <div class="container">
+<div class="container">
     <!-- Profile Menu -->
-    {% with current_tab='profile' %}
-      {% include "merchants/breadcrumb.html" %}
-    {% endwith %}
-
+  {% with current_tab='profile' %}
+    {% include "merchants/breadcrumb.html" %}
+  {% endwith %}
   <div class="col-sm-8 col-md-9">
 
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">Business Info</a>
-            <a href="#" onclick="editMerchantInfo();" id="merchant-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
+            <a style="color:#515151;" href="#">{% trans "Business Info" %}</a>
+            <a href="#" onclick="editMerchantInfo();" id="merchant-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="merchant-info-list" class="table">
             <tbody>
               <tr>
-                <td class="text-muted">Business Name</td>
+                <td class="text-muted">{% trans "Business Name" %}</td>
                 <td align="right">{{merchant.business_name}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Address Line 1</td>
+                <td class="text-muted">{% trans "Address Line 1" %}</td>
                 <td align="right">{{merchant.address_1}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Address Line 2</td>
+                <td class="text-muted">{% trans "Address Line 2" %}</td>
                 <td align="right">{{merchant.address_2}}</td>
               </tr>
               <tr>
-                <td class="text-muted">City</td>
+                <td class="text-muted">{% trans "City" %}</td>
                 <td align="right">{{merchant.city}}</td>
               </tr>
               <tr>
-                <td class="text-muted">State</td>
+                <td class="text-muted">{% trans "State" %}</td>
                 <td align="right">{{merchant.state}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Country</td>
+                <td class="text-muted">{% trans "Country" %}</td>
                 <td align="right">{{merchant.get_country_display}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Zip Code</td>
+                <td class="text-muted">{% trans "Zip Code" %}</td>
                 <td align="right">{{merchant.zip_code}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Phone Number</td>
+                <td class="text-muted">{% trans "Phone Number" %}</td>
                 <td align="right">{{merchant.phone_num.as_international}}</td>
               </tr>
             </tbody>
@@ -56,7 +56,7 @@
               {{ merchant_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
               </div>
             </form>
           </span>
@@ -66,21 +66,21 @@
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">Owner Info <small>(for Transaction Notifications)</small></a>
-            <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button" style="float:right;">Edit <i class="fa fa-pencil-square-o"></i></a>
+            <a style="color:#515151;" href="#">{% trans "Owner Info"%} <small>({% trans "for Transaction Notifications"%})</small></a>
+            <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="personal-info-list" class="table">
             <tbody>
               <tr>
-                <td class="text-muted">Name</td>
+                <td class="text-muted">{% trans "Name" %}</td>
                 <td align="right">{{user.full_name}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Email</td>
+                <td class="text-muted">{% trans "Email" %}</td>
                 <td align="right">{{user.email}}</td>
               </tr>
               <tr>
-                <td class="text-muted">Phone Number</td>
+                <td class="text-muted">{% trans "Phone Number" %}</td>
                 <td align="right">{{user.phone_num.as_international}}</td>
               </tr>
             </tbody>
@@ -92,7 +92,7 @@
               {{ personal_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
               </div>
             </form>
           </span>

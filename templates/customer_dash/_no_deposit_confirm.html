@@ -1,15 +1,18 @@
+{% load i18n %}
 <div class="container">
   <div class="page-header">
-      <h3 class="pull-left">{{merchant.business_name}}</h3>
-      <h3 class="pull-right" style="float:right;">
-        <a class="active has-spinner" id="fiat-amt-loader">
-          <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-        </a>
-        <span id="fiat-amt-section" class="hidden">
-          <span>BTC Price =</span>
-          <span style="color: #72a53b;" id="fiat-amt"></span>
-          <span>({{ merchant.get_percent_markup }}% markup)</span>
+
+      <h3 class="pull-left">{{merchant.business_name}}
+      </h3>
+      <h3 class="pull-right" style="color: #72a53b; float:right;">
+        <span id='pricing-info' class="hidden">
+          {% trans "BTC Price"%}: <span id="fiat-amt"></span> <span id='currency-code'></span> (<span id='markup'></span>% {% trans "markup"%})
         </span>
+        <a class="active has-spinner hidden" id="fiat-amt-loader">
+          <span class="spinner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </span>
+        </a>
       </h3>
       <div class="clearfix"></div>
   </div>
@@ -20,11 +23,10 @@
         <div class="row">
           <div class="col-md-12">
             <br/>
-            <h2 class="text-center">Get Cash for Your Bitcoin Now</h2>
+            <h2 class="text-center">{% trans "Get Cash for Your Bitcoin Now" %}</h2>
           </div>
         </div>
         <br/>
-
         <table style="width:100%; table-layout:fixed;">
           <tr>
             <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-bitcoin"></i></div></th>
@@ -32,9 +34,15 @@
             <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-money"></i></div></th>
           </tr>
           <tr>
-            <td><p class="lead text-center">1. Send Bitcoin</p></td>
-            <td><p class="lead text-center">2. Wait for Confirmation</p></td>
-            <td><p class="lead text-center">3. Receive Cash</p></td>
+            <td><p class="lead text-center">
+              1. {% trans "Send Bitcoin" %}
+               </p></td>
+            <td><p class="lead text-center">
+              2. {% trans "Wait for Confirmation" %}</p></td>
+            <td><p class="lead text-center">
+              3. {% trans "Receive Cash" %}
+            </p></td>
+
           </tr>
         </table>
 
@@ -43,7 +51,7 @@
           <span style="margin-left: auto; margin-right: auto; display: block;">
             <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
               <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-              Get Started
+              {% trans "Get Started" %}
             </a>
           </span>
         </div>

@@ -125,9 +125,6 @@
         success: function (data) {
           $("#fiat-amt-loader").addClass("hidden");
           $("#pricing-info").removeClass("hidden");
-          // var amount = "BTC Price: "+data['amount']+" "+data['currency_code']+" ("+data['markup']+"% markup)"
-          // $("#fiat-amt").toggleClass("show hidden");
-          // $("#fiat-amt").text(amount);
           $("#fiat-amt").text(data['amount']);
           $("#currency-code").text(data['currency_code']);
           $("#markup").text(data['markup']);

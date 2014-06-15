@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
@@ -35,18 +35,15 @@ def login_request(request):
                     # Log the login
                     LoggedLogin.record_login(request)
 
-                    msg = _('Welcome') + '<b>%s</b>, ' % user.username
-                    msg += _('you are now logged in.')
+                    msg = _('Welcome <b>%s</b>, you are now logged in.' % user.username)
                     messages.success(request, msg, extra_tags='safe')
 
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
-                    msg = _("Sorry, that's not the right password for ")
-                    msg += '<b>%s</b>.' % escape(email)
+                    msg = _("Sorry, that's not the right password for <b>%s</b>." % escape(email))
                     messages.warning(request, msg, extra_tags='safe')
             else:
-                msg = _("No account found for ")
-                msg += "<b>%s</b>." % escape(email)
+                msg = _("No account found for <b>%s</b>." % escape(email))
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':

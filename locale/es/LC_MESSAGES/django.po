@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 00:15+0000\n"
+"POT-Creation-Date: 2014-06-15 16:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,11 +20,11 @@ msgstr ""
 
 #: utils.py:153
 msgid "Sorry, that number isn't valid"
-msgstr "Lo siento, pero ese número no es válido"
+msgstr "Lo sentimos, pero ese número no es válido"
 
 #: utils.py:156
 msgid "Sorry, that number doesn't look like a real number"
-msgstr "Lo siento, pero ese número no se ve como un número real"
+msgstr "Lo sentimos, pero ese número no se ve como un número real"
 
 #: merchants/forms.py:17 merchants/forms.py:29 merchants/forms.py:112
 #: merchants/forms.py:135 shoppers/forms.py:18
@@ -43,7 +43,7 @@ msgstr "Contraseña"
 
 #: merchants/forms.py:40 merchants/forms.py:127
 msgid "Your Name"
-msgstr "Nombre"
+msgstr "Nombre y Apellido"
 
 #: merchants/forms.py:47 merchants/forms.py:159
 #: templates/merchants/profile.html:20
@@ -56,38 +56,38 @@ msgstr "País"
 
 #: merchants/forms.py:61 merchants/forms.py:220
 msgid "The Currency You Want to Trade for BTC"
-msgstr "Moneda que desea cambiar para BTC"
+msgstr "Moneda que deseas cambiar por BTC"
 
 #: merchants/forms.py:67 merchants/forms.py:227
 msgid "Bitcoin Deposit Address"
-msgstr "Bitcoin Dirección de Depósito"
+msgstr "Dirección Bitcoin de Depósito"
 
 #: merchants/forms.py:71 merchants/forms.py:231
 msgid "The wallet address where you want your bitcoin sent"
-msgstr "La dirección de la cartera donde quieres recibir bitcoin"
+msgstr "La dirección de la billetera donde quieres recibir los bitcoin"
 
 #: merchants/forms.py:75 merchants/forms.py:236
 #: templates/merchants/settings.html:25
 msgid "Percent Markup"
-msgstr "Marcado (porcentaje)"
+msgstr "Margen de Ganancia"
 
 #: merchants/forms.py:78
 msgid "The percent you want to charge above the market rate"
-msgstr "El porcentaje para cargar encima de la tasa del mercado"
+msgstr "El porcentaje de recargo por encima de la tasa del mercado"
 
 #: merchants/forms.py:91 merchants/forms.py:251
 msgid "Sorry, that's not a valid bitcoin address"
-msgstr "Lo siento, pero eso no es una válida dirección bitcoin"
+msgstr "Lo sentimos, pero eso no es una válida dirección bitcoin"
 
 #: merchants/forms.py:101
 #, python-format
 msgid "That email is already taken, do you want to <a href=\"%s\">login</a>?"
-msgstr "Este mail ya esta en uso, ¿quieres <a href=\"%s\">login</a>?>"
+msgstr "Este correo ya esta en uso, ¿quieres <a href=\"%s\">login</a>?>"
 
 #: merchants/forms.py:105
 msgid "Sorry, your email address must be less than 31 characters"
 msgstr ""
-"Lo siento, tu dirección de correo electrónico debe ser inferior a 31 "
+"Lo sentimos, tu dirección de correo electrónico debe ser inferior a 31 "
 "caracteres"
 
 #: merchants/forms.py:141 shoppers/forms.py:24
@@ -96,7 +96,7 @@ msgstr "País del Teléfono"
 
 #: merchants/forms.py:148 shoppers/forms.py:31
 msgid "Cell Phone Number in International Format"
-msgstr "Número de teléfono celular (en formato internacional)"
+msgstr "Número de teléfono móvil (en formato internacional)"
 
 #: merchants/forms.py:163
 msgid "Mel's Diner"
@@ -108,7 +108,7 @@ msgstr "Dirección 1"
 
 #: merchants/forms.py:171
 msgid "Street address, P.O. box, company name, c/o "
-msgstr "Dirección 1 "
+msgstr "Calle, Casilla de Correo, Nombre de la Empresa, c/o"
 
 #: merchants/forms.py:175 templates/merchants/profile.html:28
 msgid "Address Line 2"
@@ -129,21 +129,21 @@ msgstr "Código Postal"
 #: merchants/forms.py:209 templates/merchants/profile.html:48
 #: templates/merchants/profile.html:83
 msgid "Phone Number"
-msgstr "Número Telefono"
+msgstr "Número de Teléfono"
 
 #: merchants/forms.py:239
 msgid "The percent you want to charge above the market rate."
-msgstr "El porcentaje para cargar encima de la tasa del mercado"
+msgstr "Porcentaje a cargar por encima de la tasa de mercado"
 
 #: merchants/views.py:38
 #, fuzzy, python-format
 msgid "Welcome <b>%s</b>, you are now logged in."
-msgstr "Bienvenidos <b>%s</b>, usted ha iniciado la sesión"
+msgstr "Bienvenidos <b>%s</b>, usted ha iniciado sesión"
 
 #: merchants/views.py:43
 #, fuzzy, python-format
 msgid "Sorry, that's not the right password for <b>%s</b>."
-msgstr "Lo siento, pero esa no es la contraseña correcta para <b>%s</b>"
+msgstr "Lo sentimos, pero esa no es la contraseña correcta para <b>%s</b>"
 
 #: merchants/views.py:46
 #, fuzzy, python-format
@@ -152,7 +152,7 @@ msgstr "No hay resultados para la cuenta <b>%s</b>."
 
 #: merchants/views.py:60
 msgid "You Are Now Logged Out"
-msgstr "Usted se ha desconectado"
+msgstr "Usted se ha terminado la sesión"
 
 #: merchants/views.py:209
 msgid "Your profile has been updated"
@@ -164,19 +164,19 @@ msgstr "Su perfil no fue actualizado"
 
 #: merchants/views.py:236
 msgid "Your business info has been updated"
-msgstr "La información de su negocio ha sido actualizado"
+msgstr "La información de su negocio ha sido actualizada"
 
 #: merchants/views.py:239
 msgid "Your business info was not updated"
-msgstr "La información de su negocio no ha sido actualizado"
+msgstr "La información de su negocio no ha sido actualizada"
 
 #: merchants/views.py:256
 msgid "Your bitcoin info has been updated"
-msgstr "Su información de bitcoin ha sido actualizado"
+msgstr "Su información referente a Bitcoin ha sido actualizada"
 
 #: merchants/views.py:259
 msgid "Your bitcoin info was not updated"
-msgstr "Su información de bitcoin no ha sido actualizado"
+msgstr "Su información referente a Bitcoin no ha sido actualizada"
 
 #: shoppers/forms.py:12 templates/customer_dash/_deposit_confirm.html:30
 #: templates/merchants/profile.html:75
@@ -197,11 +197,11 @@ msgstr "Escritorio"
 
 #: templates/base.html:78
 msgid "Sign out"
-msgstr "Se déconnecter"
+msgstr "Cerrar Sesión"
 
 #: templates/base.html:84 templates/login.html:6 templates/login.html.py:14
 msgid "Sign In"
-msgstr "Acceder"
+msgstr "Ingresar"
 
 #: templates/base.html:87 templates/index.html:94
 msgid "Sign Up"
@@ -224,15 +224,15 @@ msgstr "Administración"
 
 #: templates/index.html:11
 msgid "Turn Your Phone Into a Bitcoin ATM"
-msgstr "Convierte tu móvil a un Bitcoin ATM"
+msgstr "Convierte tu teléfono móvil en un Cajero Automático de Bitcoin"
 
 #: templates/index.html:15
 msgid "List Your Business for Free"
-msgstr "Incluya Su Negocio de Forma Gratuita"
+msgstr "Liste su Negocio de Forma Gratuita"
 
 #: templates/index.html:26
 msgid "Your Bitcoin Point Of Sale System"
-msgstr "Su Sistema Punto de Venta de Bitcoin"
+msgstr "Su Sistema Bitcoin para Puntos de Venta"
 
 #: templates/index.html:28
 msgid ""
@@ -242,11 +242,12 @@ msgid ""
 "register, an internet connection, and a desire to buy bitcoin at wholesale "
 "prices."
 msgstr ""
-"CloseCoin hace que sea fácil para los propietarios de cualquier tienda a "
-"<b>comprar bitcoin por dinero en efectivo</b>. Algunos de nuestros clientes "
-"más felices son cambistas, restaurantes, hostales, tiendas de conveniencia, "
-"y gasolineras. Se funciona muy bien en cualquier lugar hay una caja, "
-"internet, y un deseo de comprar bitcoin a precios de mayorista."
+"CloseCoin hace fácil la <b> compra de bitcoin por dinero en efectivo</b>para "
+"los propietarios de cualquier tienda. Algunos de nuestros clientes más "
+"felices son casas de cambio, restaurantes, hostales, tiendas de "
+"conveniencia, y gasolineras. Funciona muy bien en cualquier lugar que tenga "
+"una caja, conexión a internet, y el deseo de comprar bitcoin a precios de "
+"mayorista."
 
 #: templates/index.html:36
 msgid "Store Owners"
@@ -261,8 +262,8 @@ msgid ""
 "Since your business has regular hours and pays out quickly in cash, you get "
 "rewarded with better prices."
 msgstr ""
-"Debido a que su negocio tiene horas regulares y paga rápidamente en "
-"efectivo, que se ven recompensados ​​con mejores precios."
+"Debido a que su negocio funciona con horas regulares y paga rápidamente en "
+"efectivo, es recompensado ​con mejores precios."
 
 #: templates/index.html:41
 msgid "Attract New Customers"
@@ -273,28 +274,28 @@ msgid ""
 "Prime placement on the CloseCoin map will send more foot traffic into your "
 "store."
 msgstr ""
-"Ubicación privilegiada en el mapa CloseCoin enviará más tráfico a pie en su "
-"tienda."
+"Ubicación privilegiada en el mapa CloseCoin aumentará la circulación de "
+"visitantes a su tienda."
 
 #: templates/index.html:44
 msgid "Sell or Spend Your Bitcoin Immediately"
-msgstr "Vender o Pasar Sus Bitcoin Inmediatamente"
+msgstr "Vender o Gastar Sus Bitcoin de Forma Inmediata"
 
 #: templates/index.html:45
 msgid ""
 "If you don't want to hold bitcoin, you can set your prices so that you're "
 "able to sell it right away for a profit."
 msgstr ""
-"Si no desea mantener bitcoin, usted puede fijar sus precios de modo que "
-"tiene capaz de vender de inmediato para un beneficio."
+"Si no desea retener bitcoin, usted puede fijar precios de modo que los pueda "
+"vender inmediatamente con una ganancia."
 
 #: templates/index.html:47
 msgid "Get Your Money to a Safer Location"
-msgstr "Mandar Su Dinero a Una Ubicación Mas Segura"
+msgstr "Mandar Su Dinero a una Ubicación Más Segura"
 
 #: templates/index.html:48
 msgid "Moving cash into bitcoins can minimize theft and reduce robberies."
-msgstr "Cambiar efectivo a bitcoin puede minimizar el robo."
+msgstr "Cambiar su efectivo por bitcoin puede minimizar hurtos y robos."
 
 #: templates/index.html:50
 msgid "Simple to Use"
@@ -305,8 +306,8 @@ msgid ""
 "Mobile-optimized and user friendly, CloseCoin is designed so that even an "
 "employee with no Bitcoin knowledge can operate it."
 msgstr ""
-"Móvil optimizada y fácil de usar, CloseCoin está diseñado para que un "
-"empleado sin conocimiento Bitcoin pueda operar el sitio."
+"Optimazada para Móviles y fácil de usar, CloseCoin está diseñado para que un "
+"empleado sin conocimiento de Bitcoin, pueda operar la plataforma."
 
 #: templates/index.html:52
 msgid "Works Anywhere In the World"
@@ -334,24 +335,24 @@ msgid ""
 "Businesses publish their prices online so you can shop around for the best "
 "rate. There are never any surprises when you get to the store."
 msgstr ""
-"Las empresas publican sus precios en línea para que pueda encontrar la mejor "
-"tarifa. Nunca hay sorpresas cuando llegas a la tienda."
+"Las empresas publican sus precios en línea para que puedas encontrar la "
+"mejor tarifa. Sin sorpresas cuando llegas a la tienda."
 
 #: templates/index.html:73
 msgid "No Messaging"
-msgstr "No Mensajes"
+msgstr "Sin Mensajes"
 
 #: templates/index.html:74
 msgid ""
 "Businesses list their hours and location in advance, just show up with your "
 "bitcoin and receive cash."
 msgstr ""
-"Las empresas listan sus horarios y la ubicación en avance, simplemente venga "
-"con su bitcoin y recibe dinero en efectivo."
+"Las empresas listan de forma anticipada sus horarios y ubicación, por lo que "
+"sólo necesitas ir con tus bitcoin, para recibir dinero en efectivo."
 
 #: templates/index.html:76
 msgid "Businesses You Can Trust"
-msgstr "Empresas que Se Puede Confiar"
+msgstr "Empresas que Puedes Confiar"
 
 #: templates/index.html:77
 msgid ""
@@ -368,7 +369,7 @@ msgstr "Informarte de Nuevos Negocios Cercanos"
 #: templates/index.html:92
 #, fuzzy
 msgid "Join The CloseCoin Network!"
-msgstr "¡Únase a la red CloseCoin!"
+msgstr "¡Únete a la red CloseCoin!"
 
 #: templates/login.html:21
 #, python-format
@@ -405,8 +406,8 @@ msgid ""
 "The deposit of <b>%(mbtc)s</b> made by %(shopper_name)s is now complete. You "
 "owe %(shopper_name)s <b>%(fiat)s</b>."
 msgstr ""
-"El depósito de <b>%(mbtc)s</b>hecha por %(shopper_name)s ahora está "
-"completa. Tienes una deuda con %(shopper_name)s<b>%(fiat)s</ b>."
+"El depósito de <b>%(mbtc)s</b>hecho por %(shopper_name)s está completado. "
+"Tienes una deuda con %(shopper_name)s<b>%(fiat)s</ b>."
 
 #: templates/customer_dash/_deposit_complete.html:18
 #, python-format
@@ -424,7 +425,7 @@ msgstr "Verifique %(mbtc)s en Blockchain.info"
 
 #: templates/customer_dash/_deposit_complete.html:33
 msgid "I Have Paid The Customer"
-msgstr "He Pagado el Cliente"
+msgstr "Ya le he Pagado al Cliente"
 
 #: templates/customer_dash/_deposit_confirm.html:6
 msgid "Last Updated"
@@ -484,11 +485,11 @@ msgstr "marcado"
 
 #: templates/customer_dash/_no_deposit_confirm.html:26
 msgid "Get Cash for Your Bitcoin Now"
-msgstr "Obtener dinero en efectivo para su Bitcoin Ahora"
+msgstr "Obtener dinero en efectivo por tus Bitcoin Ahora"
 
 #: templates/customer_dash/_no_deposit_confirm.html:41
 msgid "Wait for Confirmation"
-msgstr "Espere para Confirmaciones"
+msgstr "Espere por la Confirmación"
 
 #: templates/customer_dash/_no_deposit_confirm.html:43
 msgid "Receive Cash"
@@ -539,20 +540,20 @@ msgid ""
 "CloseCoin makes it easy for people individuals and small businesses to "
 "connect offline to buy and sell bitcoin."
 msgstr ""
-"CloseCoin hace que sea fácil para las personas particulares y pequeñas "
-"empresas se conecten en línea para comprar y vender bitcoin."
+"CloseCoin hace fácil para que personas y pequeñas empresas compren y vendan "
+"bitcoin fisicamente."
 
 #: templates/fixed_pages/help.html:40
 msgid "Back to Top"
-msgstr "Volver al Principio"
+msgstr "Subir"
 
 #: templates/fixed_pages/team.html:11
 msgid ""
 "We are Bitcoin enthusiasts who believe that bitcoin's success requires "
 "transactional use and decentralized way to get in and out of bitcoin"
 msgstr ""
-"Estamos entusiastas de Bitcoin que creen que el éxito de bitcoin requiere el "
-"uso transaccional y de manera descentralizada para entrar y salir de bitcoin"
+"Somos unos entusiastas del Bitcoin, que creemos que se requiere poder entrar "
+"y salir de bitcoinde una forma descentralizada y permitiendo transacciones."
 
 #: templates/fixed_pages/team.html:23
 msgid ""
@@ -562,10 +563,10 @@ msgid ""
 "raised money from top VCs like Sequoia, Andreesen Horowitz, and Spark "
 "Capital. Michael graduated from Brown University with a degree in Economics."
 msgstr ""
-"Michael ha construido dos companías (<a href=\"http://www.thumbtack.com\" "
+"Michael ha fundado dos compañías (<a href=\"http://www.thumbtack.com\" "
 "target=\"_blank\">thumbtack.com</ a> y <a href =\"http://priceonomics.com "
-"\"target=\" _blank\">priceonomics.com</ a>) que han recibido dinero de los "
-"mejores inversionistas institucionales como Sequoia, Andreesen Horowitz, y "
+"\"target=\" _blank\">priceonomics.com</ a>) las que han recibido fondos de "
+"los mejores inversionistas privados como Sequoia, Andreesen Horowitz, y "
 "Spark Capital. Michael estudió Economía en Brown University."
 
 #: templates/fixed_pages/team.html:33
@@ -576,10 +577,10 @@ msgid ""
 "adstage.io/\" target=\"_blank\">AdStage</a>. Tom graduated from Georgetown "
 "University with degrees in Computer Science and Economics"
 msgstr ""
-"Tom es un ex ingeniero de Google que trabajó en el equipo de fraude AdWords. "
-"Salió de Google para construir Semply, una empresa enfocada en la creación "
-"de herramientas de publicidad para las pequeñas empresas, que más tarde fue "
-"adquirida por <a href=\"https://www.adstage.io/\" target=\"_blank"
+"Tom es un ex-ingeniero de Google que trabajó en el equipo de anti-fraude de "
+"AdWords. Salió de Google para fundar Semply, una empresa enfocada en la "
+"creación de herramientas de publicidad para las pequeñas empresas, que más "
+"tarde fue adquirida por <a href=\"https://www.adstage.io/\" target=\"_blank"
 "\">AdStage</ a>. Tom se graduó de la Universidad de Georgetown con un título "
 "en Ciencias de la Computación y Economía."
 
@@ -596,8 +597,8 @@ msgstr "Completado"
 #, python-format
 msgid "Next step: <a href=\"%(profile_url)s\">List your business address</a>"
 msgstr ""
-"Siguiente paso: <a href=\"%(profile_url)s\">Lista su dirección de negocios</"
-"a>"
+"Siguiente paso: <a href=\"%(profile_url)s\">Lista la dirección de su "
+"negocio</a>"
 
 #: templates/merchants/_registration_status_bar.html:20
 #, python-format
@@ -639,7 +640,7 @@ msgstr "Información del Dueño"
 
 #: templates/merchants/profile.html:69
 msgid "for Transaction Notifications"
-msgstr "para la transacción notificaciones"
+msgstr "para la notificación de transacciones"
 
 #: templates/merchants/register.html:6
 msgid "Register Account"
@@ -647,7 +648,7 @@ msgstr "Registrar Cuenta"
 
 #: templates/merchants/register.html:14
 msgid "Create Free Account"
-msgstr "Crear Cuenta Gratis"
+msgstr "Crear una Cuenta Gratuita"
 
 #: templates/merchants/settings.html:14
 msgid "Bitcoin Settings"
@@ -659,7 +660,7 @@ msgstr "Moneda"
 
 #: templates/merchants/settings.html:29
 msgid "Your BTC Address"
-msgstr "Su BTC Dirección"
+msgstr "Su Dirección BTC"
 
 #: templates/merchants/transactions.html:16
 msgid "Date"
@@ -670,8 +671,9 @@ msgid "Shopper"
 msgstr "Cliente"
 
 #: templates/merchants/transactions.html:18
+#, fuzzy
 msgid "Bitcoin"
-msgstr "Bitcoin"
+msgstr "Enviar Bitcoin"
 
 #: templates/merchants/transactions.html:19
 msgid "Cash"
@@ -679,13 +681,4 @@ msgstr "Efectivo"
 
 #: templates/merchants/transactions.html:37
 msgid "You have no transactions yet"
-msgstr "No tiene transacciones aún"
-
-#~ msgid "Welcome"
-#~ msgstr "Bienvenido"
-
-#~ msgid "Sign Up Today"
-#~ msgstr "Registrarse"
-
-#~ msgid "Turn Your Phone Into a Bitcoin ATM Now!"
-#~ msgstr "Convierte Su Móvil en un Bitcoin ATM Ahora!"
+msgstr ""

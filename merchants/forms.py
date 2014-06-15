@@ -98,10 +98,7 @@ class MerchantRegistrationForm(forms.Form):
         if existing_user:
             # TODO: move this to clean_email
             login_url = '%s?e=%s' % (reverse('login_request'), existing_user.email)
-            msg = _('That email is already taken, do you want to ')
-            msg += '<a href="%s">' % login_url
-            msg += _('login')
-            msg += '</a>?'
+            msg = _('That email is already taken, do you want to <a href="%s">login</a>?' % login_url)
             raise forms.ValidationError(mark_safe(msg))
 
         if len(email) > 30:

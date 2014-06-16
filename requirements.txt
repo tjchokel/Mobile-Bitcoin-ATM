@@ -5,6 +5,7 @@ dj-static==0.0.5
 django-annoying==0.7.9
 django-crispy-forms==1.4.0
 django-debug-toolbar==1.2.1
+django-fields==0.2.2
 django-phonenumber-field==0.5
 django-toolbelt==0.0.1
 gnureadline==6.3.3

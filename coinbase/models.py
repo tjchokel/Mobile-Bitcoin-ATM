@@ -129,14 +129,14 @@ class CBCredential(models.Model):
         # Return transactions
         return json_resp['transactions']
 
-    def request_cashout(self, usd_to_sell_in_cents):
+    def request_cashout(self, satoshis_to_sell):
         SELL_URL = 'https://coinbase.com/api/v1/sells'
 
-        assert type(usd_to_sell_in_cents) is int, usd_to_sell_in_cents
+        btc_to_sell = satoshis_to_btc(satoshis_to_sell)
+        body_to_use = 'qty=%s' % btc_to_sell
 
-        usd_to_sell = round(usd_to_sell_in_cents / 100.0, 2)
-
-        body_to_use = '?qty=%s' % usd_to_sell
+        print body_to_use
+        print SELL_URL
 
         r = get_cb_request(
                 url=SELL_URL,
@@ -168,13 +168,13 @@ class CBCredential(models.Model):
         transfer = resp_json['transfer']
 
         status = transfer['status']
-        assert status == 'created', status
+        assert status in ('pending', 'created'), status
 
         btc_obj = transfer['btc']
         assert btc_obj['currency'] == 'BTC', btc_obj
 
-        #satoshis = btc_to_satoshis(btc_obj['amount'])
-        #assert satoshis == satoshis_to_sell, btc_obj['amount']
+        satoshis = btc_to_satoshis(btc_obj['amount'])
+        assert satoshis == satoshis_to_sell, btc_obj['amount']
 
         currency_to_recieve = transfer['total']['currency']
 
@@ -189,7 +189,7 @@ class CBCredential(models.Model):
                 cb_credential=self,
                 cb_code=transfer['code'],
                 received_at=parser.parse(transfer['created_at']),
-                #satoshis=satoshis,
+                satoshis=satoshis,
                 currency_code=currency_to_recieve,
                 fiat_fees=fiat_fees,
                 fiat_to_receive=float(transfer['total']['amount']),

@@ -1,5 +1,6 @@
 from django.db import models
 from django_fields.fields import EncryptedCharField
+from django.utils.timezone import now
 
 from services.models import APICall
 
@@ -15,7 +16,7 @@ from dateutil import parser
 import json
 
 
-class APICredential(models.Model):
+class CBCredential(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
@@ -23,6 +24,9 @@ class APICredential(models.Model):
     api_key = EncryptedCharField(max_length=64, blank=True, null=True, db_index=True)
     api_secret = EncryptedCharField(max_length=128, blank=True, null=True, db_index=True)
     disabled_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    last_succeded_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    # Not implemented anywhere:
+    last_failed_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s from %s' % (self.id, self.merchant.business_name)
@@ -32,7 +36,7 @@ class APICredential(models.Model):
         Return acount balance in satoshis
         """
         BALANCE_URL = 'https://coinbase.com/api/v1/account/balance'
-        content, status_code = get_cb_request(
+        r = get_cb_request(
                 url=BALANCE_URL,
                 api_key=self.api_key,
                 api_secret=self.api_secret)
@@ -41,15 +45,18 @@ class APICredential(models.Model):
         APICall.objects.create(
             api_name=APICall.COINBASE_BALANCE,
             url_hit=BALANCE_URL,
-            response_code=status_code,
+            response_code=r.status_code,
             post_params=None,
-            api_results=content,
+            api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % status_code
-        assert status_code == 200, err_msg
+        err_msg = 'Expected status code 200 but got %s' % r.status_code
+        assert r.status_code == 200, err_msg
 
-        resp_json = json.loads(content)
+        self.last_succeded_at = now()
+        self.save()
+
+        resp_json = json.loads(r.content)
 
         currency_returned = resp_json['currency']
         assert currency_returned == 'BTC', currency_returned
@@ -57,16 +64,17 @@ class APICredential(models.Model):
         satoshis = btc_to_satoshis(resp_json['amount'])
 
         # Record the balance results
-        CurrentBalance.objects.create(satoshis=satoshis, api_credential=self)
+        CurrentBalance.objects.create(satoshis=satoshis, cb_credential=self)
 
         return satoshis
 
     def list_recent_purchases_and_sales(self):
+        # TODO: add DB logging?
         LIST_FIAT_URL = 'https://coinbase.com/api/v1/transfers'
 
         url_to_hit = LIST_FIAT_URL+'?limit=100'
 
-        content, status_code = get_cb_request(
+        r = get_cb_request(
                 url=url_to_hit,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
@@ -76,20 +84,23 @@ class APICredential(models.Model):
         APICall.objects.create(
             api_name=APICall.COINBASE_LIST_PURCHASE_SALE,
             url_hit=url_to_hit,
-            response_code=status_code,
-            api_results=content,
+            response_code=r.status_code,
+            api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % status_code
-        assert status_code == 200, err_msg
+        err_msg = 'Expected status code 200 but got %s' % r.status_code
+        assert r.status_code == 200, err_msg
 
-        return json.loads(content)['transfers']
+        self.last_succeded_at = now()
+        self.save()
+
+        return json.loads(r.content)['transfers']
 
     def list_recent_btc_transactions(self):
         ''' Limits to 30, add pagination if you want more '''
         LIST_TX_URL = 'https://coinbase.com/api/v1/transactions'
 
-        content, status_code = get_cb_request(
+        r = get_cb_request(
                 url=LIST_TX_URL,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
@@ -99,31 +110,32 @@ class APICredential(models.Model):
         APICall.objects.create(
             api_name=APICall.COINBASE_LIST_BTC_TRANSACTIONS,
             url_hit=LIST_TX_URL,
-            response_code=status_code,
+            response_code=r.status_code,
             post_params=None,
-            api_results=content,
+            api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % status_code
-        assert status_code == 200, err_msg
+        err_msg = 'Expected status code 200 but got %s' % r.status_code
+        assert r.status_code == 200, err_msg
 
-        json_resp = json.loads(content)
+        json_resp = json.loads(r.content)
 
         # Record the balance
         CurrentBalance.objects.create(
                 satoshis=btc_to_satoshis(json_resp['balance']['amount']),
-                api_credential=self,
+                cb_credential=self,
                 )
 
         # Return transactions
         return json_resp['transactions']
 
     def request_cashout(self, satoshis_to_sell):
+        # FIXME: for some reason this doesn't work, waiting to hear back from CB.
         SELL_URL = 'https://coinbase.com/api/v1/sells'
         btc_to_sell = satoshis_to_btc(satoshis_to_sell)
         url_to_hit = SELL_URL + '?qty=%s' % btc_to_sell
 
-        content, status_code = get_cb_request(
+        r = get_cb_request(
                 url=url_to_hit,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
@@ -133,14 +145,17 @@ class APICredential(models.Model):
         APICall.objects.create(
             api_name=APICall.COINBASE_BALANCE,
             url_hit=url_to_hit,
-            response_code=status_code,
-            api_results=content,
+            response_code=r.status_code,
+            api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % status_code
-        assert status_code == 200, err_msg
+        err_msg = 'Expected status code 200 but got %s' % r.status_code
+        assert r.status_code == 200, err_msg
 
-        resp_json = json.loads(content)
+        self.last_succeded_at = now()
+        self.save()
+
+        resp_json = json.loads(r.content)
 
         success = resp_json['success']
         assert success is True, '%s: %s' % (success, resp_json.get('errors'))
@@ -166,7 +181,7 @@ class APICredential(models.Model):
         fiat_fees = fiat_fees_in_cents/100.0
 
         SellOrder.objects.create(
-                api_credential=self,
+                cb_credential=self,
                 cb_code=transfer['code'],
                 received_at=parser.parse(transfer['created_at']),
                 satoshis=satoshis,
@@ -196,7 +211,7 @@ class APICredential(models.Model):
             # TODO: url encode this?
             post_params += '&transaction[notes]=' + notes
 
-        content, status_code = get_cb_request(
+        r = get_cb_request(
                 url=SEND_URL,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
@@ -206,15 +221,18 @@ class APICredential(models.Model):
         APICall.objects.create(
             api_name=APICall.COINBASE_SEND_BTC,
             url_hit=SEND_URL,
-            response_code=status_code,
+            response_code=r.status_code,
             post_params=post_params,
-            api_results=content,
+            api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % status_code
-        assert status_code == 200, err_msg
+        err_msg = 'Expected status code 200 but got %s' % r.status_code
+        assert r.status_code == 200, err_msg
 
-        resp_json = json.loads(content)
+        self.last_succeded_at = now()
+        self.save()
+
+        resp_json = json.loads(r.content)
 
         success = resp_json['success']
         assert success is True, '%s: %s' % (success, resp_json.get('errors'))
@@ -228,12 +246,12 @@ class APICredential(models.Model):
         currency = transaction['amount']['currency']
         assert currency == 'BTC', currency
 
-        satoshis = btc_to_satoshis(transaction['amount']['amount'])
+        satoshis = -1 * btc_to_satoshis(transaction['amount']['amount'])
 
         # Record the Send
         SendBTC.objects.create(
-                api_credential=self,
-                recieved_at=parser.parse(transaction['created_at']),
+                cb_credential=self,
+                received_at=parser.parse(transaction['created_at']),
                 txn_hash=transaction['hsh'],
                 satoshis=satoshis,
                 destination_address=destination_address,
@@ -245,7 +263,7 @@ class APICredential(models.Model):
 
 class SellOrder(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    api_credential = models.ForeignKey(APICredential, blank=False, null=False)
+    cb_credential = models.ForeignKey(CBCredential, blank=False, null=False)
     # The txn that caused this event (may be blank)
     btc_transaction = models.ForeignKey('bitcoins.BTCTransaction', blank=True, null=True)
     # info returned
@@ -265,13 +283,13 @@ class SellOrder(models.Model):
 class CurrentBalance(models.Model):
     """ Probably just used as a log and not implemented anywhere """
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    api_credential = models.ForeignKey(APICredential, blank=False, null=False)
+    cb_credential = models.ForeignKey(CBCredential, blank=False, null=False)
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
 
 
 class SendBTC(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    api_credential = models.ForeignKey(APICredential, blank=False, null=False)
+    cb_credential = models.ForeignKey(CBCredential, blank=False, null=False)
     received_at = models.DateTimeField(blank=False, null=False, db_index=True)
     txn_hash = models.CharField(max_length=64, blank=True, null=True,
             unique=True, db_index=True)

@@ -1,16 +1,16 @@
 from django.contrib import admin
-from coinbase.models import APICredential, SellOrder, CurrentBalance, SendBTC
+from coinbase.models import CBCredential, SellOrder, CurrentBalance, SendBTC
 
 
-class APICredentialAdmin(admin.ModelAdmin):
+class CBCredentialAdmin(admin.ModelAdmin):
 
     list_display = ('id', 'created_at', 'merchant', 'api_key', 'api_secret', 'disabled_at', )
     raw_id_fields = ('merchant', )
 
     class Meta:
-        model = APICredential
+        model = CBCredential
 
-admin.site.register(APICredential, APICredentialAdmin)
+admin.site.register(CBCredential, CBCredentialAdmin)
 
 
 class SellOrderAdmin(admin.ModelAdmin):
@@ -18,7 +18,7 @@ class SellOrderAdmin(admin.ModelAdmin):
     list_display = (
             'id',
             'created_at',
-            'api_credential',
+            'cb_credential',
             'btc_transaction',
             'cb_code',
             'received_at',
@@ -27,7 +27,7 @@ class SellOrderAdmin(admin.ModelAdmin):
             'fees_in_fiat',
             'to_receive_in_fiat',
             )
-    raw_id_fields = ('api_credential', 'btc_transaction')
+    raw_id_fields = ('cb_credential', 'btc_transaction')
 
     class Meta:
         model = SellOrder
@@ -37,8 +37,8 @@ admin.site.register(SellOrder, SellOrderAdmin)
 
 class CurrentBalanceAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'created_at', 'api_credential', 'satoshis', )
-    raw_id_fields = ('api_credential', )
+    list_display = ('id', 'created_at', 'cb_credential', 'satoshis', )
+    raw_id_fields = ('cb_credential', )
 
     class Meta:
         model = CurrentBalance
@@ -51,7 +51,7 @@ class SendBTCAdmin(admin.ModelAdmin):
     list_display = (
             'id',
             'created_at',
-            'api_credential',
+            'cb_credential',
             'received_at',
             'txn_hash',
             'satoshis',
@@ -59,7 +59,7 @@ class SendBTCAdmin(admin.ModelAdmin):
             'cb_id',
             'notes',
             )
-    raw_id_fields = ('api_credential', )
+    raw_id_fields = ('cb_credential', )
 
     class Meta:
         model = SendBTC

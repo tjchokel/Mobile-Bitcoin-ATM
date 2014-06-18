@@ -8,69 +8,31 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'CBCredential'
-        db.create_table(u'coinbase_cbcredential', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('merchant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['merchants.Merchant'])),
-            ('api_key', self.gf('django_fields.fields.EncryptedCharField')(block_type=None, max_length=165, blank=True, null=True, cipher='AES', db_index=True)),
-            ('api_secret', self.gf('django_fields.fields.EncryptedCharField')(block_type=None, max_length=293, blank=True, null=True, cipher='AES', db_index=True)),
-            ('disabled_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
-            ('last_verified_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'coinbase', ['CBCredential'])
+        # Deleting field 'CBCredential.last_verified_at'
+        db.delete_column(u'coinbase_cbcredential', 'last_verified_at')
 
-        # Adding model 'SellOrder'
-        db.create_table(u'coinbase_sellorder', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('cb_credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['coinbase.CBCredential'])),
-            ('btc_transaction', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bitcoins.BTCTransaction'], null=True, blank=True)),
-            ('cb_code', self.gf('django.db.models.fields.CharField')(max_length=32, db_index=True)),
-            ('received_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True)),
-            ('satoshis', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
-            ('currency_code', self.gf('django.db.models.fields.CharField')(max_length=5, db_index=True)),
-            ('fees_in_fiat', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2, db_index=True)),
-            ('to_receive_in_fiat', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2, db_index=True)),
-        ))
-        db.send_create_signal(u'coinbase', ['SellOrder'])
+        # Adding field 'CBCredential.last_succeded_at'
+        db.add_column(u'coinbase_cbcredential', 'last_succeded_at',
+                      self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True),
+                      keep_default=False)
 
-        # Adding model 'CurrentBalance'
-        db.create_table(u'coinbase_currentbalance', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('cb_credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['coinbase.CBCredential'])),
-            ('satoshis', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
-        ))
-        db.send_create_signal(u'coinbase', ['CurrentBalance'])
-
-        # Adding model 'SendBTC'
-        db.create_table(u'coinbase_sendbtc', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('cb_credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['coinbase.CBCredential'])),
-            ('received_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True)),
-            ('txn_hash', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=64, unique=True, null=True, blank=True)),
-            ('satoshis', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
-            ('destination_address', self.gf('django.db.models.fields.CharField')(max_length=34, db_index=True)),
-            ('cb_id', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
-            ('notes', self.gf('django.db.models.fields.CharField')(max_length=2048)),
-        ))
-        db.send_create_signal(u'coinbase', ['SendBTC'])
+        # Adding field 'CBCredential.last_failed_at'
+        db.add_column(u'coinbase_cbcredential', 'last_failed_at',
+                      self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'CBCredential'
-        db.delete_table(u'coinbase_cbcredential')
+        # Adding field 'CBCredential.last_verified_at'
+        db.add_column(u'coinbase_cbcredential', 'last_verified_at',
+                      self.gf('django.db.models.fields.DateTimeField')(blank=True, null=True, db_index=True),
+                      keep_default=False)
 
-        # Deleting model 'SellOrder'
-        db.delete_table(u'coinbase_sellorder')
+        # Deleting field 'CBCredential.last_succeded_at'
+        db.delete_column(u'coinbase_cbcredential', 'last_succeded_at')
 
-        # Deleting model 'CurrentBalance'
-        db.delete_table(u'coinbase_currentbalance')
-
-        # Deleting model 'SendBTC'
-        db.delete_table(u'coinbase_sendbtc')
+        # Deleting field 'CBCredential.last_failed_at'
+        db.delete_column(u'coinbase_cbcredential', 'last_failed_at')
 
 
     models = {
@@ -129,7 +91,8 @@ class Migration(SchemaMigration):
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
             'disabled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_verified_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'last_failed_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'last_succeded_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"})
         },
         u'coinbase.currentbalance': {

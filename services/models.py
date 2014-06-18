@@ -19,11 +19,21 @@ class APICall(models.Model):
     BLOCKCYPHER_ADDR_MONITORING = 'BAM'
     BCI_TXN_FROM_HASH = 'BTH'
     BCI_TXN_FROM_ADDR = 'BTA'
+
+    COINBASE_BALANCE = 'CBL'
+    COINBASE_LIST_PURCHASE_SALE = 'CLC'
+    COINBASE_LIST_BTC_TRANSACTIONS = 'CLB'
+    COINBASE_SEND_BTC = 'CSB'
+
     API_NAME_CHOICES = (
             (BCI_RECEIVE_PAYMENTS, 'blockchain.info receive payments API'),
             (BCI_TXN_FROM_HASH, 'blockchain.info txn data from hash'),
             (BCI_TXN_FROM_ADDR, 'blockchain.info txn data from address'),
             (BLOCKCYPHER_ADDR_MONITORING, 'blockcypher address monitoring'),
+            (COINBASE_BALANCE, 'Coinbase Balance'),
+            (COINBASE_LIST_PURCHASE_SALE, 'Coinbase List Purchase & Sales'),
+            (COINBASE_LIST_BTC_TRANSACTIONS, 'Coinbase List BTC Transactions'),
+            (COINBASE_SEND_BTC, 'Coinbase Send BTC'),
             )
 
     # Main fields

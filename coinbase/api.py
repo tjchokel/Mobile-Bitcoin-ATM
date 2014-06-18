@@ -41,5 +41,5 @@ def get_cb_request(url, api_key, api_secret, body=None):
             'ACCESS_NONCE': nonce,
             }
     if body:
-        return requests.post(url, data=body, headers=headers)
-    return requests.get(url, headers=headers)
+        return requests.post(url, data=body, headers=headers, verify=True)
+    return requests.get(url, headers=headers, verify=True)

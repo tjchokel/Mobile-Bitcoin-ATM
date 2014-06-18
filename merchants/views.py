@@ -12,7 +12,7 @@ from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm,
-        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm)
+        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm, CoinbaseAPIForm)
 
 
 @render_to('login.html')
@@ -175,6 +175,27 @@ def merchant_profile(request):
         'on_admin_page': True,
         'personal_form': personal_form,
         'merchant_form': merchant_form
+    }
+
+
+@login_required
+@render_to('merchants/coinbase.html')
+def coinbase(request):
+    user = request.user
+    merchant = user.get_merchant()
+    form = CoinbaseAPIForm()
+    if request.method == 'POST' and merchant:
+        form = CoinbaseAPIForm(data=request.POST)
+        if form.is_valid():
+            # TODO: VALIDATE CREDENTIALS AND THEN UPDATE MODEL HERE
+            messages.success(request, _('Your Coinbase API info has been updated'))
+            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
+
+    return {
+        'user': user,
+        'merchant': merchant,
+        'form': form,
+        'on_admin_page': True
     }
 
 

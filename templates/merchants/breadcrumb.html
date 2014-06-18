@@ -1,8 +1,11 @@
+{% load staticfiles %}
 {% load i18n %}
-<div class="page-header">
-  <h1>{% trans "Admin" %}</h1>
+<div class="container">
+  <div class="page-header">
+    <h3 class="pull-left">{% trans "Admin" %}</h3>
+    <div class="clearfix"></div>
+  </div>
 </div>
-
 <div class="row">
   <div class="col-sm-4 col-md-3">
     <div class="user-menu bottom-15">
@@ -29,6 +32,34 @@
           {% endif %}
         </li>
       </ul>
+
+    </div>
+    <strong>{% trans "API Partners (New)" %}</strong>
+    <div class="user-menu bottom-15">
+      <ul>
+        <li>
+          {% if current_tab == 'coinbase' %}
+            <a href="#" class="active">
+              <img src="{% static "img/coinbase-logo-full.png" %}" />
+              {% if merchant.has_valid_coinbase_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{% url "merchants.views.coinbase" %}">
+              <img src="{% static "img/coinbase-logo-full.png" %}" />
+              {% if merchant.has_valid_coinbase_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% endif %}
+        </li>
+      </ul>
+
     </div>
     {% include "merchants/_registration_status_bar.html" %}
   </div>

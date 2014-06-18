@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container">
+    <!-- Profile Menu -->
+    {% with current_tab='coinbase' %}
+      {% include "merchants/breadcrumb.html" %}
+    {% endwith %}
+  <div class="col-sm-8 col-md-9">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h4 class="hl">
+            <a style="color:#515151;" href="#">{% trans "Coinbase Api" %}</a>
+          </h4>
+          {% if merchant.has_valid_coinbase_credentials %}
+            <p>
+              Your Coinbase account is properly connected
+            </p>
+          {% else %}
+            <p>
+              {% trans "Enter your Coinbase API credentials here to take advantage of our partnership" %}
+              <!-- Button trigger modal -->
+              (<a href="#" data-toggle="collapse" data-target="#moreinfo">{% trans "learn more" %}</a>).
+            </p>
+            <div id="moreinfo" class="collapse">
+              <p>
+                TODO: WRITE MORE INFO HERE
+              </p>
+            </div>
+              
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_bitcoin_info" %}" >
+              {% load crispy_forms_tags %}
+              {{ form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+              </div>
+            </form>
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+  <script>
+    
+  </script>
+{% endblock %}

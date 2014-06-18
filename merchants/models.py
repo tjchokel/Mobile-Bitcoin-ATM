@@ -94,3 +94,7 @@ class Merchant(models.Model):
 
     def finished_registration(self):
         return self.get_registration_percent_complete() == 100
+
+    def has_valid_coinbase_credentials(self):
+        # TODO: MAKE THIS WORK
+        return False

@@ -1,10 +1,33 @@
 {% load i18n %}
-<div class="page-header">
-  <h1>{% trans "Admin" %}</h1>
+<div class="container">
+  <div class="page-header">
+    <h3 class="pull-left">{% trans "Admin" %}</h1>
+    <h3 class="pull-right hidden-md hidden-lg">
+      <div class="btn-group">
+        {% if current_tab == 'transactions' %}
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Transactions <span class="caret"></span></button>
+        {% endif %}
+        {% if current_tab == 'settings' %}
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Settings <span class="caret"></span></button>
+        {% endif %}
+        {% if current_tab == 'profile' %}
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Profile <span class="caret"></span></button>
+        {% endif %}
+
+        <ul class="dropdown-menu">
+            <li><a href="{% url "merchants.views.merchant_transactions" %}">Transactions</a></li>
+            <li><a href="{% url "merchants.views.merchant_settings" %}">Settings</a></li>
+            <li><a href="{% url "merchants.views.merchant_profile" %}">Profile</a></li>
+          </ul>
+      </div>
+
+    </h3>
+  <div class="clearfix"></div>
 </div>
 
+
 <div class="row">
-  <div class="col-sm-4 col-md-3">
+  <div class="col-sm-4 col-md-3 hidden-sm hidden-xs">
     <div class="user-menu bottom-15">
       <ul>
         <li>

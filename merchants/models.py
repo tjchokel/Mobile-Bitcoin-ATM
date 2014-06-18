@@ -97,4 +97,8 @@ class Merchant(models.Model):
 
     def has_valid_coinbase_credentials(self):
         # TODO: MAKE THIS WORK
-        return False
+        return len(self.cbcredential_set.all()) > 0
+
+    def get_coinbase_credentials(self):
+        # TODO: MAKE THIS WORK
+        return self.cbcredential_set.last()

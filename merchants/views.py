@@ -10,6 +10,7 @@ from annoying.functions import get_object_or_None
 
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
+from coinbase.models import CBCredential
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm,
         BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm, CoinbaseAPIForm)
@@ -183,19 +184,33 @@ def merchant_profile(request):
 def coinbase(request):
     user = request.user
     merchant = user.get_merchant()
+    cb_credential = merchant.get_coinbase_credentials()
+    cb_balance = 0
+    if cb_credential:
+        cb_balance = cb_credential.get_balance()
     form = CoinbaseAPIForm()
     if request.method == 'POST' and merchant:
         form = CoinbaseAPIForm(data=request.POST)
         if form.is_valid():
             # TODO: VALIDATE CREDENTIALS AND THEN UPDATE MODEL HERE
+
+            api_key = form.cleaned_data['api_key']
+            secret_key = form.cleaned_data['secret_key']
+            credentials = CBCredential.objects.create(
+                    merchant=merchant,
+                    api_key=api_key,
+                    api_secret=secret_key
+            )
             messages.success(request, _('Your Coinbase API info has been updated'))
-            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
+            return HttpResponseRedirect(reverse_lazy('coinbase'))
 
     return {
         'user': user,
         'merchant': merchant,
         'form': form,
-        'on_admin_page': True
+        'on_admin_page': True,
+        'cb_credential': cb_credential,
+        'cb_balance': cb_balance,
     }
 
 

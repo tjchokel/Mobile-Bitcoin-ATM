@@ -29,7 +29,7 @@
               </p>
             </div>
               
-            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_bitcoin_info" %}" >
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.coinbase" %}" >
               {% load crispy_forms_tags %}
               {{ form|crispy }}
               {% csrf_token %}

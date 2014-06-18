@@ -129,24 +129,29 @@ class CBCredential(models.Model):
         # Return transactions
         return json_resp['transactions']
 
-    def request_cashout(self, satoshis_to_sell):
-        # FIXME: for some reason this doesn't work, waiting to hear back from CB.
+    def request_cashout(self, usd_to_sell_in_cents):
         SELL_URL = 'https://coinbase.com/api/v1/sells'
-        btc_to_sell = satoshis_to_btc(satoshis_to_sell)
-        url_to_hit = SELL_URL + '?qty=%s' % btc_to_sell
+
+        assert type(usd_to_sell_in_cents) is int, usd_to_sell_in_cents
+
+        usd_to_sell = round(usd_to_sell_in_cents / 100.0, 2)
+
+        body_to_use = '?qty=%s' % usd_to_sell
 
         r = get_cb_request(
-                url=url_to_hit,
+                url=SELL_URL,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
+                body=body_to_use,
                 )
 
         # Log the API call
         APICall.objects.create(
-            api_name=APICall.COINBASE_BALANCE,
-            url_hit=url_to_hit,
+            api_name=APICall.COINBASE_CASHOUT_BTC,
+            url_hit=SELL_URL,
             response_code=r.status_code,
             api_results=r.content,
+            post_params=body_to_use,
             merchant=self.merchant)
 
         err_msg = 'Expected status code 200 but got %s' % r.status_code
@@ -168,8 +173,8 @@ class CBCredential(models.Model):
         btc_obj = transfer['btc']
         assert btc_obj['currency'] == 'BTC', btc_obj
 
-        satoshis = btc_to_satoshis(btc_obj['amount'])
-        assert satoshis == satoshis_to_sell, btc_obj['amount']
+        #satoshis = btc_to_satoshis(btc_obj['amount'])
+        #assert satoshis == satoshis_to_sell, btc_obj['amount']
 
         currency_to_recieve = transfer['total']['currency']
 
@@ -184,7 +189,7 @@ class CBCredential(models.Model):
                 cb_credential=self,
                 cb_code=transfer['code'],
                 received_at=parser.parse(transfer['created_at']),
-                satoshis=satoshis,
+                #satoshis=satoshis,
                 currency_code=currency_to_recieve,
                 fiat_fees=fiat_fees,
                 fiat_to_receive=float(transfer['total']['amount']),

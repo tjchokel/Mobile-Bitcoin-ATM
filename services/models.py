@@ -24,6 +24,7 @@ class APICall(models.Model):
     COINBASE_LIST_PURCHASE_SALE = 'CLC'
     COINBASE_LIST_BTC_TRANSACTIONS = 'CLB'
     COINBASE_SEND_BTC = 'CSB'
+    COINBASE_CASHOUT_BTC = 'CSO'
 
     API_NAME_CHOICES = (
             (BCI_RECEIVE_PAYMENTS, 'blockchain.info receive payments API'),
@@ -34,6 +35,7 @@ class APICall(models.Model):
             (COINBASE_LIST_PURCHASE_SALE, 'Coinbase List Purchase & Sales'),
             (COINBASE_LIST_BTC_TRANSACTIONS, 'Coinbase List BTC Transactions'),
             (COINBASE_SEND_BTC, 'Coinbase Send BTC'),
+            (COINBASE_CASHOUT_BTC, 'Coinbase Cashout BTC'),
             )
 
     # Main fields

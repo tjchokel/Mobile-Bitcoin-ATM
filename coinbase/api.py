@@ -3,6 +3,8 @@ import hmac
 import time
 import requests
 
+CB_DEBUG = False
+
 
 def get_cb_request(url, api_key, api_secret, body=None):
     """
@@ -23,23 +25,27 @@ def get_cb_request(url, api_key, api_secret, body=None):
     api_key = str(api_key)
     api_secret = str(api_secret)
 
-    #print 'incoming body', body
-    #print 'url:', url
-
     nonce = int(time.time() * 1e6)
-    #print 'nonce:', nonce
     message = str(nonce) + url
     if body:
         message += body
-    #print 'message (after editing):', message
     signature = hmac.new(api_secret, message, hashlib.sha256).hexdigest()
-    #print 'signature:', signature
     headers = {
             #"Content-Type": 'application/x-www-form-urlencoded',
             'ACCESS_KEY': api_key,
             'ACCESS_SIGNATURE': signature,
             'ACCESS_NONCE': nonce,
             }
+
+    if CB_DEBUG:
+        print '-'*75
+        print 'url:', url
+        print 'body:', body
+        print 'nonce:', nonce
+        print 'message:', message
+        print 'signature:', signature
+        print '-'*75
+
     if body:
         return requests.post(url, data=body, headers=headers, verify=True)
     return requests.get(url, headers=headers, verify=True)

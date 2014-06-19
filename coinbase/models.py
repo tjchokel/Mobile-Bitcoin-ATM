@@ -130,23 +130,25 @@ class CBCredential(models.Model):
         return json_resp['transactions']
 
     def request_cashout(self, satoshis_to_sell):
-        # FIXME: for some reason this doesn't work, waiting to hear back from CB.
         SELL_URL = 'https://coinbase.com/api/v1/sells'
+
         btc_to_sell = satoshis_to_btc(satoshis_to_sell)
-        url_to_hit = SELL_URL + '?qty=%s' % btc_to_sell
+        body_to_use = 'qty=%s' % btc_to_sell
 
         r = get_cb_request(
-                url=url_to_hit,
+                url=SELL_URL,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
+                body=body_to_use,
                 )
 
         # Log the API call
         APICall.objects.create(
-            api_name=APICall.COINBASE_BALANCE,
-            url_hit=url_to_hit,
+            api_name=APICall.COINBASE_CASHOUT_BTC,
+            url_hit=SELL_URL,
             response_code=r.status_code,
             api_results=r.content,
+            post_params=body_to_use,
             merchant=self.merchant)
 
         err_msg = 'Expected status code 200 but got %s' % r.status_code
@@ -163,7 +165,7 @@ class CBCredential(models.Model):
         transfer = resp_json['transfer']
 
         status = transfer['status']
-        assert status == 'created', status
+        assert status.lower() in ('pending', 'created'), status
 
         btc_obj = transfer['btc']
         assert btc_obj['currency'] == 'BTC', btc_obj
@@ -174,23 +176,22 @@ class CBCredential(models.Model):
         currency_to_recieve = transfer['total']['currency']
 
         fiat_fees_in_cents = 0
-        for fee in transfer['fees']:
+        for fee_key in transfer['fees']:
+            fee = transfer['fees'][fee_key]
             fiat_fees_in_cents += int(fee['cents'])
             msg = '%s != %s' % (fee['currency_iso'], currency_to_recieve)
             assert fee['currency_iso'] == currency_to_recieve, msg
         fiat_fees = fiat_fees_in_cents/100.0
 
-        SellOrder.objects.create(
+        return SellOrder.objects.create(
                 cb_credential=self,
                 cb_code=transfer['code'],
                 received_at=parser.parse(transfer['created_at']),
                 satoshis=satoshis,
                 currency_code=currency_to_recieve,
-                fiat_fees=fiat_fees,
-                fiat_to_receive=float(transfer['total']['amount']),
-        )
-
-        return resp_json
+                fees_in_fiat=fiat_fees,
+                to_receive_in_fiat=float(transfer['total']['amount']),
+                )
 
     def send_btc(self, satoshis_to_send, destination_address, notes=None, user_fee=None):
 
@@ -249,7 +250,7 @@ class CBCredential(models.Model):
         satoshis = -1 * btc_to_satoshis(transaction['amount']['amount'])
 
         # Record the Send
-        SendBTC.objects.create(
+        return SendBTC.objects.create(
                 cb_credential=self,
                 received_at=parser.parse(transaction['created_at']),
                 txn_hash=transaction['hsh'],
@@ -257,8 +258,6 @@ class CBCredential(models.Model):
                 destination_address=destination_address,
                 cb_id=transaction['id'],
                 notes=notes)
-
-        return resp_json
 
 
 class SellOrder(models.Model):

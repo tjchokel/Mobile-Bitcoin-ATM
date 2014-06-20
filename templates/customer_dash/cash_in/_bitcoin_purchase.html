@@ -31,55 +31,5 @@
           <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
         </div>
     </form>
-
-
-
-    <!-- {% if not transactions %}
-      <p class="lead text-center">{% trans "Waiting for deposit to" %} <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">({% trans "Cancel" %})</a></p>
-    {% endif %}
-    {% if shopper %}
-      <div class="col-sm-12">
-      <br/>
-        <h3><i class="fa fa-map-marker"></i>{% trans "Transactions" %}</h3>
-        {% include "customer_dash/cash_out/_deposit_dash_table.html" %}
-        <hr>
-      </div>
-    </div>
-    <br/>
-      <div class="row">
-        <div class="col-sm-12">
-          <h4 class="hl">{% trans "Shopper Information" %}</h4>
-          <table class="table">
-            <tbody>
-              <tr>
-                <td class="text-muted">{% trans "Name" %}</td>
-                <td align="right">{{shopper.name}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Phone" %}</td>
-                <td align="right">{{shopper.phone_num.as_international}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Email" %}</td>
-                <td align="right">{{shopper.email}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    {% else %}
-      <p class="lead text-center">
-        {% trans "Please enter a name for your receipt" %}.
-      </p>
-      <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
-          {% load crispy_forms_tags %}
-          {{ shopper_form|crispy }}
-          {% csrf_token %}
-          <div class="button-wrapper">
-            <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
-          </div>
-      </form>
-    {% endif %} -->
   </div>
 </div>

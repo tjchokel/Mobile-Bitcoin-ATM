@@ -221,6 +221,7 @@
           $('#id_amount').val("");
           $("#div_id_email_or_btc_address").addClass("hidden");
           $("#div_id_email").addClass("hidden");
+          $("#div_id_btc_address").addClass("hidden");
           $("#btc-amount").html('{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
         }else{
           $("#btc-amount").addClass("hidden");
@@ -250,10 +251,20 @@
       }, 500 );
     });
 
+    $("#id_email_or_btc_address_1, #id_email_or_btc_address_2").change(function(){
+      if ($('input[name=email_or_btc_address]:checked').val() == 1) {
+        $("#div_id_btc_address").addClass("hidden");
+      }else{
+        $("#div_id_btc_address").removeClass("hidden");
+      }
+
+    });
+
 
     $(document).ready(function(){
       $("#div_id_email_or_btc_address").addClass("hidden");
       $("#div_id_email").addClass("hidden");
+      $("#div_id_btc_address").addClass("hidden");
       var currency_code = "{{merchant.currency_code}}";
       $( "#div_id_amount .controls" ).prepend( '<span class="input-group-addon needs-input-group">'+currency_code+'</span>' );
       $( ".needs-input-group" ).wrapAll( "<div class='input-group' />");

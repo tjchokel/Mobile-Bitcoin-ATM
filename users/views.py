@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
+from django.utils.translation import ugettext as _
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
@@ -92,6 +93,8 @@ def customer_dashboard(request):
             if password_form.is_valid():
                 if buy_request:
                     buy_request.pay_out_bitcoin()
+                    msg = _('Success! Your bitcoin is now being sent.')
+                    messages.success(request, msg, extra_tags='safe')
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     if forwarding_address_obj:
         # In case of refreshing the page later

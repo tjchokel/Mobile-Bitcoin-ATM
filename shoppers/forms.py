@@ -44,6 +44,12 @@ class BuyBitcoinForm(forms.Form):
             widget=forms.TextInput(attrs={'class': 'needs-input-group'}),
     )
 
+    email = forms.CharField(
+        label=_('Email'),
+        required=True,
+        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
+    )
+    
     email_or_btc_address = forms.ChoiceField(
         label=_('Send to Email or Bitcoin Address'),
         required=True,
@@ -51,20 +57,14 @@ class BuyBitcoinForm(forms.Form):
         choices=(('1', 'Email Address',), ('2', 'Bitcoin Address',)),
     )
 
-    email = forms.CharField(
-        label=_('Email'),
-        required=True,
-        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
+    btc_address = forms.CharField(
+            label=_('Bitcoin Deposit Address'),
+            required=False,
+            min_length=27,
+            max_length=34,
+            help_text=_('The wallet address where you want your bitcoin sent (optional)'),
+            widget=forms.TextInput(),
     )
-
-    # btc_address = forms.CharField(
-    #         label=_('Bitcoin Deposit Address'),
-    #         required=False,
-    #         min_length=27,
-    #         max_length=34,
-    #         help_text=_('The wallet address where you want your bitcoin sent (optional)'),
-    #         widget=forms.TextInput(),
-    # )
 
 
 class ConfirmPasswordForm(forms.Form):

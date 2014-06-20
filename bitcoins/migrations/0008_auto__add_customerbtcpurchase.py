@@ -8,15 +8,26 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'BitcoinPurchase.expires_at'
-        db.add_column(u'bitcoins_bitcoinpurchase', 'expires_at',
-                      self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True),
-                      keep_default=False)
+        # Adding model 'CustomerBTCPurchase'
+        db.create_table(u'bitcoins_customerbtcpurchase', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('added_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
+            ('merchant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['merchants.Merchant'])),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, db_index=True)),
+            ('b58_address', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=34, null=True, blank=True)),
+            ('fiat_amount', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2)),
+            ('satoshis', self.gf('django.db.models.fields.BigIntegerField')(db_index=True, null=True, blank=True)),
+            ('currency_code_when_created', self.gf('django.db.models.fields.CharField')(max_length=5, db_index=True)),
+            ('confirmed_by_merchant_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
+            ('cancelled_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
+            ('expires_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
+        ))
+        db.send_create_signal(u'bitcoins', ['CustomerBTCPurchase'])
 
 
     def backwards(self, orm):
-        # Deleting field 'BitcoinPurchase.expires_at'
-        db.delete_column(u'bitcoins_bitcoinpurchase', 'expires_at')
+        # Deleting model 'CustomerBTCPurchase'
+        db.delete_table(u'bitcoins_customerbtcpurchase')
 
 
     models = {
@@ -33,20 +44,6 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        u'bitcoins.bitcoinpurchase': {
-            'Meta': {'object_name': 'BitcoinPurchase'},
-            'added_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'b58_address': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
-            'cancelled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'confirmed_by_merchant_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'currency_code_when_created': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'db_index': 'True'}),
-            'expires_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'fiat_amount': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
-            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'})
-        },
         u'bitcoins.btctransaction': {
             'Meta': {'object_name': 'BTCTransaction'},
             'added_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
@@ -62,6 +59,20 @@ class Migration(SchemaMigration):
             'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'suspected_double_spend_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'txn_hash': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'})
+        },
+        u'bitcoins.customerbtcpurchase': {
+            'Meta': {'object_name': 'CustomerBTCPurchase'},
+            'added_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'b58_address': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
+            'cancelled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'confirmed_by_merchant_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'currency_code_when_created': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'db_index': 'True'}),
+            'expires_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'fiat_amount': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'})
         },
         u'bitcoins.destinationaddress': {
             'Meta': {'object_name': 'DestinationAddress'},

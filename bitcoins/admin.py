@@ -1,5 +1,5 @@
 from django.contrib import admin
-from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransaction, BitcoinPurchase
+from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransaction, CustomerBTCPurchase
 
 
 class DestinationAddressAdmin(admin.ModelAdmin):
@@ -46,7 +46,7 @@ class BTCTransactionAdmin(admin.ModelAdmin):
 
 admin.site.register(BTCTransaction, BTCTransactionAdmin)
 
-class BitcoinPurchaseAdmin(admin.ModelAdmin):
+class CustomerBTCPurchaseAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'merchant',
@@ -61,6 +61,6 @@ class BitcoinPurchaseAdmin(admin.ModelAdmin):
     )
 
     class Meta:
-        model = BitcoinPurchase
+        model = CustomerBTCPurchase
 
-admin.site.register(BitcoinPurchase, BitcoinPurchaseAdmin)
+admin.site.register(CustomerBTCPurchase, CustomerBTCPurchaseAdmin)

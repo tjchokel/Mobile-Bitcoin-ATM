@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse_lazy
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
-from bitcoins.models import BTCTransaction, ForwardingAddress, BitcoinPurchase
+from bitcoins.models import BTCTransaction, ForwardingAddress, CustomerBTCPurchase
 from shoppers.models import Shopper
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, ConfirmPasswordForm
 
@@ -44,7 +44,7 @@ def customer_dashboard(request):
                 email = buy_form.cleaned_data['email']
 
                 # Create shopper object
-                btc_purchase = BitcoinPurchase.objects.create(
+                btc_purchase = CustomerBTCPurchase.objects.create(
                     merchant=merchant,
                     email=email,
                     fiat_amount=amount
@@ -110,42 +110,6 @@ def customer_dashboard(request):
         'shopper_form': shopper_form,
         'buy_form': buy_form,
     }
-
-
-# @login_required
-# def buy_bitcoin(request):
-#     user = request.user
-#     if not user.get_merchant():
-#         return HttpResponseRedirect(reverse_lazy('register_merchant'))
-#     merchant = user.get_merchant()
-#     if request.method == 'POST':
-#         form = BuyBitcoinForm(data=request.POST)
-#         if form.is_valid():
-#             amount = form.cleaned_data['amount']
-#             email_or_btc_address = form.cleaned_data['email_or_btc_address']
-#             email = form.cleaned_data['email']
-
-#             # Create shopper object
-#             btc_purchase = BitcoinPurchase.objects.create(
-#                 merchant=merchant,
-#                 email=email,
-#                 fiat_amount=amount
-#             )
-
-#     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
-
-
-# @login_required
-# def confirm_merchant_password(request):
-#     user = request.user
-#     if not user.get_merchant():
-#         return HttpResponseRedirect(reverse_lazy('register_merchant'))
-#     merchant = user.get_merchant()
-#     if request.method == 'POST':
-#         form = ConfirmPasswordForm(user=user, data=request.POST)
-#         if form.is_valid():
-
-#     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
 
 def simulate_deposit_detected(request):

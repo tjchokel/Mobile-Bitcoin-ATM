@@ -443,7 +443,7 @@ class BTCTransaction(models.Model):
                     to_shopper=shopper)
 
 
-class BitcoinPurchase(models.Model):
+class CustomerBTCPurchase(models.Model):
     """
     Model for bitcoin purchase (cash in) request
     """
@@ -473,7 +473,7 @@ class BitcoinPurchase(models.Model):
             now_plus_15 = now + datetime.timedelta(minutes=15)
             self.expires_at = now_plus_15
             self.satoshis = self.get_satoshi_conversion()
-        super(BitcoinPurchase, self).save(*args, **kwargs)
+        super(CustomerBTCPurchase, self).save(*args, **kwargs)
 
     def get_satoshi_conversion(self):
         merchant = self.merchant

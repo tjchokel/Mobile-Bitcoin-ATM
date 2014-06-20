@@ -1,3 +1,4 @@
-from django.shortcuts import render
 
-# Create your views here.
+
+def fail500(request):
+    raise Exception('IntentionalFail: This Was On Purpose')

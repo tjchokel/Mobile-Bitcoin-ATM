@@ -28,7 +28,11 @@ if os.getenv('TEMPLATE_DEBUG') == 'True':
 else:
     TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = ['www.closecoin.com', 'closecoin.herokuapp.com', ]
+ALLOWED_HOSTS = (
+    'www.closecoin.com',
+    'closecoin.herokuapp.com',
+    '127.0.0.1',
+    )
 
 ADMINS = (
     ('Michael Flaxman', 'michael@coinsafe.com'),

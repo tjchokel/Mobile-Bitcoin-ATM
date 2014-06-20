@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div class="wrapper">
+	<div class="not-found">
+	  <div class="container">
+		<div class="row">
+		  <div class="col-sm-12">
+		    <div class="digits">
+		      4<i class="fa fa-meh-o animated flipInX" id="smile"></i>4
+		    </div>
+			<h1>The page you are trying to reach could not be not found</h1>
+      <br />
+			<h4 style="text-align:center">
+        If this keeps happening, please <a href="{% url "contact" %}">contact us</a> so we can fix it.
+        Sorry about that!
+      </h4>
+		  </div>
+		</div>
+	  </div>
+	</div>
+</div>
+{% endblock %}

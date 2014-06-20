@@ -185,9 +185,7 @@ def coinbase(request):
     user = request.user
     merchant = user.get_merchant()
     cb_credential = merchant.get_coinbase_credentials()
-    cb_balance = 0
-    if cb_credential:
-        cb_balance = cb_credential.get_balance()
+
     form = CoinbaseAPIForm()
     if request.method == 'POST' and merchant:
         form = CoinbaseAPIForm(data=request.POST)
@@ -210,7 +208,6 @@ def coinbase(request):
         'form': form,
         'on_admin_page': True,
         'cb_credential': cb_credential,
-        'cb_balance': cb_balance,
     }
 
 

@@ -7,7 +7,7 @@ from annoying.functions import get_object_or_None
 
 from bitcoins.models import BTCTransaction, ForwardingAddress
 from shoppers.models import Shopper
-from shoppers.forms import ShopperInformationForm
+from shoppers.forms import ShopperInformationForm, BuyBitcoinForm
 
 
 @render_to('index.html')
@@ -25,9 +25,10 @@ def customer_dashboard(request):
     if not user.get_merchant():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
-    transactions, shopper, form = None, None, None
+    transactions, shopper, shopper_form, buy_form = None, None, None, None
     forwarding_address_obj = get_object_or_None(ForwardingAddress,
             b58_address=request.session.get('forwarding_address'))
+    buy_form = BuyBitcoinForm()
     if forwarding_address_obj:
         # In case of refreshing the page later
         # Will be None on first use and be overwritten below
@@ -71,7 +72,8 @@ def customer_dashboard(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     return {
-        'form': form,
+        'shopper_form': shopper_form,
+        'buy_form': buy_form,
         'user': user,
         'merchant': merchant,
         'current_address': forwarding_address_obj,

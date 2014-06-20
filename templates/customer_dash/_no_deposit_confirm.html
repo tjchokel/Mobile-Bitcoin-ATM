@@ -18,6 +18,7 @@
   </div>
 
   {% include "customer_dash/_deposit_address_modal.html" %}
+  {% include "customer_dash/_buy_bitcoin_modal.html" %}
   <span id='predeposit' style="text-align: center; margin-top: 50px;">
       <div class="container">
         <div class="row">
@@ -48,13 +49,23 @@
 
         <br /><br />
         <div class="row">
-          <span style="margin-left: auto; margin-right: auto; display: block;">
-            <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
+          {% if merchant.has_valid_coinbase_credentials %}
+            <span style="margin-left: auto; margin-right: auto; display: block;">
+              <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
+                <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                {% trans "Get Started" %}
+              </a>
+            </span>
+          {% else %}
+             <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
               <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-              {% trans "Get Started" %}
+              {% trans "Sell Bitcoin" %}
             </a>
-          </span>
+             <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="buyBitcoinModal();">
+              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+              {% trans "Buy Bitcoin" %}
+            </a>
+          {% endif %}
         </div>
-
       </div>
 </div>

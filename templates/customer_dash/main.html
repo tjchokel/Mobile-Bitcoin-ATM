@@ -104,6 +104,11 @@
         });
     }
 
+    function buyBitcoinModal() {
+      $('#buy-bitcoin-modal').modal();
+      
+    }
+
     function confirmAddressDeposit() {
       $.ajax({
           type: 'get',
@@ -125,7 +130,7 @@
         success: function (data) {
           $("#fiat-amt-loader").addClass("hidden");
           $("#pricing-info").removeClass("hidden");
-          $("#fiat-amt").text(data['amount']);
+          $("#fiat-amt").text(data['buy_amount']);
           $("#currency-code").text(data['currency_code']);
           $("#markup").text(data['markup']);
 
@@ -168,8 +173,29 @@
             // location.reload(true);
           }
         });
-
     }
+    $("#id_fiat_amount").blur(function(){
+      $("#btc-amount").addClass("hidden");
+      $("#btc-amt-loader").removeClass("hidden");
+      $.ajax({
+        type: 'get',
+        url: '/get-bitcoin-price/',
+        success: function (data) {
+          $("#btc-amount").removeClass("hidden");
+          $("#btc-amt-loader").addClass("hidden");
+          var entered_amount = $('#id_fiat_amount').val();
+          var final_btc = parseFloat(entered_amount) / data['sell_amount'];
+          
+          $("#btc-amount").html('≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
+        },
+        error: function(data) {
+          $("#btc-amount").removeClass("hidden");
+          $("#btc-amt-loader").addClass("hidden");
+          // setTimeout(getBtcPrice, 30000);
+        }
+      });
+      
+    });
 
     $(document).ready(function(){
       {% if transactions or current_address.customer_confirmed_deposit_at %}

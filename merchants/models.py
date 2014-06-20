@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
 
 from phonenumber_field.modelfields import PhoneNumberField
 from bitcoins.models import DestinationAddress
@@ -79,7 +80,7 @@ class Merchant(models.Model):
         return BFHCurrenciesList[self.currency_code]['label']
 
     def get_registration_percent_complete(self):
-        percent_complete = 60
+        percent_complete = 50
         if self.address_1:
             percent_complete += 10
         if self.city:
@@ -87,6 +88,8 @@ class Merchant(models.Model):
         if self.state:
             percent_complete += 10
         if self.phone_num:
+            percent_complete += 10
+        if self.has_valid_coinbase_credentials():
             percent_complete += 10
         # if self.hours:
         #     percent_complete += 10

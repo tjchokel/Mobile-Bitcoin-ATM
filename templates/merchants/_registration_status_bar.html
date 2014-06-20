@@ -13,9 +13,13 @@
         </div>
     {% endif %}
 </div>
+
 {% url 'merchants.views.merchant_profile' as profile_url %}
+{% url 'merchants.views.coinbase' as coinbase_url %}
 {% if not merchant.address_1 %}
   {% blocktrans %}Next step: <a href="{{profile_url}}">List your business address</a>{% endblocktrans %}
 {% elif not merchant.phone_num %}
   {% blocktrans %}Next step: <a href="{{profile_url}}">List your business phone number</a>{% endblocktrans %}
+{% elif not merchant.has_valid_coinbase_credentials %}
+  {% blocktrans %}Next step: <a href="{{coinbase_url}}">Attach your Coinbase Account</a>{% endblocktrans %}
 {% endif %}

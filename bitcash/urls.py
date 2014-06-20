@@ -31,6 +31,8 @@ urlpatterns = patterns('',
     url(r'^customer-confirm-deposit/$', 'bitcoins.views.customer_confirm_deposit', name='customer_confirm_deposit'),
     url(r'^merchant-complete-deposit/$', 'bitcoins.views.merchant_complete_deposit', name='merchant_complete_deposit'),
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
+    url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
+
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),

@@ -5,9 +5,9 @@ from django.core.urlresolvers import reverse_lazy
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
-from bitcoins.models import BTCTransaction, ForwardingAddress
+from bitcoins.models import BTCTransaction, ForwardingAddress, BitcoinPurchase
 from shoppers.models import Shopper
-from shoppers.forms import ShopperInformationForm, BuyBitcoinForm
+from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, ConfirmPasswordForm
 
 
 @render_to('index.html')
@@ -25,24 +25,40 @@ def customer_dashboard(request):
     if not user.get_merchant():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
-    transactions, shopper, shopper_form, buy_form = None, None, None, None
+    transactions, shopper = None, None
     forwarding_address_obj = get_object_or_None(ForwardingAddress,
             b58_address=request.session.get('forwarding_address'))
-    buy_form = BuyBitcoinForm()
-    if forwarding_address_obj:
-        # In case of refreshing the page later
-        # Will be None on first use and be overwritten below
-        shopper = forwarding_address_obj.shopper
-        transactions = forwarding_address_obj.get_all_forwarding_transactions()
-        form = ShopperInformationForm(initial={'phone_country': merchant.country})
+    buy_request = merchant.get_bitcoin_purchase_request()
 
-        if request.method == 'POST':
-            form = ShopperInformationForm(data=request.POST)
-            if form.is_valid():
+    buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'})
+    password_form = ConfirmPasswordForm(user=user)
+    shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
 
-                name = form.cleaned_data['name']
-                email = form.cleaned_data['email']
-                phone_num = form.cleaned_data['phone_num']
+    if request.method == 'POST':
+        # if submitting a buy bitcoin form
+        if 'amount' in request.POST:
+            buy_form = BuyBitcoinForm(data=request.POST)
+            if buy_form.is_valid():
+                amount = buy_form.cleaned_data['amount']
+                email_or_btc_address = buy_form.cleaned_data['email_or_btc_address']
+                email = buy_form.cleaned_data['email']
+
+                # Create shopper object
+                btc_purchase = BitcoinPurchase.objects.create(
+                    merchant=merchant,
+                    email=email,
+                    fiat_amount=amount
+                )
+
+                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+        # if submitting shopper form
+        elif 'name' in request.POST:
+            shopper_form = ShopperInformationForm(data=request.POST)
+            if shopper_form.is_valid():
+
+                name = shopper_form.cleaned_data['name']
+                email = shopper_form.cleaned_data['email']
+                phone_num = shopper_form.cleaned_data['phone_num']
 
                 # Create shopper object
                 shopper = Shopper.objects.create(
@@ -70,16 +86,66 @@ def customer_dashboard(request):
                         existing_txn.send_shopper_newtx_sms()
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+        # if submitting password confirmation form
+        elif 'password' in request.POST:
+            password_form = ConfirmPasswordForm(user=user, data=request.POST)
+            if password_form.is_valid():
+                if buy_request:
+                    buy_request.pay_out_bitcoin()
+                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+    if forwarding_address_obj:
+        # In case of refreshing the page later
+        # Will be None on first use and be overwritten below
+        shopper = forwarding_address_obj.shopper
+        transactions = forwarding_address_obj.get_all_forwarding_transactions()
 
     return {
-        'shopper_form': shopper_form,
-        'buy_form': buy_form,
         'user': user,
         'merchant': merchant,
         'current_address': forwarding_address_obj,
         'transactions': transactions,
         'shopper': shopper,
+        'buy_request': buy_request,
+        'password_form': password_form,
+        'shopper_form': shopper_form,
+        'buy_form': buy_form,
     }
+
+
+# @login_required
+# def buy_bitcoin(request):
+#     user = request.user
+#     if not user.get_merchant():
+#         return HttpResponseRedirect(reverse_lazy('register_merchant'))
+#     merchant = user.get_merchant()
+#     if request.method == 'POST':
+#         form = BuyBitcoinForm(data=request.POST)
+#         if form.is_valid():
+#             amount = form.cleaned_data['amount']
+#             email_or_btc_address = form.cleaned_data['email_or_btc_address']
+#             email = form.cleaned_data['email']
+
+#             # Create shopper object
+#             btc_purchase = BitcoinPurchase.objects.create(
+#                 merchant=merchant,
+#                 email=email,
+#                 fiat_amount=amount
+#             )
+
+#     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
+
+# @login_required
+# def confirm_merchant_password(request):
+#     user = request.user
+#     if not user.get_merchant():
+#         return HttpResponseRedirect(reverse_lazy('register_merchant'))
+#     merchant = user.get_merchant()
+#     if request.method == 'POST':
+#         form = ConfirmPasswordForm(user=user, data=request.POST)
+#         if form.is_valid():
+
+#     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
 
 def simulate_deposit_detected(request):

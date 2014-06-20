@@ -2,12 +2,16 @@
 {% block content %}
   {% if transactions or current_address.customer_confirmed_deposit_at %}
     {% if current_address.all_transactions_complete and shopper %}
-      {% include "customer_dash/_deposit_complete.html" %}
+      {% include "customer_dash/cash_out/_deposit_complete.html" %}
     {% else %}
-      {% include "customer_dash/_deposit_confirm.html" %}
+      {% include "customer_dash/cash_out/_deposit_confirm.html" %}
     {% endif %}
   {% else %}
-    {% include "customer_dash/_no_deposit_confirm.html" %}
+    {% if buy_request %}
+      {% include "customer_dash/cash_in/_bitcoin_purchase.html" %}
+    {% else %}
+      {% include "customer_dash/cash_out/_no_deposit_confirm.html" %}
+    {% endif %}
   {% endif %}
 {% endblock content %}
 
@@ -78,6 +82,19 @@
         {% elif not transaction.irreversible_by %}
           setTimeout(set_time_since,1000);
         {% endif %}
+      }
+
+      function set_expires_at_time() {
+        var expires_at_unix_time = "{{buy_request.expires_at_unix_time}}"
+        var expires_at = new Date(expires_at_unix_time * 1000);
+        var time_until = timeUntil(expires_at);
+        console.log(time_until);
+        $("#expires-in").html(time_until)
+        if (time_until == 0){
+          cancelBuy();
+        }else{
+          setTimeout(set_expires_at_time, 1000);
+        }
       }
 
     function getNextAddress() {
@@ -174,30 +191,75 @@
           }
         });
     }
-    $("#id_fiat_amount").blur(function(){
-      $("#btc-amount").addClass("hidden");
-      $("#btc-amt-loader").removeClass("hidden");
+
+    function cancelBuy() {
       $.ajax({
-        type: 'get',
-        url: '/get-bitcoin-price/',
-        success: function (data) {
-          $("#btc-amount").removeClass("hidden");
-          $("#btc-amt-loader").addClass("hidden");
-          var entered_amount = $('#id_fiat_amount').val();
-          var final_btc = parseFloat(entered_amount) / data['sell_amount'];
-          
-          $("#btc-amount").html('≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
-        },
-        error: function(data) {
-          $("#btc-amount").removeClass("hidden");
-          $("#btc-amt-loader").addClass("hidden");
-          // setTimeout(getBtcPrice, 30000);
+          type: 'get',
+          url: '/cancel-buy/',
+          success: function (data) {
+            location.reload(true);
+          },
+          error: function(data) {
+            console.log('cancel buy Failed');
+            // location.reload(true);
+          }
+        });
+    }
+
+    var delay = (function(){
+      var timer = 0;
+      return function(callback, ms){
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+      };
+    })();
+
+    $("#id_amount").keyup(function(){
+      delay(function(){
+        var entered_amount = $('#id_amount').val();
+        if (entered_amount=="" || isNaN(entered_amount)){
+          $('#id_amount').val("");
+          $("#div_id_email_or_btc_address").addClass("hidden");
+          $("#div_id_email").addClass("hidden");
+          $("#btc-amount").html('{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
+        }else{
+          $("#btc-amount").addClass("hidden");
+          $("#btc-amt-loader").removeClass("hidden");
+          $.ajax({
+            type: 'get',
+            url: '/get-bitcoin-price/',
+            success: function (data) {
+              $("#btc-amount").removeClass("hidden");
+              $("#btc-amt-loader").addClass("hidden");
+              $("#div_id_email_or_btc_address").removeClass("hidden");
+              $("#div_id_email").removeClass("hidden");
+              var entered_amount = $('#id_amount').val();
+              var final_btc = parseFloat(entered_amount) / data['sell_amount'];
+              
+              $("#btc-amount").html('{{merchant.get_currency_symbol}}'+entered_amount+ ' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
+              $("#step_1").addClass("hidden");
+              $("#step_2").removeClass("hidden");
+            },
+            error: function(data) {
+              $("#btc-amount").removeClass("hidden");
+              $("#btc-amt-loader").addClass("hidden");
+              // setTimeout(getBtcPrice, 30000);
+            }
+          });
         }
-      });
-      
+      }, 500 );
     });
 
+
     $(document).ready(function(){
+      $("#div_id_email_or_btc_address").addClass("hidden");
+      $("#div_id_email").addClass("hidden");
+      var currency_code = "{{merchant.currency_code}}";
+      $( "#div_id_amount .controls" ).prepend( '<span class="input-group-addon needs-input-group">'+currency_code+'</span>' );
+      $( ".needs-input-group" ).wrapAll( "<div class='input-group' />");
+
+      $('#email-field').after('<span id="email_message"></span>');
+
       {% if transactions or current_address.customer_confirmed_deposit_at %}
 
         {% if transactions %}
@@ -232,8 +294,16 @@
         getBtcPrice();
 
         {% if not transactions %}
-          poll_new_deposits()
+          poll_new_deposits();
         {% endif %}
+      {% endif %}
+
+      {% if buy_request %}
+        set_expires_at_time();
+        // setTimeout(
+        //   function() {
+        //     set_expires_at_time();
+        //   }, 1000);
       {% endif %}
     });
   </script>

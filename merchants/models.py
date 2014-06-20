@@ -67,6 +67,9 @@ class Merchant(models.Model):
             txns.extend(forwarding_addr.btctransaction_set.filter(destination_address__isnull=True).order_by('-id'))
         return txns
 
+    def get_bitcoin_purchase_request(self):
+        return self.bitcoinpurchase_set.filter(cancelled_at__isnull=True, confirmed_by_merchant_at__isnull=True).last()
+
     def get_percent_markup(self):
         return self.basis_points_markup / 100.00
 

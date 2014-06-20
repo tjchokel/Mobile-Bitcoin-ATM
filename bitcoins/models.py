@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
+from django.utils import timezone
+import datetime
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
@@ -15,11 +17,12 @@ from bitcash.settings import BASE_URL, CAPITAL_CONTROL_COUNTRIES
 
 from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
-        format_num_for_printing)
+        format_num_for_printing, btc_to_satoshis)
 
 import json
 import requests
 import math
+from decimal import Decimal
 
 
 class DestinationAddress(models.Model):
@@ -438,3 +441,69 @@ class BTCTransaction(models.Model):
                     to_user=merchant.user,
                     to_merchant=merchant,
                     to_shopper=shopper)
+
+
+class BitcoinPurchase(models.Model):
+    """
+    Model for bitcoin purchase (cash in) request
+    """
+
+    added_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
+    email = models.EmailField(blank=False, null=False, db_index=True)
+    b58_address = models.CharField(blank=True, null=True, max_length=34, db_index=True)
+    fiat_amount = models.DecimalField(blank=False, null=False, max_digits=10, decimal_places=2)
+    satoshis = models.BigIntegerField(blank=True, null=True, db_index=True)
+    currency_code_when_created = models.CharField(max_length=5, blank=False, null=False, db_index=True)
+    confirmed_by_merchant_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    def save(self, *args, **kwargs):
+        """
+        Set fiat_amount when this object is first created
+        http://stackoverflow.com/a/2311499/1754586
+        """
+        # Only do this for blockcypher and not BCI
+        if not self.pk:
+            # This only happens if the objects isn't in the database yet.
+            self.currency_code_when_created = self.merchant.currency_code
+
+            now = datetime.datetime.now()
+            now_plus_15 = now + datetime.timedelta(minutes=15)
+            self.expires_at = now_plus_15
+            self.satoshis = self.get_satoshi_conversion()
+        super(BitcoinPurchase, self).save(*args, **kwargs)
+
+    def get_satoshi_conversion(self):
+        merchant = self.merchant
+        currency_code = self.currency_code_when_created
+        if currency_code in CAPITAL_CONTROL_COUNTRIES:
+            url = 'https://conectabitcoin.com/en/market_prices.json'
+            r = requests.get(url)
+            content = json.loads(r.content)
+            key = 'btc_'+currency_code.lower()
+            fiat_btc = content[key]['sell']
+        else:
+            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
+            r = requests.get(url)
+            content = json.loads(r.content)
+            fiat_btc = content['last']
+
+        basis_points_markup = merchant.basis_points_markup
+        markup_fee = fiat_btc * basis_points_markup / 10000.00
+        fiat_btc = fiat_btc + markup_fee
+        total_btc = self.fiat_amount / Decimal(fiat_btc)
+        satoshis = btc_to_satoshis(total_btc)
+        return satoshis
+
+    def format_mbtc_amount(self):
+        return format_mbtc(satoshis_to_mbtc(self.satoshis))
+
+    def pay_out_bitcoin(self):
+        # TODO: MAKE THIS ACTUALLY SEND FUNDS
+        self.confirmed_by_merchant_at = now()
+        self.save()
+
+    def expires_at_unix_time(self):
+        return int(self.expires_at.strftime('%s'))

@@ -312,3 +312,15 @@ def cancel_address(request):
     del request.session['forwarding_address']
 
     return HttpResponse(json.dumps({}), content_type='application/json')
+
+
+@login_required
+def cancel_buy(request):
+    user = request.user
+    merchant = user.get_merchant()
+
+    buy_request = merchant.get_bitcoin_purchase_request()
+    assert buy_request, 'No buy request to cancel'
+    buy_request.cancelled_at = now()
+    buy_request.save()
+    return HttpResponse(json.dumps({}), content_type='application/json')

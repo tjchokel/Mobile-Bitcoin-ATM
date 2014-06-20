@@ -5,7 +5,6 @@ from countries import COUNTRY_DROPDOWN
 
 from utils import clean_phone_num
 
-
 class ShopperInformationForm(forms.Form):
     name = forms.CharField(
         required=True,
@@ -37,24 +36,51 @@ class ShopperInformationForm(forms.Form):
 
 
 class BuyBitcoinForm(forms.Form):
-    fiat_amount = forms.DecimalField(
+    amount = forms.DecimalField(
             label=_('Fiat Amount'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)],
             help_text=_('The amount of cash you will be handing to the merchant'),
-            widget=forms.TextInput(),
-    )
-    email_address = forms.EmailField(
-        label=_('Email'),
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
+            widget=forms.TextInput(attrs={'class': 'needs-input-group'}),
     )
 
-    btc_address = forms.CharField(
-            label=_('Bitcoin Deposit Address'),
-            required=False,
-            min_length=27,
-            max_length=34,
-            help_text=_('The wallet address where you want your bitcoin sent (optional)'),
-            widget=forms.TextInput(),
+    email_or_btc_address = forms.ChoiceField(
+        label=_('Send to Email or Bitcoin Address'),
+        required=True,
+        widget=forms.RadioSelect(attrs={'id': 'address'}),
+        choices=(('1', 'Email Address',), ('2', 'Bitcoin Address',)),
     )
+
+    email = forms.CharField(
+        label=_('Email'),
+        required=True,
+        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
+    )
+
+    # btc_address = forms.CharField(
+    #         label=_('Bitcoin Deposit Address'),
+    #         required=False,
+    #         min_length=27,
+    #         max_length=34,
+    #         help_text=_('The wallet address where you want your bitcoin sent (optional)'),
+    #         widget=forms.TextInput(),
+    # )
+
+
+class ConfirmPasswordForm(forms.Form):
+    password = forms.CharField(
+            required=True,
+            label='Verify Merchant Password',
+            widget=forms.PasswordInput(attrs={'autocomplete': 'off'}),
+    )
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not self.user.check_password(password):
+            print 'VALIDATION ERROR'
+            raise forms.ValidationError('Invalid password')
+
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(ConfirmPasswordForm, self).__init__(*args, **kwargs)

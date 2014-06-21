@@ -211,7 +211,57 @@ class MerchantInfoForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_country'}),
     )
 
+    website = forms.URLField(
+            label='Website URL',
+            required=False,
+            )
+
     clean_phone_num = clean_phone_num
+
+
+class BusinessHoursForm(forms.Form):
+    HOURS = (
+                ('-1', 'Not Open Today'),
+                ('1', '1:00 am'),
+                ('2', '2:00 am'),
+                ('3', '3:00 am'),
+                ('4', '4:00 am'),
+                ('5', '5:00 am'),
+                ('6', '6:00 am'),
+                ('7', '7:00 am'),
+                ('8', '8:00 am'),
+                ('9', '9:00 am'),
+                ('10', '10:00 am'),
+                ('11', '11:00 am'),
+                ('12', '12:00 pm - noon'),
+                ('13', '1:00 pm'),
+                ('14', '2:00 pm'),
+                ('15', '3:00 pm'),
+                ('16', '4:00 pm'),
+                ('17', '5:00 pm'),
+                ('18', '6:00 pm'),
+                ('19', '7:00 pm'),
+                ('20', '8:00 pm'),
+                ('21', '9:00 pm'),
+                ('22', '10:00 pm'),
+                ('23', '11:00 pm'),
+                ('24', '12:00 am - midnight'),
+                )
+
+    monday_open = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    monday_close = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    tuesday_open = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    tuesday_close = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    wednesday_open = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    wednesday_close = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    thursday_open = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    thursday_close = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    friday_open = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    friday_close = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    saturday_open = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    saturday_close = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    sunday_open = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
+    sunday_close = forms.ChoiceField(required=True, choices=HOURS, widget=forms.Select())
 
 
 class BitcoinInfoForm(forms.Form):

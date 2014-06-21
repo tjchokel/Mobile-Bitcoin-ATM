@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^profile/$', 'merchants.views.merchant_profile', name='merchant_profile'),
     url(r'^transactions/$', 'merchants.views.merchant_transactions', name='merchant_transactions'),
     url(r'^edit-personal-info/$', 'merchants.views.edit_personal_info', name='edit_personal_info'),
+    url(r'^edit-hours-info/$', 'merchants.views.edit_hours_info', name='edit_hours_info'),
     url(r'^edit-merchant-info/$', 'merchants.views.edit_merchant_info', name='edit_merchant_info'),
     url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
 

@@ -46,4 +46,8 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     (r'^i18n/', include('django.conf.urls.i18n')),
+
+    # Logging Test
+    url(r'^fail500/$', 'services.views.fail500', name='services500'),
+
 )

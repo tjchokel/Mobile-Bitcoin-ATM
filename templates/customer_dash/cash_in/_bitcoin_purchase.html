@@ -10,7 +10,13 @@
 
   <div class="row">
     <p class="lead text-center text-green">
-      {{merchant.get_currency_symbol}}{{buy_request.fiat_amount}} for {{buy_request.format_mbtc_amount}} mbtc to {{buy_request.email}} (<a href="" onclick="cancelBuy();">{% trans "Cancel" %}</a>)
+      {{merchant.get_currency_symbol}}{{buy_request.fiat_amount}} for {{buy_request.format_mbtc_amount}} mbtc to 
+      {% if buy_request.b58_address %}
+        {{buy_request.b58_address}}
+      {% else %}
+        {{buy_request.email}}
+      {% endif %}
+      (<a href="" onclick="cancelBuy();">{% trans "Cancel" %}</a>)
     </p>
     <p class="lead text-center text-red">
       Price expires in <b id="expires-in"></b>

@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
+from django.contrib import messages
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
@@ -34,7 +35,7 @@ def customer_dashboard(request):
     buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'})
     password_form = ConfirmPasswordForm(user=user)
     shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
-
+    show_buy_modal = 'false'
     if request.method == 'POST':
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
@@ -43,15 +44,18 @@ def customer_dashboard(request):
                 amount = buy_form.cleaned_data['amount']
                 email_or_btc_address = buy_form.cleaned_data['email_or_btc_address']
                 email = buy_form.cleaned_data['email']
-
+                btc_address = buy_form.cleaned_data['btc_address']
                 # Create shopper object
                 btc_purchase = CustomerBTCPurchase.objects.create(
                     merchant=merchant,
                     email=email,
-                    fiat_amount=amount
+                    fiat_amount=amount,
+                    b58_address=btc_address,
                 )
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+            else:
+                show_buy_modal = 'true'
         # if submitting shopper form
         elif 'name' in request.POST:
             shopper_form = ShopperInformationForm(data=request.POST)
@@ -112,6 +116,7 @@ def customer_dashboard(request):
         'password_form': password_form,
         'shopper_form': shopper_form,
         'buy_form': buy_form,
+        'show_buy_modal': show_buy_modal,
     }
 
 

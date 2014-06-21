@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from countries import COUNTRY_DROPDOWN
 
 from utils import clean_phone_num
+from bitcoins.BCAddressField import is_valid_btc_address
 
 class ShopperInformationForm(forms.Form):
     name = forms.CharField(
@@ -44,12 +45,12 @@ class BuyBitcoinForm(forms.Form):
             widget=forms.TextInput(attrs={'class': 'needs-input-group'}),
     )
 
-    email = forms.CharField(
+    email = forms.EmailField(
         label=_('Email'),
         required=True,
         widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
     )
-    
+
     email_or_btc_address = forms.ChoiceField(
         label=_('Send to Email or Bitcoin Address'),
         required=True,
@@ -62,9 +63,20 @@ class BuyBitcoinForm(forms.Form):
             required=False,
             min_length=27,
             max_length=34,
-            help_text=_('The wallet address where you want your bitcoin sent (optional)'),
+            help_text=_('The wallet address where you want your bitcoin sent'),
             widget=forms.TextInput(),
     )
+
+    def clean_btc_address(self):
+        address = self.cleaned_data.get('btc_address')
+        email_or_btc_address = self.cleaned_data.get('email_or_btc_address')
+        if address and not is_valid_btc_address(address):
+            msg = "Sorry, that's not a valid bitcoin address"
+            raise forms.ValidationError(msg)
+        if email_or_btc_address == '2' and not is_valid_btc_address(address):
+            msg = "Please enter a valid bitcoin address"
+            raise forms.ValidationError(msg)
+        return address
 
 
 class ConfirmPasswordForm(forms.Form):

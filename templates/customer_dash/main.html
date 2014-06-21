@@ -146,10 +146,16 @@
         url: '/get-bitcoin-price/',
         success: function (data) {
           $("#fiat-amt-loader").addClass("hidden");
+          $("#sell-price-loader").addClass("hidden");
+          $("#buy-price-loader").addClass("hidden");
           $("#pricing-info").removeClass("hidden");
-          $("#fiat-amt").text(data['buy_amount']);
+          $("#sell-price-holder").removeClass("hidden");
+          $("#buy-price-holder").removeClass("hidden");
+          $("#fiat-amt").text(data['no_markup_price_formatted']);
           $("#currency-code").text(data['currency_code']);
-          $("#markup").text(data['markup']);
+          // $("#markup").text(data['markup']);
+          $("#buy-price").text(data['buy_price_formatted']);
+          $("#sell-price").text(data['sell_price_formatted']);
 
           BTC_PRICE_TIMEOUT_MS *= 1.3;
           setTimeout(getBtcPrice,BTC_PRICE_TIMEOUT_MS);
@@ -223,6 +229,7 @@
           $("#div_id_email").addClass("hidden");
           $("#div_id_btc_address").addClass("hidden");
           $("#btc-amount").html('{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
+          $("#submit-button").prop('disabled', true);
         }else{
           $("#btc-amount").addClass("hidden");
           $("#btc-amt-loader").removeClass("hidden");
@@ -240,6 +247,7 @@
               $("#btc-amount").html('{{merchant.get_currency_symbol}}'+entered_amount+ ' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
               $("#step_1").addClass("hidden");
               $("#step_2").removeClass("hidden");
+              $("#submit-button").prop('disabled', false);
             },
             error: function(data) {
               $("#btc-amount").removeClass("hidden");
@@ -262,13 +270,19 @@
 
 
     $(document).ready(function(){
-      $("#div_id_email_or_btc_address").addClass("hidden");
-      $("#div_id_email").addClass("hidden");
-      $("#div_id_btc_address").addClass("hidden");
+      if( {{ show_buy_modal }} === true){
+        $('#buy-bitcoin-modal').modal('show');
+        $("#submit-button").prop('disabled', false);
+      }else{
+        $("#div_id_email_or_btc_address").addClass("hidden");
+        $("#div_id_email").addClass("hidden");
+      }
+      if ($('input[name=email_or_btc_address]:checked').val() == 1) {
+        $("#div_id_btc_address").addClass("hidden");
+      }
       var currency_code = "{{merchant.currency_code}}";
       $( "#div_id_amount .controls" ).prepend( '<span class="input-group-addon needs-input-group">'+currency_code+'</span>' );
       $( ".needs-input-group" ).wrapAll( "<div class='input-group' />");
-
       $('#email-field').after('<span id="email_message"></span>');
 
       {% if transactions or current_address.customer_confirmed_deposit_at %}
@@ -301,11 +315,11 @@
         {% endif %}
 
       {% else %}
-
-        getBtcPrice();
-
-        {% if not transactions %}
-          poll_new_deposits();
+        {% if not buy_request %}
+          getBtcPrice();
+          {% if not transactions %}
+            poll_new_deposits();
+          {% endif %}
         {% endif %}
       {% endif %}
 

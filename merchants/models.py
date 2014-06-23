@@ -129,8 +129,6 @@ class Merchant(models.Model):
         return None
 
     def set_website(self, website_to_set):
-        if not website_to_set:
-            return
         current_website_obj = self.get_website()
         if current_website_obj:
             if current_website_obj.url != website_to_set:
@@ -138,11 +136,13 @@ class Merchant(models.Model):
                 current_website_obj.deleted_at = now()
                 current_website_obj.save()
 
+                if website_to_set:
+                    # Create (set) new website
+                    MerchantWebsite.objects.create(merchant=self, url=website_to_set)
+        else:
+            if website_to_set:
                 # Create (set) new website
                 MerchantWebsite.objects.create(merchant=self, url=website_to_set)
-        else:
-            # Create (set) new website
-            MerchantWebsite.objects.create(merchant=self, url=website_to_set)
 
 
 class OpenTime(models.Model):

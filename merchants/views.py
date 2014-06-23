@@ -315,8 +315,7 @@ def edit_merchant_info(request):
             merchant.save()
 
             website = form.cleaned_data['website']
-            if website:
-                merchant.set_website(website)
+            merchant.set_website(website)
 
             messages.success(request, _('Your business info has been updated'))
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))

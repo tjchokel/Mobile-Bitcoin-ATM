@@ -360,7 +360,7 @@ class SendBTC(models.Model):
             null=True, db_index=True)
     destination_email = models.EmailField(blank=True, null=True, db_index=True)
     cb_id = models.CharField(max_length=64, blank=False, null=False, db_index=True)
-    notes = models.CharField(max_length=2048, blank=False, null=False)
+    notes = models.CharField(max_length=2048, blank=True, null=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.destination_email or self.destination_btc_address)

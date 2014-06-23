@@ -55,7 +55,8 @@ class SendBTCAdmin(admin.ModelAdmin):
             'received_at',
             'txn_hash',
             'satoshis',
-            'destination_address',
+            'destination_btc_address',
+            'destination_email',
             'cb_id',
             'notes',
             )

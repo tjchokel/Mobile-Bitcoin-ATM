@@ -464,6 +464,7 @@ class ShopperBTCPurchase(models.Model):
     currency_code_when_created = models.CharField(max_length=5, blank=False, null=False, db_index=True)
     confirmed_by_merchant_at = models.DateTimeField(blank=True, null=True, db_index=True)
     cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    funds_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def save(self, *args, **kwargs):
@@ -496,8 +497,15 @@ class ShopperBTCPurchase(models.Model):
         return format_mbtc(satoshis_to_mbtc(self.satoshis))
 
     def pay_out_bitcoin(self):
-        # TODO: MAKE THIS ACTUALLY SEND FUNDS
+
         self.confirmed_by_merchant_at = now()
+        self.save()
+        credentials = self.merchant.get_coinbase_credentials()
+        if self.b58_address:
+            credentials.send_btc(self.satoshis, self.b58_address)
+        else:
+            credentials.send_btc(self.satoshis, None, self.shopper.email)
+        self.funds_sent_at = now()
         self.save()
 
     def expires_at_unix_time(self):

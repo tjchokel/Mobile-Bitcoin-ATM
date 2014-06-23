@@ -169,7 +169,6 @@ class ForwardingAddress(models.Model):
                 self.get_fiat_transactions_total(),
                 self.get_first_forwarding_transaction().currency_code_when_created)
 
-
 class BTCTransaction(models.Model):
     """
     Deposits that affect our users.
@@ -246,17 +245,7 @@ class BTCTransaction(models.Model):
     def calculate_fiat_amount(self):
         merchant = self.get_merchant()
         currency_code = merchant.currency_code
-        if currency_code in CAPITAL_CONTROL_COUNTRIES:
-            url = 'https://conectabitcoin.com/en/market_prices.json'
-            r = requests.get(url)
-            content = json.loads(r.content)
-            key = 'btc_'+currency_code.lower()
-            fiat_btc = content[key]['sell']
-        else:
-            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
-            r = requests.get(url)
-            content = json.loads(r.content)
-            fiat_btc = content['last']
+        fiat_btc = BTCTransaction.get_btc_price(currency_code)
         basis_points_markup = merchant.basis_points_markup
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc - markup_fee
@@ -442,8 +431,21 @@ class BTCTransaction(models.Model):
                     to_merchant=merchant,
                     to_shopper=shopper)
 
+    @classmethod
+    def get_btc_price(clas, currency_code):
+        if currency_code in CAPITAL_CONTROL_COUNTRIES:
+            url = 'https://conectabitcoin.com/en/market_prices.json'
+            r = requests.get(url)
+            content = json.loads(r.content)
+            key = 'btc_'+currency_code.lower()
+            return content[key]['sell']
+        else:
+            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
+            r = requests.get(url)
+            content = json.loads(r.content)
+            return content['last']
 
-class CustomerBTCPurchase(models.Model):
+class ShopperBTCPurchase(models.Model):
     """
     Model for bitcoin purchase (cash in) request
     """
@@ -469,27 +471,15 @@ class CustomerBTCPurchase(models.Model):
             # This only happens if the objects isn't in the database yet.
             self.currency_code_when_created = self.merchant.currency_code
 
-            now = datetime.datetime.now()
-            now_plus_15 = now + datetime.timedelta(minutes=15)
+            now_plus_15 = now() + datetime.timedelta(minutes=15)
             self.expires_at = now_plus_15
             self.satoshis = self.get_satoshi_conversion()
-        super(CustomerBTCPurchase, self).save(*args, **kwargs)
+        super(ShopperBTCPurchase, self).save(*args, **kwargs)
 
     def get_satoshi_conversion(self):
         merchant = self.merchant
         currency_code = self.currency_code_when_created
-        if currency_code in CAPITAL_CONTROL_COUNTRIES:
-            url = 'https://conectabitcoin.com/en/market_prices.json'
-            r = requests.get(url)
-            content = json.loads(r.content)
-            key = 'btc_'+currency_code.lower()
-            fiat_btc = content[key]['sell']
-        else:
-            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
-            r = requests.get(url)
-            content = json.loads(r.content)
-            fiat_btc = content['last']
-
+        fiat_btc = BTCTransaction.get_btc_price(currency_code)
         basis_points_markup = merchant.basis_points_markup
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc + markup_fee

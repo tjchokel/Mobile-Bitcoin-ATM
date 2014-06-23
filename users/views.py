@@ -7,7 +7,7 @@ from django.contrib import messages
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
-from bitcoins.models import BTCTransaction, ForwardingAddress, CustomerBTCPurchase
+from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
 from shoppers.models import Shopper
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, ConfirmPasswordForm
 
@@ -46,7 +46,7 @@ def customer_dashboard(request):
                 email = buy_form.cleaned_data['email']
                 btc_address = buy_form.cleaned_data['btc_address']
                 # Create shopper object
-                btc_purchase = CustomerBTCPurchase.objects.create(
+                btc_purchase = ShopperBTCPurchase.objects.create(
                     merchant=merchant,
                     email=email,
                     fiat_amount=amount,
@@ -97,7 +97,7 @@ def customer_dashboard(request):
             if password_form.is_valid():
                 if buy_request:
                     buy_request.pay_out_bitcoin()
-                    msg = _('Success! Your bitcoin is now being sent.')
+                    msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.email)
                     messages.success(request, msg, extra_tags='safe')
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     if forwarding_address_obj:

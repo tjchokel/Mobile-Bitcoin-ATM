@@ -8,8 +8,8 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'CustomerBTCPurchase'
-        db.create_table(u'bitcoins_customerbtcpurchase', (
+        # Adding model 'ShopperBTCPurchase'
+        db.create_table(u'bitcoins_shopperbtcpurchase', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('added_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
             ('merchant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['merchants.Merchant'])),
@@ -22,12 +22,12 @@ class Migration(SchemaMigration):
             ('cancelled_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
             ('expires_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
         ))
-        db.send_create_signal(u'bitcoins', ['CustomerBTCPurchase'])
+        db.send_create_signal(u'bitcoins', ['ShopperBTCPurchase'])
 
 
     def backwards(self, orm):
-        # Deleting model 'CustomerBTCPurchase'
-        db.delete_table(u'bitcoins_customerbtcpurchase')
+        # Deleting model 'ShopperBTCPurchase'
+        db.delete_table(u'bitcoins_shopperbtcpurchase')
 
 
     models = {
@@ -60,20 +60,6 @@ class Migration(SchemaMigration):
             'suspected_double_spend_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'txn_hash': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'})
         },
-        u'bitcoins.customerbtcpurchase': {
-            'Meta': {'object_name': 'CustomerBTCPurchase'},
-            'added_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'b58_address': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
-            'cancelled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'confirmed_by_merchant_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'currency_code_when_created': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'db_index': 'True'}),
-            'expires_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'fiat_amount': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
-            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'})
-        },
         u'bitcoins.destinationaddress': {
             'Meta': {'object_name': 'DestinationAddress'},
             'b58_address': ('django.db.models.fields.CharField', [], {'max_length': '34', 'db_index': 'True'}),
@@ -92,6 +78,20 @@ class Migration(SchemaMigration):
             'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
             'paid_out_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             'shopper': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['shoppers.Shopper']", 'null': 'True', 'blank': 'True'})
+        },
+        u'bitcoins.shopperbtcpurchase': {
+            'Meta': {'object_name': 'ShopperBTCPurchase'},
+            'added_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'b58_address': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
+            'cancelled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'confirmed_by_merchant_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'currency_code_when_created': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'db_index': 'True'}),
+            'expires_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'fiat_amount': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'})
         },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},

@@ -21,8 +21,8 @@ class CBCredential(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     # Both of these are extra-long for safety
-    api_key = EncryptedCharField(max_length=64, blank=True, null=True, db_index=True)
-    api_secret = EncryptedCharField(max_length=128, blank=True, null=True, db_index=True)
+    api_key = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
+    api_secret = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     disabled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     last_succeded_at = models.DateTimeField(blank=True, null=True, db_index=True)
     # Not implemented anywhere:

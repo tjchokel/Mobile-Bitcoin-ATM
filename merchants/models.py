@@ -18,7 +18,6 @@ class Merchant(models.Model):
     country = models.CharField(max_length=256, blank=True, null=True, db_index=True, choices=ALL_COUNTRIES)
     zip_code = models.CharField(max_length=256, blank=True, null=True, db_index=True)
     phone_num = PhoneNumberField(blank=True, null=True, db_index=True)
-    hours = models.CharField(max_length=256, blank=True, null=True, db_index=True)
     currency_code = models.CharField(max_length=5, blank=False, null=False, db_index=True, choices=BFH_CURRENCY_DROPDOWN)
     basis_points_markup = models.IntegerField(blank=True, null=True, db_index=True, default=100)
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
@@ -109,8 +108,7 @@ class Merchant(models.Model):
             percent_complete += 10
         if self.has_valid_coinbase_credentials():
             percent_complete += 10
-        # if self.hours:
-        #     percent_complete += 10
+
         return percent_complete
 
     def finished_registration(self):
@@ -130,3 +128,80 @@ class Merchant(models.Model):
     def get_coinbase_credentials(self):
         # TODO: MAKE THIS WORK
         return self.cbcredential_set.filter(disabled_at__isnull=True).last()
+
+    def get_hours(self):
+        return self.opentime_set.all()
+
+    def get_hours_formatted(self):
+        open_times = self.get_hours()
+        hours_formatted = {}
+        for open_time in open_times:
+            hours_formatted[open_time.weekday] = {
+                    'from_time': open_time.from_time,
+                    'to_time': open_time.to_time,
+                    }
+        return hours_formatted
+
+    def set_hours(self, hours):
+        """
+        hours is a list that looks like the following:
+          hours = (
+            (weekday, from_hour, to_hour),
+            (1, datetime.time(9), datetime.time(17)),
+            (2, datetime.time(9), datetime.time(17)),
+          )
+        """
+        # Delete current hours
+        self.get_hours().delete()
+
+        # Set new hours
+        for weekday, from_time, to_time in hours:
+            OpenTime.objects.create(merchant=self, weekday=weekday, from_time=from_time, to_time=to_time)
+
+    def get_website(self):
+        websites = self.merchantwebsite_set.filter(deleted_at=None)
+        if websites:
+            return websites[0]
+        return None
+
+    def set_website(self, website_to_set):
+        current_website_obj = self.get_website()
+        if current_website_obj:
+            if current_website_obj.url != website_to_set:
+                # Mark current websites as deleted
+                current_website_obj.deleted_at = now()
+                current_website_obj.save()
+
+                if website_to_set:
+                    # Create (set) new website
+                    MerchantWebsite.objects.create(merchant=self, url=website_to_set)
+        else:
+            if website_to_set:
+                # Create (set) new website
+                MerchantWebsite.objects.create(merchant=self, url=website_to_set)
+
+
+class OpenTime(models.Model):
+    # http://stackoverflow.com/a/12217171/1754586
+    WEEKDAYS = (
+        (1, _('Monday')),
+        (2, _('Tuesday')),
+        (3, _('Wednesday')),
+        (4, _('Thursday')),
+        (5, _('Friday')),
+        (6, _('Saturday')),
+        (7, _('Sunday')),
+    )
+    merchant = models.ForeignKey(Merchant, blank=False, null=False)
+
+    weekday = models.IntegerField(choices=WEEKDAYS, db_index=True,
+            null=False, blank=False, unique=True)
+    from_time = models.TimeField()
+    to_time = models.TimeField()
+
+
+class MerchantWebsite(models.Model):
+    # Allow multiple websites for future-proofing
+    merchant = models.ForeignKey(Merchant)
+    url = models.URLField(blank=False, null=False, db_index=True)
+    deleted_at = models.DateTimeField(blank=True, null=True, db_index=True)

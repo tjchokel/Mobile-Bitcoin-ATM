@@ -48,6 +48,10 @@
                 <td class="text-muted">{% trans "Phone Number" %}</td>
                 <td align="right">{{merchant.phone_num.as_international}}</td>
               </tr>
+              <tr>
+                <td class="text-muted">{% trans "Website (URL)" %}</td>
+                <td align="right">{{merchant.get_website.url }}</td>
+              </tr>
             </tbody>
           </table>
           <span class="hidden" id="merchant-info-edit">
@@ -63,10 +67,63 @@
         </div>
       </div>
 
+      {% comment %}
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Owner Info"%} <small>({% trans "for Transaction Notifications"%})</small></a>
+            <a style="color:#515151;" href="#">{% trans "Business Hours"%}</a>
+            <a href="#" onclick="editHoursInfo();" id="hours-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
+          </h4>
+          <table id="hours-info-list" class="table">
+            <tbody>
+              <tr>
+                <td class="text-muted">{% trans "Monday" %}</td>
+                <td align="right">{{biz_hours.1.from_time}} - {{biz_hours.1.to_time}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Tuesday" %}</td>
+                <td align="right">{{biz_hours.2.from_time}} - {{biz_hours.2.to_time}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Wednesday" %}</td>
+                <td align="right">{{biz_hours.3.from_time}} - {{biz_hours.3.to_time}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Thursday" %}</td>
+                <td align="right">{{biz_hours.4.from_time}} - {{biz_hours.4.to_time}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Friday" %}</td>
+                <td align="right">{{biz_hours.5.from_time}} - {{biz_hours.5.to_time}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Saturday" %}</td>
+                <td align="right">{{biz_hours.6.from_time}} - {{biz_hours.6.to_time}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Sunday" %}</td>
+                <td align="right">{{biz_hours.7.from_time}} - {{biz_hours.7.to_time}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <span class="hidden" id="hours-info-edit">
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_hours_info" %}" >
+              {% load crispy_forms_tags %}
+              {{ hours_form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+              </div>
+            </form>
+          </span>
+        </div>
+      </div>
+      {% endcomment %}
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h4 class="hl">
+            <a style="color:#515151;" href="#">{% trans "Owner Info"%} <small>({% trans "Private - for Transaction Notifications"%})</small></a>
             <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="personal-info-list" class="table">
@@ -86,7 +143,6 @@
             </tbody>
           </table>
           <span class="hidden" id="personal-info-edit">
-            
             <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_personal_info" %}" >
               {% load crispy_forms_tags %}
               {{ personal_form|crispy }}
@@ -98,6 +154,8 @@
           </span>
         </div>
       </div>
+
+
     </div>
     </div>
     </div>
@@ -112,8 +170,21 @@
           edit_button.text("Cancel");
         }else{
           edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
-        }        
+        }
     }
+
+    {% comment %}
+    function editHoursInfo() {
+        $("#hours-info-list").toggleClass("show hidden");
+        $("#hours-info-edit").toggleClass("show hidden");
+        var edit_button = $("#hours-info-edit-button");
+        if (edit_button.text().replace(" ", "")=="Edit"){
+          edit_button.text("Cancel");
+        }else{
+          edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
+        }
+    }
+    {% endcomment %}
 
     function editMerchantInfo() {
         $("#merchant-info-list").toggleClass("show hidden");

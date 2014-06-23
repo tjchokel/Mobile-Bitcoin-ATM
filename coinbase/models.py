@@ -217,7 +217,12 @@ class CBCredential(models.Model):
                 )
 
     def send_btc(self, satoshis_to_send, destination_btc_address,
-            destination_email_address=None, notes=None, user_fee=None):
+            destination_email_address=None, notes=None):
+        """
+        Send satoshis to a destination address or email address.
+        CB requires a fee for txns < .01 BTC, so it will automatically include
+        txn fees for those.
+        """
 
         msg = "Can't have botha  destination email and BTC address. %s | %s" % (
                 destination_email_address, destination_btc_address)
@@ -249,8 +254,11 @@ class CBCredential(models.Model):
         post_params = 'transaction[to]=%s&transaction[amount]=%s' % (
                 dest_addr_to_use, btc_to_send)
 
-        if user_fee:
-            post_params += '&transaction[user_fee]=' + user_fee
+        if satoshis_to_send < btc_to_satoshis(.01) and not destination_email_address:
+            # https://coinbase.com/api/doc/1.0/transactions/send_money.html
+            # Coinbase pays transaction fees on payments greater than or equal to 0.01 BTC.
+            # But for smaller amounts you may want to add your own amount."
+            post_params += '&transaction[user_fee]=0.0001'
 
         if notes:
             # TODO: url encode this?

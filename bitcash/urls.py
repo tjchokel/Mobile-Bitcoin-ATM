@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
 
     # API Partners
-    url(r'^coinbase/$', 'merchants.views.coinbase', name='coinbase'),
+    url(r'^coinbase/$', 'coinbase.views.coinbase', name='coinbase'),
 
     # AJAX Calls
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
@@ -32,7 +32,8 @@ urlpatterns = patterns('',
     url(r'^merchant-complete-deposit/$', 'bitcoins.views.merchant_complete_deposit', name='merchant_complete_deposit'),
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
     url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
-
+    url(r'^refresh-cb-credentials/$', 'coinbase.views.refresh_credentials', name='refresh_cb_credentials'),
+    url(r'^disable-cb-credentials/$', 'coinbase.views.disable_credentials', name='disable_cb_credentials'),
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),

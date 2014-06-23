@@ -10,10 +10,9 @@ from annoying.functions import get_object_or_None
 
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
-from coinbase.models import CBCredential
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm,
-        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm, CoinbaseAPIForm)
+        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm)
 
 
 @render_to('login.html')
@@ -180,43 +179,11 @@ def merchant_profile(request):
 
 
 @login_required
-@render_to('merchants/coinbase.html')
-def coinbase(request):
-    user = request.user
-    merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credentials()
-
-    form = CoinbaseAPIForm()
-    if request.method == 'POST' and merchant:
-        form = CoinbaseAPIForm(data=request.POST)
-        if form.is_valid():
-            # TODO: VALIDATE CREDENTIALS AND THEN UPDATE MODEL HERE
-
-            api_key = form.cleaned_data['api_key']
-            secret_key = form.cleaned_data['secret_key']
-            credentials = CBCredential.objects.create(
-                    merchant=merchant,
-                    api_key=api_key,
-                    api_secret=secret_key
-            )
-            messages.success(request, _('Your Coinbase API info has been updated'))
-            return HttpResponseRedirect(reverse_lazy('coinbase'))
-
-    return {
-        'user': user,
-        'merchant': merchant,
-        'form': form,
-        'on_admin_page': True,
-        'cb_credential': cb_credential,
-    }
-
-
-@login_required
 @render_to('merchants/transactions.html')
 def merchant_transactions(request):
     user = request.user
     merchant = user.get_merchant()
-    transactions = merchant.get_all_forwarding_transactions()
+    transactions = merchant.get_combined_transactions()
     return {
         'user': user,
         'merchant': merchant,

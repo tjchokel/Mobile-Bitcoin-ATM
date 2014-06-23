@@ -2,6 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 import datetime
 
 from bitcoins.bci import set_bci_webhook
@@ -431,6 +432,9 @@ class BTCTransaction(models.Model):
                     to_merchant=merchant,
                     to_shopper=shopper)
 
+    def get_type(self):
+        return _('Bitcoin Sale')
+
     @classmethod
     def get_btc_price(clas, currency_code):
         if currency_code in CAPITAL_CONTROL_COUNTRIES:
@@ -445,6 +449,7 @@ class BTCTransaction(models.Model):
             content = json.loads(r.content)
             return content['last']
 
+
 class ShopperBTCPurchase(models.Model):
     """
     Model for bitcoin purchase (cash in) request
@@ -452,7 +457,7 @@ class ShopperBTCPurchase(models.Model):
 
     added_at = models.DateTimeField(auto_now_add=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
-    email = models.EmailField(blank=False, null=False, db_index=True)
+    shopper = models.ForeignKey('shoppers.Shopper', blank=False, null=False)
     b58_address = models.CharField(blank=True, null=True, max_length=34, db_index=True)
     fiat_amount = models.DecimalField(blank=False, null=False, max_digits=10, decimal_places=2)
     satoshis = models.BigIntegerField(blank=True, null=True, db_index=True)
@@ -497,3 +502,30 @@ class ShopperBTCPurchase(models.Model):
 
     def expires_at_unix_time(self):
         return int(self.expires_at.strftime('%s'))
+
+    def get_shopper(self):
+        return self.shopper
+
+    def format_satoshis_amount(self):
+        return format_satoshis_with_units(self.satoshis)
+
+    def get_currency_symbol(self):
+        if self.currency_code_when_created:
+            return BFHCurrenciesList[self.currency_code_when_created]['symbol']
+        else:
+            return '$'
+
+    def get_fiat_amount_formatted(self):
+        return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,
+                self.currency_code_when_created)
+
+    def get_status(self):
+        if self.cancelled_at:
+            return 'Cancelled'
+        if self.confirmed_by_merchant_at:
+            return 'Complete'
+        else:
+            return 'Waiting on Merchant Approval'
+
+    def get_type(self):
+        return _('Bitcoin Purchase')

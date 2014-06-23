@@ -251,22 +251,3 @@ class BitcoinInfoForm(forms.Form):
             msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address
-
-
-class CoinbaseAPIForm(forms.Form):
-
-    api_key = forms.CharField(
-        label=_('API Key'),
-        required=True,
-        min_length=5,
-        max_length=256,
-        widget=forms.TextInput(),
-    )
-
-    secret_key = forms.CharField(
-        label=_('Secret Key'),
-        min_length=5,
-        max_length=50,
-        required=True,
-        widget=forms.TextInput(),
-    )

@@ -67,6 +67,21 @@ class Merchant(models.Model):
             txns.extend(forwarding_addr.btctransaction_set.filter(destination_address__isnull=True).order_by('-id'))
         return txns
 
+    def get_combined_transactions(self):
+        """
+            Get's all transactions for cash in and cash out
+
+            Sorts by added_at
+        """
+        cash_out_txns = self.get_all_forwarding_transactions()
+        cash_in_txns = self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True).all()
+
+        combined_transactions = [w for w in cash_in_txns]
+        combined_transactions.extend(cash_out_txns)
+
+        combined_transactions = sorted(combined_transactions, key=lambda x: x.added_at, reverse=True)
+        return combined_transactions
+
     def get_bitcoin_purchase_request(self):
         return self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True, confirmed_by_merchant_at__isnull=True).last()
 
@@ -101,10 +116,17 @@ class Merchant(models.Model):
     def finished_registration(self):
         return self.get_registration_percent_complete() == 100
 
-    def has_valid_coinbase_credentials(self):
+    def has_coinbase_credentials(self):
         # TODO: MAKE THIS WORK
-        return len(self.cbcredential_set.all()) > 0
+        return len(self.cbcredential_set.filter(disabled_at__isnull=True).all()) > 0
+
+    def has_valid_coinbase_credentials(self):
+        credentials = self.get_coinbase_credentials()
+        if credentials and not credentials.last_failed_at:
+            return True
+        else:
+            return False
 
     def get_coinbase_credentials(self):
         # TODO: MAKE THIS WORK
-        return self.cbcredential_set.last()
+        return self.cbcredential_set.filter(disabled_at__isnull=True).last()

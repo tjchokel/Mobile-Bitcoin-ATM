@@ -68,7 +68,7 @@
               {% endif %}
             </a>
           {% else %}
-            <a href="{% url "merchants.views.coinbase" %}">
+            <a href="{% url "coinbase.views.coinbase" %}">
               <img src="{% static "img/coinbase-logo-full.png" %}" />
               {% if merchant.has_valid_coinbase_credentials %}
                 <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>

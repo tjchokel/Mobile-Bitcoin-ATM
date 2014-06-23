@@ -21,8 +21,10 @@
   {% include "customer_dash/cash_in/_buy_bitcoin_modal.html" %}
         
       <div class="pricing">
+
+      {% if merchant.has_valid_coinbase_credentials %}
+
         <div class="col-sm-6">
-        <!-- Remove .animated .fadeInDown .first classes if you don't want item to move -->
           <div class="item">
             <div class="head">
               <h4>Buy Bitcoin <div style="color: #81D685; font-size: 42px;"><i class="fa fa-bitcoin"></i></div></h4>
@@ -49,12 +51,6 @@
               </tr>
             </tbody>
           </table>
-
-          <!-- <ul>
-            <li>1. Enter Email or Bitcoin Address</li>
-            <li>2. Pay Cash</li>
-            <li>3. Receive Bitcoin</li>
-          </ul> -->
           <a class="btn btn-primary btn-xl has-spinner" id="buy-bitcoin-button" onclick="buyBitcoinModal();">
             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
             {% trans "Buy Bitcoin" %}
@@ -63,6 +59,10 @@
         </div>
       </div>
       <div class="col-sm-6">
+
+    {% else %}
+      <div class="col-sm-6 col-sm-offset-3">
+    {% endif %}
         <div class="item">
           <div class="head">
             <h4>Sell Bitcoin <div style="color: #81D685; font-size: 42px;"><i class="fa fa-money"></i></div></h4>
@@ -90,12 +90,6 @@
               </tr>
             </tbody>
           </table>
-
-          <!-- <ul>
-            <li>1. Get Deposit Address</li>
-            <li>2. Send Bitcoin</li>
-            <li>3. Get Cash</li>
-          </ul> -->
           <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
             {% trans "Sell Bitcoin" %}
@@ -105,56 +99,5 @@
     </div>
 
 
-
-
-
-
-
-
-
-
-        <!-- <table style="width:100%; table-layout:fixed;">
-          <tr>
-            <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-bitcoin"></i></div></th>
-            <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-envelope"></i></div></th>
-            <th><div style="float:center; text-align:center; margin:0; color: #81D685; font-size: 52px;"><i class="fa fa-money"></i></div></th>
-          </tr>
-          <tr>
-            <td><p class="lead text-center">
-              1. {% trans "Send Bitcoin" %}
-               </p></td>
-            <td><p class="lead text-center">
-              2. {% trans "Wait for Confirmation" %}</p></td>
-            <td><p class="lead text-center">
-              3. {% trans "Receive Cash" %}
-            </p></td>
-
-          </tr>
-        </table>
-
-        <br /><br />
-        <div class="row">
-          {% if merchant.has_valid_coinbase_credentials %}
-            <span style="margin-left: auto; margin-right: auto; display: block;">
-              <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
-                <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                {% trans "Get Started" %}
-              </a>
-            </span>
-          {% else %}
-             <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
-              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-              {% trans "Sell Bitcoin" %}
-            </a>
-             <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="buyBitcoinModal();">
-              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-              {% trans "Buy Bitcoin" %}
-            </a>
-          {% endif %}
-        </div> -->
-
-
-
-
-      </div>
+  </div>
 </div>

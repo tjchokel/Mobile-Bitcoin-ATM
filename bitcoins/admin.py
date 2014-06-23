@@ -50,7 +50,6 @@ class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'merchant',
-        'email',
         'b58_address',
         'fiat_amount',
         'satoshis',

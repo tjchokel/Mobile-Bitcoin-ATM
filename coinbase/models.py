@@ -1,6 +1,7 @@
 from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
 
 from services.models import APICall
 
@@ -50,9 +51,14 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
+        if r.status_code != 200:
+            self.last_failed_at = now()
+        else:
+            self.last_failed_at = None
+        self.save()
+
         err_msg = 'Expected status code 200 but got %s' % r.status_code
         assert r.status_code == 200, err_msg
-
         self.last_succeded_at = now()
         self.save()
 
@@ -88,9 +94,14 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
+        if r.status_code != 200:
+            self.last_failed_at = now()
+        else:
+            self.last_failed_at = None
+        self.save()
+
         err_msg = 'Expected status code 200 but got %s' % r.status_code
         assert r.status_code == 200, err_msg
-
         self.last_succeded_at = now()
         self.save()
 
@@ -114,6 +125,12 @@ class CBCredential(models.Model):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant)
+
+        if r.status_code != 200:
+            self.last_failed_at = now()
+        else:
+            self.last_failed_at = None
+        self.save()
 
         err_msg = 'Expected status code 200 but got %s' % r.status_code
         assert r.status_code == 200, err_msg
@@ -150,6 +167,12 @@ class CBCredential(models.Model):
             api_results=r.content,
             post_params=body_to_use,
             merchant=self.merchant)
+
+        if r.status_code != 200:
+            self.last_failed_at = now()
+        else:
+            self.last_failed_at = None
+        self.save()
 
         err_msg = 'Expected status code 200 but got %s' % r.status_code
         assert r.status_code == 200, err_msg
@@ -227,6 +250,12 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
+        if r.status_code != 200:
+            self.last_failed_at = now()
+        else:
+            self.last_failed_at = None
+        self.save()
+
         err_msg = 'Expected status code 200 but got %s' % r.status_code
         assert r.status_code == 200, err_msg
 
@@ -258,6 +287,12 @@ class CBCredential(models.Model):
                 destination_address=destination_address,
                 cb_id=transaction['id'],
                 notes=notes)
+
+    def get_status(self):
+        if self.last_failed_at:
+            return _('Invalid')
+        else:
+            return _('Valid')
 
 
 class SellOrder(models.Model):

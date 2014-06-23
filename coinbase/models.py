@@ -254,7 +254,7 @@ class CBCredential(models.Model):
         post_params = 'transaction[to]=%s&transaction[amount]=%s' % (
                 dest_addr_to_use, btc_to_send)
 
-        if satoshis_to_send < btc_to_satoshis(.01):
+        if satoshis_to_send < btc_to_satoshis(.01) and not destination_email_address:
             # https://coinbase.com/api/doc/1.0/transactions/send_money.html
             # Coinbase pays transaction fees on payments greater than or equal to 0.01 BTC.
             # But for smaller amounts you may want to add your own amount."

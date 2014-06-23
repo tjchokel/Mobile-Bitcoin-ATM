@@ -3,25 +3,27 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>{% trans "Sign In" %}</h1>
+            <h3 class="pull-left">{% trans "Sign In" %}</h3>
+            <div class="clearfix"></div>
         </div>
 
-        <form class="form-horizontal" method="post" action="{% url "merchants.views.login_request" %}" >
-            {% load crispy_forms_tags %}
-            {{ form|crispy }}
-            {% csrf_token %}
-            <div class="button-wrapper">
-              <button type="submit" class="btn btn-primary btn-lg">{% trans "Sign In" %}</button>
-            </div>
-        </form>
-        <br />
+        <div class="col-md-8 col-md-offset-2">
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.login_request" %}" >
+                {% load crispy_forms_tags %}
+                {{ form|crispy }}
+                {% csrf_token %}
+                <div class="button-wrapper">
+                  <button type="submit" class="btn btn-primary btn-lg">{% trans "Sign In" %}</button>
+                </div>
+            </form>
         
-        <h3>
-        {% url 'merchants.views.register_merchant' as register_url %}
-        {% blocktrans %}To create a new account, please <a href="{{ register_url }}"> click here</a>.{% endblocktrans %}
-        </h3>
+        <hr/>
+        <p class="lead">
+            {% url 'merchants.views.register_merchant' as register_url %}
+            {% blocktrans %}To create a new account, please <a href="{{ register_url }}"> click here</a>.{% endblocktrans %}
+        </p>
+        </div>
 
-        <hr />
     </div>
 {% endblock content %}
 

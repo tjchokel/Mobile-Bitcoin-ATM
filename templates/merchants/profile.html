@@ -67,6 +67,7 @@
         </div>
       </div>
 
+      {% comment %}
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
@@ -117,6 +118,7 @@
           </span>
         </div>
       </div>
+      {% endcomment %}
 
       <div class="row">
         <div class="col-sm-12">
@@ -171,6 +173,7 @@
         }
     }
 
+    {% comment %}
     function editHoursInfo() {
         $("#hours-info-list").toggleClass("show hidden");
         $("#hours-info-edit").toggleClass("show hidden");
@@ -181,6 +184,7 @@
           edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
         }
     }
+    {% endcomment %}
 
     function editMerchantInfo() {
         $("#merchant-info-list").toggleClass("show hidden");

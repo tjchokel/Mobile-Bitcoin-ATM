@@ -12,7 +12,9 @@ from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm,
-        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm)
+        BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm)
+
+import datetime
 
 
 @render_to('login.html')
@@ -165,16 +167,43 @@ def merchant_profile(request):
     initial['zip_code'] = merchant.zip_code
     initial['country'] = merchant.country
     initial['phone_num'] = merchant.phone_num
+    website_obj = merchant.get_website()
+    if website_obj:
+        initial['website'] = website_obj.url
 
-    personal_form = OwnerInfoForm(initial=initial)
-    merchant_form = MerchantInfoForm(initial=initial)
+    # biz hours, so WET :(
+    hours_formatted = merchant.get_hours_formatted()
+    if hours_formatted.get(1):
+        initial['monday_open'] = hours_formatted.get(1)['from_time'].hour
+        initial['monday_close'] = hours_formatted.get(1)['to_time'].hour
+    if hours_formatted.get(2):
+        initial['tuesday_open'] = hours_formatted.get(2)['from_time'].hour
+        initial['tuesday_close'] = hours_formatted.get(2)['to_time'].hour
+    if hours_formatted.get(3):
+        initial['wednesday_open'] = hours_formatted.get(3)['from_time'].hour
+        initial['wednesday_close'] = hours_formatted.get(3)['to_time'].hour
+    if hours_formatted.get(4):
+        initial['thursday_open'] = hours_formatted.get(4)['from_time'].hour
+        initial['thursday_close'] = hours_formatted.get(4)['to_time'].hour
+    if hours_formatted.get(5):
+        initial['friday_open'] = hours_formatted.get(5)['from_time'].hour
+        initial['friday_close'] = hours_formatted.get(5)['to_time'].hour
+    if hours_formatted.get(6):
+        initial['saturday_open'] = hours_formatted.get(6)['from_time'].hour
+        initial['saturday_close'] = hours_formatted.get(6)['to_time'].hour
+    if hours_formatted.get(7):
+        initial['sunday_open'] = hours_formatted.get(7)['from_time'].hour
+        initial['sunday_close'] = hours_formatted.get(7)['to_time'].hour
+
     return {
         'user': user,
         'merchant': merchant,
         'transactions': transactions,
         'on_admin_page': True,
-        'personal_form': personal_form,
-        'merchant_form': merchant_form
+        'personal_form': OwnerInfoForm(initial=initial),
+        'merchant_form': MerchantInfoForm(initial=initial),
+        'hours_form': BusinessHoursForm(initial=initial),
+        'biz_hours': hours_formatted,
     }
 
 
@@ -216,6 +245,58 @@ def edit_personal_info(request):
 
 
 @login_required
+def edit_hours_info(request):
+    user = request.user
+    if request.method == 'POST':
+        form = BusinessHoursForm(data=request.POST)
+        if form.is_valid():
+
+            merchant = user.get_merchant()
+
+            monday_open = int(form.cleaned_data['monday_open'])
+            monday_close = int(form.cleaned_data['monday_close'])
+            tuesday_open = int(form.cleaned_data['tuesday_open'])
+            tuesday_close = int(form.cleaned_data['tuesday_close'])
+            wednesday_open = int(form.cleaned_data['wednesday_open'])
+            wednesday_close = int(form.cleaned_data['wednesday_close'])
+            thursday_open = int(form.cleaned_data['thursday_open'])
+            thursday_close = int(form.cleaned_data['thursday_close'])
+            friday_open = int(form.cleaned_data['friday_open'])
+            friday_close = int(form.cleaned_data['friday_close'])
+            saturday_open = int(form.cleaned_data['saturday_open'])
+            saturday_close = int(form.cleaned_data['saturday_close'])
+            sunday_open = int(form.cleaned_data['sunday_open'])
+            sunday_close = int(form.cleaned_data['sunday_close'])
+
+            hours = []
+
+            if monday_open > 0 and monday_close > 0:
+                hours.append((1, datetime.time(monday_open), datetime.time(monday_close)))
+            if tuesday_open > 0 and tuesday_close > 0:
+                hours.append((2, datetime.time(tuesday_open), datetime.time(tuesday_close)))
+            if wednesday_open > 0 and wednesday_close > 0:
+                hours.append((3, datetime.time(wednesday_open), datetime.time(wednesday_close)))
+            if thursday_open > 0 and thursday_close > 0:
+                hours.append((4, datetime.time(thursday_open), datetime.time(thursday_close)))
+            if friday_open > 0 and friday_close > 0:
+                hours.append((5, datetime.time(friday_open), datetime.time(friday_close)))
+            if saturday_open > 0 and saturday_close > 0:
+                hours.append((6, datetime.time(saturday_open), datetime.time(saturday_close)))
+            if sunday_open > 0 and sunday_close > 0:
+                hours.append((7, datetime.time(sunday_open), datetime.time(sunday_close)))
+
+            merchant.set_hours(hours)
+
+            msg = _('Your business hours have been updated')
+            messages.success(request, msg)
+            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+
+    msg = _('Your business hours have not been updated')
+    messages.warning(request, msg)
+    return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+
+
+@login_required
 def edit_merchant_info(request):
     user = request.user
     merchant = user.get_merchant()
@@ -232,6 +313,9 @@ def edit_merchant_info(request):
             merchant.zip_code = form.cleaned_data['zip_code']
             merchant.phone_num = form.cleaned_data['phone_num']
             merchant.save()
+
+            website = form.cleaned_data['website']
+            merchant.set_website(website)
 
             messages.success(request, _('Your business info has been updated'))
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))

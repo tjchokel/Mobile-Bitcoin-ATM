@@ -60,6 +60,7 @@ INSTALLED_APPS = (
     'emails',
     'phones',
     'coinbase',
+    'bstamp',
 )
 
 MIDDLEWARE_CLASSES = (

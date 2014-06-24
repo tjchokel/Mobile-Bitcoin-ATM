@@ -115,19 +115,31 @@ class Merchant(models.Model):
         return self.get_registration_percent_complete() == 100
 
     def has_coinbase_credentials(self):
-        # TODO: MAKE THIS WORK
-        return len(self.cbcredential_set.filter(disabled_at__isnull=True).all()) > 0
+        return bool(self.get_coinbase_credentials())
 
     def has_valid_coinbase_credentials(self):
         credentials = self.get_coinbase_credentials()
         if credentials and not credentials.last_failed_at:
+            # If this ever fails this logic will permanently mark it as failed
             return True
         else:
             return False
 
     def get_coinbase_credentials(self):
-        # TODO: MAKE THIS WORK
         return self.cbcredential_set.filter(disabled_at__isnull=True).last()
+
+    def get_bitstamp_credentials(self):
+        return self.bscredential_set.filter(disabled_at=None).last()
+
+    def has_bitstamp_credentials(self):
+        return bool(self.get_bitstamp_credentials())
+
+    def has_valid_bitstamp_credentials(self):
+        credentials = self.get_bitstamp_credentials()
+        if credentials and not credentials.last_failed_at:
+            # If this ever fails this logic will permanently mark it as failed
+            return True
+        return False
 
     def get_hours(self):
         return self.opentime_set.all()

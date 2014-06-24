@@ -1,6 +1,7 @@
 from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
 
 from services.models import APICall
 
@@ -48,6 +49,7 @@ class BSCredential(models.Model):
                 merchant=self.merchant)
 
             self.last_succeded_at = now()
+            self.last_failed_at = None
             self.save()
         except Exception as e:
             # Log the API call
@@ -92,6 +94,7 @@ class BSCredential(models.Model):
                 merchant=self.merchant)
 
             self.last_succeded_at = now()
+            self.last_failed_at = None
             self.save()
 
         except Exception as e:
@@ -143,6 +146,7 @@ class BSCredential(models.Model):
                 merchant=self.merchant)
 
             self.last_succeded_at = now()
+            self.last_failed_at = None
             self.save()
 
         except Exception as e:
@@ -213,6 +217,12 @@ class BSCredential(models.Model):
 
         return address
 
+    def get_status(self):
+        if self.last_failed_at:
+            return _('Invalid')
+        else:
+            return _('Valid')
+
 
 class BSBalance(models.Model):
     """ Probably just used as a log and not implemented anywhere """
@@ -264,6 +274,7 @@ class BSSendBTC(models.Model):
                 merchant=self.bs_credential.merchant)
 
             self.last_succeded_at = now()
+            self.last_failed_at = None
             self.save()
         except Exception as e:
             # Log the API Call
@@ -274,6 +285,8 @@ class BSSendBTC(models.Model):
                 post_params=None,
                 api_results=str(e),
                 merchant=self.bs_credential.merchant)
+            self.last_failed_at = now()
+            self.save()
             raise Exception(e)
 
         for withdrawal_request in withdrawal_requests:

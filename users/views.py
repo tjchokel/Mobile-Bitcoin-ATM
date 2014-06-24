@@ -9,7 +9,7 @@ from annoying.functions import get_object_or_None
 
 from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
 from shoppers.models import Shopper
-from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, ConfirmPasswordForm
+from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, BitstampBuyBitcoinForm, ConfirmPasswordForm
 
 
 @render_to('index.html')
@@ -32,20 +32,24 @@ def customer_dashboard(request):
             b58_address=request.session.get('forwarding_address'))
     buy_request = merchant.get_bitcoin_purchase_request()
 
-    buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'})
+    if merchant.has_valid_coinbase_credentials():
+        buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'})
+    else:
+        buy_form = BitstampBuyBitcoinForm()
     password_form = ConfirmPasswordForm(user=user)
     shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
     show_buy_modal = 'false'
     if request.method == 'POST':
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
-            buy_form = BuyBitcoinForm(data=request.POST)
+            if merchant.has_valid_coinbase_credentials():
+                buy_form = BuyBitcoinForm(data=request.POST)
+            else:
+                buy_form = BitstampBuyBitcoinForm(data=request.POST)
             if buy_form.is_valid():
                 amount = buy_form.cleaned_data['amount']
-                email_or_btc_address = buy_form.cleaned_data['email_or_btc_address']
                 email = buy_form.cleaned_data['email']
                 btc_address = buy_form.cleaned_data['btc_address']
-                
                 # Create shopper object
                 shopper = Shopper.objects.create(
                     email=email,

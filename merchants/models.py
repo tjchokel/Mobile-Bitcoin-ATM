@@ -106,13 +106,23 @@ class Merchant(models.Model):
             percent_complete += 10
         if self.phone_num:
             percent_complete += 10
-        if self.has_valid_coinbase_credentials():
+        if self.has_valid_api_credentials():
             percent_complete += 10
 
         return percent_complete
 
     def finished_registration(self):
         return self.get_registration_percent_complete() == 100
+
+    def has_valid_api_credentials(self):
+        return self.has_valid_coinbase_credentials() or self.has_valid_bitstamp_credentials()
+
+    def get_valid_api_credentials(self):
+        if self.has_valid_coinbase_credentials():
+            return self.get_coinbase_credentials()
+        if self.has_valid_bitstamp_credentials():
+            return self.get_bitstamp_credentials()
+        return None
 
     def has_coinbase_credentials(self):
         return bool(self.get_coinbase_credentials())

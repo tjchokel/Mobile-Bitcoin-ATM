@@ -3,17 +3,19 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>{% trans "Register Account" %}</h1>
+          <h3 class="pull-left">{% trans "Register Account" %}</h3>
+          <div class="clearfix"></div>
         </div>
-
-        <form class="form-horizontal" method="post" action="{% url "merchants.views.register_merchant" %}" >
-            {% load crispy_forms_tags %}
-            {{ form|crispy }}
-            {% csrf_token %}
-            <div class="button-wrapper">
-              <button type="submit" class="btn btn-primary btn-lg">{% trans "Create Free Account" %}</button>
-            </div>
-        </form>
+        <div class="col-md-8 col-md-offset-2">
+             <form class="form-horizontal" method="post" action="{% url "merchants.views.register_merchant" %}" >
+                 {% load crispy_forms_tags %}
+                 {{ form|crispy }}
+                 {% csrf_token %}
+                 <div class="button-wrapper">
+                   <button type="submit" class="btn btn-primary btn-lg">{% trans "Create Free Account" %}</button>
+                 </div>
+             </form>
+          </div>
     </div>
 {% endblock content %}
 

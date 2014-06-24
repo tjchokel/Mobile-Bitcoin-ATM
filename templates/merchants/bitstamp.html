@@ -5,18 +5,18 @@
 {% block content %}
 <div class="container">
     <!-- Profile Menu -->
-    {% with current_tab='coinbase' %}
+    {% with current_tab='bitstamp' %}
       {% include "merchants/breadcrumb.html" %}
     {% endwith %}
-  <div class="col-sm-12 col-xs-12 col-md-9">
+  <div class="col-sm-8 col-md-9">
 
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Coinbase Api" %}</a>
+            <a style="color:#515151;" href="#">{% trans "Bitstamp Api" %}</a>
           </h4>
-          {% if merchant.has_coinbase_credentials %}
-            {% with api='coinbase' %}
+          {% if merchant.has_bitstamp_credentials %}
+            {% with api='bitstamp' %}
               {% include "merchants/_delete_api_credentials_modal.html" %}
             {% endwith %}
             <table class="table table-condensed" style="border-collapse:collapse;">
@@ -31,9 +31,9 @@
               </thead>
               <tbody>
                 <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
-                  <td>{{cb_credential.created_at|naturaltime}}</td>
-                  <td>{{cb_credential.get_status|format_status_string}}</td>
-                  <td>{{cb_credential.api_key|obscure_except_ending}}</td>
+                  <td>{{credential.created_at|naturaltime}}</td>
+                  <td>{{credential.get_status|format_status_string}}</td>
+                  <td>{{credential.api_key|obscure_except_ending}}</td>
                   <td style="font-size: 22px;">
 
                     <a href="javascript: refreshCredentials();" id='refresh-button'><i class="fa fa-refresh"></i></a>
@@ -60,7 +60,7 @@
 
           {% else %}
             <p>
-              {% trans "Enter your Coinbase API credentials here to take advantage of our partnership" %}
+              {% trans "Enter your Bitstamp API credentials here to take advantage of our partnership" %}
               <!-- Button trigger modal -->
               (<a href="#" data-toggle="collapse" data-target="#moreinfo">{% trans "learn more" %}</a>).
             </p>
@@ -70,7 +70,7 @@
               </p>
             </div>
               
-            <form class="form-horizontal" method="post" action="{% url "coinbase.views.coinbase" %}" >
+            <form class="form-horizontal" method="post" action="{% url "bstamp.views.bitstamp" %}" >
               {% load crispy_forms_tags %}
               {{ form|crispy }}
               {% csrf_token %}
@@ -93,7 +93,7 @@
       $('#refresh-button').addClass("hidden");
       $.ajax({
           type: 'get',
-          url: '/refresh-cb-credentials/',
+          url: '/refresh-bs-credentials/',
           success: function (data) {
             console.log('SUCESS');
             location.reload(true);
@@ -120,7 +120,7 @@
       $('#disable-button').addClass("hidden");
       $.ajax({
           type: 'get',
-          url: '/disable-cb-credentials/',
+          url: '/disable-bs-credentials/',
           success: function (data) {
             console.log('SUCESS');
             location.reload(true);

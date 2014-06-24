@@ -500,7 +500,7 @@ class ShopperBTCPurchase(models.Model):
 
         self.confirmed_by_merchant_at = now()
         self.save()
-        credentials = self.merchant.get_coinbase_credentials()
+        credentials = self.merchant.get_valid_api_credentials()
         if self.b58_address:
             credentials.send_btc(self.satoshis, self.b58_address)
         else:

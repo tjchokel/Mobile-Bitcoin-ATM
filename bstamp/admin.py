@@ -8,11 +8,11 @@ class BSCredentialAdmin(admin.ModelAdmin):
             'id',
             'created_at',
             'merchant',
-            'username',
-            'api_key',
-            'disabled_at',
             'last_succeded_at',
             'last_failed_at',
+            'disabled_at',
+            'username',
+            'api_key',
             )
     raw_id_fields = ('merchant', )
 

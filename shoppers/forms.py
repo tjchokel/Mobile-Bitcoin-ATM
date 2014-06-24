@@ -38,7 +38,7 @@ class ShopperInformationForm(forms.Form):
 
 class BuyBitcoinForm(forms.Form):
     amount = forms.DecimalField(
-            label=_('Fiat Amount'),
+            label=_('Cash Amount'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)],
             help_text=_('The amount of cash you will be handing to the merchant'),
@@ -75,6 +75,38 @@ class BuyBitcoinForm(forms.Form):
             raise forms.ValidationError(msg)
         if email_or_btc_address == '2' and not is_valid_btc_address(address):
             msg = "Please enter a valid bitcoin address"
+            raise forms.ValidationError(msg)
+        return address
+
+
+class BitstampBuyBitcoinForm(forms.Form):
+    amount = forms.DecimalField(
+            label=_('Cash Amount'),
+            required=True,
+            validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)],
+            help_text=_('The amount of cash you will be handing to the merchant'),
+            widget=forms.TextInput(attrs={'class': 'needs-input-group'}),
+    )
+
+    email = forms.EmailField(
+        label=_('Email'),
+        required=True,
+        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
+    )
+
+    btc_address = forms.CharField(
+            label=_('Bitcoin Deposit Address'),
+            required=True,
+            min_length=27,
+            max_length=34,
+            help_text=_('The wallet address where you want your bitcoin sent'),
+            widget=forms.TextInput(),
+    )
+
+    def clean_btc_address(self):
+        address = self.cleaned_data.get('btc_address')
+        if not is_valid_btc_address(address):
+            msg = "Sorry, that's not a valid bitcoin address"
             raise forms.ValidationError(msg)
         return address
 

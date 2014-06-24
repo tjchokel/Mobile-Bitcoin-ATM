@@ -241,6 +241,9 @@
               $("#btc-amt-loader").addClass("hidden");
               $("#div_id_email_or_btc_address").removeClass("hidden");
               $("#div_id_email").removeClass("hidden");
+              if (!$('#div_id_email_or_btc_address').lenth){
+                $("#div_id_btc_address").removeClass("hidden");
+              }
               var entered_amount = $('#id_amount').val();
               var final_btc = parseFloat(entered_amount) / data['sell_amount'];
               
@@ -280,6 +283,10 @@
       if ($('input[name=email_or_btc_address]:checked').val() == 1) {
         $("#div_id_btc_address").addClass("hidden");
       }
+      if (!$('#div_id_email_or_btc_address').length){
+        $("#div_id_btc_address").removeClass("hidden");
+      }
+      if ($('#div_id_email_or_btc_address') )
       var currency_code = "{{merchant.currency_code}}";
       $( "#div_id_amount .controls" ).prepend( '<span class="input-group-addon needs-input-group">'+currency_code+'</span>' );
       $( ".needs-input-group" ).wrapAll( "<div class='input-group' />");

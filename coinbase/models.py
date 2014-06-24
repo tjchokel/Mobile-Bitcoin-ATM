@@ -318,6 +318,54 @@ class CBCredential(models.Model):
                 })
         return SendBTC.objects.create(**send_btc_dict)
 
+    def get_new_receiving_address(self, set_as_merchant_address=False):
+        """
+        Generates a new receiving address
+        """
+        ADDRESS_URL = 'https://coinbase.com/api/v1/account/generate_receive_address'
+
+        post_params = 'address[label]=CloseCoin %s' % now().strftime("%Y-%m-%d")
+
+        r = get_cb_request(
+                url=ADDRESS_URL,
+                api_key=self.api_key,
+                api_secret=self.api_secret,
+                body=post_params,
+                )
+
+        # Log the API call
+        APICall.objects.create(
+            api_name=APICall.COINBASE_NEW_ADDRESS,
+            url_hit=ADDRESS_URL,
+            response_code=r.status_code,
+            post_params=post_params,
+            api_results=r.content,
+            merchant=self.merchant)
+
+        if r.status_code == 200:
+            self.last_failed_at = None
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
+
+        resp_json = json.loads(r.content)
+
+        assert resp_json['success'] is True, resp_json
+
+        address = resp_json['address']
+
+        msg = '%s is not a valid bitcoin address' % address
+        assert is_valid_btc_address(address), msg
+
+        if set_as_merchant_address:
+            self.merchant.set_destination_address(address)
+
+        return address
+
     def get_status(self):
         if self.last_failed_at:
             return _('Invalid')

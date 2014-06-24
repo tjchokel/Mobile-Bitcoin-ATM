@@ -172,11 +172,57 @@ class BSCredential(models.Model):
                 destination_address=destination_address,
                 )
 
+    def get_receiving_address(self, set_as_merchant_address=False):
+        """
+        Gets current receiving address.
+        There is no way to generate a new one via API (can be done manually)
+        """
+        ADDRESS_URL = 'https://www.bitstamp.net/api/bitcoin_deposit_address/'
+        trading_obj = self.get_trading_obj()
+
+        try:
+            address = trading_obj.bitcoin_deposit_address()
+
+            msg = '%s is not a valid bitcoin address' % address
+            assert is_valid_btc_address(address), msg
+
+            # Log the API call
+            APICall.objects.create(
+                api_name=APICall.BITSTAMP_BTC_ADDRESS,
+                url_hit=ADDRESS_URL,
+                response_code=200,
+                post_params=None,  # not accurate
+                api_results=address,
+                merchant=self.merchant)
+
+            self.last_succeded_at = now()
+            self.save()
+        except Exception as e:
+            # Log the API call
+            APICall.objects.create(
+                api_name=APICall.BITSTAMP_BTC_ADDRESS,
+                url_hit=ADDRESS_URL,
+                response_code=0,  # this is not accurate
+                post_params=None,  # not accurate
+                api_results=str(e),
+                merchant=self.merchant)
+
+            self.last_failed_at = now()
+            self.save()
+
+            raise Exception(e)
+
+        if set_as_merchant_address:
+            self.merchant.set_destination_address(address)
+
+        return address
+
     def get_status(self):
         if self.last_failed_at:
             return _('Invalid')
         else:
             return _('Valid')
+
 
 class BSBalance(models.Model):
     """ Probably just used as a log and not implemented anywhere """

@@ -130,7 +130,6 @@ class Merchant(models.Model):
     def has_valid_coinbase_credentials(self):
         credentials = self.get_coinbase_credentials()
         if credentials and not credentials.last_failed_at:
-            # If this ever fails this logic will permanently mark it as failed
             return True
         else:
             return False
@@ -147,7 +146,6 @@ class Merchant(models.Model):
     def has_valid_bitstamp_credentials(self):
         credentials = self.get_bitstamp_credentials()
         if credentials and not credentials.last_failed_at:
-            # If this ever fails this logic will permanently mark it as failed
             return True
         return False
 

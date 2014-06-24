@@ -4,7 +4,15 @@ from coinbase.models import CBCredential, SellOrder, CurrentBalance, SendBTC
 
 class CBCredentialAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'created_at', 'merchant', 'api_key', 'disabled_at', )
+    list_display = (
+            'id',
+            'created_at',
+            'merchant',
+            'last_succeded_at',
+            'last_failed_at',
+            'disabled_at',
+            'api_key',
+            )
     raw_id_fields = ('merchant', )
 
     class Meta:

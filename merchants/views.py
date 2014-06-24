@@ -11,9 +11,10 @@ from annoying.functions import get_object_or_None
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
 
-from merchants.forms import (LoginForm, MerchantRegistrationForm,
+from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistrationForm,
         BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm)
-
+from coinbase.models import CBCredential
+from bstamp.models import BSCredential
 import datetime
 
 
@@ -84,8 +85,8 @@ def register_merchant(request):
             business_name = form.cleaned_data['business_name']
             country = form.cleaned_data['country']
             currency_code = form.cleaned_data['currency_code']
-            btc_address = form.cleaned_data['btc_address']
-            basis_points_markup = form.cleaned_data['btc_markup']
+            # btc_address = form.cleaned_data['btc_address']
+            # basis_points_markup = form.cleaned_data['btc_markup']
 
             # create user
             user = AuthUser.objects.create_user(
@@ -101,9 +102,9 @@ def register_merchant(request):
                     business_name=business_name,
                     country=country,
                     currency_code=currency_code,
-                    basis_points_markup=basis_points_markup * 100,
+                    # basis_points_markup=basis_points_markup * 100,
             )
-            merchant.set_destination_address(btc_address)
+            # merchant.set_destination_address(btc_address)
 
             # login user
             user_to_login = authenticate(username=email, password=password)
@@ -112,7 +113,7 @@ def register_merchant(request):
             # Log the login
             LoggedLogin.record_login(request)
 
-            return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+            return HttpResponseRedirect(reverse_lazy('register_bitcoin'))
 
         else:
             form_valid = False
@@ -124,6 +125,55 @@ def register_merchant(request):
             form = MerchantRegistrationForm(AuthUser=AuthUser, initial=initial)
 
     return {'form': form, 'user': user, 'form_valid': form_valid}
+
+
+@render_to('merchants/register_bitcoin.html')
+def register_bitcoin(request):
+    user = request.user
+    merchant = user.get_merchant()
+    if not merchant:
+        return HttpResponseRedirect(reverse_lazy('register_merchant'))
+    initial = {
+            'btc_markup': 2.0,
+            'exchange_choice': 1,
+    }
+    form = BitcoinRegistrationForm(initial=initial)
+    if request.method == 'POST':
+        form = BitcoinRegistrationForm(data=request.POST)
+        if form.is_valid():
+            exchange_choice = form.cleaned_data['exchange_choice']
+            cb_api_key = form.cleaned_data['cb_api_key']
+            cb_secret_key = form.cleaned_data['cb_secret_key']
+            bs_username = form.cleaned_data['bs_username']
+            bs_api_key = form.cleaned_data['bs_api_key']
+            bs_secret_key = form.cleaned_data['bs_secret_key']
+            btc_address = form.cleaned_data['btc_address']
+            basis_points_markup = form.cleaned_data['btc_markup']
+            merchant.basis_points_markup = basis_points_markup * 100
+            if exchange_choice == '3':
+                merchant.set_destination_address(btc_address)
+                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+            else:
+                if exchange_choice == '1':
+                    credentials = CBCredential.objects.create(
+                        merchant=merchant,
+                        api_key=cb_api_key,
+                        api_secret=cb_secret_key
+                    )
+                else:
+                    credentials = BSCredential.objects.create(
+                        merchant=merchant,
+                        api_key=bs_api_key,
+                        api_secret=bs_secret_key,
+                        username=bs_username
+                    )
+                try:
+                    balance = credentials.get_balance()
+                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                except:
+                    messages.warning(request, _('Your API credentials are not valid. Please try again.'))
+
+    return {'form': form, 'user': user}
 
 
 @login_required

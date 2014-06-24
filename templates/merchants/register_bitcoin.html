@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+          <h3 class="pull-left">{% trans "Bitcoin Settings" %}</h3>
+          <div class="clearfix"></div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+             <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
+                 {% load crispy_forms_tags %}
+                 {{ form|crispy }}
+                 {% csrf_token %}
+                 <div class="button-wrapper">
+                   <button type="submit" class="btn btn-primary btn-lg">{% trans "Complete Registration" %}</button>
+                 </div>
+             </form>
+          </div>
+    </div>
+{% endblock content %}
+
+
+{% block extra_js %}
+
+     <script>
+          $("#id_exchange_choice_1, #id_exchange_choice_2, #id_exchange_choice_3").change(function(){
+               if ($('input[name=exchange_choice]:checked').val() == 1) {
+                    $("#div_id_cb_api_key").removeClass("hidden");
+                    $("#div_id_cb_secret_key").removeClass("hidden");
+
+                    $("#div_id_bs_api_key").addClass("hidden");
+                    $("#div_id_bs_secret_key").addClass("hidden");
+                    $("#div_id_bs_username").addClass("hidden");
+                    
+                    $("#div_id_btc_address").addClass("hidden");
+               }else if ($('input[name=exchange_choice]:checked').val() == 2){
+                    $("#div_id_cb_api_key").addClass("hidden");
+                    $("#div_id_cb_secret_key").addClass("hidden");
+
+                    $("#div_id_bs_api_key").removeClass("hidden");
+                    $("#div_id_bs_secret_key").removeClass("hidden");
+                    $("#div_id_bs_username").removeClass("hidden");
+                    
+                    $("#div_id_btc_address").addClass("hidden");
+               }else if ($('input[name=exchange_choice]:checked').val() == 3){
+                    $("#div_id_cb_api_key").addClass("hidden");
+                    $("#div_id_cb_secret_key").addClass("hidden");
+
+                    $("#div_id_bs_api_key").addClass("hidden");
+                    $("#div_id_bs_secret_key").addClass("hidden");
+                    $("#div_id_bs_username").addClass("hidden");
+                    
+                    $("#div_id_btc_address").removeClass("hidden");
+               }
+          });
+
+
+      $(document).ready(function(){
+          var required_asterisk = '<span class="asteriskField">*</span>';
+          $('label:not(.requiredField):not(.radio)').append(required_asterisk); 
+          if ($('input[name=exchange_choice]:checked').val() == 1) {
+               $("#div_id_bs_api_key").addClass("hidden");
+               $("#div_id_bs_secret_key").addClass("hidden");
+               $("#div_id_bs_username").addClass("hidden");
+               $("#div_id_btc_address").addClass("hidden");
+          }else if ($('input[name=exchange_choice]:checked').val() == 2) {
+               $("#div_id_cb_api_key").addClass("hidden");
+               $("#div_id_cb_secret_key").addClass("hidden");
+               $("#div_id_btc_address").addClass("hidden");
+          }else if ($('input[name=exchange_choice]:checked').val() == 3) {
+               $("#div_id_cb_api_key").addClass("hidden");
+               $("#div_id_cb_secret_key").addClass("hidden");
+               $("#div_id_bs_secret_key").addClass("hidden");
+               $("#div_id_bs_username").addClass("hidden");
+               $("#div_id_btc_address").addClass("hidden");
+          }
+      });
+     </script>
+
+{% endblock %}

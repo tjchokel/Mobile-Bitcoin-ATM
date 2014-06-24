@@ -24,9 +24,9 @@ def home(request):
 @render_to('customer_dash/main.html')
 def customer_dashboard(request):
     user = request.user
-    if not user.get_merchant():
-        return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
+    if not merchant:
+        return HttpResponseRedirect(reverse_lazy('register_merchant'))
     transactions, shopper = None, None
     forwarding_address_obj = get_object_or_None(ForwardingAddress,
             b58_address=request.session.get('forwarding_address'))

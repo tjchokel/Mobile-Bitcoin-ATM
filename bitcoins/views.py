@@ -49,11 +49,11 @@ def get_bitcoin_price(request):
     markup_fee = fiat_btc * basis_points_markup / 10000.00
     buy_fiat_btc = fiat_btc + markup_fee
     sell_fiat_btc = fiat_btc - markup_fee
-    
+
     buy_price_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:,.2f}'.format(buy_fiat_btc))
     sell_price_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:,.2f}'.format(sell_fiat_btc))
     no_markup_price_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:,.2f}'.format(fiat_btc))
-    
+
     percent_markup = basis_points_markup / 100.00
     json_response = json.dumps({
                 "sell_amount": sell_fiat_btc,

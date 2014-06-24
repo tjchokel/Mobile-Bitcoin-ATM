@@ -63,34 +63,12 @@ class MerchantRegistrationForm(forms.Form):
         required=True,
         widget=forms.Select(),
     )
-    btc_address = forms.CharField(
-            label=_('Bitcoin Deposit Address'),
-            required=True,
-            min_length=27,
-            max_length=34,
-            help_text=_('The wallet address where you want your bitcoin sent'),
-            widget=forms.TextInput(),
-    )
-    btc_markup = forms.DecimalField(
-            label=_('Percent Markup'),
-            required=True,
-            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text=_('The percent you want to charge above the market rate'),
-            widget=forms.TextInput(),
-    )
 
     def __init__(self, AuthUser, *args, **kwargs):
         self.AuthUser = AuthUser
         super(MerchantRegistrationForm, self).__init__(*args, **kwargs)
         if kwargs and 'initial' in kwargs and 'currency_code' in kwargs['initial']:
             self.fields['currency_code'].widget.attrs['data-currency'] = kwargs['initial']['currency_code']
-
-    def clean_btc_address(self):
-        address = self.cleaned_data.get('btc_address')
-        if not is_valid_btc_address(address):
-            msg = _("Sorry, that's not a valid bitcoin address")
-            raise forms.ValidationError(msg)
-        return address
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -105,6 +83,124 @@ class MerchantRegistrationForm(forms.Form):
             msg = _('Sorry, your email address must be less than 31 characters')
             raise forms.ValidationError(msg)
         return email
+
+
+class BitcoinRegistrationForm(forms.Form):
+
+    exchange_choice = forms.ChoiceField(
+        label=_('Who Manages Your Bitcoin Address'),
+        required=True,
+        widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
+        choices=(('1', 'Coinbase.com',), ('2', 'Bitstamp.net',), ('3', _('Self-Managed Address (cannot sell bitcoin)'))),
+    )
+
+    cb_api_key = forms.CharField(
+        label=_('Coinbase API Key'),
+        required=False,
+        min_length=5,
+        max_length=256,
+        widget=forms.TextInput(),
+    )
+
+    cb_secret_key = forms.CharField(
+        label=_('Coinbase Secret Key'),
+        min_length=5,
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(),
+    )
+
+    bs_username = forms.CharField(
+        label=_('Bitstamp Username'),
+        required=False,
+        min_length=5,
+        max_length=256,
+        widget=forms.TextInput(),
+    )
+
+    bs_api_key = forms.CharField(
+        label=_('Bitstamp API Key'),
+        required=False,
+        min_length=5,
+        max_length=256,
+        widget=forms.TextInput(),
+    )
+
+    bs_secret_key = forms.CharField(
+        label=_('Bitstamp Secret Key'),
+        min_length=5,
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(),
+    )
+
+    btc_address = forms.CharField(
+            label=_('Bitcoin Deposit Address'),
+            required=False,
+            min_length=27,
+            max_length=34,
+            help_text=_('The wallet address where you want your bitcoin sent'),
+            widget=forms.TextInput(),
+    )
+
+    btc_markup = forms.DecimalField(
+            label=_('Percent Markup'),
+            required=True,
+            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+            help_text=_('The percent you want to charge above the market rate'),
+            widget=forms.TextInput(),
+    )
+
+    def clean_cb_api_key(self):
+        exchange_choice = self.cleaned_data.get('exchange_choice')
+        cb_api_key = self.cleaned_data.get('cb_api_key')
+        if exchange_choice == '1' and not cb_api_key:
+            msg = _('Please enter your Coinbase API key')
+            raise forms.ValidationError(msg)
+        return cb_api_key
+
+    def clean_cb_secret_key(self):
+        exchange_choice = self.cleaned_data.get('exchange_choice')
+        cb_secret_key = self.cleaned_data.get('cb_secret_key')
+        if exchange_choice == '1' and not cb_secret_key:
+            msg = _('Please enter your Coinbase secret key')
+            raise forms.ValidationError(msg)
+        return cb_secret_key
+
+    def clean_bs_username(self):
+        exchange_choice = self.cleaned_data.get('exchange_choice')
+        bs_username = self.cleaned_data.get('bs_username')
+        if exchange_choice == '2' and not bs_username:
+            msg = _('Please enter your Bitstamp username')
+            raise forms.ValidationError(msg)
+        return bs_username
+
+    def clean_bs_api_key(self):
+        exchange_choice = self.cleaned_data.get('exchange_choice')
+        bs_api_key = self.cleaned_data.get('bs_api_key')
+        if exchange_choice == '2' and not bs_api_key:
+            msg = _('Please enter your Bitstamp API key')
+            raise forms.ValidationError(msg)
+        return bs_api_key
+
+    def clean_bs_secret_key(self):
+        exchange_choice = self.cleaned_data.get('exchange_choice')
+        bs_secret_key = self.cleaned_data.get('bs_secret_key')
+        if exchange_choice == '2' and not bs_secret_key:
+            msg = _('Please enter your Bitstamp Secret Key')
+            raise forms.ValidationError(msg)
+        return bs_secret_key
+
+    def clean_btc_address(self):
+        address = self.cleaned_data.get('btc_address')
+        exchange_choice = self.cleaned_data.get('exchange_choice')
+        if address and not is_valid_btc_address(address):
+            msg = "Sorry, that's not a valid bitcoin address"
+            raise forms.ValidationError(msg)
+        if exchange_choice == '3' and not is_valid_btc_address(address):
+            msg = "Please enter a valid bitcoin address"
+            raise forms.ValidationError(msg)
+        return address
 
 
 class AccountRegistrationForm(forms.Form):

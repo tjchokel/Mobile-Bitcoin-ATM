@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class BitstampAPIForm(forms.Form):
 
-    secret_key = forms.CharField(
+    username = forms.CharField(
         label=_('Username'),
         min_length=4,
         max_length=50,

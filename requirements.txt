@@ -13,7 +13,7 @@ gnureadline==6.3.3
 gunicorn==18.0
 ipython==2.1.0
 jsonfield==0.9.20
-newrelic==2.20.0.17
+newrelic==2.22.0.19
 phonenumbers==6.1.0
 plivo==0.9.6
 psycopg2==2.5.3
@@ -21,6 +21,7 @@ pycrypto==2.6.1
 pystache==0.5.4
 python-dateutil==2.2
 python-postmark==0.4.1
+raven==5.0.0
 requests==2.3.0
 six==1.7.2
 sqlparse==0.1.11

@@ -31,13 +31,14 @@ else:
 
 ALLOWED_HOSTS = (
     'www.closecoin.com',
+    '.closecoin.com',
     'closecoin.herokuapp.com',
     'bitcashstaging.herokuapp.com',
     '127.0.0.1',
     )
 
 ADMINS = (
-    ('Michael Flaxman', 'michael@coinsafe.com'),
+    ('Michael Flaxman', 'michael@closecoin.com'),
     ('Tom Chokel', 'tom@coinsafe.com'),
 )
 
@@ -190,38 +191,50 @@ assert PLIVO_AUTH_ID, 'Must have plivo API access'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/app/'
 
-# https://github.com/etianen/django-herokuapp#outputting-logs-to-heroku-logplex
+CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']
+
+# http://scanova.io/blog/engineering/2014/05/21/error-logging-in-javascript-and-python-using-sentry/
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
     },
-    'loggers': {
-        'django.request': {
-            'handlers': ['console'],
-            # mail_admins intentionally disabled
-            # was causing request.META (with API credentials!) to be sent via email
-            # re-enable here if Sentry isn't working and you can solve this problem
-            'level': 'ERROR',
-            'propagate': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
     },
     'handlers': {
-        'mail_admins': {
+        'sentry': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
         },
-        "console": {
-            "level": "INFO",
-            "class": "logging.StreamHandler",
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
         },
     },
 }
-CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']
 
 # Keep this at the end
 if DEBUG:

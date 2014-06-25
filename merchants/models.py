@@ -33,7 +33,9 @@ class Merchant(models.Model):
         destination_addresses = self.get_active_dest_addresses()
         if destination_addresses:
             return destination_addresses[0]
-        return None
+        else:
+            address = DestinationAddress.create_address_from_api_creds(self)
+            return address
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
@@ -200,6 +202,9 @@ class Merchant(models.Model):
             if website_to_set:
                 # Create (set) new website
                 MerchantWebsite.objects.create(merchant=self, url=website_to_set)
+
+    def has_finished_registration(self):
+        return self.has_destination_address()
 
 
 class OpenTime(models.Model):

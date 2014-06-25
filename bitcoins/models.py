@@ -67,6 +67,19 @@ class DestinationAddress(models.Model):
 
         return forwarding_address
 
+    @classmethod
+    def create_address_from_api_creds(cls, merchant):
+        address_object = None
+        if merchant.has_valid_coinbase_credentials():
+            credentials = merchant.get_coinbase_credentials()
+            address = credentials.get_new_receiving_address(True)
+            address_object = DestinationAddress.objects.get(b58_address=address)
+        elif merchant.has_valid_bitstamp_credentials():
+            credentials = merchant.get_bitstamp_credentials()
+            address = credentials.get_receiving_address(True)
+            address_object = DestinationAddress.objects.get(b58_address=address)
+        return address_object
+
 
 class ForwardingAddress(models.Model):
     """

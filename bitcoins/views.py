@@ -48,6 +48,7 @@ def get_bitcoin_price(request):
     markup_fee = fiat_btc * basis_points_markup / 10000.00
     buy_price = fiat_btc + markup_fee
     sell_price = fiat_btc - markup_fee
+
     percent_markup = basis_points_markup / 100.00
 
     json_response = json.dumps({

@@ -11,7 +11,11 @@ urlpatterns = patterns('',
     url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
     url(r'^simulate-deposit/$', 'users.views.simulate_deposit_detected', name='simulate_deposit_detected'),
 
+    url(r'^register/$', 'merchants.views.register_router',
+        name='register_router'),
     url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),
+    url(r'^register-bitcoin/$', 'merchants.views.register_bitcoin', name='register_bitcoin'),
+
 
     # Merchant Settings
     url(r'^merchant-settings/$', 'merchants.views.merchant_settings', name='merchant_settings'),

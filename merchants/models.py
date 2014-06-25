@@ -33,7 +33,9 @@ class Merchant(models.Model):
         destination_addresses = self.get_active_dest_addresses()
         if destination_addresses:
             return destination_addresses[0]
-        return None
+        else:
+            address = DestinationAddress.create_address_from_api_creds(self)
+            return address
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
@@ -116,13 +118,18 @@ class Merchant(models.Model):
         return self.get_registration_percent_complete() == 100
 
     def has_valid_api_credentials(self):
-        return self.has_valid_coinbase_credentials() or self.has_valid_bitstamp_credentials()
+        cb = self.has_valid_coinbase_credentials()
+        bs = self.has_valid_bitstamp_credentials()
+        bci = self.has_valid_blockchain_credentials()
+        return any([cb, bs, bci])
 
     def get_valid_api_credentials(self):
         if self.has_valid_coinbase_credentials():
             return self.get_coinbase_credentials()
-        if self.has_valid_bitstamp_credentials():
+        elif self.has_valid_bitstamp_credentials():
             return self.get_bitstamp_credentials()
+        elif self.has_valid_blockchain_credentials():
+            return self.get_blockchain_credentials()
         return None
 
     def has_coinbase_credentials(self):
@@ -136,10 +143,22 @@ class Merchant(models.Model):
             return False
 
     def get_coinbase_credentials(self):
-        return self.cbcredential_set.filter(disabled_at__isnull=True).last()
+        return self.cbcredential_set.filter(disabled_at=None).last()
 
     def get_bitstamp_credentials(self):
         return self.bscredential_set.filter(disabled_at=None).last()
+
+    def get_blockchain_credentials(self):
+        return self.bcicredential_set.filter(disabled_at=None).last()
+
+    def has_blockchain_credentials(self):
+        return bool(self.get_blockchain_credentials())
+
+    def has_valid_blockchain_credentials(self):
+        credentials = self.get_blockchain_credentials()
+        if credentials and not credentials.last_failed_at:
+            return True
+        return False
 
     def has_bitstamp_credentials(self):
         return bool(self.get_bitstamp_credentials())
@@ -200,6 +219,9 @@ class Merchant(models.Model):
             if website_to_set:
                 # Create (set) new website
                 MerchantWebsite.objects.create(merchant=self, url=website_to_set)
+
+    def has_finished_registration(self):
+        return self.has_destination_address()
 
 
 class OpenTime(models.Model):

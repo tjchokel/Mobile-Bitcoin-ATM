@@ -160,7 +160,7 @@
 
     <!-- Foooter
     ================== -->
-    {% if user.is_authenticated and user.get_merchant %}
+    {% if user.is_authenticated and user.get_merchant and user.get_merchant.has_finished_registration %}
       <div class="navbar navbar-inverse navbar-fixed-bottom" id="footer" style="background: white">
         <div class="container">
 

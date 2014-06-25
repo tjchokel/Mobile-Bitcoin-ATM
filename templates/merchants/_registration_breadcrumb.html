@@ -1,0 +1,14 @@
+{% load i18n %}
+<ol class="breadcrumb" align="center">
+  {% if current_step == 0 %}
+    <li>{% trans "Profile" %}</li>
+  {% else %}
+    <li class="active">{% trans "Profile" %}</li>
+  {% endif %}
+
+  {% if current_step == 1 %}
+    <li>{% trans "Bitcoin Settings" %}</li>
+  {% else %}
+    <li class="active">{% trans "Bitcoin Settings" %}</li>
+  {% endif %}
+</ol>

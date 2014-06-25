@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'phones',
     'coinbase',
     'bstamp',
+    'bcwallet',
 )
 
 MIDDLEWARE_CLASSES = (

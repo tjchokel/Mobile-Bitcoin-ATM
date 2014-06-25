@@ -33,6 +33,10 @@ class APICall(models.Model):
     BITSTAMP_WITHDRAWALS = 'BSW'
     BITSTAMP_BTC_ADDRESS = 'BSA'
 
+    BLOCKCHAIN_WALLET_BALANCE = 'BWB'
+    BLOCKCHAIN_WALLET_SEND_BTC = 'BWS'
+    BLOCKCHAIN_WALLET_NEW_ADDRESS = 'BWN'
+
     API_NAME_CHOICES = (
             (BCI_RECEIVE_PAYMENTS, 'blockchain.info receive payments API'),
             (BCI_TXN_FROM_HASH, 'blockchain.info txn data from hash'),
@@ -49,6 +53,9 @@ class APICall(models.Model):
             (BITSTAMP_SEND_BTC, 'Bitstamp Send BTC'),
             (BITSTAMP_WITHDRAWALS, 'Bitstamp Withdrawals'),
             (BITSTAMP_BTC_ADDRESS, 'Bitstamp BTC Address'),
+            (BLOCKCHAIN_WALLET_BALANCE, 'Blockchain Wallet Balance'),
+            (BLOCKCHAIN_WALLET_SEND_BTC, 'Blockchain Wallet Send BTC'),
+            (BLOCKCHAIN_WALLET_NEW_ADDRESS, 'Blockchain Wallet New BTC Address'),
             )
 
     # Main fields

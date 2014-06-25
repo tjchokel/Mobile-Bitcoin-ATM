@@ -91,7 +91,6 @@ class BitcoinRegistrationForm(forms.Form):
         label=_('Who Manages Your Bitcoin Address'),
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
-        # choices=(('1', 'Coinbase.com',), ('2', 'Bitstamp.net',), ('3', _('Self-Managed Address (cannot sell bitcoin)'))),
         choices=(('coinbase', 'Coinbase.com',), ('bitstamp', 'Bitstamp.net',),('blockchain', _('Blockchain.info')), ('selfmanaged', _('Self-Managed Address (cannot sell bitcoin)'))),
     )
 
@@ -231,14 +230,6 @@ class BitcoinRegistrationForm(forms.Form):
             msg = _('Please enter your Blockchain API key')
             raise forms.ValidationError(msg)
         return bci_main_password
-
-    # def clean_bci_second_password(self):
-    #     exchange_choice = self.cleaned_data.get('exchange_choice')
-    #     bci_second_password = self.cleaned_data.get('bci_second_password')
-    #     if exchange_choice == 'blockchain' and not bci_second_password:
-    #         msg = _('Please enter your Blockchain Secret Key')
-    #         raise forms.ValidationError(msg)
-    #     return bs_secret_key
 
     def clean_btc_address(self):
         address = self.cleaned_data.get('btc_address')

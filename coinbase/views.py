@@ -11,8 +11,6 @@ from django.utils.timezone import now
 from coinbase.models import CBCredential
 from coinbase.forms import CoinbaseAPIForm
 
-import json
-
 
 @login_required
 @render_to('merchants/coinbase.html')
@@ -29,7 +27,7 @@ def coinbase(request):
 
             api_key = form.cleaned_data['api_key']
             secret_key = form.cleaned_data['secret_key']
-            credentials = CBCredential.objects.create(
+            credentials, created = CBCredential.objects.get_or_create(
                     merchant=merchant,
                     api_key=api_key,
                     api_secret=secret_key
@@ -38,8 +36,8 @@ def coinbase(request):
                 balance = credentials.get_balance()
                 messages.success(request, _('Your Coinbase API info has been updated'))
             except:
-                # question - Is this how I should do it?
-                credentials.delete()
+                credentials.disabled_at = now()
+                credentials.save()
                 messages.warning(request, _('Your Coinbase API credentials are not valid'))
 
             return HttpResponseRedirect(reverse_lazy('coinbase'))
@@ -74,4 +72,3 @@ def disable_credentials(request):
     cb_credential.disabled_at = now()
     cb_credential.save()
     return HttpResponse("*ok*")
-    

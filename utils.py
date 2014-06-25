@@ -45,6 +45,13 @@ def format_mbtc(mbtc):
     return format_num_for_printing(mbtc, 6)
 
 
+def format_fiat_amount(amount, currency_symbol, currency_code=None):
+    if currency_code:
+        return "%s%s %s" % (currency_symbol, '{:,.2f}'.format(amount), currency_code)
+    else:
+        return "%s%s" % (currency_symbol, '{:,.2f}'.format(amount))
+
+
 def format_satoshis_with_units(satoshis):
     '''
     Great function for displaying to user (BTC or mBTC, which makes more sense)

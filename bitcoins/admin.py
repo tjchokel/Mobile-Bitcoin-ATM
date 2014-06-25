@@ -46,6 +46,7 @@ class BTCTransactionAdmin(admin.ModelAdmin):
 
 admin.site.register(BTCTransaction, BTCTransactionAdmin)
 
+
 class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
     list_display = (
         'id',

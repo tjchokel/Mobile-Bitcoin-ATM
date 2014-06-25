@@ -6,6 +6,7 @@ from countries import COUNTRY_DROPDOWN
 from utils import clean_phone_num
 from bitcoins.BCAddressField import is_valid_btc_address
 
+
 class ShopperInformationForm(forms.Form):
     name = forms.CharField(
         required=True,
@@ -106,7 +107,7 @@ class BitstampBuyBitcoinForm(forms.Form):
     def clean_btc_address(self):
         address = self.cleaned_data.get('btc_address')
         if not is_valid_btc_address(address):
-            msg = "Sorry, that's not a valid bitcoin address"
+            msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address
 
@@ -114,16 +115,14 @@ class BitstampBuyBitcoinForm(forms.Form):
 class ConfirmPasswordForm(forms.Form):
     password = forms.CharField(
             required=True,
-            label='Verify Merchant Password',
+            label=_('Verify Merchant Password'),
             widget=forms.PasswordInput(attrs={'autocomplete': 'off'}),
     )
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
         if not self.user.check_password(password):
-            print 'VALIDATION ERROR'
-            raise forms.ValidationError('Invalid password')
-
+            raise forms.ValidationError(_('Invalid password'))
 
     def __init__(self, user, *args, **kwargs):
         self.user = user

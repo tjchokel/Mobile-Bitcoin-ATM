@@ -33,7 +33,7 @@ def obscure_except_ending(string, trailing_chars_to_show=5):
 
 @register.filter(name='format_status_string')
 def format_status_string(string):
-    GREEN_STATUSES = ['complete', 'valid']
+    GREEN_STATUSES = ['complete', 'valid', 'cash paid out']
     # YELLOW_STATUSES = ['waiting for verifications']
     RED_STATUSES = ['canceled', 'invalid']
 
@@ -45,3 +45,11 @@ def format_status_string(string):
         return mark_safe('<span class ="text-red">%s</span>' % (string))
     else:
         return mark_safe('%s' % (string))
+
+
+@register.filter(name='format_fiat_amount')
+def format_fiat_amount(amount, currency_symbol, currency_code=None):
+    if currency_code:
+        return "%s%s %s" % (currency_symbol, '{:,.2f}'.format(amount), currency_code)
+    else:
+        return "%s%s" % (currency_symbol, '{:,.2f}'.format(amount))

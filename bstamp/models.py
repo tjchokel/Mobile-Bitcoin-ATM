@@ -117,10 +117,10 @@ class BSCredential(models.Model):
     def request_cashout(self, satoshis_to_sell, limit_order_price=None):
         raise Exception('Not Implemented Yet')
 
-    def send_btc(self, satoshis_to_send, destination_address):
+    def send_btc(self, satoshis_to_send, destination_btc_address):
 
-        msg = '%s is not a valid bitcoin address' % destination_address
-        assert is_valid_btc_address(destination_address), msg
+        msg = '%s is not a valid bitcoin address' % destination_btc_address
+        assert is_valid_btc_address(destination_btc_address), msg
 
         btc_to_send = satoshis_to_btc(satoshis_to_send)
         SEND_URL = 'https://www.bitstamp.net/api/bitcoin_withdrawal/'
@@ -129,7 +129,7 @@ class BSCredential(models.Model):
 
         try:
             post_params = {'amount': btc_to_send,
-                    'address': destination_address}
+                    'address': destination_btc_address}
             withdrawal_info = trading_obj.bitcoin_withdrawal(**post_params)
 
             withdrawal_id = withdrawal_info['id']
@@ -169,7 +169,7 @@ class BSCredential(models.Model):
                 bs_credential=self,
                 bs_withdrawal_id=withdrawal_id,
                 satoshis=satoshis_to_send,
-                destination_address=destination_address,
+                destination_address=destination_btc_address,
                 )
 
     def get_receiving_address(self, set_as_merchant_address=False):

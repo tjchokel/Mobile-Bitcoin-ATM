@@ -25,12 +25,12 @@ def bitstamp(request):
     if request.method == 'POST' and merchant:
         form = BitstampAPIForm(data=request.POST)
         if form.is_valid():
-            # TODO: VALIDATE CREDENTIALS AND THEN UPDATE MODEL HERE
-
             api_key = form.cleaned_data['api_key']
             secret_key = form.cleaned_data['secret_key']
-            credentials = BSCredential.objects.create(
+            username = form.cleaned_data['username']
+            credentials, created = BSCredential.objects.get_or_create(
                     merchant=merchant,
+                    username=username,
                     api_key=api_key,
                     api_secret=secret_key
             )
@@ -38,8 +38,8 @@ def bitstamp(request):
                 balance = credentials.get_balance()
                 messages.success(request, _('Your Bitstamp API info has been updated'))
             except:
-                # question - Is this how I should do it?
-                credentials.delete()
+                credentials.disabled_at = now()
+                credentials.save()
                 messages.warning(request, _('Your Bitstamp API credentials are not valid'))
 
             return HttpResponseRedirect(reverse_lazy('bitstamp'))
@@ -51,6 +51,7 @@ def bitstamp(request):
         'on_admin_page': True,
         'credential': credential,
     }
+
 
 @sensitive_variables('username', 'api_key', 'secret_key', 'credentials')
 @login_required

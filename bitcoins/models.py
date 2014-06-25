@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
-from django.utils import timezone
 from django.utils.translation import ugettext as _
 import datetime
 
@@ -170,6 +169,7 @@ class ForwardingAddress(models.Model):
                 self.get_fiat_transactions_total(),
                 self.get_first_forwarding_transaction().currency_code_when_created)
 
+
 class BTCTransaction(models.Model):
     """
     Deposits that affect our users.
@@ -221,7 +221,6 @@ class BTCTransaction(models.Model):
         http://stackoverflow.com/a/2311499/1754586
         """
         if not self.destination_address:
-            # Only do this for blockcypher and not BCI
             if not self.pk:
                 # This only happens if the objects isn't in the database yet.
                 self.currency_code_when_created = self.get_merchant().currency_code
@@ -435,8 +434,8 @@ class BTCTransaction(models.Model):
     def get_type(self):
         return _('Bitcoin Sale')
 
-    @classmethod
-    def get_btc_price(clas, currency_code):
+    @staticmethod
+    def get_btc_price(currency_code):
         if currency_code in CAPITAL_CONTROL_COUNTRIES:
             url = 'https://conectabitcoin.com/en/market_prices.json'
             r = requests.get(url)
@@ -479,10 +478,10 @@ class ShopperBTCPurchase(models.Model):
 
             now_plus_15 = now() + datetime.timedelta(minutes=15)
             self.expires_at = now_plus_15
-            self.satoshis = self.get_satoshi_conversion()
+            self.satoshis = self.get_satoshis_from_fiat()
         super(ShopperBTCPurchase, self).save(*args, **kwargs)
 
-    def get_satoshi_conversion(self):
+    def get_satoshis_from_fiat(self):
         merchant = self.merchant
         currency_code = self.currency_code_when_created
         fiat_btc = BTCTransaction.get_btc_price(currency_code)
@@ -501,10 +500,11 @@ class ShopperBTCPurchase(models.Model):
         self.confirmed_by_merchant_at = now()
         self.save()
         credentials = self.merchant.get_valid_api_credentials()
+        assert credentials, 'No Merchant API Credentials'
         if self.b58_address:
-            credentials.send_btc(self.satoshis, self.b58_address)
+            credentials.send_btc(satoshis_to_send=self.satoshis, destination_btc_address=self.b58_address)
         else:
-            credentials.send_btc(self.satoshis, None, self.shopper.email)
+            credentials.send_btc(satoshis_to_send=self.satoshis, destination_btc_address=None, destination_email_address=self.shopper.email)
         self.funds_sent_at = now()
         self.save()
 
@@ -529,11 +529,11 @@ class ShopperBTCPurchase(models.Model):
 
     def get_status(self):
         if self.cancelled_at:
-            return 'Cancelled'
+            return _('Cancelled')
         if self.confirmed_by_merchant_at:
-            return 'Complete'
+            return _('Complete')
         else:
-            return 'Waiting on Merchant Approval'
+            return _('Waiting on Merchant Approval')
 
     def get_type(self):
         return _('Bitcoin Purchase')

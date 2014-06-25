@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
+from django.utils.timezone import now
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
@@ -98,8 +99,6 @@ def register_merchant(request):
             business_name = form.cleaned_data['business_name']
             country = form.cleaned_data['country']
             currency_code = form.cleaned_data['currency_code']
-            # btc_address = form.cleaned_data['btc_address']
-            # basis_points_markup = form.cleaned_data['btc_markup']
 
             # create user
             user = AuthUser.objects.create_user(
@@ -115,9 +114,7 @@ def register_merchant(request):
                     business_name=business_name,
                     country=country,
                     currency_code=currency_code,
-                    # basis_points_markup=basis_points_markup * 100,
             )
-            # merchant.set_destination_address(btc_address)
 
             # login user
             user_to_login = authenticate(username=email, password=password)
@@ -180,10 +177,13 @@ def register_bitcoin(request):
                         api_secret=bs_secret_key,
                         username=bs_username
                     )
+
                 try:
                     balance = credentials.get_balance()
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
+                    credentials.disabled_at = now()
+                    credentials.save()
                     messages.warning(request, _('Your API credentials are not valid. Please try again.'))
 
     return {'form': form, 'user': user}

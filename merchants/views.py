@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -38,9 +38,6 @@ def login_request(request):
                     # Log the login
                     LoggedLogin.record_login(request)
 
-                    msg = _('Welcome <b>%s</b>, you are now logged in.' % user.username)
-                    messages.success(request, msg, extra_tags='safe')
-
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     msg = _("Sorry, that's not the right password for <b>%s</b>." % escape(email))
@@ -65,13 +62,29 @@ def logout_request(request):
     return HttpResponseRedirect(reverse_lazy('login_request'))
 
 
+def register_router(request):
+    user = request.user
+    if not user.is_authenticated():  # if user is not authenticated
+        return HttpResponsePermanentRedirect(reverse_lazy('register_merchant'))
+    merchant = user.get_merchant()
+    if merchant and merchant.has_finished_registration():
+        return HttpResponsePermanentRedirect(reverse_lazy('customer_dashboard'))
+    else:
+        return HttpResponsePermanentRedirect(reverse_lazy('register_bitcoin'))
+
+
 @render_to('merchants/register.html')
 def register_merchant(request):
     user = request.user
+    if user.is_authenticated():
+        merchant = user.get_merchant()
+        if merchant and merchant.has_finished_registration():
+            return HttpResponsePermanentRedirect(reverse_lazy('customer_dashboard'))
+        else:
+            return HttpResponsePermanentRedirect(reverse_lazy('register_bitcoin'))
     initial = {
-            'btc_markup': 2.0,
-            'country': 'USA',
-            'currency_code': 'USD',
+        'country': 'USA',
+        'currency_code': 'USD',
     }
     form = MerchantRegistrationForm(AuthUser=AuthUser, initial=initial)
     form_valid = True  # used to decide whether we run the JS or not
@@ -181,6 +194,8 @@ def register_bitcoin(request):
 def merchant_settings(request):
     user = request.user
     merchant = user.get_merchant()
+    if not merchant or not merchant.has_finished_registration():
+        return HttpResponseRedirect(reverse_lazy('register_router'))
     dest_address = merchant.get_destination_address()
     initial = {}
 
@@ -202,6 +217,8 @@ def merchant_settings(request):
 def merchant_profile(request):
     user = request.user
     merchant = user.get_merchant()
+    if not merchant or not merchant.has_finished_registration():
+        return HttpResponseRedirect(reverse_lazy('register_router'))
     transactions = merchant.get_all_forwarding_transactions()
     initial = {}
     initial['full_name'] = user.full_name
@@ -262,6 +279,8 @@ def merchant_profile(request):
 def merchant_transactions(request):
     user = request.user
     merchant = user.get_merchant()
+    if not merchant or not merchant.has_finished_registration():
+        return HttpResponseRedirect(reverse_lazy('register_router'))
     transactions = merchant.get_combined_transactions()
     return {
         'user': user,

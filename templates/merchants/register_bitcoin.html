@@ -7,6 +7,9 @@
           <div class="clearfix"></div>
         </div>
         <div class="col-md-8 col-md-offset-2">
+            {% with current_step=1 %}
+                 {% include "merchants/_registration_breadcrumb.html" %}
+            {% endwith %}
              <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
                  {% load crispy_forms_tags %}
                  {{ form|crispy }}

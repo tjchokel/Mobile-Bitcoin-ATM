@@ -6,7 +6,11 @@
           <h3 class="pull-left">{% trans "Register Account" %}</h3>
           <div class="clearfix"></div>
         </div>
+
         <div class="col-md-8 col-md-offset-2">
+          {% with current_step=0 %}
+               {% include "merchants/_registration_breadcrumb.html" %}
+          {% endwith %}
              <form class="form-horizontal" method="post" action="{% url "merchants.views.register_merchant" %}" >
                  {% load crispy_forms_tags %}
                  {{ form|crispy }}

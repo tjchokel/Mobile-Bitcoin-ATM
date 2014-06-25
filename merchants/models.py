@@ -202,6 +202,9 @@ class Merchant(models.Model):
                 # Create (set) new website
                 MerchantWebsite.objects.create(merchant=self, url=website_to_set)
 
+    def has_finished_registration(self):
+        return self.has_destination_address()
+
 
 class OpenTime(models.Model):
     # http://stackoverflow.com/a/12217171/1754586

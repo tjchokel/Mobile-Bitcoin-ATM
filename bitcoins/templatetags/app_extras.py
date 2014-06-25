@@ -33,7 +33,7 @@ def obscure_except_ending(string, trailing_chars_to_show=5):
 
 @register.filter(name='format_status_string')
 def format_status_string(string):
-    GREEN_STATUSES = ['complete', 'valid']
+    GREEN_STATUSES = ['complete', 'valid', 'cash paid out']
     # YELLOW_STATUSES = ['waiting for verifications']
     RED_STATUSES = ['canceled', 'invalid']
 

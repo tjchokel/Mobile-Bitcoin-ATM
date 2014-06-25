@@ -25,18 +25,18 @@ def bitstamp(request):
             api_key = form.cleaned_data['api_key']
             secret_key = form.cleaned_data['secret_key']
             username = form.cleaned_data['username']
-            credentials, created = BSCredential.objects.get_or_create(
+            credential, created = BSCredential.objects.get_or_create(
                     merchant=merchant,
                     username=username,
                     api_key=api_key,
                     api_secret=secret_key
             )
             try:
-                balance = credentials.get_balance()
+                balance = credential.get_balance()
                 messages.success(request, _('Your Bitstamp API info has been updated'))
             except:
-                credentials.disabled_at = now()
-                credentials.save()
+                credential.disabled_at = now()
+                credential.save()
                 messages.warning(request, _('Your Bitstamp API credentials are not valid'))
 
             return HttpResponseRedirect(reverse_lazy('bitstamp'))

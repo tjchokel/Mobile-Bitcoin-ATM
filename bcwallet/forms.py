@@ -2,20 +2,28 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 
-class BitstampAPIForm(forms.Form):
+class BlockchainAPIForm(forms.Form):
 
-    api_key = forms.CharField(
-        label=_('API Key'),
+    username = forms.CharField(
+        label=_('Username'),
         required=True,
-        min_length=5,
+        min_length=2,
         max_length=256,
         widget=forms.TextInput(),
     )
 
-    secret_key = forms.CharField(
-        label=_('Secret Key'),
-        min_length=5,
+    main_password = forms.CharField(
+        label=_('Main Password'),
+        min_length=4,
         max_length=50,
         required=True,
-        widget=forms.TextInput(),
+        widget=forms.PasswordInput(render_value=False),
+    )
+
+    second_password = forms.CharField(
+        label=_('Second Password'),
+        min_length=4,
+        max_length=50,
+        required=False,
+        widget=forms.PasswordInput(render_value=False),
     )

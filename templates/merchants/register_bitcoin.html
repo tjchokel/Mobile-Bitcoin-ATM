@@ -73,9 +73,10 @@
           }else if ($('input[name=exchange_choice]:checked').val() == 3) {
                $("#div_id_cb_api_key").addClass("hidden");
                $("#div_id_cb_secret_key").addClass("hidden");
+               $("#div_id_bs_api_key").addClass("hidden");
                $("#div_id_bs_secret_key").addClass("hidden");
                $("#div_id_bs_username").addClass("hidden");
-               $("#div_id_btc_address").addClass("hidden");
+               $("#div_id_btc_address").removeClass("hidden");
           }
       });
      </script>

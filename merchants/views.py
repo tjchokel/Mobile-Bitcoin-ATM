@@ -140,6 +140,8 @@ def register_merchant(request):
 @render_to('merchants/register_bitcoin.html')
 def register_bitcoin(request):
     user = request.user
+    if not user:
+        return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
     if not merchant:
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
@@ -182,7 +184,7 @@ def register_bitcoin(request):
                     )
 
                 try:
-                    balance = credentials.get_balance()
+                    credentials.get_balance()
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
                     credentials.disabled_at = now()

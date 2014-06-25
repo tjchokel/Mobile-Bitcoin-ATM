@@ -22,6 +22,10 @@ urlpatterns = patterns('',
     url(r'^edit-merchant-info/$', 'merchants.views.edit_merchant_info', name='edit_merchant_info'),
     url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
 
+    # API Partners
+    url(r'^coinbase/$', 'coinbase.views.coinbase', name='coinbase'),
+    url(r'^bitstamp/$', 'bstamp.views.bitstamp', name='bitstamp'),
+
     # AJAX Calls
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
@@ -29,6 +33,13 @@ urlpatterns = patterns('',
     url(r'^customer-confirm-deposit/$', 'bitcoins.views.customer_confirm_deposit', name='customer_confirm_deposit'),
     url(r'^merchant-complete-deposit/$', 'bitcoins.views.merchant_complete_deposit', name='merchant_complete_deposit'),
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
+    url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
+    url(r'^refresh-cb-credentials/$', 'coinbase.views.refresh_credentials', name='refresh_cb_credentials'),
+    url(r'^disable-cb-credentials/$', 'coinbase.views.disable_credentials', name='disable_cb_credentials'),
+    url(r'^refresh-bs-credentials/$', 'bstamp.views.refresh_credentials', name='refresh_bs_credentials'),
+    url(r'^disable-bs-credentials/$', 'bstamp.views.disable_credentials', name='disable_bs_credentials'),
+
+
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),

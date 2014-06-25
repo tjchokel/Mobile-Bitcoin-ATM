@@ -212,7 +212,7 @@ def merchant_profile(request):
 def merchant_transactions(request):
     user = request.user
     merchant = user.get_merchant()
-    transactions = merchant.get_all_forwarding_transactions()
+    transactions = merchant.get_combined_transactions()
     return {
         'user': user,
         'merchant': merchant,

@@ -1,6 +1,7 @@
 from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
 
 from services.models import APICall
 
@@ -21,8 +22,8 @@ class CBCredential(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     # Both of these are extra-long for safety
-    api_key = EncryptedCharField(max_length=64, blank=True, null=True, db_index=True)
-    api_secret = EncryptedCharField(max_length=128, blank=True, null=True, db_index=True)
+    api_key = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
+    api_secret = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     disabled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     last_succeded_at = models.DateTimeField(blank=True, null=True, db_index=True)
     # Not implemented anywhere:
@@ -50,11 +51,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-
-        self.last_succeded_at = now()
-        self.save()
+        if r.status_code == 200:
+            self.last_failed_at = None
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         resp_json = json.loads(r.content)
 
@@ -88,11 +93,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-
-        self.last_succeded_at = now()
-        self.save()
+        if r.status_code == 200:
+            self.last_failed_at = None
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         return json.loads(r.content)['transfers']
 
@@ -115,8 +124,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
+        if r.status_code == 200:
+            self.last_failed_at = None
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         json_resp = json.loads(r.content)
 
@@ -151,11 +167,15 @@ class CBCredential(models.Model):
             post_params=body_to_use,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-
-        self.last_succeded_at = now()
-        self.save()
+        if r.status_code == 200:
+            self.last_failed_at = None
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         resp_json = json.loads(r.content)
 
@@ -193,20 +213,49 @@ class CBCredential(models.Model):
                 to_receive_in_fiat=float(transfer['total']['amount']),
                 )
 
-    def send_btc(self, satoshis_to_send, destination_address, notes=None, user_fee=None):
+    def send_btc(self, satoshis_to_send, destination_btc_address,
+            destination_email_address=None, notes=None):
+        """
+        Send satoshis to a destination address or email address.
+        CB requires a fee for txns < .01 BTC, so it will automatically include
+        txn fees for those.
+        """
 
-        msg = '%s is not a valid bitcoin address' % destination_address
-        assert is_valid_btc_address(destination_address), msg
+        msg = "Can't have botha  destination email and BTC address. %s | %s" % (
+                destination_email_address, destination_btc_address)
+        assert not (destination_email_address and destination_btc_address), msg
+
+        msg = 'Must send to a destination email OR BTC address'
+        assert destination_email_address or destination_btc_address, msg
+
+        dest_addr_to_use = None
+
+        if destination_btc_address:
+            dest_addr_to_use = destination_btc_address
+            send_btc_dict = {'destination_btc_address': destination_btc_address}
+
+            msg = '%s is not a valid bitcoin address' % destination_btc_address
+            assert is_valid_btc_address(destination_btc_address), msg
+
+        if destination_email_address:
+            dest_addr_to_use = destination_email_address
+            send_btc_dict = {'destination_email': destination_email_address}
+
+            msg = '%s is not a valid email address' % destination_email_address
+            # FIXME
 
         btc_to_send = satoshis_to_btc(satoshis_to_send)
 
         SEND_URL = 'https://coinbase.com/api/v1/transactions/send_money'
 
         post_params = 'transaction[to]=%s&transaction[amount]=%s' % (
-                destination_address, btc_to_send)
+                dest_addr_to_use, btc_to_send)
 
-        if user_fee:
-            post_params += '&transaction[user_fee]=' + user_fee
+        if satoshis_to_send < btc_to_satoshis(.01) and not destination_email_address:
+            # https://coinbase.com/api/doc/1.0/transactions/send_money.html
+            # Coinbase pays transaction fees on payments greater than or equal to 0.01 BTC.
+            # But for smaller amounts you may want to add your own amount."
+            post_params += '&transaction[user_fee]=0.0001'
 
         if notes:
             # TODO: url encode this?
@@ -227,11 +276,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-
-        self.last_succeded_at = now()
-        self.save()
+        if r.status_code == 200:
+            self.last_failed_at = None
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         resp_json = json.loads(r.content)
 
@@ -241,8 +294,8 @@ class CBCredential(models.Model):
         transaction = resp_json['transaction']
 
         recipient_address = transaction['recipient_address']
-        msg = '%s != %s' % (recipient_address, destination_address)
-        assert recipient_address == destination_address, msg
+        msg = '%s != %s' % (recipient_address, dest_addr_to_use)
+        assert recipient_address == dest_addr_to_use, msg
 
         currency = transaction['amount']['currency']
         assert currency == 'BTC', currency
@@ -250,14 +303,69 @@ class CBCredential(models.Model):
         satoshis = -1 * btc_to_satoshis(transaction['amount']['amount'])
 
         # Record the Send
-        return SendBTC.objects.create(
-                cb_credential=self,
-                received_at=parser.parse(transaction['created_at']),
-                txn_hash=transaction['hsh'],
-                satoshis=satoshis,
-                destination_address=destination_address,
-                cb_id=transaction['id'],
-                notes=notes)
+        send_btc_dict.update({
+                'cb_credential': self,
+                'received_at': parser.parse(transaction['created_at']),
+                'txn_hash': transaction['hsh'],
+                'satoshis': satoshis,
+                'cb_id': transaction['id'],
+                'notes': notes,
+                })
+        return SendBTC.objects.create(**send_btc_dict)
+
+    def get_new_receiving_address(self, set_as_merchant_address=False):
+        """
+        Generates a new receiving address
+        """
+        ADDRESS_URL = 'https://coinbase.com/api/v1/account/generate_receive_address'
+
+        post_params = 'address[label]=CloseCoin %s' % now().strftime("%Y-%m-%d")
+
+        r = get_cb_request(
+                url=ADDRESS_URL,
+                api_key=self.api_key,
+                api_secret=self.api_secret,
+                body=post_params,
+                )
+
+        # Log the API call
+        APICall.objects.create(
+            api_name=APICall.COINBASE_NEW_ADDRESS,
+            url_hit=ADDRESS_URL,
+            response_code=r.status_code,
+            post_params=post_params,
+            api_results=r.content,
+            merchant=self.merchant)
+
+        if r.status_code == 200:
+            self.last_failed_at = None
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
+
+        resp_json = json.loads(r.content)
+
+        assert resp_json['success'] is True, resp_json
+
+        address = resp_json['address']
+
+        msg = '%s is not a valid bitcoin address' % address
+        assert is_valid_btc_address(address), msg
+
+        if set_as_merchant_address:
+            self.merchant.set_destination_address(address)
+
+        return address
+
+    def get_status(self):
+        if self.last_failed_at:
+            return _('Invalid')
+        else:
+            return _('Valid')
 
 
 class SellOrder(models.Model):
@@ -278,12 +386,18 @@ class SellOrder(models.Model):
     to_receive_in_fiat = models.DecimalField(blank=False, null=False,
             max_digits=10, decimal_places=2, db_index=True)
 
+    def __str__(self):
+        return '%s: %s' % (self.id, self.cb_code)
+
 
 class CurrentBalance(models.Model):
     """ Probably just used as a log and not implemented anywhere """
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     cb_credential = models.ForeignKey(CBCredential, blank=False, null=False)
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.satoshis)
 
 
 class SendBTC(models.Model):
@@ -293,7 +407,11 @@ class SendBTC(models.Model):
     txn_hash = models.CharField(max_length=64, blank=True, null=True,
             unique=True, db_index=True)
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
-    destination_address = models.CharField(max_length=34, blank=False,
-            null=False, db_index=True)
+    destination_btc_address = models.CharField(max_length=34, blank=True,
+            null=True, db_index=True)
+    destination_email = models.EmailField(blank=True, null=True, db_index=True)
     cb_id = models.CharField(max_length=64, blank=False, null=False, db_index=True)
-    notes = models.CharField(max_length=2048, blank=False, null=False)
+    notes = models.CharField(max_length=2048, blank=True, null=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.destination_email or self.destination_btc_address)

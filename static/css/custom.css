@@ -229,7 +229,7 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 }
 .services li:hover {
    width: 328px!important;
-   background: #69D2E7;
+   background: #2a3b48;
    cursor: pointer;
    color: #FFF;
    text-align: left;
@@ -753,7 +753,7 @@ img.img-about {
     -moz-transition: all 0.3s;
 }
 .pricing .head {
-    background: #69D2E7;
+    background: #59b0e0;
     padding: 30px 10px 10px;
     position: relative;
     border-radius: 3px;
@@ -768,7 +768,7 @@ img.img-about {
     position: absolute;
     height: 30px;
     width: 100%;
-    border-top: 30px solid #69D2E7;
+    border-top: 30px solid #59b0e0;
     border-right: 120px solid white;
     border-left: 120px solid white;
     bottom: -30px;
@@ -1245,6 +1245,9 @@ table {
 }
 .text-amethyst {
     color: #9B59B6;
+}
+.text-yellow {
+    color: #CFCF00;
 }
 
 /* Background colors */

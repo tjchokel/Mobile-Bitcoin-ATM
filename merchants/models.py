@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 from phonenumber_field.modelfields import PhoneNumberField
 from bitcoins.models import DestinationAddress
@@ -66,6 +66,25 @@ class Merchant(models.Model):
             txns.extend(forwarding_addr.btctransaction_set.filter(destination_address__isnull=True).order_by('-id'))
         return txns
 
+    def get_combined_transactions(self):
+        """
+            Get's all transactions for cash in and cash out
+
+            Sorts by added_at
+        """
+        cash_out_txns = self.get_all_forwarding_transactions()
+        cash_in_txns = self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True).all()
+
+        combined_transactions = [w for w in cash_in_txns]
+        combined_transactions.extend(cash_out_txns)
+
+        combined_transactions = sorted(combined_transactions, key=lambda x: x.added_at, reverse=True)
+        return combined_transactions
+
+    def get_bitcoin_purchase_request(self):
+        return self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True,
+            confirmed_by_merchant_at__isnull=True).last()
+
     def get_percent_markup(self):
         return self.basis_points_markup / 100.00
 
@@ -79,7 +98,7 @@ class Merchant(models.Model):
         return BFHCurrenciesList[self.currency_code]['label']
 
     def get_registration_percent_complete(self):
-        percent_complete = 60
+        percent_complete = 50
         if self.address_1:
             percent_complete += 10
         if self.city:
@@ -88,10 +107,48 @@ class Merchant(models.Model):
             percent_complete += 10
         if self.phone_num:
             percent_complete += 10
+        if self.has_valid_api_credentials():
+            percent_complete += 10
+
         return percent_complete
 
     def finished_registration(self):
         return self.get_registration_percent_complete() == 100
+
+    def has_valid_api_credentials(self):
+        return self.has_valid_coinbase_credentials() or self.has_valid_bitstamp_credentials()
+
+    def get_valid_api_credentials(self):
+        if self.has_valid_coinbase_credentials():
+            return self.get_coinbase_credentials()
+        if self.has_valid_bitstamp_credentials():
+            return self.get_bitstamp_credentials()
+        return None
+
+    def has_coinbase_credentials(self):
+        return bool(self.get_coinbase_credentials())
+
+    def has_valid_coinbase_credentials(self):
+        credentials = self.get_coinbase_credentials()
+        if credentials and not credentials.last_failed_at:
+            return True
+        else:
+            return False
+
+    def get_coinbase_credentials(self):
+        return self.cbcredential_set.filter(disabled_at__isnull=True).last()
+
+    def get_bitstamp_credentials(self):
+        return self.bscredential_set.filter(disabled_at=None).last()
+
+    def has_bitstamp_credentials(self):
+        return bool(self.get_bitstamp_credentials())
+
+    def has_valid_bitstamp_credentials(self):
+        credentials = self.get_bitstamp_credentials()
+        if credentials and not credentials.last_failed_at:
+            return True
+        return False
 
     def get_hours(self):
         return self.opentime_set.all()

@@ -80,6 +80,25 @@ function timeSince(date) {
     return Math.floor(seconds);
 }
 
+function timeUntil(date) {
+
+    var seconds = Math.floor((date - new Date()) / 1000);
+    if (seconds <= 0){
+        return 0;
+    }
+
+    var interval = Math.floor(seconds / 31536000);
+
+    interval = Math.floor(seconds / 60);
+    var mins_and_seconds = "";
+    if (interval > 1) {
+         mins_and_seconds = interval + " minutes, ";
+    }
+    seconds = seconds - (interval * 60)
+    mins_and_seconds = mins_and_seconds + Math.floor(seconds) + " seconds";
+    return mins_and_seconds;
+}
+
 $(document).ready(function(){
     // messages timeout for 10 sec 
     setTimeout(function() {

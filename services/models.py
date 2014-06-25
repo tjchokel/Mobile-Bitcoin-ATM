@@ -25,6 +25,13 @@ class APICall(models.Model):
     COINBASE_LIST_BTC_TRANSACTIONS = 'CLB'
     COINBASE_SEND_BTC = 'CSB'
     COINBASE_CASHOUT_BTC = 'CSO'
+    COINBASE_NEW_ADDRESS = 'CNA'
+
+    BITSTAMP_BALANCE = 'BSB'
+    BITSTAMP_LIST_TRANSACTIONS = 'BSL'
+    BITSTAMP_SEND_BTC = 'BSS'
+    BITSTAMP_WITHDRAWALS = 'BSW'
+    BITSTAMP_BTC_ADDRESS = 'BSA'
 
     API_NAME_CHOICES = (
             (BCI_RECEIVE_PAYMENTS, 'blockchain.info receive payments API'),
@@ -36,6 +43,12 @@ class APICall(models.Model):
             (COINBASE_LIST_BTC_TRANSACTIONS, 'Coinbase List BTC Transactions'),
             (COINBASE_SEND_BTC, 'Coinbase Send BTC'),
             (COINBASE_CASHOUT_BTC, 'Coinbase Cashout BTC'),
+            (COINBASE_NEW_ADDRESS, 'Coinbase New Address'),
+            (BITSTAMP_BALANCE, 'Bitstamp Balance'),
+            (BITSTAMP_LIST_TRANSACTIONS, 'Bitstamp List Transactions'),
+            (BITSTAMP_SEND_BTC, 'Bitstamp Send BTC'),
+            (BITSTAMP_WITHDRAWALS, 'Bitstamp Withdrawals'),
+            (BITSTAMP_BTC_ADDRESS, 'Bitstamp BTC Address'),
             )
 
     # Main fields

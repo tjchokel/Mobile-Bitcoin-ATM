@@ -179,7 +179,7 @@ class MerchantInfoForm(forms.Form):
     )
 
     city = forms.CharField(
-        label='City',
+        label=_('City'),
         required=False,
         max_length=30,
         widget=forms.TextInput(),
@@ -211,8 +211,8 @@ class MerchantInfoForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_country'}),
     )
 
-    website = forms.URLField(
-            label='Website URL',
+    website = forms.CharField(
+            label=_('Website URL'),
             required=False,
             )
 

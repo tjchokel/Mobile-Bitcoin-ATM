@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
+from django.utils.translation import ugettext as _
+import datetime
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
@@ -15,11 +17,12 @@ from bitcash.settings import BASE_URL, CAPITAL_CONTROL_COUNTRIES
 
 from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
-        format_num_for_printing)
+        format_num_for_printing, btc_to_satoshis)
 
 import json
 import requests
 import math
+from decimal import Decimal
 
 
 class DestinationAddress(models.Model):
@@ -218,7 +221,6 @@ class BTCTransaction(models.Model):
         http://stackoverflow.com/a/2311499/1754586
         """
         if not self.destination_address:
-            # Only do this for blockcypher and not BCI
             if not self.pk:
                 # This only happens if the objects isn't in the database yet.
                 self.currency_code_when_created = self.get_merchant().currency_code
@@ -243,17 +245,7 @@ class BTCTransaction(models.Model):
     def calculate_fiat_amount(self):
         merchant = self.get_merchant()
         currency_code = merchant.currency_code
-        if currency_code in CAPITAL_CONTROL_COUNTRIES:
-            url = 'https://conectabitcoin.com/en/market_prices.json'
-            r = requests.get(url)
-            content = json.loads(r.content)
-            key = 'btc_'+currency_code.lower()
-            fiat_btc = content[key]['sell']
-        else:
-            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
-            r = requests.get(url)
-            content = json.loads(r.content)
-            fiat_btc = content['last']
+        fiat_btc = BTCTransaction.get_btc_price(currency_code)
         basis_points_markup = merchant.basis_points_markup
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc - markup_fee
@@ -438,3 +430,110 @@ class BTCTransaction(models.Model):
                     to_user=merchant.user,
                     to_merchant=merchant,
                     to_shopper=shopper)
+
+    def get_type(self):
+        return _('Bitcoin Sale')
+
+    @staticmethod
+    def get_btc_price(currency_code):
+        if currency_code in CAPITAL_CONTROL_COUNTRIES:
+            url = 'https://conectabitcoin.com/en/market_prices.json'
+            r = requests.get(url)
+            content = json.loads(r.content)
+            key = 'btc_'+currency_code.lower()
+            return content[key]['sell']
+        else:
+            url = 'https://api.bitcoinaverage.com/ticker/global/'+currency_code
+            r = requests.get(url)
+            content = json.loads(r.content)
+            return content['last']
+
+
+class ShopperBTCPurchase(models.Model):
+    """
+    Model for bitcoin purchase (cash in) request
+    """
+
+    added_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
+    shopper = models.ForeignKey('shoppers.Shopper', blank=False, null=False)
+    b58_address = models.CharField(blank=True, null=True, max_length=34, db_index=True)
+    fiat_amount = models.DecimalField(blank=False, null=False, max_digits=10, decimal_places=2)
+    satoshis = models.BigIntegerField(blank=True, null=True, db_index=True)
+    currency_code_when_created = models.CharField(max_length=5, blank=False, null=False, db_index=True)
+    confirmed_by_merchant_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    funds_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    def save(self, *args, **kwargs):
+        """
+        Set fiat_amount when this object is first created
+        http://stackoverflow.com/a/2311499/1754586
+        """
+        # Only do this for blockcypher and not BCI
+        if not self.pk:
+            # This only happens if the objects isn't in the database yet.
+            self.currency_code_when_created = self.merchant.currency_code
+
+            now_plus_15 = now() + datetime.timedelta(minutes=15)
+            self.expires_at = now_plus_15
+            self.satoshis = self.get_satoshis_from_fiat()
+        super(ShopperBTCPurchase, self).save(*args, **kwargs)
+
+    def get_satoshis_from_fiat(self):
+        merchant = self.merchant
+        currency_code = self.currency_code_when_created
+        fiat_btc = BTCTransaction.get_btc_price(currency_code)
+        basis_points_markup = merchant.basis_points_markup
+        markup_fee = fiat_btc * basis_points_markup / 10000.00
+        fiat_btc = fiat_btc + markup_fee
+        total_btc = self.fiat_amount / Decimal(fiat_btc)
+        satoshis = btc_to_satoshis(total_btc)
+        return satoshis
+
+    def format_mbtc_amount(self):
+        return format_mbtc(satoshis_to_mbtc(self.satoshis))
+
+    def pay_out_bitcoin(self):
+
+        self.confirmed_by_merchant_at = now()
+        self.save()
+        credentials = self.merchant.get_valid_api_credentials()
+        assert credentials, 'No Merchant API Credentials'
+        if self.b58_address:
+            credentials.send_btc(satoshis_to_send=self.satoshis, destination_btc_address=self.b58_address)
+        else:
+            credentials.send_btc(satoshis_to_send=self.satoshis, destination_btc_address=None, destination_email_address=self.shopper.email)
+        self.funds_sent_at = now()
+        self.save()
+
+    def expires_at_unix_time(self):
+        return int(self.expires_at.strftime('%s'))
+
+    def get_shopper(self):
+        return self.shopper
+
+    def format_satoshis_amount(self):
+        return format_satoshis_with_units(self.satoshis)
+
+    def get_currency_symbol(self):
+        if self.currency_code_when_created:
+            return BFHCurrenciesList[self.currency_code_when_created]['symbol']
+        else:
+            return '$'
+
+    def get_fiat_amount_formatted(self):
+        return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,
+                self.currency_code_when_created)
+
+    def get_status(self):
+        if self.cancelled_at:
+            return _('Cancelled')
+        if self.confirmed_by_merchant_at:
+            return _('Complete')
+        else:
+            return _('Waiting on Merchant Approval')
+
+    def get_type(self):
+        return _('Bitcoin Purchase')

@@ -1,3 +1,4 @@
+{% load staticfiles %}
 {% load i18n %}
 <div class="container">
   <div class="page-header">
@@ -13,18 +14,27 @@
         {% if current_tab == 'profile' %}
           <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Profile <span class="caret"></span></button>
         {% endif %}
+        {% if current_tab == 'coinbase' %}
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Coinbase <span class="caret"></span></button>
+        {% endif %}
+        {% if current_tab == 'bitstamp' %}
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Bitstamp <span class="caret"></span></button>
+        {% endif %}
 
         <ul class="dropdown-menu">
             <li><a href="{% url "merchants.views.merchant_transactions" %}">Transactions</a></li>
             <li><a href="{% url "merchants.views.merchant_settings" %}">Settings</a></li>
             <li><a href="{% url "merchants.views.merchant_profile" %}">Profile</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation" class="dropdown-header">API Partners</li>
+            <li><a href="{% url "coinbase.views.coinbase" %}">Coinbase</a></li>
+            <li><a href="{% url "bstamp.views.bitstamp" %}">Bitstamp</a></li>
           </ul>
       </div>
 
     </h3>
   <div class="clearfix"></div>
 </div>
-
 
 <div class="row">
   <div class="col-sm-4 col-md-3 hidden-sm hidden-xs">
@@ -52,6 +62,55 @@
           {% endif %}
         </li>
       </ul>
+
+    </div>
+    <strong>{% trans "API Partners (New)" %}</strong>
+    <div class="user-menu bottom-15">
+      <ul>
+        <li>
+          {% if current_tab == 'coinbase' %}
+            <a href="#" class="active">
+              <img src="{% static "img/coinbase-logo-full.png" %}" />
+              {% if merchant.has_valid_coinbase_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{% url "coinbase.views.coinbase" %}">
+              <img src="{% static "img/coinbase-logo-full.png" %}" />
+              {% if merchant.has_valid_coinbase_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% endif %}
+        </li>
+        <li>
+          {% if current_tab == 'bitstamp' %}
+            <a href="#" class="active">
+              <img src="{% static "img/bitstamp-logo-full.png" %}" />
+              {% if merchant.has_valid_bitstamp_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{% url "bstamp.views.bitstamp" %}">
+              <img src="{% static "img/bitstamp-logo-full.png" %}" />
+              {% if merchant.has_valid_bitstamp_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% endif %}
+        </li>
+      </ul>
+
     </div>
     {% include "merchants/_registration_status_bar.html" %}
   </div>

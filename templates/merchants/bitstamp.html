@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load app_extras %}
+{% block content %}
+<div class="container">
+    <!-- Profile Menu -->
+    {% with current_tab='bitstamp' %}
+      {% include "merchants/breadcrumb.html" %}
+    {% endwith %}
+  <div class="col-sm-8 col-md-9">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h4 class="hl">
+            <a style="color:#515151;" href="#">{% trans "Bitstamp Api" %}</a>
+          </h4>
+          {% if merchant.has_bitstamp_credentials %}
+            {% with api='bitstamp' %}
+              {% include "merchants/_delete_api_credentials_modal.html" %}
+            {% endwith %}
+            <table class="table table-condensed" style="border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>{% trans "Added At" %}</th>
+                  <th>{% trans "Status" %}</th>
+                  <th>{% trans "API Key" %}</th>
+                  <th>{% trans "Refresh" %}</th>
+                  <th>{% trans "Delete" %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
+                  <td>{{credential.created_at|naturaltime}}</td>
+                  <td>{{credential.get_status|format_status_string}}</td>
+                  <td>{{credential.api_key|obscure_except_ending}}</td>
+                  <td style="font-size: 22px;">
+
+                    <a href="javascript: refreshCredentials();" id='refresh-button'><i class="fa fa-refresh"></i></a>
+                    <a class="active has-spinner hidden" id="refresh-loader">
+                      <span class="spinner">
+                        <i class="fa fa-spinner fa-spin"></i>
+                      </span>
+                    </a>
+
+                  </td>
+                  <td style="font-size: 22px;">
+
+                    <a href="javascript: showDisableModal();" id='disable-button'><i class="fa fa-trash-o"></i></a>
+                    <a class="active has-spinner hidden" id="disable-loader">
+                      <span class="spinner">
+                        <i class="fa fa-spinner fa-spin"></i>
+                      </span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+
+          {% else %}
+            <p>
+              {% trans "Enter your Bitstamp API credentials here to take advantage of our partnership" %}
+              <!-- Button trigger modal -->
+              (<a href="#" data-toggle="collapse" data-target="#moreinfo">{% trans "learn more" %}</a>).
+            </p>
+            <div id="moreinfo" class="collapse">
+              <p>
+                TODO: WRITE MORE INFO HERE
+              </p>
+            </div>
+              
+            <form class="form-horizontal" method="post" action="{% url "bstamp.views.bitstamp" %}" >
+              {% load crispy_forms_tags %}
+              {{ form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+              </div>
+            </form>
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+  <script>
+    function refreshCredentials() {
+      $('#refresh-loader').removeClass("hidden");
+      $('#refresh-button').addClass("hidden");
+      $.ajax({
+          type: 'get',
+          url: '/refresh-bs-credentials/',
+          success: function (data) {
+            console.log('SUCESS');
+            location.reload(true);
+            $('#refresh-loader').addClass("hidden");
+            $('#refresh-button').removeClass("hidden");
+            
+          },
+          error: function(data) {
+            console.log('refreshCredentials Failed');
+            $('#refresh-loader').addClass("hidden");
+            $('#refresh-button').removeClass("hidden");
+            
+            location.reload(true);
+          }
+        });
+    }
+    
+    function showDisableModal() {
+      $('#delete-credentials-modal').modal();
+    }
+
+    function disableCredentials() {
+      $('#disable-loader').removeClass("hidden");
+      $('#disable-button').addClass("hidden");
+      $.ajax({
+          type: 'get',
+          url: '/disable-bs-credentials/',
+          success: function (data) {
+            console.log('SUCESS');
+            location.reload(true);
+            $('#disable-loader').addClass("hidden");
+            $('#disable-button').removeClass("hidden");
+            
+          },
+          error: function(data) {
+            console.log('refreshCredentials Failed');
+            $('#disable-loader').addClass("hidden");
+            $('#disable-button').removeClass("hidden");
+            
+            location.reload(true);
+          }
+        });
+    }
+
+  </script>
+{% endblock %}

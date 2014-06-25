@@ -16,7 +16,7 @@
       <div class="col-sm-12">
       <br/>
         <h3><i class="fa fa-map-marker"></i>{% trans "Transactions" %}</h3>
-        {% include "customer_dash/_deposit_dash_table.html" %}
+        {% include "customer_dash/cash_out/_deposit_dash_table.html" %}
         <hr>
       </div>
     </div>
@@ -49,7 +49,7 @@
       </p>
       <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}
-          {{ form|crispy }}
+          {{ shopper_form|crispy }}
           {% csrf_token %}
           <div class="button-wrapper">
             <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>

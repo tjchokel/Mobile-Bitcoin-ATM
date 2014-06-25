@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -8,46 +7,46 @@ from django.contrib import messages
 from annoying.decorators import render_to
 from django.utils.timezone import now
 
-from coinbase.models import CBCredential
-from coinbase.forms import CoinbaseAPIForm
+from bstamp.forms import BitstampAPIForm
+from bstamp.models import BSCredential
 
 
 @login_required
-@render_to('merchants/coinbase.html')
-def coinbase(request):
+@render_to('merchants/bitstamp.html')
+def bitstamp(request):
     user = request.user
     merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credentials()
+    credential = merchant.get_bitstamp_credentials()
 
-    form = CoinbaseAPIForm()
+    form = BitstampAPIForm()
     if request.method == 'POST' and merchant:
-        form = CoinbaseAPIForm(data=request.POST)
+        form = BitstampAPIForm(data=request.POST)
         if form.is_valid():
-            # TODO: VALIDATE CREDENTIALS AND THEN UPDATE MODEL HERE
-
             api_key = form.cleaned_data['api_key']
             secret_key = form.cleaned_data['secret_key']
-            credentials, created = CBCredential.objects.get_or_create(
+            username = form.cleaned_data['username']
+            credentials, created = BSCredential.objects.get_or_create(
                     merchant=merchant,
+                    username=username,
                     api_key=api_key,
                     api_secret=secret_key
             )
             try:
                 balance = credentials.get_balance()
-                messages.success(request, _('Your Coinbase API info has been updated'))
+                messages.success(request, _('Your Bitstamp API info has been updated'))
             except:
                 credentials.disabled_at = now()
                 credentials.save()
-                messages.warning(request, _('Your Coinbase API credentials are not valid'))
+                messages.warning(request, _('Your Bitstamp API credentials are not valid'))
 
-            return HttpResponseRedirect(reverse_lazy('coinbase'))
+            return HttpResponseRedirect(reverse_lazy('bitstamp'))
 
     return {
         'user': user,
         'merchant': merchant,
         'form': form,
         'on_admin_page': True,
-        'cb_credential': cb_credential,
+        'credential': credential,
     }
 
 
@@ -55,12 +54,12 @@ def coinbase(request):
 def refresh_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credentials()
+    credential = merchant.get_bitstamp_credentials()
     try:
-        balance = cb_credential.get_balance()
-        messages.success(request, _('Your Coinbase API info has been refreshed'))
+        balance = credential.get_balance()
+        messages.success(request, _('Your Bistamp API info has been refreshed'))
     except:
-        messages.warning(request, _('Your Coinbase API info could not be validated'))
+        messages.warning(request, _('Your Bistamp API info could not be validated'))
     return HttpResponse("*ok*")
 
 
@@ -68,7 +67,7 @@ def refresh_credentials(request):
 def disable_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credentials()
-    cb_credential.disabled_at = now()
-    cb_credential.save()
+    credential = merchant.get_bitstamp_credentials()
+    credential.disabled_at = now()
+    credential.save()
     return HttpResponse("*ok*")

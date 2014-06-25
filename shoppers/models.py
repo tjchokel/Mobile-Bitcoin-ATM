@@ -23,3 +23,9 @@ class Shopper(models.Model):
             return 'phone'
         else:
             return ''
+
+    def get_transaction_table_string(self):
+        if self.name:
+            return self.name
+        else:
+            return self.email

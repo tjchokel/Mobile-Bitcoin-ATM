@@ -141,6 +141,8 @@ def register_merchant(request):
     return {'form': form, 'user': user, 'form_valid': form_valid}
 
 
+@sensitive_variables('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
+@sensitive_post_parameters('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
 @render_to('merchants/register_bitcoin.html')
 def register_bitcoin(request):
     user = request.user

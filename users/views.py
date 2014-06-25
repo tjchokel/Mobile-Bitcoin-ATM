@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.contrib import messages
+from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
@@ -20,6 +21,8 @@ def home(request):
         return {}
 
 
+@sensitive_variables('password', 'password_form')
+@sensitive_post_parameters('password', )
 @login_required
 @render_to('customer_dash/main.html')
 def customer_dashboard(request):

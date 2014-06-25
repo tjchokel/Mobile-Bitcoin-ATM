@@ -7,6 +7,7 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
+import re
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -31,12 +32,19 @@ else:
 ALLOWED_HOSTS = (
     'www.closecoin.com',
     'closecoin.herokuapp.com',
+    'bitcashstaging.herokuapp.com',
     '127.0.0.1',
     )
 
 ADMINS = (
     ('Michael Flaxman', 'michael@coinsafe.com'),
     ('Tom Chokel', 'tom@coinsafe.com'),
+)
+
+IGNORABLE_404_URLS = (
+    re.compile(r'^/apple-touch-icon.*\.png$'),
+    re.compile(r'^/favicon\.ico$'),
+    re.compile(r'^/robots\.txt$'),
 )
 
 # Application definition
@@ -72,6 +80,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'bitcash.middleware.AjaxMessaging',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

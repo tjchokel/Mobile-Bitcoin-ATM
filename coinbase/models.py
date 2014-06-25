@@ -51,16 +51,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        if r.status_code != 200:
-            self.last_failed_at = now()
-        else:
+        if r.status_code == 200:
             self.last_failed_at = None
-        self.save()
-
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-        self.last_succeded_at = now()
-        self.save()
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         resp_json = json.loads(r.content)
 
@@ -94,16 +93,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        if r.status_code != 200:
-            self.last_failed_at = now()
-        else:
+        if r.status_code == 200:
             self.last_failed_at = None
-        self.save()
-
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-        self.last_succeded_at = now()
-        self.save()
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         return json.loads(r.content)['transfers']
 
@@ -126,14 +124,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        if r.status_code != 200:
-            self.last_failed_at = now()
-        else:
+        if r.status_code == 200:
             self.last_failed_at = None
-        self.save()
-
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         json_resp = json.loads(r.content)
 
@@ -168,17 +167,15 @@ class CBCredential(models.Model):
             post_params=body_to_use,
             merchant=self.merchant)
 
-        if r.status_code != 200:
-            self.last_failed_at = now()
-        else:
+        if r.status_code == 200:
             self.last_failed_at = None
-        self.save()
-
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-
-        self.last_succeded_at = now()
-        self.save()
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         resp_json = json.loads(r.content)
 
@@ -279,17 +276,15 @@ class CBCredential(models.Model):
             api_results=r.content,
             merchant=self.merchant)
 
-        if r.status_code != 200:
-            self.last_failed_at = now()
-        else:
+        if r.status_code == 200:
             self.last_failed_at = None
-        self.save()
-
-        err_msg = 'Expected status code 200 but got %s' % r.status_code
-        assert r.status_code == 200, err_msg
-
-        self.last_succeded_at = now()
-        self.save()
+            self.last_succeded_at = now()
+            self.save()
+        else:
+            self.last_failed_at = now()
+            self.save()
+            err_msg = 'Expected status code 200 but got %s' % r.status_code
+            raise Exception('StatusCode: %s' % err_msg)
 
         resp_json = json.loads(r.content)
 

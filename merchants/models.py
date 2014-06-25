@@ -84,7 +84,8 @@ class Merchant(models.Model):
         return combined_transactions
 
     def get_bitcoin_purchase_request(self):
-        return self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True, confirmed_by_merchant_at__isnull=True).last()
+        btc_purchase_request = self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True, confirmed_by_merchant_at__isnull=True).last()
+        return btc_purchase_request
 
     def get_percent_markup(self):
         return self.basis_points_markup / 100.00

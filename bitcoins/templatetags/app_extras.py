@@ -45,3 +45,11 @@ def format_status_string(string):
         return mark_safe('<span class ="text-red">%s</span>' % (string))
     else:
         return mark_safe('%s' % (string))
+
+
+@register.filter(name='format_fiat_amount')
+def format_fiat_amount(amount, currency_symbol, currency_code=None):
+    if currency_code:
+        return "%s%s %s" % (currency_symbol, '{:,.2f}'.format(amount), currency_code)
+    else:
+        return "%s%s" % (currency_symbol, '{:,.2f}'.format(amount))

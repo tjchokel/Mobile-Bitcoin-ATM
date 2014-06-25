@@ -11,10 +11,8 @@ from bitcoins.models import BTCTransaction, ForwardingAddress
 from services.models import WebHook
 
 from emails.internal_msg import send_admin_email
-from bitcash.settings import CAPITAL_CONTROL_COUNTRIES
-
+from utils import format_fiat_amount
 import json
-import requests
 
 
 def poll_deposits(request):
@@ -44,24 +42,22 @@ def get_bitcoin_price(request):
     user = request.user
     merchant = user.get_merchant()
     currency_code = merchant.currency_code
+    currency_symbol = merchant.get_currency_symbol()
     fiat_btc = BTCTransaction.get_btc_price(currency_code)
     basis_points_markup = merchant.basis_points_markup
     markup_fee = fiat_btc * basis_points_markup / 10000.00
-    buy_fiat_btc = fiat_btc + markup_fee
-    sell_fiat_btc = fiat_btc - markup_fee
-
-    buy_price_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:,.2f}'.format(buy_fiat_btc))
-    sell_price_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:,.2f}'.format(sell_fiat_btc))
-    no_markup_price_formatted = "%s%s" % (merchant.get_currency_symbol(), '{:,.2f}'.format(fiat_btc))
+    buy_price = fiat_btc + markup_fee
+    sell_price = fiat_btc - markup_fee
 
     percent_markup = basis_points_markup / 100.00
+
     json_response = json.dumps({
-                "sell_amount": sell_fiat_btc,
+                "no_markup_price": format_fiat_amount(fiat_btc, currency_symbol, currency_code),
+                "buy_price": format_fiat_amount(buy_price, currency_symbol),
+                "sell_price": format_fiat_amount(sell_price, currency_symbol),
+                "sell_price_no_format": sell_price,
                 "markup": percent_markup,
                 "currency_code": currency_code,
-                "no_markup_price_formatted": no_markup_price_formatted,
-                "sell_price_formatted": sell_price_formatted,
-                "buy_price_formatted": buy_price_formatted,
                 })
     return HttpResponse(json_response, content_type='application/json')
 

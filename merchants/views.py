@@ -160,16 +160,19 @@ def register_bitcoin(request):
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
+            # self managed address
             if exchange_choice == '3':
                 merchant.set_destination_address(btc_address)
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
+                # using coinbase credentials
                 if exchange_choice == '1':
                     credentials = CBCredential.objects.create(
                         merchant=merchant,
                         api_key=cb_api_key,
                         api_secret=cb_secret_key
                     )
+                # using bitstamp credentials
                 else:
                     credentials = BSCredential.objects.create(
                         merchant=merchant,

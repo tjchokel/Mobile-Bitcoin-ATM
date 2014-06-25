@@ -434,8 +434,8 @@ class BTCTransaction(models.Model):
     def get_type(self):
         return _('Bitcoin Sale')
 
-    @classmethod
-    def get_btc_price(cls, currency_code):
+    @staticmethod
+    def get_btc_price(currency_code):
         if currency_code in CAPITAL_CONTROL_COUNTRIES:
             url = 'https://conectabitcoin.com/en/market_prices.json'
             r = requests.get(url)

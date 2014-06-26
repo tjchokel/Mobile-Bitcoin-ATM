@@ -147,18 +147,16 @@
         url: '/get-bitcoin-price/',
         success: function (data) {
           $("#fiat-amt-loader").addClass("hidden");
-          $("#sell-price-loader").addClass("hidden");
-          $("#buy-price-loader").addClass("hidden");
+          $(".price-loader").addClass("hidden");
           $("#pricing-info").removeClass("hidden");
           $("#sell-price-holder").removeClass("hidden");
           $("#buy-price-holder").removeClass("hidden");
-          
 
           $("#fiat-amt").text(data['no_markup_price']);
-          $("#currency-code").text(data['currency_code']);
-          // $("#markup").text(data['markup']);
+          $(".currency-code").text(data['currency_code']);
+          $(".percent-markup").text(data['markup']);
           $("#buy-price").text(data['buy_price']);
-          $("#sell-price").text(data['sell_price']);
+          $("#sell-price").text(data['sell_price_no_format']);
 
           BTC_PRICE_TIMEOUT_MS *= 1.3;
           setTimeout(getBtcPrice,BTC_PRICE_TIMEOUT_MS);
@@ -223,7 +221,7 @@
       };
     })();
 
-    $("#id_amount").keyup(function(){
+    $("#id_amount").keydown(function(){
       delay(function(){
         var entered_amount = $('#id_amount').val();
         if (entered_amount=="" || isNaN(entered_amount)){
@@ -234,33 +232,21 @@
           $("#btc-amount").html('{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
           $("#submit-button").prop('disabled', true);
         }else{
-          $("#btc-amount").addClass("hidden");
-          $("#btc-amt-loader").removeClass("hidden");
-          $.ajax({
-            type: 'get',
-            url: '/get-bitcoin-price/',
-            success: function (data) {
-              $("#btc-amount").removeClass("hidden");
-              $("#btc-amt-loader").addClass("hidden");
-              $("#div_id_email_or_btc_address").removeClass("hidden");
-              $("#div_id_email").removeClass("hidden");
-              if (!$('#div_id_email_or_btc_address').length){
-                $("#div_id_btc_address").removeClass("hidden");
-              }
-              var entered_amount = $('#id_amount').val();
-              var final_btc = parseFloat(entered_amount) / data['sell_price_no_format'];
-              
-              $("#btc-amount").html('{{merchant.get_currency_symbol}}'+entered_amount+ ' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
-              $("#step_1").addClass("hidden");
-              $("#step_2").removeClass("hidden");
-              $("#submit-button").prop('disabled', false);
-            },
-            error: function(data) {
-              $("#btc-amount").removeClass("hidden");
-              $("#btc-amt-loader").addClass("hidden");
-              // setTimeout(getBtcPrice, 30000);
-            }
-          });
+
+          $("#div_id_email_or_btc_address").removeClass("hidden");
+          $("#div_id_email").removeClass("hidden");
+          if (!$('#div_id_email_or_btc_address').length){
+            $("#div_id_btc_address").removeClass("hidden");
+          }
+          var entered_amount = $('#id_amount').val();
+          var sell_price_no_format = parseFloat($('#sell-price').text());
+          var final_btc = parseFloat(entered_amount) / sell_price_no_format;
+
+          $("#btc-amount").html('{{merchant.get_currency_symbol}}'+entered_amount+ ' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
+          $("#step_1").addClass("hidden");
+          $("#step_2").removeClass("hidden");
+          $("#submit-button").prop('disabled', false);
+
         }
       }, 500 );
     });

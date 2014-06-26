@@ -6,7 +6,7 @@
       </h3>
       <h3 class="pull-right hidden-xs" style="color: #72a53b; float:right;">
         <span id='pricing-info' class="hidden">
-          {% trans "BTC Price"%}: <span id="fiat-amt"></span> <span id='currency-code'></span>
+          {% trans "Market BTC Price"%}: <span id="fiat-amt"></span> <span class="currency-code"></span>
         </span>
         <a class="active has-spinner" id="fiat-amt-loader">
           <span class="spinner">
@@ -27,12 +27,16 @@
         <div class="col-sm-6">
           <div class="item">
             <div class="head">
-              <h4>Buy Bitcoin <div style="color: #81D685; font-size: 42px;"><i class="fa fa-bitcoin"></i></div></h4>
+              <h3>Buy Bitcoin <span style="color: #81D685; font-size: 42px;">&nbsp; <i class="fa fa-bitcoin"></i></span></h3>
             <div class="arrow"></div>
           </div>
           <div class="sceleton">
-            <h5 class="hidden" id="buy-price-holder"><span id="buy-price"></span><span>/btc</span></h5>
-            <a class="active has-spinner" id="buy-price-loader">
+            <h5 class="hidden" id="buy-price-holder">
+              <span id="buy-price"></span> <span class="currency-code"></span><span> / BTC</span>
+              <span class="text-muted">(+<span class="percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
+            </h5>
+
+            <a class="active has-spinner price-loader">
             <span class="spinner">
               <i class="fa fa-spinner fa-spin"></i>
             </span>
@@ -40,14 +44,14 @@
           <table class="table">
             <tbody>
               <tr>
-                <td align="left" style="padding-left: 25%;">1. Enter Email or Bitcoin Address</td>
+                <td align="left" style="padding-left: 25%;">1. {% trans "Enter Email or Bitcoin Address" %}</td>
               </tr>
               <tr>
-                <td align="left" style="padding-left: 25%;">2. Pay Cash</td>
+                <td align="left" style="padding-left: 25%;">2. {% trans "Pay Cash to Merchant" %}</td>
               </tr>
               
               <tr>
-                <td align="left" style="padding-left: 25%;">3. Receive Bitcoin</td>
+                <td align="left" style="padding-left: 25%;">3. {% trans "Receive Bitcoin from Merchant" %}</td>
               </tr>
             </tbody>
           </table>
@@ -65,12 +69,15 @@
     {% endif %}
         <div class="item">
           <div class="head">
-            <h4>Sell Bitcoin <div style="color: #81D685; font-size: 42px;"><i class="fa fa-money"></i></div></h4>
+            <h3>Sell Bitcoin <span style="color: #81D685; font-size: 42px;">&nbsp; <i class="fa fa-money"></i></span></h3>
           <div class="arrow"></div>
         </div>
         <div class="sceleton">
-          <h5 class="hidden" id="sell-price-holder"><span id="sell-price"></span><span>/btc</span></h5>
-          <a class="active has-spinner" id="sell-price-loader">
+          <h5 class="hidden" id="sell-price-holder">
+            <span class="currency_symbol"></span><span id="sell-price"></span> <span class="currency-code"></span><span> / BTC</span>
+            <span class="text-muted">(-<span class="percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
+          </h5>
+          <a class="active has-spinner price-loader">
             <span class="spinner">
               <i class="fa fa-spinner fa-spin"></i>
             </span>
@@ -79,14 +86,14 @@
           <table class="table">
             <tbody>
               <tr>
-                <td align="left" style="padding-left: 25%;">1. Get Deposit Address</td>
+                <td align="left" style="padding-left: 25%;">1. {% trans "Get Deposit Address" %}</td>
               </tr>
               <tr>
-                <td align="left" style="padding-left: 25%;">2. Send Bitcoin</td>
+                <td align="left" style="padding-left: 25%;">2. {% trans "Send Bitcoin to Merchant" %}</td>
               </tr>
               
               <tr>
-                <td align="left" style="padding-left: 25%;">3. Get Cash</td>
+                <td align="left" style="padding-left: 25%;">3. {% trans "Receive Cash from Merchant" %}</td>
               </tr>
             </tbody>
           </table>

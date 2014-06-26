@@ -68,9 +68,6 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     Send and log an email
     """
 
-    print '-' * 75
-    print 'send_and_log called...'
-
     #TODO: find a better way to handle the circular dependency
     from emails.models import SentEmail
 
@@ -133,8 +130,5 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
 
     # Send email object
     pm.send()
-
-    print 'EMAIL SENT TO', to_email
-    print '-' * 75
 
     return se

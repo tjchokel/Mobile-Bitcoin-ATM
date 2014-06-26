@@ -15,7 +15,7 @@
         {% if buy_request.b58_address %}
           {{buy_request.b58_address}}
         {% else %}
-          {{buy_request.email}}
+          {{buy_request.shopper.email}}
         {% endif %}
         (<a href="" onclick="cancelBuy();">{% trans "Cancel" %}</a>)
       </p>

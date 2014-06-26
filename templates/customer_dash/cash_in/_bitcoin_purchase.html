@@ -2,42 +2,73 @@
 <div class="container">
   <div class="page-header">
       <h3 class="pull-left">{{merchant.business_name}}</h3>
-      <!-- <h3 class="pull-right" id="last-polled" style="color: #72a53b; float:right;">
-        {% trans "Last Updated" %}: <span id='last-polled-time'>0</span> {% trans "seconds ago" %}
-        </h3> -->
       <div class="clearfix"></div>
   </div>
 
+  <div class="modal fade" id="confirm-purchase-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-receipt" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="confirm-receipt">{% trans "Confirm Cash Received" %}</h4>
+          <div class="clearfix"></div>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+
+              <p>
+                Merchant: please enter your password once you have recieved
+                <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b>
+                from the customer.
+              </p>
+
+              <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
+                {% load crispy_forms_tags %}
+                {{ password_form|crispy }}
+                {% csrf_token %}
+                <div class="button-wrapper">
+                  <button type="submit" class="btn btn-primary btn-lg">{% trans "Send BTC" %}</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+          <br/>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
   <div class="row">
     <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
-      <p class="lead text-center text-green">
-        {{merchant.get_currency_symbol}}{{buy_request.fiat_amount}} for {{buy_request.format_mbtc_amount}} mbtc to 
-        {% if buy_request.b58_address %}
-          {{buy_request.b58_address}}
-        {% else %}
-          {{buy_request.email}}
-        {% endif %}
+
+      <p class="lead text-center text-red">
+        {% trans "Price expires in" %}: <b id="expires-in"></b>
         (<a href="" onclick="cancelBuy();">{% trans "Cancel" %}</a>)
       </p>
-      <p class="lead text-center text-red">
-        Price expires in <b id="expires-in"></b>
+
+      <p class="lead text-center text-green">
+        Please pay the merchant <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b> to receive <b>{{buy_request.format_mbtc_amount}}</b> mBTC to
+          {% if buy_request.b58_address %}
+            <b>{{buy_request.b58_address}}</b>
+          {% else %}
+            <b>{{buy_request.email}}</b> (via CoinBase)
+          {% endif %}
       </p>
 
-      <p class="lead">
-        3. Please pay the merchant {{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}
+      <br />
+
+      <p class="text-center">
+
+        <!-- Button trigger modal -->
+        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#confirm-purchase-modal">
+          {% trans "I Have Paid" %}
+          <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b>
+        </button>
+
       </p>
-      <p class="lead">
-        4. After paying the merchant, have them confirm the transaction by entering their password below
-      </p>
-    
-      <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
-          {% load crispy_forms_tags %}
-          {{ password_form|crispy }}
-          {% csrf_token %}
-          <div class="button-wrapper">
-            <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
-          </div>
-      </form>
+
     </div>
   </div>
 </div>

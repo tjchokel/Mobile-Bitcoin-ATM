@@ -274,10 +274,14 @@
         }
       }
 
+      if( {{ show_confirm_purchase_modal }} === true){
+        $('#confirm-purchase-modal').modal('show');
+      }
+
       if ($('input[name=email_or_btc_address]:checked').val() == 1) {
         $("#div_id_btc_address").addClass("hidden");
       }
-      
+
       var currency_code = "{{merchant.currency_code}}";
       $( "#div_id_amount .controls" ).prepend( '<span class="input-group-addon needs-input-group">'+currency_code+'</span>' );
       $( ".needs-input-group" ).wrapAll( "<div class='input-group' />");

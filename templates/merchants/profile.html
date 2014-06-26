@@ -22,19 +22,19 @@
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Address Line 1" %}</td>
-                <td align="right">{{merchant.address_1}}</td>
+                <td align="right">{{merchant.address_1|default_if_none:''}}</td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Address Line 2" %}</td>
-                <td align="right">{{merchant.address_2}}</td>
+                <td align="right">{{merchant.address_2|default_if_none:''}}</td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "City" %}</td>
-                <td align="right">{{merchant.city}}</td>
+                <td align="right">{{merchant.city|default_if_none:''}}</td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "State" %}</td>
-                <td align="right">{{merchant.state}}</td>
+                <td align="right">{{merchant.state|default_if_none:''}}</td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Country" %}</td>
@@ -42,7 +42,7 @@
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Zip Code" %}</td>
-                <td align="right">{{merchant.zip_code}}</td>
+                <td align="right">{{merchant.zip_code|default_if_none:''}}</td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Phone Number" %}</td>

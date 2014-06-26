@@ -147,6 +147,8 @@ def register_merchant(request):
 @render_to('merchants/register_bitcoin.html')
 def register_bitcoin(request):
     user = request.user
+    if not user:
+        return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
     if not merchant:
         return HttpResponseRedirect(reverse_lazy('register_merchant'))

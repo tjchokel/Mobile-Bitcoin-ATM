@@ -52,12 +52,14 @@ def get_bitcoin_price(request):
     percent_markup = basis_points_markup / 100.00
 
     json_response = json.dumps({
-                "no_markup_price": format_fiat_amount(fiat_btc, currency_symbol, currency_code),
+                "no_markup_price": format_fiat_amount(fiat_btc, currency_symbol),
                 "buy_price": format_fiat_amount(buy_price, currency_symbol),
                 "sell_price": format_fiat_amount(sell_price, currency_symbol),
-                "sell_price_no_format": sell_price,
+                "sell_price_no_format": round(sell_price, 2),
+                "buy_price_no_format": round(buy_price, 2),
                 "markup": percent_markup,
                 "currency_code": currency_code,
+                "currency_symbol": currency_symbol,
                 })
     return HttpResponse(json_response, content_type='application/json')
 

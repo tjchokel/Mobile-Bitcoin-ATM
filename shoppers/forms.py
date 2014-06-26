@@ -80,7 +80,7 @@ class BuyBitcoinForm(forms.Form):
         return address
 
 
-class BitstampBuyBitcoinForm(forms.Form):
+class NoEmailBuyBitcoinForm(forms.Form):
     amount = forms.DecimalField(
             label=_('Cash Amount'),
             required=True,

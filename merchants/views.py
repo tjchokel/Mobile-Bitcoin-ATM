@@ -16,6 +16,7 @@ from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistr
         BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm)
 from coinbase.models import CBCredential
 from bstamp.models import BSCredential
+from bcwallet.models import BCICredential
 import datetime
 
 
@@ -147,7 +148,7 @@ def register_bitcoin(request):
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     initial = {
             'btc_markup': 2.0,
-            'exchange_choice': 1,
+            'exchange_choice': 'coinbase',
     }
     form = BitcoinRegistrationForm(initial=initial)
     if request.method == 'POST':
@@ -159,28 +160,35 @@ def register_bitcoin(request):
             bs_username = form.cleaned_data['bs_username']
             bs_api_key = form.cleaned_data['bs_api_key']
             bs_secret_key = form.cleaned_data['bs_secret_key']
+            bci_username = form.cleaned_data['bci_username']
+            bci_main_password = form.cleaned_data['bci_main_password']
+            bci_second_password = form.cleaned_data['bci_second_password']
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
-            # self managed address
-            if exchange_choice == '3':
+            if exchange_choice == 'selfmanaged':
                 merchant.set_destination_address(btc_address)
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
-                # using coinbase credentials
-                if exchange_choice == '1':
+                if exchange_choice == 'coinbase':
                     credentials = CBCredential.objects.create(
                         merchant=merchant,
                         api_key=cb_api_key,
                         api_secret=cb_secret_key
                     )
-                # using bitstamp credentials
-                else:
+                elif exchange_choice == 'bitstamp':
                     credentials = BSCredential.objects.create(
                         merchant=merchant,
                         api_key=bs_api_key,
                         api_secret=bs_secret_key,
                         username=bs_username
+                    )
+                elif exchange_choice == 'blockchain':
+                    credentials = BCICredential.objects.create(
+                        merchant=merchant,
+                        username=bci_username,
+                        main_password=bci_main_password,
+                        second_password=bci_second_password,
                     )
 
                 try:

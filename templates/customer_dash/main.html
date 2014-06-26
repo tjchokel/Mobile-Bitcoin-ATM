@@ -234,9 +234,6 @@
       var entered_amount = $('#id_amount').val();
       if (entered_amount=="" || isNaN(entered_amount)){
         $('#id_amount').val("");
-        // $("#div_id_email_or_btc_address").addClass("hidden");
-        // $("#div_id_email").addClass("hidden");
-        // $("#div_id_btc_address").addClass("hidden");
         $("#btc-amount").html('≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
         $("#submit-button").prop('disabled', true);
       }else{
@@ -251,37 +248,9 @@
         var final_btc = parseFloat(entered_amount) / buy_price_no_format;
         
         $("#btc-amount").html(' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
-        // $("#step_1").addClass("hidden");
-        // $("#step_2").removeClass("hidden");
         $("#submit-button").prop('disabled', false);
       }
-      // delay(function(){
-      //   var entered_amount = $('#id_amount').val();
-      //   if (entered_amount=="" || isNaN(entered_amount)){
-      //     $('#id_amount').val("");
-      //     $("#div_id_email_or_btc_address").addClass("hidden");
-      //     $("#div_id_email").addClass("hidden");
-      //     $("#div_id_btc_address").addClass("hidden");
-      //     $("#btc-amount").html('{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
-      //     $("#submit-button").prop('disabled', true);
-      //   }else{
 
-      //     $("#div_id_email_or_btc_address").removeClass("hidden");
-      //     $("#div_id_email").removeClass("hidden");
-      //     if (!$('#div_id_email_or_btc_address').length){
-      //       $("#div_id_btc_address").removeClass("hidden");
-      //     }
-      //     var entered_amount = $('#id_amount').val();
-      //     var sell_price_no_format = parseFloat($('#sell-price').text());
-      //     var final_btc = parseFloat(entered_amount) / sell_price_no_format;
-
-      //     $("#btc-amount").html(' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
-      //     $("#step_1").addClass("hidden");
-      //     $("#step_2").removeClass("hidden");
-      //     $("#submit-button").prop('disabled', false);
-
-      //   }
-      // }, 500 );
     });
 
     $("#id_email_or_btc_address_1, #id_email_or_btc_address_2").change(function(){
@@ -299,8 +268,6 @@
         $('#buy-bitcoin-modal').modal('show');
         $("#submit-button").prop('disabled', false);
 
-      }else{
-        // $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ <i class="fa fa-bitcoin"></i>0.00</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
       }
 
       if ($('input[name=email_or_btc_address]:checked').val() == 1) {

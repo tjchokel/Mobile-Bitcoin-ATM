@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -7,11 +6,14 @@ from django.utils.translation import ugettext as _
 from django.contrib import messages
 from annoying.decorators import render_to
 from django.utils.timezone import now
+from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
 from coinbase.models import CBCredential
 from coinbase.forms import CoinbaseAPIForm
 
 
+@sensitive_variables('api_key', 'secret_key', 'credentials')
+@sensitive_post_parameters('api_key', 'secret_key')
 @login_required
 @render_to('merchants/coinbase.html')
 def coinbase(request):
@@ -51,6 +53,7 @@ def coinbase(request):
     }
 
 
+@sensitive_variables('api_key', 'secret_key', 'credentials')
 @login_required
 def refresh_credentials(request):
     user = request.user
@@ -64,6 +67,7 @@ def refresh_credentials(request):
     return HttpResponse("*ok*")
 
 
+@sensitive_variables('api_key', 'secret_key', 'credentials')
 @login_required
 def disable_credentials(request):
     user = request.user

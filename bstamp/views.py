@@ -6,11 +6,14 @@ from django.utils.translation import ugettext as _
 from django.contrib import messages
 from annoying.decorators import render_to
 from django.utils.timezone import now
+from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
 from bstamp.forms import BitstampAPIForm
 from bstamp.models import BSCredential
 
 
+@sensitive_variables('username', 'api_key', 'secret_key', 'credentials')
+@sensitive_post_parameters('username', 'api_key', 'secret_key')
 @login_required
 @render_to('merchants/bitstamp.html')
 def bitstamp(request):
@@ -50,6 +53,7 @@ def bitstamp(request):
     }
 
 
+@sensitive_variables('username', 'api_key', 'secret_key', 'credentials')
 @login_required
 def refresh_credentials(request):
     user = request.user
@@ -63,6 +67,7 @@ def refresh_credentials(request):
     return HttpResponse("*ok*")
 
 
+@sensitive_variables('username', 'api_key', 'secret_key', 'credentials')
 @login_required
 def disable_credentials(request):
     user = request.user

@@ -5,7 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
+from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 from django.utils.timezone import now
+
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
@@ -20,6 +22,8 @@ from bcwallet.models import BCICredential
 import datetime
 
 
+@sensitive_variables('password', )
+@sensitive_post_parameters('password', )
 @render_to('login.html')
 def login_request(request):
     form = LoginForm()
@@ -138,6 +142,8 @@ def register_merchant(request):
     return {'form': form, 'user': user, 'form_valid': form_valid}
 
 
+@sensitive_variables('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
+@sensitive_post_parameters('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
 @render_to('merchants/register_bitcoin.html')
 def register_bitcoin(request):
     user = request.user
@@ -190,7 +196,7 @@ def register_bitcoin(request):
                     )
 
                 try:
-                    balance = credentials.get_balance()
+                    credentials.get_balance()
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
                     credentials.disabled_at = now()

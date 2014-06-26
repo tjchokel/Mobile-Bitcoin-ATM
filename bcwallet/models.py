@@ -74,14 +74,14 @@ class BCICredential(models.Model):
     def request_cashout(self, satoshis_to_sell, limit_order_price=None):
         raise Exception('Not Possible')
 
-    def send_btc(self, satoshis_to_send, destination_address):
+    def send_btc(self, satoshis_to_send, destination_btc_address):
 
-        msg = '%s is not a valid bitcoin address' % destination_address
-        assert is_valid_btc_address(destination_address), msg
+        msg = '%s is not a valid bitcoin address' % destination_btc_address
+        assert is_valid_btc_address(destination_btc_address), msg
 
         BASE_URL = 'https://blockchain.info/merchant/%s/payment?password=%s&to=%s&amount=%s&shared=false'
         SEND_URL = BASE_URL % (self.username, self.main_password,
-                destination_address, satoshis_to_send)
+                destination_btc_address, satoshis_to_send)
 
         if self.second_password:
             SEND_URL += '&second_password=%s' % self.second_password
@@ -118,7 +118,7 @@ class BCICredential(models.Model):
         return BCISendBTC.objects.create(
                 bci_credential=self,
                 satoshis=satoshis_to_send,
-                destination_address=destination_address,
+                destination_address=destination_btc_address,
                 tx_hash=tx_hash,
                 )
 

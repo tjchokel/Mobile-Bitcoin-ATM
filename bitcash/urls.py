@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     # API Partners
     url(r'^coinbase/$', 'coinbase.views.coinbase', name='coinbase'),
     url(r'^bitstamp/$', 'bstamp.views.bitstamp', name='bitstamp'),
+    url(r'^blockchain/$', 'bcwallet.views.blockchain', name='blockchain'),
 
     # AJAX Calls
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
@@ -42,6 +43,9 @@ urlpatterns = patterns('',
     url(r'^disable-cb-credentials/$', 'coinbase.views.disable_credentials', name='disable_cb_credentials'),
     url(r'^refresh-bs-credentials/$', 'bstamp.views.refresh_credentials', name='refresh_bs_credentials'),
     url(r'^disable-bs-credentials/$', 'bstamp.views.disable_credentials', name='disable_bs_credentials'),
+    url(r'^refresh-bci-credentials/$', 'bcwallet.views.refresh_credentials', name='refresh_bci_credentials'),
+    url(r'^disable-bci-credentials/$', 'bcwallet.views.disable_credentials', name='disable_bci_credentials'),
+
 
 
 

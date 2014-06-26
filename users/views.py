@@ -9,7 +9,7 @@ from annoying.functions import get_object_or_None
 
 from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
 from shoppers.models import Shopper
-from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, BitstampBuyBitcoinForm, ConfirmPasswordForm
+from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 
 
 @render_to('index.html')
@@ -35,7 +35,7 @@ def customer_dashboard(request):
     if merchant.has_valid_coinbase_credentials():
         buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'})
     else:
-        buy_form = BitstampBuyBitcoinForm()
+        buy_form = NoEmailBuyBitcoinForm()
     password_form = ConfirmPasswordForm(user=user)
     shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
     show_buy_modal = 'false'
@@ -45,7 +45,7 @@ def customer_dashboard(request):
             if merchant.has_valid_coinbase_credentials():
                 buy_form = BuyBitcoinForm(data=request.POST)
             else:
-                buy_form = BitstampBuyBitcoinForm(data=request.POST)
+                buy_form = NoEmailBuyBitcoinForm(data=request.POST)
             if buy_form.is_valid():
                 amount = buy_form.cleaned_data['amount']
                 email = buy_form.cleaned_data['email']

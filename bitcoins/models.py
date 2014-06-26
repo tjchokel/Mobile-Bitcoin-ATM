@@ -78,6 +78,10 @@ class DestinationAddress(models.Model):
             credentials = merchant.get_bitstamp_credentials()
             address = credentials.get_receiving_address(True)
             address_object = DestinationAddress.objects.get(b58_address=address)
+        elif merchant.has_valid_blockchain_credentials():
+            credentials = merchant.get_blockchain_credentials()
+            address = credentials.get_new_receiving_address(True)
+            address_object = DestinationAddress.objects.get(b58_address=address)
         return address_object
 
 

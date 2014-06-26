@@ -56,6 +56,7 @@ def get_bitcoin_price(request):
                 "buy_price": format_fiat_amount(buy_price, currency_symbol),
                 "sell_price": format_fiat_amount(sell_price, currency_symbol),
                 "sell_price_no_format": round(sell_price, 2),
+                "buy_price_no_format": round(buy_price, 2),
                 "markup": percent_markup,
                 "currency_code": currency_code,
                 "currency_symbol": currency_symbol,

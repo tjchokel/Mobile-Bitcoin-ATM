@@ -27,12 +27,12 @@
         <div class="col-sm-6">
           <div class="item">
             <div class="head">
-              <h3>Buy Bitcoin <span style="color: #81D685; font-size: 42px;">&nbsp; <i class="fa fa-bitcoin"></i></span></h3>
+              <h3>{% trans "Buy Bitcoin" %} <span style="color: #81D685; font-size: 42px;"><i class="fa fa-bitcoin"></i></span></h3>
             <div class="arrow"></div>
           </div>
           <div class="sceleton">
             <h5 class="hidden" id="buy-price-holder">
-              <span id="buy-price"></span> <span class="currency-code"></span><span> / BTC</span>
+              <span class="currency_symbol"></span><span id="buy-price"></span><span> / BTC</span>
               <span class="text-muted">(+<span class="percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
             </h5>
 
@@ -69,12 +69,12 @@
     {% endif %}
         <div class="item">
           <div class="head">
-            <h3>Sell Bitcoin <span style="color: #81D685; font-size: 42px;">&nbsp; <i class="fa fa-money"></i></span></h3>
+            <h3>Sell Bitcoin <span style="color: #81D685; font-size: 42px;"> <i class="fa fa-money"></i></span></h3>
           <div class="arrow"></div>
         </div>
         <div class="sceleton">
           <h5 class="hidden" id="sell-price-holder">
-            <span class="currency_symbol"></span><span id="sell-price"></span> <span class="currency-code"></span><span> / BTC</span>
+            <span class="currency_symbol"></span><span id="sell-price"></span><span> / BTC</span>
             <span class="text-muted">(-<span class="percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
           </h5>
           <a class="active has-spinner price-loader">

@@ -8,50 +8,72 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'BCICredential'
-        db.create_table(u'bcwallet_bcicredential', (
+        # Adding model 'Credential'
+        db.create_table(u'credentials_credential', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
+            ('credential_type', self.gf('django.db.models.fields.CharField')(max_length=3, db_index=True)),
             ('merchant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['merchants.Merchant'])),
-            ('username', self.gf('django_fields.fields.EncryptedCharField')(max_length=165, block_type=None, cipher='AES', db_index=True)),
-            ('main_password', self.gf('django_fields.fields.EncryptedCharField')(max_length=293, block_type=None, cipher='AES', db_index=True)),
-            ('second_password', self.gf('django_fields.fields.EncryptedCharField')(block_type=None, max_length=293, blank=True, null=True, cipher='AES', db_index=True)),
+            ('api_key', self.gf('django_fields.fields.EncryptedCharField')(max_length=293, block_type=None, cipher='AES', db_index=True)),
+            ('api_secret', self.gf('django_fields.fields.EncryptedCharField')(max_length=549, block_type=None, cipher='AES', db_index=True)),
+            ('secondary_secret', self.gf('django_fields.fields.EncryptedCharField')(block_type=None, max_length=549, blank=True, null=True, cipher='AES', db_index=True)),
             ('disabled_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
             ('last_succeded_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
             ('last_failed_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
         ))
-        db.send_create_signal(u'bcwallet', ['BCICredential'])
+        db.send_create_signal(u'credentials', ['Credential'])
 
-        # Adding model 'BCIBalance'
-        db.create_table(u'bcwallet_bcibalance', (
+        # Adding model 'CurrentBalance'
+        db.create_table(u'credentials_currentbalance', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('bci_credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bcwallet.BCICredential'])),
+            ('credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['credentials.Credential'])),
             ('satoshis', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
         ))
-        db.send_create_signal(u'bcwallet', ['BCIBalance'])
+        db.send_create_signal(u'credentials', ['CurrentBalance'])
 
-        # Adding model 'BCISendBTC'
-        db.create_table(u'bcwallet_bcisendbtc', (
+        # Adding model 'SentBTC'
+        db.create_table(u'credentials_sentbtc', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('bci_credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['bcwallet.BCICredential'])),
+            ('credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['credentials.Credential'])),
+            ('txn_hash', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=64, unique=True, null=True, blank=True)),
             ('satoshis', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
-            ('destination_address', self.gf('django.db.models.fields.CharField')(max_length=34, db_index=True)),
-            ('tx_hash', self.gf('django.db.models.fields.CharField')(unique=True, max_length=64, db_index=True)),
+            ('destination_btc_address', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=34, null=True, blank=True)),
+            ('destination_email', self.gf('django.db.models.fields.EmailField')(db_index=True, max_length=75, null=True, blank=True)),
+            ('unique_id', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('notes', self.gf('django.db.models.fields.CharField')(max_length=2048, null=True, blank=True)),
+            ('status', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=1, null=True, blank=True)),
+            ('status_last_checked_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
         ))
-        db.send_create_signal(u'bcwallet', ['BCISendBTC'])
+        db.send_create_signal(u'credentials', ['SentBTC'])
+
+        # Adding model 'SellBTCOrder'
+        db.create_table(u'credentials_sellbtcorder', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
+            ('credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['credentials.Credential'])),
+            ('custom_code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=32, db_index=True)),
+            ('satoshis', self.gf('django.db.models.fields.BigIntegerField')(db_index=True)),
+            ('currency_code', self.gf('django.db.models.fields.CharField')(max_length=5, db_index=True)),
+            ('fees_in_fiat', self.gf('django.db.models.fields.DecimalField')(db_index=True, null=True, max_digits=10, decimal_places=2, blank=True)),
+            ('to_receive_in_fiat', self.gf('django.db.models.fields.DecimalField')(max_digits=10, decimal_places=2, db_index=True)),
+        ))
+        db.send_create_signal(u'credentials', ['SellBTCOrder'])
 
 
     def backwards(self, orm):
-        # Deleting model 'BCICredential'
-        db.delete_table(u'bcwallet_bcicredential')
+        # Deleting model 'Credential'
+        db.delete_table(u'credentials_credential')
 
-        # Deleting model 'BCIBalance'
-        db.delete_table(u'bcwallet_bcibalance')
+        # Deleting model 'CurrentBalance'
+        db.delete_table(u'credentials_currentbalance')
 
-        # Deleting model 'BCISendBTC'
-        db.delete_table(u'bcwallet_bcisendbtc')
+        # Deleting model 'SentBTC'
+        db.delete_table(u'credentials_sentbtc')
+
+        # Deleting model 'SellBTCOrder'
+        db.delete_table(u'credentials_sellbtcorder')
 
 
     models = {
@@ -68,40 +90,57 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        u'bcwallet.bcibalance': {
-            'Meta': {'object_name': 'BCIBalance'},
-            'bci_credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bcwallet.BCICredential']"}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'})
-        },
-        u'bcwallet.bcicredential': {
-            'Meta': {'object_name': 'BCICredential'},
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'disabled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'last_failed_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'last_succeded_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
-            'main_password': ('django_fields.fields.EncryptedCharField', [], {'max_length': '293', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
-            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
-            'second_password': ('django_fields.fields.EncryptedCharField', [], {'block_type': 'None', 'max_length': '293', 'blank': 'True', 'null': 'True', 'cipher': "'AES'", 'db_index': 'True'}),
-            'username': ('django_fields.fields.EncryptedCharField', [], {'max_length': '165', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'})
-        },
-        u'bcwallet.bcisendbtc': {
-            'Meta': {'object_name': 'BCISendBTC'},
-            'bci_credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bcwallet.BCICredential']"}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'destination_address': ('django.db.models.fields.CharField', [], {'max_length': '34', 'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
-            'tx_hash': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '64', 'db_index': 'True'})
-        },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
             'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'credentials.credential': {
+            'Meta': {'object_name': 'Credential'},
+            'api_key': ('django_fields.fields.EncryptedCharField', [], {'max_length': '293', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
+            'api_secret': ('django_fields.fields.EncryptedCharField', [], {'max_length': '549', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'credential_type': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_index': 'True'}),
+            'disabled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'last_failed_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'last_succeded_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
+            'secondary_secret': ('django_fields.fields.EncryptedCharField', [], {'block_type': 'None', 'max_length': '549', 'blank': 'True', 'null': 'True', 'cipher': "'AES'", 'db_index': 'True'})
+        },
+        u'credentials.currentbalance': {
+            'Meta': {'object_name': 'CurrentBalance'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['credentials.Credential']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'})
+        },
+        u'credentials.sellbtcorder': {
+            'Meta': {'object_name': 'SellBTCOrder'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['credentials.Credential']"}),
+            'currency_code': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
+            'custom_code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32', 'db_index': 'True'}),
+            'fees_in_fiat': ('django.db.models.fields.DecimalField', [], {'db_index': 'True', 'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
+            'to_receive_in_fiat': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2', 'db_index': 'True'})
+        },
+        u'credentials.sentbtc': {
+            'Meta': {'object_name': 'SentBTC'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['credentials.Credential']"}),
+            'destination_btc_address': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
+            'destination_email': ('django.db.models.fields.EmailField', [], {'db_index': 'True', 'max_length': '75', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'notes': ('django.db.models.fields.CharField', [], {'max_length': '2048', 'null': 'True', 'blank': 'True'}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
+            'status': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '1', 'null': 'True', 'blank': 'True'}),
+            'status_last_checked_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'txn_hash': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'unique_id': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
         u'merchants.merchant': {
             'Meta': {'object_name': 'Merchant'},
@@ -140,4 +179,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['bcwallet']
+    complete_apps = ['credentials']

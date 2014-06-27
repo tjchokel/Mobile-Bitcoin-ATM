@@ -11,14 +11,13 @@ from django.utils.timezone import now
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
+from credentials.models import Credential
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistrationForm,
         BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm)
-from coinbase.models import CBCredential
-from bstamp.models import BSCredential
-from bcwallet.models import BCICredential
+
 import datetime
 
 
@@ -161,14 +160,6 @@ def register_bitcoin(request):
         form = BitcoinRegistrationForm(data=request.POST)
         if form.is_valid():
             exchange_choice = form.cleaned_data['exchange_choice']
-            cb_api_key = form.cleaned_data['cb_api_key']
-            cb_secret_key = form.cleaned_data['cb_secret_key']
-            bs_username = form.cleaned_data['bs_username']
-            bs_api_key = form.cleaned_data['bs_api_key']
-            bs_secret_key = form.cleaned_data['bs_secret_key']
-            bci_username = form.cleaned_data['bci_username']
-            bci_main_password = form.cleaned_data['bci_main_password']
-            bci_second_password = form.cleaned_data['bci_second_password']
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
@@ -177,24 +168,24 @@ def register_bitcoin(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 if exchange_choice == 'coinbase':
-                    credentials = CBCredential.objects.create(
+                    credentials = Credential.objects.create(
                         merchant=merchant,
-                        api_key=cb_api_key,
-                        api_secret=cb_secret_key
+                        api_key=form.cleaned_data['cb_api_key'],
+                        api_secret=form.cleaned_data['cb_secret_key']
                     )
                 elif exchange_choice == 'bitstamp':
-                    credentials = BSCredential.objects.create(
+                    credentials = Credential.objects.create(
                         merchant=merchant,
-                        api_key=bs_api_key,
-                        api_secret=bs_secret_key,
-                        username=bs_username
+                        api_key=form.cleaned_data['bs_username'],
+                        api_secret=form.cleaned_data['bs_api_key'],
+                        secondary_secret=form.cleaned_data['bs_secret_key'],
                     )
                 elif exchange_choice == 'blockchain':
-                    credentials = BCICredential.objects.create(
+                    credentials = Credential.objects.create(
                         merchant=merchant,
-                        username=bci_username,
-                        main_password=bci_main_password,
-                        second_password=bci_second_password,
+                        username=form.cleaned_data['bci_username'],
+                        main_password=form.cleaned_data['bci_main_password'],
+                        second_password=form.cleaned_data['bci_second_password'],
                     )
 
                 try:

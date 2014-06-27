@@ -1,7 +1,8 @@
-from django.db import models
-from django_fields.fields import EncryptedCharField
+from credentials.base import BaseCredential
+
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
+
+from credentials.models import CurrentBalance, SentBTC
 
 from services.models import APICall
 
@@ -12,26 +13,12 @@ from utils import btc_to_satoshis, satoshis_to_btc
 from bitstamp.client import Trading
 
 
-class BSCredential(models.Model):
-
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
-    # Both of these are extra-long for safety
-    username = EncryptedCharField(max_length=32, blank=False, null=False, db_index=True)
-    api_key = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
-    api_secret = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
-    disabled_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    last_succeded_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    last_failed_at = models.DateTimeField(blank=True, null=True, db_index=True)
-
-    def __str__(self):
-        return '%s from %s' % (self.id, self.merchant.business_name)
-
-    def get_payment_channel(self):
-        return 'BTS'
+class BTSCredential(BaseCredential):
 
     def get_trading_obj(self):
-        return Trading(username=self.username, key=self.api_key, secret=self.api_secret)
+        return Trading(username=self.cred.api_key,
+                key=self.cred.api_secret,
+                secret=self.cred.secondary_secret)
 
     def get_balance(self):
         """
@@ -49,11 +36,11 @@ class BSCredential(models.Model):
                 response_code=200,
                 post_params=None,  # not accurate
                 api_results=balance_dict,
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_succeded_at = now()
-            self.last_failed_at = None
-            self.save()
+            self.cred.last_succeded_at = now()
+            self.cred.last_failed_at = None
+            self.cred.save()
         except Exception as e:
             # Log the API call
             APICall.objects.create(
@@ -62,17 +49,17 @@ class BSCredential(models.Model):
                 response_code=0,  # this is not accurate
                 post_params=None,  # not accurate
                 api_results=str(e),
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
 
             raise Exception(e)
 
         satoshis = btc_to_satoshis(balance_dict['btc_available'])
 
         # Record the balance results
-        BSBalance.objects.create(satoshis=satoshis, bs_credential=self)
+        CurrentBalance.objects.create(satoshis=satoshis, credential=self.cred)
 
         return satoshis
 
@@ -94,11 +81,11 @@ class BSCredential(models.Model):
                 response_code=200,
                 post_params=None,  # not accurate
                 api_results=str(txn_list),
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_succeded_at = now()
-            self.last_failed_at = None
-            self.save()
+            self.cred.last_succeded_at = now()
+            self.cred.last_failed_at = None
+            self.cred.save()
 
         except Exception as e:
             # Log the API call
@@ -108,10 +95,10 @@ class BSCredential(models.Model):
                 response_code=0,  # not accurate
                 post_params=None,  # not accurate
                 api_results=str(e),
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
 
             raise Exception(e)
 
@@ -146,11 +133,11 @@ class BSCredential(models.Model):
                 response_code=200,
                 post_params=post_params,
                 api_results=str(withdrawal_info),
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_succeded_at = now()
-            self.last_failed_at = None
-            self.save()
+            self.cred.last_succeded_at = now()
+            self.cred.last_failed_at = None
+            self.cred.save()
 
         except Exception as e:
             # Log the API Call
@@ -160,16 +147,16 @@ class BSCredential(models.Model):
                 response_code=0,  # not accurate
                 post_params=post_params,
                 api_results=str(e),
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
 
             raise Exception(e)
 
         # Record the Send
-        BSSendBTC.objects.create(
-                bs_credential=self,
+        SentBTC.objects.create(
+                credential=self.cred,
                 bs_withdrawal_id=withdrawal_id,
                 satoshis=satoshis_to_send,
                 destination_address=destination_btc_address,
@@ -196,10 +183,10 @@ class BSCredential(models.Model):
                 response_code=200,
                 post_params=None,  # not accurate
                 api_results=address,
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_succeded_at = now()
-            self.save()
+            self.cred.last_succeded_at = now()
+            self.cred.save()
         except Exception as e:
             # Log the API call
             APICall.objects.create(
@@ -208,62 +195,21 @@ class BSCredential(models.Model):
                 response_code=0,  # this is not accurate
                 post_params=None,  # not accurate
                 api_results=str(e),
-                merchant=self.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
 
             raise Exception(e)
 
         if set_as_merchant_address:
-            self.merchant.set_destination_address(address)
+            self.cred.merchant.set_destination_address(address)
 
         return address
 
-    def get_status(self):
-        if self.last_failed_at:
-            return _('Invalid')
-        else:
-            return _('Valid')
-
-
-class BSBalance(models.Model):
-    """ Probably just used as a log and not implemented anywhere """
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    bs_credential = models.ForeignKey(BSCredential, blank=False, null=False)
-    satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
-
-    def __str__(self):
-        return '%s: %s' % (self.id, self.satoshis)
-
-
-class BSSendBTC(models.Model):
-
-    BS_STATUS_CHOICES = (
-            ('0', 'Open'),
-            ('1', 'In Process'),
-            ('2', 'Finished'),
-            ('3', 'Canceled'),
-            ('4', 'Failed'),
-            )
-
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    bs_credential = models.ForeignKey(BSCredential, blank=False, null=False)
-    bs_withdrawal_id = models.BigIntegerField(blank=False, null=False, db_index=True)
-    satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
-    destination_address = models.CharField(max_length=34, blank=False,
-            null=False, db_index=True)
-    # To use with polling (we don't get this data on creation)
-    status = models.CharField(choices=BS_STATUS_CHOICES, max_length=1,
-            null=True, blank=True, db_index=True)
-    status_last_checked_at = models.DateTimeField(blank=True, null=True, db_index=True)
-
-    def __str__(self):
-        return '%s: %s' % (self.id, self.destination_address)
-
     def check_status(self, update_results=True):
         WITHDRAWALS_URL = 'https://www.bitstamp.net/api/withdrawal_requests/'
-        trading_obj = self.bs_credential.get_trading_obj()
+        trading_obj = self.get_trading_obj()
 
         try:
             withdrawal_requests = trading_obj.withdrawal_requests()
@@ -274,11 +220,11 @@ class BSSendBTC(models.Model):
                 response_code=200,
                 post_params=None,
                 api_results=str(withdrawal_requests),
-                merchant=self.bs_credential.merchant)
+                merchant=self.cred.merchant)
 
-            self.last_succeded_at = now()
-            self.last_failed_at = None
-            self.save()
+            self.cred.last_succeded_at = now()
+            self.cred.last_failed_at = None
+            self.cred.save()
         except Exception as e:
             # Log the API Call
             APICall.objects.create(
@@ -287,18 +233,18 @@ class BSSendBTC(models.Model):
                 response_code=0,  # not accurate
                 post_params=None,
                 api_results=str(e),
-                merchant=self.bs_credential.merchant)
-            self.last_failed_at = now()
-            self.save()
+                merchant=self.cred.merchant)
+            self.cred.last_failed_at = now()
+            self.cred.save()
             raise Exception(e)
 
         for withdrawal_request in withdrawal_requests:
-            if withdrawal_request['id'] == self.bs_withdrawal_id:
+            if withdrawal_request['id'] == self.cred.bs_withdrawal_id:
                 new_status = withdrawal_request['status']
                 if update_results:
-                    self.status = new_status
-                    self.status_last_checked_at = now()
-                    self.save()
+                    self.cred.status = new_status
+                    self.cred.status_last_checked_at = now()
+                    self.cred.save()
                 return new_status
 
         raise Exception('WithdrawalNotFound')

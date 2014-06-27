@@ -1,41 +1,74 @@
-from django.db import models
-from django_fields.fields import EncryptedCharField
+from credentials.base import BaseCredential
+
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
 
 from services.models import APICall
-
-from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction
 
-from coinbase.api import get_cb_request
+from bitcoins.BCAddressField import is_valid_btc_address
 
 from utils import btc_to_satoshis, satoshis_to_btc
 
-from countries import BFH_CURRENCY_DROPDOWN
+from credentials.models import CurrentBalance, SellBTCOrder, SentBTC
+
+import json
+import hashlib
+import hmac
+import time
+import requests
 
 from dateutil import parser
 
-import json
+
+CB_DEBUG = False
 
 
-class CBCredential(models.Model):
+def get_cb_request(url, api_key, api_secret, body=None):
+    """
+    Modified from example here:
+    https://coinbase.com/docs/api/authentication
+    https://coinbase.com/docs/api/ecommerce_tutorial
 
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
-    # Both of these are extra-long for safety
-    api_key = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
-    api_secret = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
-    disabled_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    last_succeded_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    # Not implemented anywhere:
-    last_failed_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    CB API is non-standard and undocumented.
+    For kwargs, use a get string as the `url` and no body. Easy.
+    For POSTing a JSON object, encode them as a query_string (in the
+    following nonstandard way) and post it as such:
 
-    def __str__(self):
-        return '%s from %s' % (self.id, self.merchant.business_name)
+    {'transation': {'to': 'foo', 'amount': 1}}
+    ->
+    transaction[to]=foo&transaction[amount]=1
+    """
+    # convert from unicode to str
+    api_key = str(api_key)
+    api_secret = str(api_secret)
 
-    def get_payment_channel(self):
-        return 'CBS'
+    nonce = int(time.time() * 1e6)
+    message = str(nonce) + url
+    if body:
+        message += body
+    signature = hmac.new(api_secret, message, hashlib.sha256).hexdigest()
+    headers = {
+            #"Content-Type": 'application/x-www-form-urlencoded',
+            'ACCESS_KEY': api_key,
+            'ACCESS_SIGNATURE': signature,
+            'ACCESS_NONCE': nonce,
+            }
+
+    if CB_DEBUG:
+        print '-'*75
+        print 'url:', url
+        print 'body:', body
+        print 'nonce:', nonce
+        print 'message:', message
+        print 'signature:', signature
+        print '-'*75
+
+    if body:
+        return requests.post(url, data=body, headers=headers, verify=True)
+    return requests.get(url, headers=headers, verify=True)
+
+
+class CBSCredential(BaseCredential):
 
     def get_balance(self):
         """
@@ -44,8 +77,8 @@ class CBCredential(models.Model):
         BALANCE_URL = 'https://coinbase.com/api/v1/account/balance'
         r = get_cb_request(
                 url=BALANCE_URL,
-                api_key=self.api_key,
-                api_secret=self.api_secret)
+                api_key=self.cred.api_key,
+                api_secret=self.cred.api_secret)
 
         # Log the API call
         APICall.objects.create(
@@ -54,15 +87,15 @@ class CBCredential(models.Model):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.merchant)
+            merchant=self.cred.merchant)
 
         if r.status_code == 200:
-            self.last_failed_at = None
-            self.last_succeded_at = now()
-            self.save()
+            self.cred.last_failed_at = None
+            self.cred.last_succeded_at = now()
+            self.cred.save()
         else:
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
             err_msg = 'Expected status code 200 but got %s' % r.status_code
             raise Exception('StatusCode: %s' % err_msg)
 
@@ -74,7 +107,7 @@ class CBCredential(models.Model):
         satoshis = btc_to_satoshis(resp_json['amount'])
 
         # Record the balance results
-        CurrentBalance.objects.create(satoshis=satoshis, cb_credential=self)
+        CurrentBalance.objects.create(satoshis=satoshis, credential=self.cred)
 
         return satoshis
 
@@ -86,8 +119,8 @@ class CBCredential(models.Model):
 
         r = get_cb_request(
                 url=url_to_hit,
-                api_key=self.api_key,
-                api_secret=self.api_secret,
+                api_key=self.cred.api_key,
+                api_secret=self.cred.api_secret,
                 )
 
         # Log the API call
@@ -96,15 +129,15 @@ class CBCredential(models.Model):
             url_hit=url_to_hit,
             response_code=r.status_code,
             api_results=r.content,
-            merchant=self.merchant)
+            merchant=self.cred.merchant)
 
         if r.status_code == 200:
-            self.last_failed_at = None
-            self.last_succeded_at = now()
-            self.save()
+            self.cred.last_failed_at = None
+            self.cred.last_succeded_at = now()
+            self.cred.save()
         else:
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
             err_msg = 'Expected status code 200 but got %s' % r.status_code
             raise Exception('StatusCode: %s' % err_msg)
 
@@ -116,8 +149,8 @@ class CBCredential(models.Model):
 
         r = get_cb_request(
                 url=LIST_TX_URL,
-                api_key=self.api_key,
-                api_secret=self.api_secret,
+                api_key=self.cred.api_key,
+                api_secret=self.cred.api_secret,
                 )
 
         # Log the API call
@@ -127,15 +160,15 @@ class CBCredential(models.Model):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.merchant)
+            merchant=self.cred.merchant)
 
         if r.status_code == 200:
-            self.last_failed_at = None
-            self.last_succeded_at = now()
-            self.save()
+            self.cred.last_failed_at = None
+            self.cred.last_succeded_at = now()
+            self.cred.save()
         else:
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
             err_msg = 'Expected status code 200 but got %s' % r.status_code
             raise Exception('StatusCode: %s' % err_msg)
 
@@ -144,7 +177,7 @@ class CBCredential(models.Model):
         # Record the balance
         CurrentBalance.objects.create(
                 satoshis=btc_to_satoshis(json_resp['balance']['amount']),
-                cb_credential=self,
+                cb_credential=self.cred,
                 )
 
         # Return transactions
@@ -158,8 +191,8 @@ class CBCredential(models.Model):
 
         r = get_cb_request(
                 url=SELL_URL,
-                api_key=self.api_key,
-                api_secret=self.api_secret,
+                api_key=self.cred.api_key,
+                api_secret=self.cred.api_secret,
                 body=body_to_use,
                 )
 
@@ -170,15 +203,15 @@ class CBCredential(models.Model):
             response_code=r.status_code,
             api_results=r.content,
             post_params=body_to_use,
-            merchant=self.merchant)
+            merchant=self.cred.merchant)
 
         if r.status_code == 200:
-            self.last_failed_at = None
-            self.last_succeded_at = now()
-            self.save()
+            self.cred.last_failed_at = None
+            self.cred.last_succeded_at = now()
+            self.cred.save()
         else:
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
             err_msg = 'Expected status code 200 but got %s' % r.status_code
             raise Exception('StatusCode: %s' % err_msg)
 
@@ -208,8 +241,8 @@ class CBCredential(models.Model):
             assert fee['currency_iso'] == currency_to_recieve, msg
         fiat_fees = fiat_fees_in_cents/100.0
 
-        return SellOrder.objects.create(
-                cb_credential=self,
+        return SellBTCOrder.objects.create(
+                cb_credential=self.cred,
                 cb_code=transfer['code'],
                 received_at=parser.parse(transfer['created_at']),
                 satoshis=satoshis,
@@ -268,8 +301,8 @@ class CBCredential(models.Model):
 
         r = get_cb_request(
                 url=SEND_URL,
-                api_key=self.api_key,
-                api_secret=self.api_secret,
+                api_key=self.cred.api_key,
+                api_secret=self.cred.api_secret,
                 body=post_params)
 
         # Log the API call
@@ -279,15 +312,15 @@ class CBCredential(models.Model):
             response_code=r.status_code,
             post_params=post_params,
             api_results=r.content,
-            merchant=self.merchant)
+            merchant=self.cred.merchant)
 
         if r.status_code == 200:
-            self.last_failed_at = None
-            self.last_succeded_at = now()
-            self.save()
+            self.cred.last_failed_at = None
+            self.cred.last_succeded_at = now()
+            self.cred.save()
         else:
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
             err_msg = 'Expected status code 200 but got %s' % r.status_code
             raise Exception('StatusCode: %s' % err_msg)
 
@@ -311,14 +344,14 @@ class CBCredential(models.Model):
 
         # Record the Send
         send_btc_dict.update({
-                'cb_credential': self,
+                'cb_credential': self.cred,
                 'received_at': parser.parse(transaction['created_at']),
                 'txn_hash': txn_hash,
                 'satoshis': satoshis,
                 'cb_id': transaction['id'],
                 'notes': notes,
                 })
-        SendBTC.objects.create(**send_btc_dict)
+        SentBTC.objects.create(**send_btc_dict)
 
         if txn_hash:
             return BTCTransaction.objects.create(
@@ -336,8 +369,8 @@ class CBCredential(models.Model):
 
         r = get_cb_request(
                 url=ADDRESS_URL,
-                api_key=self.api_key,
-                api_secret=self.api_secret,
+                api_key=self.cred.api_key,
+                api_secret=self.cred.api_secret,
                 body=post_params,
                 )
 
@@ -348,15 +381,15 @@ class CBCredential(models.Model):
             response_code=r.status_code,
             post_params=post_params,
             api_results=r.content,
-            merchant=self.merchant)
+            merchant=self.cred.merchant)
 
         if r.status_code == 200:
-            self.last_failed_at = None
-            self.last_succeded_at = now()
-            self.save()
+            self.cred.last_failed_at = None
+            self.cred.last_succeded_at = now()
+            self.cred.save()
         else:
-            self.last_failed_at = now()
-            self.save()
+            self.cred.last_failed_at = now()
+            self.cred.save()
             err_msg = 'Expected status code 200 but got %s' % r.status_code
             raise Exception('StatusCode: %s' % err_msg)
 
@@ -370,61 +403,6 @@ class CBCredential(models.Model):
         assert is_valid_btc_address(address), msg
 
         if set_as_merchant_address:
-            self.merchant.set_destination_address(address)
+            self.cred.merchant.set_destination_address(address)
 
         return address
-
-    def get_status(self):
-        if self.last_failed_at:
-            return _('Invalid')
-        else:
-            return _('Valid')
-
-
-class SellOrder(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    cb_credential = models.ForeignKey(CBCredential, blank=False, null=False)
-    # The txn that caused this event (may be blank)
-    btc_transaction = models.ForeignKey('bitcoins.BTCTransaction', blank=True, null=True)
-    # info returned
-    cb_code = models.CharField(max_length=32, blank=False, null=False, db_index=True)
-    received_at = models.DateTimeField(blank=False, null=False, db_index=True)
-    satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
-    currency_code = models.CharField(max_length=5, blank=False, null=False,
-            db_index=True, choices=BFH_CURRENCY_DROPDOWN)
-    # CB and related bank fees
-    fees_in_fiat = models.DecimalField(blank=False, null=False, max_digits=10,
-            decimal_places=2, db_index=True)
-    # what's received by user after CB fees
-    to_receive_in_fiat = models.DecimalField(blank=False, null=False,
-            max_digits=10, decimal_places=2, db_index=True)
-
-    def __str__(self):
-        return '%s: %s' % (self.id, self.cb_code)
-
-
-class CurrentBalance(models.Model):
-    """ Probably just used as a log and not implemented anywhere """
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    cb_credential = models.ForeignKey(CBCredential, blank=False, null=False)
-    satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
-
-    def __str__(self):
-        return '%s: %s' % (self.id, self.satoshis)
-
-
-class SendBTC(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    cb_credential = models.ForeignKey(CBCredential, blank=False, null=False)
-    received_at = models.DateTimeField(blank=False, null=False, db_index=True)
-    txn_hash = models.CharField(max_length=64, blank=True, null=True,
-            unique=True, db_index=True)
-    satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
-    destination_btc_address = models.CharField(max_length=34, blank=True,
-            null=True, db_index=True)
-    destination_email = models.EmailField(blank=True, null=True, db_index=True)
-    cb_id = models.CharField(max_length=64, blank=False, null=False, db_index=True)
-    notes = models.CharField(max_length=2048, blank=True, null=True)
-
-    def __str__(self):
-        return '%s: %s' % (self.id, self.destination_email or self.destination_btc_address)

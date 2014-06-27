@@ -143,13 +143,16 @@ class Merchant(models.Model):
             return False
 
     def get_coinbase_credentials(self):
-        return self.cbcredential_set.filter(disabled_at=None).last()
+        return self.credential_set.filter(disabled_at=None,
+                credential_type='CBS').last()
 
     def get_bitstamp_credentials(self):
-        return self.bscredential_set.filter(disabled_at=None).last()
+        return self.credential_set.filter(disabled_at=None,
+                credential_type='BTS').last()
 
     def get_blockchain_credentials(self):
-        return self.bcicredential_set.filter(disabled_at=None).last()
+        return self.credential_set.filter(disabled_at=None,
+                credential_type='BCI').last()
 
     def has_blockchain_credentials(self):
         return bool(self.get_blockchain_credentials())

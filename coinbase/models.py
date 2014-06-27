@@ -34,6 +34,9 @@ class CBCredential(models.Model):
     def __str__(self):
         return '%s from %s' % (self.id, self.merchant.business_name)
 
+    def get_payment_channel(self):
+        return 'CBS'
+
     def get_balance(self):
         """
         Return acount balance in satoshis

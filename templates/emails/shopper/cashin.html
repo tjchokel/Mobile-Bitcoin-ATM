@@ -5,7 +5,7 @@
 {{ business_name }} has just confirmed that they recieved your deposit of <b>{{ fiat_amount_formatted }}</b>.
 The exchange rate used was {{ exchange_rate_formatted }} / BTC
 so {{ business_name }} has requested that {{ payment_method_formatted }} immediately send <b>{{ satoshis_formatted }}</b>
-from their account directly to <b>{% firstof shopper_btc_address shopper_email %}<b>.
+from their account directly to <b>{% firstof shopper_btc_address shopper_email %}</b>.
 <br />
 <br />
 {% if tx_hash %}

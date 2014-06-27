@@ -452,7 +452,7 @@ class BTCTransaction(models.Model):
                     to_shopper=shopper)
 
     def get_type(self):
-        return _('Bitcoin Sale')
+        return _('Bought BTC')
 
     @staticmethod
     def get_btc_price(currency_code):
@@ -475,8 +475,8 @@ class ShopperBTCPurchase(models.Model):
     """
 
     PAYMENT_CHANNELS = (
-            ('CBS', 'coinbase'),
-            ('BTS', 'bitstamp'),
+            ('CBS', 'CoinBase'),
+            ('BTS', 'BitStamp'),
             ('BCI', 'blockchain.info'),
             )
 
@@ -496,6 +496,9 @@ class ShopperBTCPurchase(models.Model):
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.added_at)
 
     def save(self, *args, **kwargs):
         """
@@ -548,7 +551,8 @@ class ShopperBTCPurchase(models.Model):
         self.save()
 
         if send_receipt:
-            self.send_email_receipt()
+            self.send_shopper_receipt()
+            self.send_merchant_receipt()
 
     def send_merchant_receipt(self):
         fiat_amount_formatted = self.get_fiat_amount_formatted()
@@ -563,7 +567,7 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_payment_via_formatted(),
+                'payment_method_formatted': self.get_payment_via_display(),
                 'payment_method': self.payment_via,
                 'tx_hash': tx_hash,
                 }
@@ -573,7 +577,7 @@ class ShopperBTCPurchase(models.Model):
                 subject='%s Received' % fiat_amount_formatted,
                 body_template='merchant/shopper_cashin.html',
                 to_merchant=self.merchant,
-                to_email=self.shopper_email,
+                to_email=self.shopper.email,
                 body_context=body_context,
                 )
 
@@ -582,7 +586,7 @@ class ShopperBTCPurchase(models.Model):
 
         return email
 
-    def send_customer_receipt(self):
+    def send_shopper_receipt(self):
         fiat_amount_formatted = self.get_fiat_amount_formatted()
         if self.btc_transaction:
             tx_hash = self.btc_transaction.txn_hash
@@ -596,7 +600,7 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_payment_via_formatted(),
+                'payment_method_formatted': self.get_payment_via_display(),
                 'payment_method': self.payment_via,
                 'tx_hash': tx_hash,
                 }
@@ -609,7 +613,7 @@ class ShopperBTCPurchase(models.Model):
                 body_context=body_context,
                 )
 
-        self.merchant_email_sent_at = now()
+        self.shopper_email_sent_at = now()
         self.save()
 
         return email
@@ -653,4 +657,4 @@ class ShopperBTCPurchase(models.Model):
             return _('Waiting on Merchant Approval')
 
     def get_type(self):
-        return _('Bitcoin Purchase')
+        return _('Sold BTC')

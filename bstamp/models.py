@@ -27,6 +27,9 @@ class BSCredential(models.Model):
     def __str__(self):
         return '%s from %s' % (self.id, self.merchant.business_name)
 
+    def get_payment_channel(self):
+        return 'BTS'
+
     def get_trading_obj(self):
         return Trading(username=self.username, key=self.api_key, secret=self.api_secret)
 

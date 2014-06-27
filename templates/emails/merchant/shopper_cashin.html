@@ -6,10 +6,7 @@ A deposit of <b>{{ fiat_amount_formatted }}</b>
 {% if shopper_name %}from {{ shopper_name }}{% elif shopper_email %}from {{ shopper_email }}{% endif %}
 was received at {{ business_name }}.
 The exchange rate used was {{ exchange_rate_formatted }} / BTC
-so we requested that {{ payment_method_formatted }} immediately send <b>{{ satoshis_formatted }}</b> to {{ recipient }} on your behalf.
-{% if payment_method == "BTS" %}
-Please note that Bitstamp often has a 10 minute delay in sending bitcoin.
-{% endif %}
+so we requested that {{ payment_method_formatted }} immediately send <b>{{ satoshis_formatted }}</b> to {% firstof shopper_btc_address shopper_email %} on your behalf.
 
 {% if tx_hash %}
 <br /><br />

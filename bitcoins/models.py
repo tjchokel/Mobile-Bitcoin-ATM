@@ -474,12 +474,6 @@ class ShopperBTCPurchase(models.Model):
     Model for bitcoin purchase (cash in) request
     """
 
-    PAYMENT_CHANNELS = (
-            ('CBS', 'CoinBase'),
-            ('BTS', 'BitStamp'),
-            ('BCI', 'blockchain.info'),
-            )
-
     added_at = models.DateTimeField(auto_now_add=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     shopper = models.ForeignKey('shoppers.Shopper', blank=False, null=False)
@@ -491,8 +485,7 @@ class ShopperBTCPurchase(models.Model):
     cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     funds_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    payment_via = models.CharField(choices=PAYMENT_CHANNELS, max_length=3,
-            null=False, blank=False, db_index=True)
+    credential = models.ForeignKey('credentials.Credential', blank=True, null=True)
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
@@ -531,22 +524,20 @@ class ShopperBTCPurchase(models.Model):
 
     def pay_out_bitcoin(self, send_receipt=True):
 
-        self.confirmed_by_merchant_at = now()
+        if not self.credential:
+            self.credential = self.merchant.get_valid_api_credentials()
         self.save()
-        credentials = self.merchant.get_valid_api_credentials()
-        assert credentials, 'No Merchant API Credentials'
         if self.b58_address:
-            btc_txn = credentials.send_btc(
+            btc_txn = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn = credentials.send_btc(
+            btc_txn = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
-        if btc_txn:
-            # associate btc transaction (if it exists)
-            self.btc_transaction = btc_txn
+        self.btc_transaction = btc_txn
+        self.confirmed_by_merchant_at = now()
         self.funds_sent_at = now()
         self.save()
 

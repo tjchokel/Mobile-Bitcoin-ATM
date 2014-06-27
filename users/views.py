@@ -50,6 +50,10 @@ def customer_dashboard(request):
             else:
                 buy_form = NoEmailBuyBitcoinForm(data=request.POST)
             if buy_form.is_valid():
+                if merchant.has_valid_coinbase_credentials():
+                    email_or_btc_address = buy_form.cleaned_data['email_or_btc_address']
+                else:
+                    email_or_btc_address = None
                 amount = buy_form.cleaned_data['amount']
                 email = buy_form.cleaned_data['email']
                 btc_address = buy_form.cleaned_data['btc_address']
@@ -58,12 +62,20 @@ def customer_dashboard(request):
                     email=email,
                 )
 
-                ShopperBTCPurchase.objects.create(
-                    merchant=merchant,
-                    shopper=shopper,
-                    fiat_amount=amount,
-                    b58_address=btc_address,
-                )
+                # if sending to email
+                if email_or_btc_address and email_or_btc_address == '1':
+                    ShopperBTCPurchase.objects.create(
+                        merchant=merchant,
+                        shopper=shopper,
+                        fiat_amount=amount,
+                    )
+                else:
+                    ShopperBTCPurchase.objects.create(
+                        merchant=merchant,
+                        shopper=shopper,
+                        fiat_amount=amount,
+                        b58_address=btc_address,
+                    )
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:

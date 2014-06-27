@@ -43,7 +43,7 @@ class BuyBitcoinForm(forms.Form):
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)],
             help_text=_('The amount of cash you will be handing to the merchant'),
-            widget=forms.TextInput(attrs={'class': 'needs-input-group'}),
+            widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0.00', 'style': 'width:50%;'}),
     )
 
     email = forms.EmailField(
@@ -62,8 +62,6 @@ class BuyBitcoinForm(forms.Form):
     btc_address = forms.CharField(
             label=_('Bitcoin Deposit Address'),
             required=False,
-            min_length=27,
-            max_length=34,
             help_text=_('The wallet address where you want your bitcoin sent'),
             widget=forms.TextInput(),
     )
@@ -71,12 +69,11 @@ class BuyBitcoinForm(forms.Form):
     def clean_btc_address(self):
         address = self.cleaned_data.get('btc_address')
         email_or_btc_address = self.cleaned_data.get('email_or_btc_address')
-        if address and not is_valid_btc_address(address):
-            msg = "Sorry, that's not a valid bitcoin address"
-            raise forms.ValidationError(msg)
-        if email_or_btc_address == '2' and not is_valid_btc_address(address):
-            msg = "Please enter a valid bitcoin address"
-            raise forms.ValidationError(msg)
+        # sending to a bitcoin address
+        if email_or_btc_address == '2':
+            if not is_valid_btc_address(address):
+                msg = _("Please enter a valid bitcoin address")
+                raise forms.ValidationError(msg)
         return address
 
 
@@ -85,8 +82,8 @@ class NoEmailBuyBitcoinForm(forms.Form):
             label=_('Cash Amount'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)],
-            help_text=_('The amount of cash you will be handing to the merchant'),
-            widget=forms.TextInput(attrs={'class': 'needs-input-group'}),
+            help_text=_('The amount of cash you will be paying the merchant'),
+            widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0.00', 'style': 'width:50%;'}),
     )
 
     email = forms.EmailField(

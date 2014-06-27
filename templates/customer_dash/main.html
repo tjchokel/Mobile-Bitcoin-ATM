@@ -159,6 +159,14 @@
           $("#sell-price").text(data['sell_price_no_format']);
           $(".currency_symbol").text(data['currency_symbol']);
 
+          var entered_amount = $('#id_amount').val();
+          if (entered_amount){
+            var buy_price_no_format = parseFloat($('#buy-price').text());
+            var final_btc = parseFloat(entered_amount) / buy_price_no_format;
+            $("#btc-amount").html(' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
+          }
+          
+
           BTC_PRICE_TIMEOUT_MS *= 1.3;
           setTimeout(getBtcPrice,BTC_PRICE_TIMEOUT_MS);
         },
@@ -222,34 +230,27 @@
       };
     })();
 
-    $("#id_amount").keydown(function(){
-      delay(function(){
-        var entered_amount = $('#id_amount').val();
-        if (entered_amount=="" || isNaN(entered_amount)){
-          $('#id_amount').val("");
-          $("#div_id_email_or_btc_address").addClass("hidden");
-          $("#div_id_email").addClass("hidden");
-          $("#div_id_btc_address").addClass("hidden");
-          $("#btc-amount").html('{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
-          $("#submit-button").prop('disabled', true);
-        }else{
+    $("#id_amount").keyup(function(){
+      var entered_amount = $('#id_amount').val();
+      if (entered_amount=="" || isNaN(entered_amount)){
+        $('#id_amount').val("");
+        $("#btc-amount").html('≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
+        $("#submit-button").prop('disabled', true);
+      }else{
 
-          $("#div_id_email_or_btc_address").removeClass("hidden");
-          $("#div_id_email").removeClass("hidden");
-          if (!$('#div_id_email_or_btc_address').length){
-            $("#div_id_btc_address").removeClass("hidden");
-          }
-          var entered_amount = $('#id_amount').val();
-          var sell_price_no_format = parseFloat($('#sell-price').text());
-          var final_btc = parseFloat(entered_amount) / sell_price_no_format;
-
-          $("#btc-amount").html('{{merchant.get_currency_symbol}}'+entered_amount+ ' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
-          $("#step_1").addClass("hidden");
-          $("#step_2").removeClass("hidden");
-          $("#submit-button").prop('disabled', false);
-
+        $("#div_id_email_or_btc_address").removeClass("hidden");
+        $("#div_id_email").removeClass("hidden");
+        if (!$('#div_id_email_or_btc_address').length){
+          $("#div_id_btc_address").removeClass("hidden");
         }
-      }, 500 );
+        var entered_amount = $('#id_amount').val();
+        var buy_price_no_format = parseFloat($('#buy-price').text());
+        var final_btc = parseFloat(entered_amount) / buy_price_no_format;
+        
+        $("#btc-amount").html(' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
+        $("#submit-button").prop('disabled', false);
+      }
+
     });
 
     $("#id_email_or_btc_address_1, #id_email_or_btc_address_2").change(function(){
@@ -266,12 +267,7 @@
       if( {{ show_buy_modal }} === true){
         $('#buy-bitcoin-modal').modal('show');
         $("#submit-button").prop('disabled', false);
-      }else{
-        $("#div_id_email_or_btc_address").addClass("hidden");
-        $("#div_id_email").addClass("hidden");
-        if (!$('#div_id_email_or_btc_address').length){
-          $("#div_id_btc_address").addClass("hidden");
-        }
+
       }
 
       if( {{ show_confirm_purchase_modal }} === true){
@@ -287,6 +283,8 @@
       $( ".needs-input-group" ).wrapAll( "<div class='input-group' />");
       $('#email-field').after('<span id="email_message"></span>');
 
+      $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ <i class="fa fa-bitcoin"></i>0.00</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
+      
       {% if transactions or current_address.customer_confirmed_deposit_at %}
 
         {% if transactions %}
@@ -327,10 +325,6 @@
 
       {% if buy_request %}
         set_expires_at_time();
-        // setTimeout(
-        //   function() {
-        //     set_expires_at_time();
-        //   }, 1000);
       {% endif %}
     });
   </script>

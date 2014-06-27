@@ -157,9 +157,9 @@ class BTSCredential(BaseCredential):
         # Record the Send
         SentBTC.objects.create(
                 credential=self.cred,
-                bs_withdrawal_id=withdrawal_id,
+                unique_id=withdrawal_id,
                 satoshis=satoshis_to_send,
-                destination_address=destination_btc_address,
+                destination_btc_address=destination_btc_address,
                 )
 
     def get_receiving_address(self, set_as_merchant_address=False):
@@ -206,6 +206,9 @@ class BTSCredential(BaseCredential):
             self.cred.merchant.set_destination_address(address)
 
         return address
+
+    def get_any_receiving_address(self, set_as_merchant_address=False):
+        return self.get_receiving_address(set_as_merchant_address=set_as_merchant_address)
 
     def check_status(self, update_results=True):
         WITHDRAWALS_URL = 'https://www.bitstamp.net/api/withdrawal_requests/'

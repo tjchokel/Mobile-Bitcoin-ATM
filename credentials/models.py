@@ -6,10 +6,15 @@ from countries import BFH_CURRENCY_DROPDOWN
 
 
 class Credential(models.Model):
+
+    COINBASE = 'CBS'
+    BITSTAMP = 'BTS'
+    BLOCKCHAIN_INFO = 'BCI'
+
     CREDENTIAL_TYPES = (
-            ('CBS', 'CoinBase'),
-            ('BTS', 'BitStamp'),
-            ('BCI', 'blockchain.info'),
+            (COINBASE, 'CoinBase'),
+            (BITSTAMP, 'BitStamp'),
+            (BLOCKCHAIN_INFO, 'blockchain.info'),
             )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -52,7 +57,7 @@ class Credential(models.Model):
             from credentials.blockchain_api import BCICredential
             return BCICredential(self)
         else:
-            raise Exception('NotImplemented: %s' % self.credential_type)
+            raise Exception('Credential Type Not Implemented: %s' % self.credential_type)
 
 
 class CurrentBalance(models.Model):

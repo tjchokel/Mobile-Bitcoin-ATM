@@ -155,3 +155,6 @@ class BCICredential(BaseCredential):
             self.cred.merchant.set_destination_address(address)
 
         return address
+
+    def get_any_receiving_address(self, set_as_merchant_address=False):
+        return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)

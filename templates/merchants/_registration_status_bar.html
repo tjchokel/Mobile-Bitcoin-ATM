@@ -15,8 +15,8 @@
 </div>
 
 {% url 'merchants.views.merchant_profile' as profile_url %}
-{% url 'coinbase.views.coinbase' as coinbase_url %}
-{% url 'bstamp.views.bitstamp' as bitstamp_url %}
+{% url 'credentials.views.coinbase_creds' as coinbase_url %}
+{% url 'credentials.views.bitstamp_creds' as bitstamp_url %}
 {% if not merchant.address_1 %}
   {% blocktrans %}Next step: <a href="{{profile_url}}">List your business address</a>{% endblocktrans %}
 {% elif not merchant.phone_num %}

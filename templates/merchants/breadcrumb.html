@@ -29,9 +29,9 @@
             <li><a href="{% url "merchants.views.merchant_profile" %}">Profile</a></li>
             <li role="presentation" class="divider"></li>
             <li role="presentation" class="dropdown-header">API Partners</li>
-            <li><a href="{% url "coinbase.views.coinbase" %}">Coinbase</a></li>
-            <li><a href="{% url "bstamp.views.bitstamp" %}">Bitstamp</a></li>
-            <li><a href="{% url "bcwallet.views.blockchain" %}">Blockchain</a></li>
+            <li><a href="{% url "credentials.views.coinbase_creds" %}">Coinbase</a></li>
+            <li><a href="{% url "credentials.views.bitstamp_creds" %}">Bitstamp</a></li>
+            <li><a href="{% url "credentials.views.blockchain_creds" %}">Blockchain</a></li>
           </ul>
       </div>
 
@@ -81,7 +81,7 @@
               {% endif %}
             </a>
           {% else %}
-            <a href="{% url "coinbase.views.coinbase" %}">
+            <a href="{% url "credentials.views.coinbase_creds" %}">
               <img src="{% static "img/coinbase-logo-full.png" %}" />
               {% if merchant.has_valid_coinbase_credentials %}
                 <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
@@ -102,7 +102,7 @@
               {% endif %}
             </a>
           {% else %}
-            <a href="{% url "bstamp.views.bitstamp" %}">
+            <a href="{% url "credentials.views.bitstamp_creds" %}">
               <img src="{% static "img/bitstamp-logo-full.png" %}" />
               {% if merchant.has_valid_bitstamp_credentials %}
                 <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
@@ -123,7 +123,7 @@
               {% endif %}
             </a>
           {% else %}
-            <a href="{% url "bcwallet.views.blockchain" %}">
+            <a href="{% url "credentials.views.blockchain_creds" %}">
               <img src="{% static "img/blockchain-logo-full.png" %}" />
               {% if merchant.has_valid_blockchain_credentials %}
                 <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>

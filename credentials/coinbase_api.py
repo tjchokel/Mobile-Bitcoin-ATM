@@ -177,7 +177,7 @@ class CBSCredential(BaseCredential):
         # Record the balance
         CurrentBalance.objects.create(
                 satoshis=btc_to_satoshis(json_resp['balance']['amount']),
-                cb_credential=self.cred,
+                credential=self.cred,
                 )
 
         # Return transactions
@@ -242,9 +242,8 @@ class CBSCredential(BaseCredential):
         fiat_fees = fiat_fees_in_cents/100.0
 
         return SellBTCOrder.objects.create(
-                cb_credential=self.cred,
-                cb_code=transfer['code'],
-                received_at=parser.parse(transfer['created_at']),
+                credential=self.cred,
+                custom_code=transfer['code'],
                 satoshis=satoshis,
                 currency_code=currency_to_recieve,
                 fees_in_fiat=fiat_fees,
@@ -344,11 +343,10 @@ class CBSCredential(BaseCredential):
 
         # Record the Send
         send_btc_dict.update({
-                'cb_credential': self.cred,
-                'received_at': parser.parse(transaction['created_at']),
+                'credential': self.cred,
                 'txn_hash': txn_hash,
                 'satoshis': satoshis,
-                'cb_id': transaction['id'],
+                'unique_id': transaction['id'],
                 'notes': notes,
                 })
         SentBTC.objects.create(**send_btc_dict)
@@ -406,3 +404,6 @@ class CBSCredential(BaseCredential):
             self.cred.merchant.set_destination_address(address)
 
         return address
+
+    def get_any_receiving_address(self, set_as_merchant_address=False):
+        return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)

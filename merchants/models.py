@@ -34,8 +34,7 @@ class Merchant(models.Model):
         if destination_addresses:
             return destination_addresses[0]
         else:
-            address = DestinationAddress.create_address_from_api_creds(self)
-            return address
+            return DestinationAddress.create_address_from_api_creds(self)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)

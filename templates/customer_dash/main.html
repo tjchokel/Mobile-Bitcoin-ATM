@@ -267,7 +267,6 @@
       if( {{ show_buy_modal }} === true){
         $('#buy-bitcoin-modal').modal('show');
         $("#submit-button").prop('disabled', false);
-
       }
 
       if( {{ show_confirm_purchase_modal }} === true){
@@ -284,7 +283,7 @@
       $('#email-field').after('<span id="email_message"></span>');
 
       $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ <i class="fa fa-bitcoin"></i>0.00</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
-      
+
       {% if transactions or current_address.customer_confirmed_deposit_at %}
 
         {% if transactions %}
@@ -312,15 +311,22 @@
           function() {
             set_time_since();
           }, 1000);
+
         {% endif %}
 
       {% else %}
-        {% if not buy_request %}
+
+        {% if buy_request %}
+          $('#confirm-purchase-modal').on('shown.bs.modal', function () {
+              $('#id_password').focus();
+          })
+        {% else %}
           getBtcPrice();
           {% if not transactions %}
             poll_new_deposits();
           {% endif %}
         {% endif %}
+
       {% endif %}
 
       {% if buy_request %}

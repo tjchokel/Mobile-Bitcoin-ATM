@@ -70,7 +70,7 @@
               </p>
             </div>
               
-            <form class="form-horizontal" method="post" action="{% url "bstamp.views.bitstamp" %}" >
+            <form class="form-horizontal" method="post" action="{% url "credentials.views.bitstamp_creds" %}" >
               {% load crispy_forms_tags %}
               {{ form|crispy }}
               {% csrf_token %}

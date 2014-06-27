@@ -169,27 +169,30 @@ def register_bitcoin(request):
             else:
                 if exchange_choice == 'coinbase':
                     credentials = Credential.objects.create(
-                        merchant=merchant,
-                        api_key=form.cleaned_data['cb_api_key'],
-                        api_secret=form.cleaned_data['cb_secret_key']
-                    )
+                            credential_type=Credential.COINBASE,
+                            merchant=merchant,
+                            api_key=form.cleaned_data['cb_api_key'],
+                            api_secret=form.cleaned_data['cb_secret_key'],
+                            )
                 elif exchange_choice == 'bitstamp':
                     credentials = Credential.objects.create(
-                        merchant=merchant,
-                        api_key=form.cleaned_data['bs_username'],
-                        api_secret=form.cleaned_data['bs_api_key'],
-                        secondary_secret=form.cleaned_data['bs_secret_key'],
-                    )
+                            credential_type=Credential.BITSTAMP,
+                            merchant=merchant,
+                            api_key=form.cleaned_data['bs_username'],
+                            api_secret=form.cleaned_data['bs_api_key'],
+                            secondary_secret=form.cleaned_data['bs_secret_key'],
+                            )
                 elif exchange_choice == 'blockchain':
                     credentials = Credential.objects.create(
-                        merchant=merchant,
-                        username=form.cleaned_data['bci_username'],
-                        main_password=form.cleaned_data['bci_main_password'],
-                        second_password=form.cleaned_data['bci_second_password'],
-                    )
+                            credential_type=Credential.BLOCKCHAIN_INFO,
+                            merchant=merchant,
+                            username=form.cleaned_data['bci_username'],
+                            main_password=form.cleaned_data['bci_main_password'],
+                            second_password=form.cleaned_data['bci_second_password'],
+                            )
 
                 try:
-                    credentials.get_balance()
+                    credentials.get_custom_methods().get_balance()
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
                     credentials.disabled_at = now()

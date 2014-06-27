@@ -69,20 +69,11 @@ class DestinationAddress(models.Model):
 
     @classmethod
     def create_address_from_api_creds(cls, merchant):
-        address_object = None
-        if merchant.has_valid_coinbase_credentials():
-            credentials = merchant.get_coinbase_credentials()
-            address = credentials.get_new_receiving_address(True)
-            address_object = DestinationAddress.objects.get(b58_address=address)
-        elif merchant.has_valid_bitstamp_credentials():
-            credentials = merchant.get_bitstamp_credentials()
-            address = credentials.get_receiving_address(True)
-            address_object = DestinationAddress.objects.get(b58_address=address)
-        elif merchant.has_valid_blockchain_credentials():
-            credentials = merchant.get_blockchain_credentials()
-            address = credentials.get_new_receiving_address(True)
-            address_object = DestinationAddress.objects.get(b58_address=address)
-        return address_object
+        api_credential = merchant.get_valid_api_credentials()
+        api_custom_methods = api_credential.get_custom_methods()
+        address = api_custom_methods.get_any_receiving_address(
+                set_as_merchant_address=True)
+        return cls.objects.get(b58_address=address)
 
 
 class ForwardingAddress(models.Model):
@@ -527,12 +518,13 @@ class ShopperBTCPurchase(models.Model):
         if not self.credential:
             self.credential = self.merchant.get_valid_api_credentials()
         self.save()
+        methods = self.credential.get_custom_methods()
         if self.b58_address:
-            btc_txn = self.credential.send_btc(
+            btc_txn = methods.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn = self.credential.send_btc(
+            btc_txn = methods.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
@@ -559,8 +551,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_credential_type_display(),
-                'payment_method': self.credential_type,
+                'payment_method_formatted': self.credential.get_credential_type_display(),
+                'payment_method': self.credential.credential_type,
                 'tx_hash': tx_hash,
                 }
         if self.shopper.name:
@@ -593,8 +585,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_credential_type_display(),
-                'payment_method': self.credential_type,
+                'payment_method_formatted': self.credential.get_credential_type_display(),
+                'payment_method': self.credential.credential_type,
                 'tx_hash': tx_hash,
                 }
         email = send_and_log(

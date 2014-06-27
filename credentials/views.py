@@ -15,7 +15,7 @@ from credentials.models import Credential
 @sensitive_post_parameters('username', 'main_password', 'second_password', )
 @login_required
 @render_to('merchants/blockchain.html')
-def add_blockchain_creds(request):
+def blockchain_creds(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_blockchain_credentials()
@@ -31,15 +31,16 @@ def add_blockchain_creds(request):
                     api_secret=form.cleaned_data['main_password'],
                     secondary_secret=form.cleaned_data['second_password'],
             )
+            custom_methods = credential.get_custom_methods()
             try:
-                credential.get_balance()
+                custom_methods.get_balance()
                 messages.success(request, _('Your Blockchain API info has been updated'))
             except:
                 credential.disabled_at = now()
                 credential.save()
                 messages.warning(request, _('Your Blockchain API credentials are not valid'))
 
-            return HttpResponseRedirect(reverse_lazy('blockchain'))
+            return HttpResponseRedirect(reverse_lazy('blockchain_creds'))
 
     return {
         'user': user,
@@ -53,7 +54,7 @@ def add_blockchain_creds(request):
 @sensitive_post_parameters('api_key', 'secret_key')
 @login_required
 @render_to('merchants/coinbase.html')
-def add_coinbase_creds(request):
+def coinbase_creds(request):
     user = request.user
     merchant = user.get_merchant()
     cb_credential = merchant.get_coinbase_credentials()
@@ -68,15 +69,16 @@ def add_coinbase_creds(request):
                     api_key=form.cleaned_data['api_key'],
                     api_secret=form.cleaned_data['secret_key']
             )
+            custom_methods = credentials.get_custom_methods()
             try:
-                credentials.get_balance()
+                custom_methods.get_balance()
                 messages.success(request, _('Your Coinbase API info has been updated'))
             except:
                 credentials.disabled_at = now()
                 credentials.save()
                 messages.warning(request, _('Your Coinbase API credentials are not valid'))
 
-            return HttpResponseRedirect(reverse_lazy('coinbase'))
+            return HttpResponseRedirect(reverse_lazy('coinbase_creds'))
 
     return {
         'user': user,
@@ -90,7 +92,7 @@ def add_coinbase_creds(request):
 @sensitive_post_parameters('username', 'api_key', 'secret_key')
 @login_required
 @render_to('merchants/bitstamp.html')
-def add_bitstamp_creds(request):
+def bitstamp_creds(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_bitstamp_credentials()
@@ -102,19 +104,20 @@ def add_bitstamp_creds(request):
             credential, created = Credential.objects.get_or_create(
                     credential_type='BTS',
                     merchant=merchant,
-                    username=form.cleaned_data['username'],
-                    api_key=form.cleaned_data['api_key'],
-                    api_secret=form.cleaned_data['secret_key']
+                    api_key=form.cleaned_data['username'],
+                    api_secret=form.cleaned_data['api_key'],
+                    secondary_secret=form.cleaned_data['secret_key']
             )
+            custom_methods = credential.get_custom_methods()
             try:
-                credential.get_balance()
+                custom_methods.get_balance()
                 messages.success(request, _('Your Bitstamp API info has been updated'))
             except:
                 credential.disabled_at = now()
                 credential.save()
                 messages.warning(request, _('Your Bitstamp API credentials are not valid'))
 
-            return HttpResponseRedirect(reverse_lazy('bitstamp'))
+            return HttpResponseRedirect(reverse_lazy('bitstamp_creds'))
 
     return {
         'user': user,
@@ -130,8 +133,9 @@ def refresh_bci_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_blockchain_credentials()
+    custom_methods = credential.get_custom_methods()
     try:
-        credential.get_balance()
+        custom_methods.get_balance()
         messages.success(request, _('Your Blockchain API info has been refreshed'))
     except:
         messages.warning(request, _('Your Blockchain API info could not be validated'))
@@ -142,9 +146,10 @@ def refresh_bci_credentials(request):
 def refresh_cb_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credentials()
+    credential = merchant.get_coinbase_credentials()
+    custom_methods = credential.get_custom_methods()
     try:
-        cb_credential.get_balance()
+        custom_methods.get_balance()
         messages.success(request, _('Your Coinbase API info has been refreshed'))
     except:
         messages.warning(request, _('Your Coinbase API info could not be validated'))
@@ -156,8 +161,9 @@ def refresh_bs_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_bitstamp_credentials()
+    custom_methods = credential.get_custom_methods()
     try:
-        credential.get_balance()
+        custom_methods.get_balance()
         messages.success(request, _('Your Bistamp API info has been refreshed'))
     except:
         messages.warning(request, _('Your Bistamp API info could not be validated'))
@@ -178,9 +184,9 @@ def disable_bci_credentials(request):
 def disable_cb_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credentials()
-    cb_credential.disabled_at = now()
-    cb_credential.save()
+    credential = merchant.get_coinbase_credentials()
+    credential.disabled_at = now()
+    credential.save()
     return HttpResponse("*ok*")
 
 

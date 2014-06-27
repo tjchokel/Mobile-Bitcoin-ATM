@@ -11,8 +11,7 @@ urlpatterns = patterns('',
     url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
     url(r'^simulate-deposit/$', 'users.views.simulate_deposit_detected', name='simulate_deposit_detected'),
 
-    url(r'^register/$', 'merchants.views.register_router',
-        name='register_router'),
+    url(r'^register/$', 'merchants.views.register_router', name='register_router'),
     url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),
     url(r'^register-bitcoin/$', 'merchants.views.register_bitcoin', name='register_bitcoin'),
 
@@ -27,9 +26,9 @@ urlpatterns = patterns('',
     url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
 
     # API Partners
-    url(r'^coinbase/$', 'credentials.views.add_coinbase_creds', name='add_coinbase_creds'),
-    url(r'^bitstamp/$', 'credentials.views.add_bitstamp_creds', name='add_bitstamp_creds'),
-    url(r'^blockchain/$', 'credentials.views.add_blockchain_creds', name='add_blockchain_creds'),
+    url(r'^coinbase/$', 'credentials.views.coinbase_creds', name='coinbase_creds'),
+    url(r'^bitstamp/$', 'credentials.views.bitstamp_creds', name='bitstamp_creds'),
+    url(r'^blockchain/$', 'credentials.views.blockchain_creds', name='blockchain_creds'),
 
     # AJAX Calls
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),

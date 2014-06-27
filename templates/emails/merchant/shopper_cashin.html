@@ -4,7 +4,7 @@
 
 A deposit of <b>{{ fiat_amount_formatted }}</b>
 {% if shopper_name %}from {{ shopper_name }}{% elif shopper_email %}from {{ shopper_email }}{% endif %}
-was received at your business.
+was received at {{ business_name }}.
 The exchange rate used was {{ exchange_rate_formatted }} / BTC
 so we requested that {{ payment_method_formatted }} immediately send <b>{{ satoshis_formatted }}</b> to {{ recipient }} on your behalf.
 {% if payment_method == "BTS" %}
@@ -14,12 +14,27 @@ Please note that Bitstamp often has a 10 minute delay in sending bitcoin.
 {% if tx_hash %}
 <br /><br />
 You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>,
-as well as in <a href="{{ BASE_URL }}{{ closecoin_tx_uri }}">in your dashboard on CloseCoin</a>.
 {% endif %}
 
+{% if tx_hash %}
+  You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>
+  as well as in <a href="{{ BASE_URL }}{{ closecoin_tx_uri }}">your dashboard on CloseCoin</a>.
+{% elif shopper_btc_address %}
+  You can <a href="https://blockchain.info/address/{{ shopper_btc_address }}">see this transaction on the bitcoin blockchain here</a>
+  (may be mixed with other transactions at this address).
+  {% if payment_method == "BTS" %}
+    Please note that Bitstamp often has a 10 minute delay in sending bitcoin.
+  {% endif %}
+{% else %}
+  {# coinbase email transaction #}
+  You can <a href="https://coinbase.com/accounts/">see this transaction in your CoinBase account</a>
+  as well as in <a href="{{ BASE_URL }}{{ closecoin_tx_uri }}">your dashboard on CloseCoin</a>.
+{% endif %}
+
+
 {% if shopper_email %}
-<br /><br />
-The customer has been sent a receipt.
+  <br /><br />
+  The customer has been sent a receipt.
 {% endif %}
 
 {% endblock content %}

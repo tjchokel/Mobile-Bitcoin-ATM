@@ -341,7 +341,7 @@ class BTCTransaction(models.Model):
                     }
             return send_and_log(
                     subject='%s Sent' % satoshis_formatted,
-                    body_template='shopper_newtx.html',
+                    body_template='shopper/cashout_newtx.html',
                     to_merchant=None,
                     to_email=shopper.email,
                     to_name=shopper.name,
@@ -382,7 +382,7 @@ class BTCTransaction(models.Model):
                     }
             return send_and_log(
                     subject='%s Confirmed' % satoshis_formatted,
-                    body_template='shopper_txconfirmed.html',
+                    body_template='shopper/cashout_txconfirmed.html',
                     to_merchant=None,
                     to_email=shopper.email,
                     to_name=shopper.name,
@@ -406,6 +406,7 @@ class BTCTransaction(models.Model):
                     to_shopper=shopper)
 
     def send_merchant_txconfirmed_email(self):
+        # TODO: allow for notification settings
         merchant = self.get_merchant()
         shopper = self.get_shopper()
         satoshis_formatted = self.format_satoshis_amount()
@@ -421,16 +422,16 @@ class BTCTransaction(models.Model):
             subject += 'from %s' % shopper.name
             body_context['shopper_name'] = shopper.name
         return send_and_log(
-                body_template='merchant_txconfirmed.html',
+                body_template='merchant/shopper_cashout.html',
                 subject='%s Received' % satoshis_formatted,
                 to_merchant=merchant,
                 body_context=body_context,
                 )
 
     def send_merchant_txconfirmed_sms(self):
+        # TODO: allow for notification settings
         merchant = self.get_merchant()
         if merchant.phone_num:
-            # TODO: allow for notification settings
             msg = 'The %s you received from %s has been confirmed. Please pay them %s immediately.'
             shopper = self.get_shopper()
             if shopper and shopper.name:
@@ -492,7 +493,7 @@ class ShopperBTCPurchase(models.Model):
     expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
     payment_via = models.CharField(choices=PAYMENT_CHANNELS, max_length=3,
             null=False, blank=False, db_index=True)
-    btc_transaction = models.ForeignKey(BTCTransaction)
+    btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
@@ -558,18 +559,21 @@ class ShopperBTCPurchase(models.Model):
         body_context = {
                 'fiat_amount_formatted': fiat_amount_formatted,
                 'satoshis_formatted': self.format_satoshis_amount(),
-                'shopper_name': self.shopper.name,
                 'shopper_email': self.shopper.email,
+                'shopper_btc_address': self.b58_address,
+                'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
                 'payment_method_formatted': self.get_payment_via_formatted(),
                 'payment_method': self.payment_via,
                 'tx_hash': tx_hash,
-                'closecoin_tx_uri': reverse('merchant_transactions'),
                 }
+        if self.shopper.name:
+            body_context['salutataion'] = self.shopper.name
         email = send_and_log(
                 subject='%s Received' % fiat_amount_formatted,
-                body_template='merchant/customer_cashin.html',
+                body_template='merchant/shopper_cashin.html',
                 to_merchant=self.merchant,
+                to_email=self.shopper_email,
                 body_context=body_context,
                 )
 
@@ -579,7 +583,36 @@ class ShopperBTCPurchase(models.Model):
         return email
 
     def send_customer_receipt(self):
-        # FIXME: implement
+        fiat_amount_formatted = self.get_fiat_amount_formatted()
+        if self.btc_transaction:
+            tx_hash = self.btc_transaction.txn_hash
+        else:
+            tx_hash = None
+        body_context = {
+                'fiat_amount_formatted': fiat_amount_formatted,
+                'satoshis_formatted': self.format_satoshis_amount(),
+                'shopper_name': self.shopper.name,
+                'shopper_email': self.shopper.email,
+                'shopper_btc_address': self.b58_address,
+                'business_name': self.merchant.business_name,
+                'exchange_rate_formatted': self.get_exchange_rate_formatted(),
+                'payment_method_formatted': self.get_payment_via_formatted(),
+                'payment_method': self.payment_via,
+                'tx_hash': tx_hash,
+                }
+        email = send_and_log(
+                subject='%s Received' % fiat_amount_formatted,
+                body_template='shopper/cashin.html',
+                to_merchant=None,
+                to_name=self.shopper.name,
+                to_email=self.shopper.email,
+                body_context=body_context,
+                )
+
+        self.merchant_email_sent_at = now()
+        self.save()
+
+        return email
         pass
 
     def expires_at_unix_time(self):

@@ -33,11 +33,11 @@
                   <td>{{transaction.format_satoshis_amount}}</td>
                   <td>{{transaction.get_fiat_amount_formatted}}</td>
                   <td>
-                    {% if transaction.payment_via == 'CBS' %}
+                    {% if transaction.credential.credential_type == 'CBS' %}
                       <a href="https://coinbase.com/accounts/" target="_blank">CoinBase</a>
-                    {% elif transaction.payment_via == 'BTS' %}
+                    {% elif transaction.credential.credential_type == 'BTS' %}
                       <a href="https://www.bitstamp.net/account/transactions/" target="_blank">BitStamp</a>
-                    {% elif transaction.payment_via == 'BCI' %}
+                    {% elif transaction.credential.credential_type == 'BCI' %}
                       <a href="https://blockchain.info/wallet/login" target="_blank">BlockChain</a>
                     {% else %}
                       Bitcoin Network

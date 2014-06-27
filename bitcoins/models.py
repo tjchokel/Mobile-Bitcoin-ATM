@@ -546,6 +546,7 @@ class ShopperBTCPurchase(models.Model):
             self.send_merchant_receipt()
 
     def send_merchant_receipt(self):
+        assert self.credential
         fiat_amount_formatted = self.get_fiat_amount_formatted()
         if self.btc_transaction:
             tx_hash = self.btc_transaction.txn_hash
@@ -558,8 +559,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_payment_via_display(),
-                'payment_method': self.payment_via,
+                'payment_method_formatted': self.get_credential_type_display(),
+                'payment_method': self.credential_type,
                 'tx_hash': tx_hash,
                 }
         if self.shopper.name:
@@ -578,6 +579,7 @@ class ShopperBTCPurchase(models.Model):
         return email
 
     def send_shopper_receipt(self):
+        assert self.credential
         fiat_amount_formatted = self.get_fiat_amount_formatted()
         if self.btc_transaction:
             tx_hash = self.btc_transaction.txn_hash
@@ -591,8 +593,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_payment_via_display(),
-                'payment_method': self.payment_via,
+                'payment_method_formatted': self.get_credential_type_display(),
+                'payment_method': self.credential_type,
                 'tx_hash': tx_hash,
                 }
         email = send_and_log(

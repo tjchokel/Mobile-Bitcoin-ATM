@@ -62,7 +62,7 @@ def customer_dashboard(request):
                     email=email,
                 )
 
-                payment_via = merchant.get_valid_api_credentials().get_payment_channel()
+                credential = merchant.get_valid_api_credentials()
 
                 # if sending to email
                 if email_or_btc_address and email_or_btc_address == '1':
@@ -70,7 +70,7 @@ def customer_dashboard(request):
                         merchant=merchant,
                         shopper=shopper,
                         fiat_amount=amount,
-                        payment_via=payment_via,
+                        credential=credential,
                     )
                 else:
                     ShopperBTCPurchase.objects.create(
@@ -78,7 +78,7 @@ def customer_dashboard(request):
                         shopper=shopper,
                         fiat_amount=amount,
                         b58_address=btc_address,
-                        payment_via=payment_via,
+                        credential=credential,
                     )
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))

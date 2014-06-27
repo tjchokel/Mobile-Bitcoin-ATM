@@ -105,8 +105,8 @@ class BCICredential(BaseCredential):
         SentBTC.objects.create(
                 credential=self.cred,
                 satoshis=satoshis_to_send,
-                destination_address=destination_btc_address,
-                tx_hash=tx_hash,
+                destination_btc_address=destination_btc_address,
+                txn_hash=tx_hash,
                 )
 
         return BTCTransaction.objects.create(

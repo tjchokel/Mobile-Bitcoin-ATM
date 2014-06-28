@@ -1,0 +1,30 @@
+{% extends "base_email.html" %}
+
+{% block content %}
+
+{{ business_name }} has just confirmed that they recieved your deposit of <b>{{ fiat_amount_formatted }}</b>.
+The exchange rate used was {{ exchange_rate_formatted }} / BTC
+so {{ business_name }} has requested that {{ payment_method_formatted }} immediately send <b>{{ satoshis_formatted }}</b>
+from their account directly to <b>{% firstof shopper_btc_address shopper_email %}</b>.
+<br />
+<br />
+{% if tx_hash %}
+  You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>.
+{% elif shopper_btc_address %}
+  You can <a href="https://blockchain.info/address/{{ shopper_btc_address }}">see this transaction on the bitcoin blockchain here</a>
+  (may be mixed with other transactions at this address).
+  {% if payment_method == "BTS" %}
+    Please note that Bitstamp often has a 10 minute delay in sending bitcoin.
+  {% endif %}
+{% else %}
+  {# coinbase email transaction #}
+  You should get an email momentarily from CoinBase at {{ shopper_email }} notifying you of the transaction.
+  Please check your spam folder if you haven't received this email.
+{% endif %}
+
+{% endblock content %}
+
+{% block ps %}
+P.S. If you'd like to know more about how bitcoin transactions work, please check out
+<a href="http://www.coindesk.com/information/how-do-bitcoin-transactions-work/">CoinDesk's Article on Bitcoin Transactions</a>.
+{% endblock ps %}

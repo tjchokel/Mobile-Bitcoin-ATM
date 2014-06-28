@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from services.models import APICall
 
 from bitcoins.BCAddressField import is_valid_btc_address
+from bitcoins.models import BTCTransaction
 
 import requests
 import json
@@ -26,6 +27,9 @@ class BCICredential(models.Model):
 
     def __str__(self):
         return '%s from %s' % (self.id, self.merchant.business_name)
+
+    def get_payment_channel(self):
+        return 'BCI'
 
     def get_balance(self):
         """
@@ -115,12 +119,17 @@ class BCICredential(models.Model):
         assert 'error' not in resp_json, resp_json
 
         # Record the Send
-        return BCISendBTC.objects.create(
+        BCISendBTC.objects.create(
                 bci_credential=self,
                 satoshis=satoshis_to_send,
                 destination_address=destination_btc_address,
                 tx_hash=tx_hash,
                 )
+
+        return BTCTransaction.objects.create(
+            txn_hash=tx_hash,
+            satoshis=satoshis_to_send,
+            conf_num=0)
 
     def get_new_receiving_address(self, set_as_merchant_address=False):
         """

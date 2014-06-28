@@ -41,7 +41,7 @@ def customer_dashboard(request):
         buy_form = NoEmailBuyBitcoinForm()
     password_form = ConfirmPasswordForm(user=user)
     shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
-    show_buy_modal = 'false'
+    show_buy_modal, show_confirm_purchase_modal = 'false', 'false'
     if request.method == 'POST':
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
@@ -61,19 +61,24 @@ def customer_dashboard(request):
                 shopper = Shopper.objects.create(
                     email=email,
                 )
+
+                payment_via = merchant.get_valid_api_credentials().get_payment_channel()
+
                 # if sending to email
                 if email_or_btc_address and email_or_btc_address == '1':
-                    btc_purchase = ShopperBTCPurchase.objects.create(
+                    ShopperBTCPurchase.objects.create(
                         merchant=merchant,
                         shopper=shopper,
                         fiat_amount=amount,
+                        payment_via=payment_via,
                     )
                 else:
-                    btc_purchase = ShopperBTCPurchase.objects.create(
+                    ShopperBTCPurchase.objects.create(
                         merchant=merchant,
                         shopper=shopper,
                         fiat_amount=amount,
                         b58_address=btc_address,
+                        payment_via=payment_via,
                     )
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
@@ -117,10 +122,13 @@ def customer_dashboard(request):
         # if submitting password confirmation form
         elif 'password' in request.POST:
             password_form = ConfirmPasswordForm(user=user, data=request.POST)
+            show_confirm_purchase_modal = 'true'
             if password_form.is_valid():
                 if buy_request:
                     buy_request.pay_out_bitcoin()
+                    show_confirm_purchase_modal = 'false'
                     msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.shopper.email)
+                    # FIXME: send receipt!
                     messages.success(request, msg, extra_tags='safe')
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     if forwarding_address_obj:
@@ -140,6 +148,7 @@ def customer_dashboard(request):
         'shopper_form': shopper_form,
         'buy_form': buy_form,
         'show_buy_modal': show_buy_modal,
+        'show_confirm_purchase_modal': show_confirm_purchase_modal,
     }
 
 

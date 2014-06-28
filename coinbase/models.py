@@ -6,6 +6,8 @@ from django.utils.translation import ugettext as _
 from services.models import APICall
 
 from bitcoins.BCAddressField import is_valid_btc_address
+from bitcoins.models import BTCTransaction
+
 from coinbase.api import get_cb_request
 
 from utils import btc_to_satoshis, satoshis_to_btc
@@ -31,6 +33,9 @@ class CBCredential(models.Model):
 
     def __str__(self):
         return '%s from %s' % (self.id, self.merchant.business_name)
+
+    def get_payment_channel(self):
+        return 'CBS'
 
     def get_balance(self):
         """
@@ -242,7 +247,7 @@ class CBCredential(models.Model):
             send_btc_dict = {'destination_email': destination_email_address}
 
             msg = '%s is not a valid email address' % destination_email_address
-            # FIXME
+            # FIXME: implement
 
         btc_to_send = satoshis_to_btc(satoshis_to_send)
 
@@ -302,16 +307,24 @@ class CBCredential(models.Model):
 
         satoshis = -1 * btc_to_satoshis(transaction['amount']['amount'])
 
+        txn_hash = transaction['hsh']
+
         # Record the Send
         send_btc_dict.update({
                 'cb_credential': self,
                 'received_at': parser.parse(transaction['created_at']),
-                'txn_hash': transaction['hsh'],
+                'txn_hash': txn_hash,
                 'satoshis': satoshis,
                 'cb_id': transaction['id'],
                 'notes': notes,
                 })
-        return SendBTC.objects.create(**send_btc_dict)
+        SendBTC.objects.create(**send_btc_dict)
+
+        if txn_hash:
+            return BTCTransaction.objects.create(
+                    txn_hash=txn_hash,
+                    satoshis=satoshis,
+                    conf_num=0)
 
     def get_new_receiving_address(self, set_as_merchant_address=False):
         """

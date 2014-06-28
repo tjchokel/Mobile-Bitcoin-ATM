@@ -27,6 +27,9 @@ class BSCredential(models.Model):
     def __str__(self):
         return '%s from %s' % (self.id, self.merchant.business_name)
 
+    def get_payment_channel(self):
+        return 'BTS'
+
     def get_trading_obj(self):
         return Trading(username=self.username, key=self.api_key, secret=self.api_secret)
 
@@ -165,7 +168,7 @@ class BSCredential(models.Model):
             raise Exception(e)
 
         # Record the Send
-        return BSSendBTC.objects.create(
+        BSSendBTC.objects.create(
                 bs_credential=self,
                 bs_withdrawal_id=withdrawal_id,
                 satoshis=satoshis_to_send,
@@ -237,11 +240,11 @@ class BSBalance(models.Model):
 class BSSendBTC(models.Model):
 
     BS_STATUS_CHOICES = (
-            (0, 'Open'),
-            (1, 'In Process'),
-            (2, 'Finished'),
-            (3, 'Canceled'),
-            (4, 'Failed'),
+            ('0', 'Open'),
+            ('1', 'In Process'),
+            ('2', 'Finished'),
+            ('3', 'Canceled'),
+            ('4', 'Failed'),
             )
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -291,7 +294,7 @@ class BSSendBTC(models.Model):
 
         for withdrawal_request in withdrawal_requests:
             if withdrawal_request['id'] == self.bs_withdrawal_id:
-                new_status = int(withdrawal_request['status'])
+                new_status = withdrawal_request['status']
                 if update_results:
                     self.status = new_status
                     self.status_last_checked_at = now()

@@ -14,11 +14,12 @@
           <table class="table table-condensed" style="border-collapse:collapse;">
             <thead>
               <tr>
-                <th>{% trans "Date" %}</th>
+                <th>{% trans "When" %}</th>
                 <th>{% trans "Type" %}</th>
                 <th>{% trans "Shopper" %}</th>
                 <th>{% trans "Bitcoin" %}</th>
                 <th>{% trans "Cash" %}</th>
+                <th>{% trans "Wallet" %}</th>
                 <th>{% trans "Status" %}</th>
               </tr>
             </thead>
@@ -29,9 +30,28 @@
                   <td>{{transaction.added_at|naturaltime}}</td>
                   <td>{{transaction.get_type}}</td>
                   <td>{{ transaction.get_shopper.get_transaction_table_string }}</td>
-                  <td><a href="https://blockchain.info/address/{{ transaction.forwarding_address.b58_address }}" target="_blank" >{{transaction.format_satoshis_amount}}</a></td>
+                  <td>{{transaction.format_satoshis_amount}}</td>
                   <td>{{transaction.get_fiat_amount_formatted}}</td>
-                  <td>{{transaction.get_status|format_status_string}}</td>
+                  <td>
+                    {% if transaction.payment_via == 'CBS' %}
+                      <a href="https://coinbase.com/accounts/" target="_blank">CoinBase</a>
+                    {% elif transaction.payment_via == 'BTS' %}
+                      <a href="https://www.bitstamp.net/account/transactions/" target="_blank">BitStamp</a>
+                    {% elif transaction.payment_via == 'BCI' %}
+                      <a href="https://blockchain.info/wallet/login" target="_blank">BlockChain</a>
+                    {% else %}
+                      Bitcoin Network
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if transaction.txn_hash or transaction.btc_transaction.txn_hash %}
+                      <a href="https://blockchain.info/tx/{% firstof transaction.txn_hash transaction.btc_transaction.txn_hash %}" target="_blank">{{transaction.get_status|format_status_string}}</a>
+                    {% elif transaction.b58_address %}
+                      <a href="https://blockchain.info/address/{{ transaction.b58_address }}" target="_blank">{{transaction.get_status|format_status_string}}</a>
+                    {% else %}
+                      <a href="https://coinbase.com/accounts/" target="_blank">{{transaction.get_status|format_status_string}}</a>
+                    {% endif %}
+                  </td>
                 </tr>
               {% endfor %}
             {% else %}

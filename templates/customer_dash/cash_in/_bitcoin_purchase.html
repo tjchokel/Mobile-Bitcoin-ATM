@@ -18,9 +18,7 @@
             <div class="col-sm-12">
 
               <p>
-                Merchant: please enter your password once you have recieved
-                <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b>
-                from the customer.
+                {% trans "Merchant: please enter your password once you have recieved <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b>from the customer." %}
               </p>
 
               <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
@@ -49,12 +47,8 @@
       </p>
 
       <p class="lead text-center text-green">
-        Please pay the merchant <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b> to receive <b>{{buy_request.format_mbtc_amount}}</b> mBTC to
-          {% if buy_request.b58_address %}
-            <b>{{buy_request.b58_address}}</b>
-          {% else %}
-            <b>{{buy_request.email}}</b> (via CoinBase)
-          {% endif %}
+        {% trans "Please pay the merchant <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b> to receive <b>{{buy_request.format_mbtc_amount}}</b> mBTC to" %}
+        <b>{% firstof buy_request.b58_address buy_request.email}}</b>
       </p>
 
       <br />

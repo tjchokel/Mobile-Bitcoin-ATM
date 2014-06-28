@@ -18,7 +18,10 @@
             <div class="col-sm-12">
 
               <p>
-                {% trans "Merchant: please enter your password once you have recieved <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b>from the customer." %}
+                {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount %}
+                  Merchant: please enter your password once you have recieved
+                  <b>{{ currency_symbol }}{{fiat_amount}}</b> from the customer.
+                {% endblocktrans %}
               </p>
 
               <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
@@ -47,8 +50,9 @@
       </p>
 
       <p class="lead text-center text-green">
-        {% trans "Please pay the merchant <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b> to receive <b>{{buy_request.format_mbtc_amount}}</b> mBTC to" %}
-        <b>{% firstof buy_request.b58_address buy_request.email}}</b>
+        {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount format_mbtc_amount=buy_request.format_mbtc_amount b58_address=buy_request.b58_address email=buy_request.email %}
+          Please pay the merchant <b>{{currency_symbol}}{{fiat_amount}}</b> to receive <b>{{format_mbtc_amount}}</b> mBTC.
+        {% endblocktrans %}
       </p>
 
       <br />
@@ -57,8 +61,9 @@
 
         <!-- Button trigger modal -->
         <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#confirm-purchase-modal">
-          {% trans "I Have Paid" %}
-          <b>{{merchant.get_currency_symbol}}{{buy_request.fiat_amount}}</b>
+          {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount %}
+            I Have Paid <b>{{get_currency_symbol}}{{fiat_amount}}</b>
+          {% endblocktrans %}
         </button>
 
       </p>

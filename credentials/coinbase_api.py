@@ -17,8 +17,6 @@ import hmac
 import time
 import requests
 
-from dateutil import parser
-
 
 CB_DEBUG = False
 

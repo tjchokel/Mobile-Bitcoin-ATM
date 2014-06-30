@@ -186,9 +186,9 @@ def register_bitcoin(request):
                     credentials = Credential.objects.create(
                             credential_type=Credential.BLOCKCHAIN_INFO,
                             merchant=merchant,
-                            username=form.cleaned_data['bci_username'],
-                            main_password=form.cleaned_data['bci_main_password'],
-                            second_password=form.cleaned_data['bci_second_password'],
+                            api_key=form.cleaned_data['bci_username'],
+                            api_secret=form.cleaned_data['bci_main_password'],
+                            secondary_secret=form.cleaned_data['bci_second_password'],
                             )
 
                 try:

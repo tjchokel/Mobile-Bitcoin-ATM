@@ -476,7 +476,7 @@ class ShopperBTCPurchase(models.Model):
     cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     funds_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    parent_credential = models.ForeignKey('credentials.ParentCredential', blank=True, null=True)
+    credential_link = models.ForeignKey('credentials.CredentialLink', blank=True, null=True)
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)

@@ -2,29 +2,23 @@ from django.utils.translation import ugettext as _
 from django.db import models
 from django.utils.timezone import now
 
+from polymorphic import PolymorphicModel
+
 from countries import BFH_CURRENCY_DROPDOWN
 
 
-class ParentCredential(models.Model):
+class CredentialLink(models.Model):
+    """ Join table to link an object to a related child credential """
 
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
-    disabled_at = models.DateTimeField(blank=True, null=True, db_index=True)
-
-    # Optional FKs
     # FIXME: only allow one of these to be set:
     cbs_credential = models.OneToOneField('coinbase_wallets.CBSCredential', blank=True, null=True)
-    bci_credential = models.OneToOneField('blockhain_wallets.BCICredential', blank=True, null=True)
-    bts_credential = models.OneToOneField('bitstamp_wallets.BTSCredential', blank=True, null=True)
-
-    # v1 logging, fancier logging to come
-    last_succeded_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    last_failed_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    #bci_credential = models.OneToOneField('blockhain_wallets.BCICredential', blank=True, null=True)
+    #bts_credential = models.OneToOneField('bitstamp_wallets.BTSCredential', blank=True, null=True)
 
     def __str__(self):
-        return '%s for %s' % (self.id, self.merchant.business_name)
+        return '%s: %s' % (self.id, self.get_credential().id)
 
-    def get_child_model(self):
+    def get_credential(self):
         if self.cbs_credential:
             return self.cbs_credential
         elif self.bci_credential:
@@ -32,6 +26,20 @@ class ParentCredential(models.Model):
         elif self.bts_credential:
             return self.bts_credential
         raise Exception('No Credential')
+
+
+class BaseCredential(PolymorphicModel):
+
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
+    disabled_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    # v1 logging, fancier logging to come
+    last_succeded_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    last_failed_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    def __str__(self):
+        return '%s for %s' % (self.id, self.merchant.business_name)
 
     def mark_success(self):
         self.last_failed_at = None
@@ -58,28 +66,21 @@ class ParentCredential(models.Model):
             return _('Valid')
 
 
-class ParentBalance(models.Model):
+class BaseBalance(PolymorphicModel):
     """ Probably just used as a log and not implemented anywhere """
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    parent_credential = models.ForeignKey(ParentCredential, blank=False, null=False)
+    credential_link = models.ForeignKey(CredentialLink, blank=False, null=False)
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.satoshis)
 
 
-class ParentSentBTC(models.Model):
+class BaseSentBTC(PolymorphicModel):
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    parent_credential = models.ForeignKey(ParentCredential, blank=False, null=False)
+    credential_link = models.ForeignKey(CredentialLink, blank=False, null=False)
 
-    # Optional FKs
-    # FIXME: only allow one of these to be set:
-    # Note that there is no BCISentBTC because it has no use
-    cbs_sent_btc = models.OneToOneField('coinbase_wallets.CBSSentBTC', blank=True, null=True)
-    bts_sent_btc = models.OneToOneField('bitstamp_wallets.BTSSentBTC', blank=True, null=True)
-
-    # standard fields
     txn_hash = models.CharField(max_length=64, blank=True, null=True,
             unique=True, db_index=True)
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
@@ -90,31 +91,16 @@ class ParentSentBTC(models.Model):
     def __str__(self):
         return '%s: %s' % (self.id, self.destination_btc_address or self.destination_email)
 
-    def get_child_model(self):
-        if self.cbs_sent_btc:
-            return self.cbs_sent_btc
-        elif self.bci_sent_btc:
-            return self.bci_sent_btc
-        elif self.bts_sent_btc:
-            return self.bts_sent_btc
-        raise Exception('No Child Model')
 
-
-class ParentSellBTC(models.Model):
+class BaseSellBTC(PolymorphicModel):
     """
     When the merchant sells BTC for fiat
 
     Not yet implemented on the site
     """
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    parent_credential = models.ForeignKey(ParentCredential, blank=False, null=False)
+    credential_link = models.ForeignKey(CredentialLink, blank=False, null=False)
 
-    # Optional FKs
-    # FIXME: only allow one of these to be set:
-    cbs_sell_btc = models.OneToOneField('coinbase_wallets.CBSSellBTC', blank=True, null=True)
-    bts_sell_btc = models.OneToOneField('bitstamp_wallets.BTSSellBTC', blank=True, null=True)
-
-    custom_code = models.CharField(max_length=32, blank=False, null=False, db_index=True, unique=True)
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
     currency_code = models.CharField(max_length=5, blank=False, null=False,
             db_index=True, choices=BFH_CURRENCY_DROPDOWN)

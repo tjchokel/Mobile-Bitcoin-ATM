@@ -2,7 +2,7 @@ from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
-from credentials.models import ParentBalance, ParentSentBTC, ParentSellBTC
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, BaseSellBTC
 from services.models import APICall
 from bitcoins.models import BTCTransaction
 
@@ -64,7 +64,7 @@ def get_cb_request(url, api_key, api_secret, body=None):
     return requests.get(url, headers=headers, verify=True)
 
 
-class CBSCredential(models.Model):
+class CBSCredential(BaseCredential):
 
     api_key = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     api_secret = EncryptedCharField(max_length=256, blank=False, null=False, db_index=True)
@@ -86,10 +86,10 @@ class CBSCredential(models.Model):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -99,7 +99,8 @@ class CBSCredential(models.Model):
         satoshis = btc_to_satoshis(resp_json['amount'])
 
         # Record the balance results
-        ParentBalance.objects.create(satoshis=satoshis, parent_credential=self)
+        BaseBalance.objects.create(satoshis=satoshis,
+                credential_link=self.credentiallink)
 
         return satoshis
 
@@ -121,10 +122,10 @@ class CBSCredential(models.Model):
             url_hit=url_to_hit,
             response_code=r.status_code,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         return json.loads(r.content)['transfers']
 
@@ -145,17 +146,17 @@ class CBSCredential(models.Model):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         json_resp = json.loads(r.content)
 
         # Record the balance
-        ParentBalance.objects.create(
+        BaseBalance.objects.create(
                 satoshis=btc_to_satoshis(json_resp['balance']['amount']),
-                parent_credential=self.parentcredential
+                credential_link=self.credentiallink
                 )
 
         # Return transactions
@@ -181,10 +182,10 @@ class CBSCredential(models.Model):
             response_code=r.status_code,
             api_results=r.content,
             post_params=body_to_use,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -214,8 +215,8 @@ class CBSCredential(models.Model):
 
         cbs_sell_btc = CBSSellBTC.objects.create(coinbase_code=transfer['code'])
 
-        return ParentSellBTC.objects.create(
-                parent_credential=self.parentcredential,
+        return CBSSellBTC.objects.create(
+                credential_link=self.credentiallink,
                 cbs_sell_btc=cbs_sell_btc,
                 satoshis=satoshis,
                 currency_code=currency_to_recieve,
@@ -284,10 +285,10 @@ class CBSCredential(models.Model):
             response_code=r.status_code,
             post_params=post_params,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -313,12 +314,12 @@ class CBSCredential(models.Model):
 
         # Record the Send
         send_btc_dict.update({
-                'parent_credential': self.parentcredential,
+                'credential_link': self.credentiallink,
                 'cbs_sent_btc': cbs_sent_btc,
                 'txn_hash': txn_hash,
                 'satoshis': satoshis,
                 })
-        ParentSentBTC.objects.create(**send_btc_dict)
+        CBSSentBTC.objects.create(**send_btc_dict)
 
         if txn_hash:
             return BTCTransaction.objects.create(
@@ -348,10 +349,10 @@ class CBSCredential(models.Model):
             response_code=r.status_code,
             post_params=post_params,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -363,7 +364,7 @@ class CBSCredential(models.Model):
         assert is_valid_btc_address(address), msg
 
         if set_as_merchant_address:
-            self.parentcredential.merchant.set_destination_address(address)
+            self.merchant.set_destination_address(address)
 
         return address
 
@@ -371,7 +372,7 @@ class CBSCredential(models.Model):
         return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)
 
 
-class CBSSentBTC(models.Model):
+class CBSSentBTC(BaseSentBTC):
     transaction_id = models.CharField(max_length=64, blank=False, null=False, db_index=True)
     notes = models.CharField(max_length=2048, blank=True, null=True)
 
@@ -379,7 +380,7 @@ class CBSSentBTC(models.Model):
         return '%s: %s' % (self.id, self.transaction_id)
 
 
-class CBSSellBTC(models.Model):
+class CBSSellBTC(BaseSellBTC):
     # Not implemented yet
     coinbase_code = models.CharField(max_length=32, blank=False, null=False, db_index=True, unique=True)
 

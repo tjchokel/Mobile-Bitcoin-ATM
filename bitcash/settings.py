@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'raven.contrib.django.raven_compat',
+    'polymorphic',
     'south',
     'crispy_forms',
     'users',
@@ -70,8 +71,8 @@ INSTALLED_APPS = (
     'phones',
     'credentials',
     'coinbase_wallets',
-    'bitstamp_wallets',
-    'blockchain_wallets',
+    #'bitstamp_wallets',
+    #'blockchain_wallets',
 )
 
 MIDDLEWARE_CLASSES = (

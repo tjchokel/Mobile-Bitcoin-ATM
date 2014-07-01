@@ -8,10 +8,7 @@ was received at {{ business_name }}.
 The exchange rate used was {{ exchange_rate_formatted }} / BTC
 so we requested that {{ payment_method_formatted }} immediately send <b>{{ satoshis_formatted }}</b> to {% firstof shopper_btc_address shopper_email %} on your behalf.
 
-{% if tx_hash %}
 <br /><br />
-You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>,
-{% endif %}
 
 {% if tx_hash %}
   You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>

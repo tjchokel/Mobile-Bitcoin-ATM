@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from coinbase_wallets.models import BTSCredential, BTSSentBTC
+from bitstamp_wallets.models import BTSCredential, BTSSentBTC
 
 
 class BTSCredentialAdmin(admin.ModelAdmin):

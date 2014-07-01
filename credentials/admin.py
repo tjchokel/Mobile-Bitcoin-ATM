@@ -1,15 +1,13 @@
 from django.contrib import admin
-from credentials.models import Credential, SellBTCOrder, CurrentBalance, SentBTC
+from credentials.models import BaseCredential, BaseSellBTC, BaseBalance, BaseSentBTC
 
 
-class CredentialAdmin(admin.ModelAdmin):
+class BaseCredentialAdmin(admin.ModelAdmin):
 
     list_display = (
             'id',
             'created_at',
-            'credential_type',
             'merchant',
-            'api_key',
             'last_succeded_at',
             'last_failed_at',
             'disabled_at',
@@ -17,60 +15,55 @@ class CredentialAdmin(admin.ModelAdmin):
     raw_id_fields = ('merchant', )
 
     class Meta:
-        model = Credential
+        model = BaseCredential
 
-admin.site.register(Credential, CredentialAdmin)
+admin.site.register(BaseCredential, BaseCredentialAdmin)
 
 
-class CurrentBalanceAdmin(admin.ModelAdmin):
+class BaseBalanceAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'created_at', 'credential', 'satoshis', )
-    raw_id_fields = ('credential', )
+    list_display = ('id', 'created_at', 'credential_link', 'satoshis', )
+    raw_id_fields = ('credential_link', )
 
     class Meta:
-        model = CurrentBalance
+        model = BaseBalance
 
-admin.site.register(CurrentBalance, CurrentBalanceAdmin)
+admin.site.register(BaseBalance, BaseBalanceAdmin)
 
 
-class SellBTCOrderAdmin(admin.ModelAdmin):
+class BaseSellBTCAdmin(admin.ModelAdmin):
 
     list_display = (
             'id',
             'created_at',
-            'credential',
-            'custom_code',
+            'credential_link',
             'satoshis',
             'currency_code',
             'fees_in_fiat',
             'to_receive_in_fiat',
             )
-    raw_id_fields = ('credential', )
+    raw_id_fields = ('credential_link', )
 
     class Meta:
-        model = SellBTCOrder
+        model = BaseSellBTC
 
-admin.site.register(SellBTCOrder, SellBTCOrderAdmin)
+admin.site.register(BaseSellBTC, BaseSellBTCAdmin)
 
 
-class SentBTCAdmin(admin.ModelAdmin):
+class BaseSentBTCAdmin(admin.ModelAdmin):
 
     list_display = (
             'id',
             'created_at',
-            'credential',
+            'credential_link',
             'txn_hash',
             'satoshis',
             'destination_btc_address',
             'destination_email',
-            'unique_id',
-            'notes',
-            'status',
-            'status_last_checked_at',
             )
-    raw_id_fields = ('credential', )
+    raw_id_fields = ('credential_link', )
 
     class Meta:
-        model = SentBTC
+        model = BaseSentBTC
 
-admin.site.register(SentBTC, SentBTCAdmin)
+admin.site.register(BaseSentBTC, BaseSentBTCAdmin)

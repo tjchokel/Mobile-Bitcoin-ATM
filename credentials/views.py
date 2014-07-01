@@ -91,7 +91,7 @@ def coinbase_creds(request):
     }
 
 
-@sensitive_post_parameters('username', 'api_key', 'secret_key')
+@sensitive_post_parameters('customer_id', 'api_key', 'secret_key')
 @login_required
 @render_to('merchants/bitstamp.html')
 def bitstamp_creds(request):
@@ -105,9 +105,9 @@ def bitstamp_creds(request):
         if form.is_valid():
             credential, created = BTSCredential.objects.get_or_create(
                     merchant=merchant,
-                    username=form.cleaned_data['username'],
+                    customer_id=form.cleaned_data['customer_id'],
                     api_key=form.cleaned_data['api_key'],
-                    api_secret=form.cleaned_data['secret_key']
+                    api_secret=form.cleaned_data['api_secret']
             )
             if created:
                 credential.create_credential_link()
@@ -115,7 +115,8 @@ def bitstamp_creds(request):
             try:
                 credential.get_balance()
                 messages.success(request, _('Your Bitstamp API info has been updated'))
-            except:
+            except Exception as e:
+                print e
                 credential.mark_disabled()
                 messages.warning(request, _('Your Bitstamp API credentials are not valid'))
 
@@ -164,7 +165,8 @@ def refresh_bs_credentials(request):
     try:
         credential.get_balance()
         messages.success(request, _('Your Bistamp API info has been refreshed'))
-    except:
+    except Exception as e:
+        print e
         messages.warning(request, _('Your Bistamp API info could not be validated'))
     return HttpResponse("*ok*")
 

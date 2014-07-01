@@ -50,8 +50,8 @@ class CoinbaseAPIForm(forms.Form):
 
 class BitstampAPIForm(forms.Form):
 
-    username = forms.CharField(
-        label=_('Username'),
+    customer_id = forms.CharField(
+        label=_('Customer ID'),
         min_length=4,
         max_length=50,
         required=True,
@@ -66,8 +66,8 @@ class BitstampAPIForm(forms.Form):
         widget=forms.TextInput(),
     )
 
-    secret_key = forms.CharField(
-        label=_('Secret Key'),
+    api_secret = forms.CharField(
+        label=_('API Secret'),
         min_length=5,
         max_length=50,
         required=True,

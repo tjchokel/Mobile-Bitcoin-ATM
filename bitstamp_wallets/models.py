@@ -2,7 +2,7 @@ from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
-from credentials.models import BaseBalance, BaseSentBTC, CredentialLink
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, CredentialLink
 from services.models import APICall
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -14,9 +14,9 @@ from bitstamp.client import Trading
 import json
 
 
-class BTSCredential(models.Model):
+class BTSCredential(BaseCredential):
 
-    username = EncryptedCharField(max_length=32, blank=False, null=False, db_index=True)
+    customer_id = EncryptedCharField(max_length=32, blank=False, null=False, db_index=True)
     api_key = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
     api_secret = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
 
@@ -34,9 +34,9 @@ class BTSCredential(models.Model):
         return 'BitStamp'
 
     def get_trading_obj(self):
-        return Trading(username=self.api_key,
+        return Trading(username=self.customer_id,
                 key=self.api_secret,
-                secret=self.secondary_secret)
+                secret=self.api_secret)
 
     def get_balance(self):
         """

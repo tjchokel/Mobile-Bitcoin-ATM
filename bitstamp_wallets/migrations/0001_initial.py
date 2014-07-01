@@ -10,8 +10,8 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'BTSCredential'
         db.create_table(u'bitstamp_wallets_btscredential', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('username', self.gf('django_fields.fields.EncryptedCharField')(max_length=101, block_type=None, cipher='AES', db_index=True)),
+            (u'basecredential_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['credentials.BaseCredential'], unique=True, primary_key=True)),
+            ('customer_id', self.gf('django_fields.fields.EncryptedCharField')(max_length=101, block_type=None, cipher='AES', db_index=True)),
             ('api_key', self.gf('django_fields.fields.EncryptedCharField')(max_length=165, block_type=None, cipher='AES', db_index=True)),
             ('api_secret', self.gf('django_fields.fields.EncryptedCharField')(max_length=293, block_type=None, cipher='AES', db_index=True)),
         ))
@@ -50,11 +50,11 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
         u'bitstamp_wallets.btscredential': {
-            'Meta': {'object_name': 'BTSCredential'},
+            'Meta': {'object_name': 'BTSCredential', '_ormbases': [u'credentials.BaseCredential']},
             'api_key': ('django_fields.fields.EncryptedCharField', [], {'max_length': '165', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
             'api_secret': ('django_fields.fields.EncryptedCharField', [], {'max_length': '293', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'username': ('django_fields.fields.EncryptedCharField', [], {'max_length': '101', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'})
+            u'basecredential_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['credentials.BaseCredential']", 'unique': 'True', 'primary_key': 'True'}),
+            'customer_id': ('django_fields.fields.EncryptedCharField', [], {'max_length': '101', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'})
         },
         u'bitstamp_wallets.btssentbtc': {
             'Meta': {'object_name': 'BTSSentBTC', '_ormbases': [u'credentials.BaseSentBTC']},

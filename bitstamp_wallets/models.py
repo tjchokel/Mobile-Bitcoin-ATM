@@ -34,9 +34,7 @@ class BTSCredential(BaseCredential):
         return 'BitStamp'
 
     def get_trading_obj(self):
-        return Trading(username=self.customer_id,
-                key=self.api_secret,
-                secret=self.api_secret)
+        return Trading(username=self.customer_id, key=self.api_key, secret=self.api_secret)
 
     def get_balance(self):
         """

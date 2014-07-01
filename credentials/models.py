@@ -27,6 +27,12 @@ class CredentialLink(models.Model):
             return self.bts_credential
         raise Exception('No Credential')
 
+    def get_credential_abbrev(self):
+        return self.get_credential().get_credential_abbrev()
+
+    def get_credential_to_display(self):
+        return self.get_credential().get_credential_to_display()
+
 
 class BaseCredential(PolymorphicModel):
 
@@ -62,6 +68,12 @@ class BaseCredential(PolymorphicModel):
             self.mark_failure
             err_msg = 'Expected 2xx but got %s' % status_code
             raise Exception('StatusCode: %s' % err_msg)
+
+    def get_credential_abbrev(self):
+        raise Exception('Not Implemented')
+
+    def get_credential_to_display(self):
+        raise Exception('Not Implemented')
 
     def get_status(self):
         if self.last_failed_at:

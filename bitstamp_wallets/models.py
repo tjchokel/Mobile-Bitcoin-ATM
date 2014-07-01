@@ -27,6 +27,12 @@ class BTSCredential(models.Model):
         """
         return CredentialLink.objects.create(bts_credential=self)
 
+    def get_credential_abbrev(self):
+        return 'BTS'
+
+    def get_credential_to_display(self):
+        return 'BitStamp'
+
     def get_trading_obj(self):
         return Trading(username=self.api_key,
                 key=self.api_secret,

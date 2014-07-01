@@ -24,6 +24,12 @@ class BCICredential(BaseCredential):
         """
         return CredentialLink.objects.create(bci_credential=self)
 
+    def get_credential_abbrev(self):
+        return 'BCI'
+
+    def get_credential_to_display(self):
+        return 'blockchain.info'
+
     def get_balance(self):
         """
         Return acount balance in satoshis

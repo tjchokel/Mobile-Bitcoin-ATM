@@ -77,6 +77,12 @@ class CBSCredential(BaseCredential):
         """
         return CredentialLink.objects.create(cbs_credential=self)
 
+    def get_credential_abbrev(self):
+        return 'CBS'
+
+    def get_credential_to_display(self):
+        return 'CoinBase'
+
     def get_balance(self):
         """
         Return acount balance in satoshis

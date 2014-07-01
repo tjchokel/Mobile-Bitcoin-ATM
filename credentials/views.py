@@ -53,7 +53,7 @@ def blockchain_creds(request):
     }
 
 
-@sensitive_post_parameters('api_key', 'secret_key')
+@sensitive_post_parameters('api_key', 'api_secret')
 @login_required
 @render_to('merchants/coinbase.html')
 def coinbase_creds(request):
@@ -68,7 +68,7 @@ def coinbase_creds(request):
             credential, created = CBSCredential.objects.get_or_create(
                     merchant=merchant,
                     api_key=form.cleaned_data['api_key'].strip(),
-                    api_secret=form.cleaned_data['secret_key'].strip(),
+                    api_secret=form.cleaned_data['api_secret'].strip(),
                     )
             if created:
                 credential.create_credential_link()

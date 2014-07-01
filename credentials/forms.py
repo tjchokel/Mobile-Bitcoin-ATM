@@ -39,8 +39,8 @@ class CoinbaseAPIForm(forms.Form):
         widget=forms.TextInput(),
     )
 
-    secret_key = forms.CharField(
-        label=_('Secret Key'),
+    api_secret = forms.CharField(
+        label=_('API Secret'),
         min_length=5,
         max_length=50,
         required=True,

@@ -115,8 +115,7 @@ def bitstamp_creds(request):
             try:
                 credential.get_balance()
                 messages.success(request, _('Your Bitstamp API info has been updated'))
-            except Exception as e:
-                print e
+            except:
                 credential.mark_disabled()
                 messages.warning(request, _('Your Bitstamp API credentials are not valid'))
 
@@ -165,8 +164,7 @@ def refresh_bs_credentials(request):
     try:
         credential.get_balance()
         messages.success(request, _('Your Bistamp API info has been refreshed'))
-    except Exception as e:
-        print e
+    except:
         messages.warning(request, _('Your Bistamp API info could not be validated'))
     return HttpResponse("*ok*")
 

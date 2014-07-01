@@ -36,7 +36,7 @@ class BCICredential(BaseCredential):
         """
 
         BASE_URL = 'https://blockchain.info/merchant/%s/balance?password=%s'
-        BALANCE_URL = BASE_URL % (self.api_key, self.api_secret)
+        BALANCE_URL = BASE_URL % (self.username, self.main_password)
 
         r = requests.get(BALANCE_URL)
 
@@ -75,11 +75,11 @@ class BCICredential(BaseCredential):
         assert is_valid_btc_address(destination_btc_address), msg
 
         BASE_URL = 'https://blockchain.info/merchant/%s/payment?password=%s&to=%s&amount=%s&shared=false'
-        SEND_URL = BASE_URL % (self.api_key, self.api_secret,
+        SEND_URL = BASE_URL % (self.username, self.main_password,
                 destination_btc_address, satoshis_to_send)
 
-        if self.secondary_secret:
-            SEND_URL += '&second_password=%s' % self.secondary_secret
+        if self.second_password:
+            SEND_URL += '&second_password=%s' % self.second_password
 
         r = requests.get(SEND_URL)
 
@@ -121,7 +121,7 @@ class BCICredential(BaseCredential):
         label = 'CloseCoin %s' % now().strftime("%Y-%m-%d")
 
         BASE_URL = 'https://blockchain.info/merchant/%s/new_address?password=%s&label=%s'
-        ADDRESS_URL = BASE_URL % (self.api_key, self.api_secret, label)
+        ADDRESS_URL = BASE_URL % (self.username, self.main_password, label)
 
         r = requests.get(url=ADDRESS_URL)
 

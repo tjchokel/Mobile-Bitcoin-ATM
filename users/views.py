@@ -70,7 +70,7 @@ def customer_dashboard(request):
                         merchant=merchant,
                         shopper=shopper,
                         fiat_amount=amount,
-                        credential=credential,
+                        credential_link=credential.credentiallink,
                     )
                 else:
                     ShopperBTCPurchase.objects.create(
@@ -78,7 +78,7 @@ def customer_dashboard(request):
                         shopper=shopper,
                         fiat_amount=amount,
                         b58_address=btc_address,
-                        credential=credential,
+                        credential_link=credential.credentiallink,
                     )
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))

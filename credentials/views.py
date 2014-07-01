@@ -20,7 +20,7 @@ from credentials.forms import BlockchainAPIForm, CoinbaseAPIForm, BitstampAPIFor
 def blockchain_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_blockchain_credentials()
+    credential = merchant.get_blockchain_credential()
 
     form = BlockchainAPIForm()
     if request.method == 'POST' and merchant:
@@ -59,7 +59,7 @@ def blockchain_creds(request):
 def coinbase_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credentials()
+    cb_credential = merchant.get_coinbase_credential()
 
     form = CoinbaseAPIForm()
     if request.method == 'POST' and merchant:
@@ -97,7 +97,7 @@ def coinbase_creds(request):
 def bitstamp_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_bitstamp_credentials()
+    credential = merchant.get_bitstamp_credential()
 
     form = BitstampAPIForm()
     if request.method == 'POST' and merchant:
@@ -134,7 +134,7 @@ def bitstamp_creds(request):
 def refresh_bci_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_blockchain_credentials()
+    credential = merchant.get_blockchain_credential()
     try:
         credential.get_balance()
         messages.success(request, _('Your Blockchain API info has been refreshed'))
@@ -147,7 +147,7 @@ def refresh_bci_credentials(request):
 def refresh_cb_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_coinbase_credentials()
+    credential = merchant.get_coinbase_credential()
     try:
         credential.get_balance()
         messages.success(request, _('Your Coinbase API info has been refreshed'))
@@ -160,7 +160,7 @@ def refresh_cb_credentials(request):
 def refresh_bs_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_bitstamp_credentials()
+    credential = merchant.get_bitstamp_credential()
     try:
         credential.get_balance()
         messages.success(request, _('Your Bistamp API info has been refreshed'))
@@ -173,7 +173,7 @@ def refresh_bs_credentials(request):
 def disable_bci_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_blockchain_credentials()
+    credential = merchant.get_blockchain_credential()
     credential.disabled_at = now()
     credential.save()
     return HttpResponse("*ok*")
@@ -183,7 +183,7 @@ def disable_bci_credentials(request):
 def disable_cb_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_coinbase_credentials()
+    credential = merchant.get_coinbase_credential()
     credential.disabled_at = now()
     credential.save()
     return HttpResponse("*ok*")
@@ -193,7 +193,7 @@ def disable_cb_credentials(request):
 def disable_bs_credentials(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_bitstamp_credentials()
+    credential = merchant.get_bitstamp_credential()
     credential.disabled_at = now()
     credential.save()
     return HttpResponse("*ok*")

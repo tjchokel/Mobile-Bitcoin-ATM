@@ -153,7 +153,7 @@ def register_bitcoin(request):
     merchant = user.get_merchant()
     if not merchant:
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
-    if merchant.has_valid_api_credentials():
+    if merchant.has_valid_api_credential():
         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     initial = {

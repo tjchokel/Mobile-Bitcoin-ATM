@@ -21,7 +21,7 @@
   {% blocktrans %}Next step: <a href="{{profile_url}}">List your business address</a>{% endblocktrans %}
 {% elif not merchant.phone_num %}
   {% blocktrans %}Next step: <a href="{{profile_url}}">List your business phone number</a>{% endblocktrans %}
-{% elif not merchant.has_valid_api_credentials %}
+{% elif not merchant.has_valid_api_credential %}
   {% if merchant.has_coinbase_credentials %}
     {% blocktrans %}Next step: <a href="{{coinbase_url}}">Check Your Coinbase Credentials</a>{% endblocktrans %}
   {% elif merchant.has_bitstamp_credentials %}

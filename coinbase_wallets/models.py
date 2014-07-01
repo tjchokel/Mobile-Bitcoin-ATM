@@ -1,15 +1,14 @@
-from credentials.base import BaseCredential
-
+from django.db import models
+from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
+from credentials.models import ParentBalance, ParentSentBTC, ParentSellBTC
 from services.models import APICall
 from bitcoins.models import BTCTransaction
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
 from utils import btc_to_satoshis, satoshis_to_btc
-
-from credentials.models import CurrentBalance, SellBTCOrder, SentBTC
 
 import json
 import hashlib
@@ -46,7 +45,6 @@ def get_cb_request(url, api_key, api_secret, body=None):
         message += body
     signature = hmac.new(api_secret, message, hashlib.sha256).hexdigest()
     headers = {
-            #"Content-Type": 'application/x-www-form-urlencoded',
             'ACCESS_KEY': api_key,
             'ACCESS_SIGNATURE': signature,
             'ACCESS_NONCE': nonce,
@@ -66,7 +64,10 @@ def get_cb_request(url, api_key, api_secret, body=None):
     return requests.get(url, headers=headers, verify=True)
 
 
-class CBSCredential(BaseCredential):
+class CBSCredential(models.Model):
+
+    api_key = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
+    api_secret = EncryptedCharField(max_length=256, blank=False, null=False, db_index=True)
 
     def get_balance(self):
         """
@@ -75,8 +76,8 @@ class CBSCredential(BaseCredential):
         BALANCE_URL = 'https://coinbase.com/api/v1/account/balance'
         r = get_cb_request(
                 url=BALANCE_URL,
-                api_key=self.cred.api_key,
-                api_secret=self.cred.api_secret)
+                api_key=self.api_key,
+                api_secret=self.api_secret)
 
         # Log the API call
         APICall.objects.create(
@@ -85,17 +86,10 @@ class CBSCredential(BaseCredential):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.cred.merchant)
+            merchant=self.parentcredential.merchant,
+            parent_credential=self.parentcredential)
 
-        if r.status_code == 200:
-            self.cred.last_failed_at = None
-            self.cred.last_succeded_at = now()
-            self.cred.save()
-        else:
-            self.cred.last_failed_at = now()
-            self.cred.save()
-            err_msg = 'Expected status code 200 but got %s' % r.status_code
-            raise Exception('StatusCode: %s' % err_msg)
+        self.parentcredential.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -105,7 +99,7 @@ class CBSCredential(BaseCredential):
         satoshis = btc_to_satoshis(resp_json['amount'])
 
         # Record the balance results
-        CurrentBalance.objects.create(satoshis=satoshis, credential=self.cred)
+        ParentBalance.objects.create(satoshis=satoshis, parent_credential=self)
 
         return satoshis
 
@@ -117,8 +111,8 @@ class CBSCredential(BaseCredential):
 
         r = get_cb_request(
                 url=url_to_hit,
-                api_key=self.cred.api_key,
-                api_secret=self.cred.api_secret,
+                api_key=self.api_key,
+                api_secret=self.api_secret,
                 )
 
         # Log the API call
@@ -127,17 +121,10 @@ class CBSCredential(BaseCredential):
             url_hit=url_to_hit,
             response_code=r.status_code,
             api_results=r.content,
-            merchant=self.cred.merchant)
+            merchant=self.parentcredential.merchant,
+            parent_credential=self.parentcredential)
 
-        if r.status_code == 200:
-            self.cred.last_failed_at = None
-            self.cred.last_succeded_at = now()
-            self.cred.save()
-        else:
-            self.cred.last_failed_at = now()
-            self.cred.save()
-            err_msg = 'Expected status code 200 but got %s' % r.status_code
-            raise Exception('StatusCode: %s' % err_msg)
+        self.parentcredential.handle_status_code(r.status_code)
 
         return json.loads(r.content)['transfers']
 
@@ -147,8 +134,8 @@ class CBSCredential(BaseCredential):
 
         r = get_cb_request(
                 url=LIST_TX_URL,
-                api_key=self.cred.api_key,
-                api_secret=self.cred.api_secret,
+                api_key=self.api_key,
+                api_secret=self.api_secret,
                 )
 
         # Log the API call
@@ -158,24 +145,17 @@ class CBSCredential(BaseCredential):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.cred.merchant)
+            merchant=self.parentcredential.merchant,
+            parent_credential=self.parentcredential)
 
-        if r.status_code == 200:
-            self.cred.last_failed_at = None
-            self.cred.last_succeded_at = now()
-            self.cred.save()
-        else:
-            self.cred.last_failed_at = now()
-            self.cred.save()
-            err_msg = 'Expected status code 200 but got %s' % r.status_code
-            raise Exception('StatusCode: %s' % err_msg)
+        self.parentcredential.handle_status_code(r.status_code)
 
         json_resp = json.loads(r.content)
 
         # Record the balance
-        CurrentBalance.objects.create(
+        ParentBalance.objects.create(
                 satoshis=btc_to_satoshis(json_resp['balance']['amount']),
-                credential=self.cred,
+                parent_credential=self.parentcredential
                 )
 
         # Return transactions
@@ -189,8 +169,8 @@ class CBSCredential(BaseCredential):
 
         r = get_cb_request(
                 url=SELL_URL,
-                api_key=self.cred.api_key,
-                api_secret=self.cred.api_secret,
+                api_key=self.api_key,
+                api_secret=self.api_secret,
                 body=body_to_use,
                 )
 
@@ -201,17 +181,10 @@ class CBSCredential(BaseCredential):
             response_code=r.status_code,
             api_results=r.content,
             post_params=body_to_use,
-            merchant=self.cred.merchant)
+            merchant=self.parentcredential.merchant,
+            parent_credential=self.parentcredential)
 
-        if r.status_code == 200:
-            self.cred.last_failed_at = None
-            self.cred.last_succeded_at = now()
-            self.cred.save()
-        else:
-            self.cred.last_failed_at = now()
-            self.cred.save()
-            err_msg = 'Expected status code 200 but got %s' % r.status_code
-            raise Exception('StatusCode: %s' % err_msg)
+        self.parentcredential.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -239,9 +212,11 @@ class CBSCredential(BaseCredential):
             assert fee['currency_iso'] == currency_to_recieve, msg
         fiat_fees = fiat_fees_in_cents/100.0
 
-        return SellBTCOrder.objects.create(
-                credential=self.cred,
-                custom_code=transfer['code'],
+        cbs_sell_btc = CBSSellBTC.objects.create(coinbase_code=transfer['code'])
+
+        return ParentSellBTC.objects.create(
+                parent_credential=self.parentcredential,
+                cbs_sell_btc=cbs_sell_btc,
                 satoshis=satoshis,
                 currency_code=currency_to_recieve,
                 fees_in_fiat=fiat_fees,
@@ -252,8 +227,8 @@ class CBSCredential(BaseCredential):
             destination_email_address=None, notes=None):
         """
         Send satoshis to a destination address or email address.
-        CB requires a fee for txns < .01 BTC, so it will automatically include
-        txn fees for those.
+        CB requires a fee for txns < .01 BTC, so this method will
+        automatically include txn fees for those.
         """
 
         msg = "Can't have botha  destination email and BTC address. %s | %s" % (
@@ -298,8 +273,8 @@ class CBSCredential(BaseCredential):
 
         r = get_cb_request(
                 url=SEND_URL,
-                api_key=self.cred.api_key,
-                api_secret=self.cred.api_secret,
+                api_key=self.api_key,
+                api_secret=self.api_secret,
                 body=post_params)
 
         # Log the API call
@@ -309,17 +284,10 @@ class CBSCredential(BaseCredential):
             response_code=r.status_code,
             post_params=post_params,
             api_results=r.content,
-            merchant=self.cred.merchant)
+            merchant=self.parentcredential.merchant,
+            parent_credential=self.parentcredential)
 
-        if r.status_code == 200:
-            self.cred.last_failed_at = None
-            self.cred.last_succeded_at = now()
-            self.cred.save()
-        else:
-            self.cred.last_failed_at = now()
-            self.cred.save()
-            err_msg = 'Expected status code 200 but got %s' % r.status_code
-            raise Exception('StatusCode: %s' % err_msg)
+        self.parentcredential.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -339,15 +307,18 @@ class CBSCredential(BaseCredential):
 
         txn_hash = transaction['hsh']
 
+        cbs_sent_btc = CBSSentBTC.objects.create(
+                transaction_id=transaction['id'],
+                notes=notes)
+
         # Record the Send
         send_btc_dict.update({
-                'credential': self.cred,
+                'parent_credential': self.parentcredential,
+                'cbs_sent_btc': cbs_sent_btc,
                 'txn_hash': txn_hash,
                 'satoshis': satoshis,
-                'unique_id': transaction['id'],
-                'notes': notes,
                 })
-        SentBTC.objects.create(**send_btc_dict)
+        ParentSentBTC.objects.create(**send_btc_dict)
 
         if txn_hash:
             return BTCTransaction.objects.create(
@@ -365,8 +336,8 @@ class CBSCredential(BaseCredential):
 
         r = get_cb_request(
                 url=ADDRESS_URL,
-                api_key=self.cred.api_key,
-                api_secret=self.cred.api_secret,
+                api_key=self.api_key,
+                api_secret=self.api_secret,
                 body=post_params,
                 )
 
@@ -377,17 +348,10 @@ class CBSCredential(BaseCredential):
             response_code=r.status_code,
             post_params=post_params,
             api_results=r.content,
-            merchant=self.cred.merchant)
+            merchant=self.parentcredential.merchant,
+            parent_credential=self.parentcredential)
 
-        if r.status_code == 200:
-            self.cred.last_failed_at = None
-            self.cred.last_succeded_at = now()
-            self.cred.save()
-        else:
-            self.cred.last_failed_at = now()
-            self.cred.save()
-            err_msg = 'Expected status code 200 but got %s' % r.status_code
-            raise Exception('StatusCode: %s' % err_msg)
+        self.parentcredential.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -399,9 +363,25 @@ class CBSCredential(BaseCredential):
         assert is_valid_btc_address(address), msg
 
         if set_as_merchant_address:
-            self.cred.merchant.set_destination_address(address)
+            self.parentcredential.merchant.set_destination_address(address)
 
         return address
 
     def get_any_receiving_address(self, set_as_merchant_address=False):
         return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)
+
+
+class CBSSentBTC(models.Model):
+    transaction_id = models.CharField(max_length=64, blank=False, null=False, db_index=True)
+    notes = models.CharField(max_length=2048, blank=True, null=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.transaction_id)
+
+
+class CBSSellBTC(models.Model):
+    # Not implemented yet
+    coinbase_code = models.CharField(max_length=32, blank=False, null=False, db_index=True, unique=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.destination_btc_address or self.destination_email)

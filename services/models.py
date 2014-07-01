@@ -69,8 +69,9 @@ class APICall(models.Model):
     headers = models.CharField(max_length=2048, null=True, blank=True)
     api_results = models.CharField(max_length=100000, blank=True, null=True)
 
-    # optional FK
+    # optional FKs
     merchant = models.ForeignKey('merchants.Merchant', null=True, blank=True)
+    parent_credential = models.ForeignKey('credentials.ParentCredential', null=True, blank=True)
 
 
 class WebHook(models.Model):

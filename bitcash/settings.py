@@ -69,6 +69,9 @@ INSTALLED_APPS = (
     'emails',
     'phones',
     'credentials',
+    'coinbase_wallets',
+    'bitstamp_wallets',
+    'blockchain_wallets',
 )
 
 MIDDLEWARE_CLASSES = (

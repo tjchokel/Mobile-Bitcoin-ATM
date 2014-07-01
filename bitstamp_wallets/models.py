@@ -1,9 +1,8 @@
-from credentials.base import BaseCredential
-
+from django.db import models
+from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
-from credentials.models import CurrentBalance, SentBTC
-
+from credentials.models import ParentBalance, ParentSentBTC
 from services.models import APICall
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -12,13 +11,19 @@ from utils import btc_to_satoshis, satoshis_to_btc
 
 from bitstamp.client import Trading
 
+import json
 
-class BTSCredential(BaseCredential):
+
+class BTSCredential(models.Model):
+
+    username = EncryptedCharField(max_length=32, blank=False, null=False, db_index=True)
+    api_key = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
+    api_secret = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
 
     def get_trading_obj(self):
-        return Trading(username=self.cred.api_key,
-                key=self.cred.api_secret,
-                secret=self.cred.secondary_secret)
+        return Trading(username=self.api_key,
+                key=self.api_secret,
+                secret=self.secondary_secret)
 
     def get_balance(self):
         """
@@ -36,11 +41,11 @@ class BTSCredential(BaseCredential):
                 response_code=200,
                 post_params=None,  # not accurate
                 api_results=balance_dict,
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_succeded_at = now()
-            self.cred.last_failed_at = None
-            self.cred.save()
+            self.parentcredential.mark_success()
+
         except Exception as e:
             # Log the API call
             APICall.objects.create(
@@ -49,17 +54,18 @@ class BTSCredential(BaseCredential):
                 response_code=0,  # this is not accurate
                 post_params=None,  # not accurate
                 api_results=str(e),
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_failed_at = now()
-            self.cred.save()
+            self.parentcredential.mark_failure()
 
             raise Exception(e)
 
         satoshis = btc_to_satoshis(balance_dict['btc_available'])
 
         # Record the balance results
-        CurrentBalance.objects.create(satoshis=satoshis, credential=self.cred)
+        ParentBalance.objects.create(satoshis=satoshis,
+                parent_credential=self.parentcredential)
 
         return satoshis
 
@@ -81,11 +87,10 @@ class BTSCredential(BaseCredential):
                 response_code=200,
                 post_params=None,  # not accurate
                 api_results=str(txn_list),
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_succeded_at = now()
-            self.cred.last_failed_at = None
-            self.cred.save()
+            self.parentcredential.mark_success()
 
         except Exception as e:
             # Log the API call
@@ -95,10 +100,10 @@ class BTSCredential(BaseCredential):
                 response_code=0,  # not accurate
                 post_params=None,  # not accurate
                 api_results=str(e),
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_failed_at = now()
-            self.cred.save()
+            self.parentcredential.mark_failure()
 
             raise Exception(e)
 
@@ -133,11 +138,10 @@ class BTSCredential(BaseCredential):
                 response_code=200,
                 post_params=post_params,
                 api_results=str(withdrawal_info),
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_succeded_at = now()
-            self.cred.last_failed_at = None
-            self.cred.save()
+            self.parentcredential.mark_success()
 
         except Exception as e:
             # Log the API Call
@@ -147,19 +151,22 @@ class BTSCredential(BaseCredential):
                 response_code=0,  # not accurate
                 post_params=post_params,
                 api_results=str(e),
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_failed_at = now()
-            self.cred.save()
+            self.parentcredential.mark_failure()
 
             raise Exception(e)
 
+        bts_sent_btc = BTSSentBTC.objects.create(
+                withdrawal_id=withdrawal_id,
+                )
         # Record the Send
-        SentBTC.objects.create(
-                credential=self.cred,
-                unique_id=withdrawal_id,
+        ParentSentBTC.objects.create(
+                parent_credential=self.parentcredential,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
+                bts_sent_btc=bts_sent_btc,
                 )
 
     def get_receiving_address(self, set_as_merchant_address=False):
@@ -183,10 +190,11 @@ class BTSCredential(BaseCredential):
                 response_code=200,
                 post_params=None,  # not accurate
                 api_results=address,
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_succeded_at = now()
-            self.cred.save()
+            self.parentcredential.mark_success()
+
         except Exception as e:
             # Log the API call
             APICall.objects.create(
@@ -195,24 +203,44 @@ class BTSCredential(BaseCredential):
                 response_code=0,  # this is not accurate
                 post_params=None,  # not accurate
                 api_results=str(e),
-                merchant=self.cred.merchant)
+                merchant=self.parentcredential.merchant,
+                parent_credential=self.parentcredential)
 
-            self.cred.last_failed_at = now()
-            self.cred.save()
+            self.parentcredential.mark_failure()
 
             raise Exception(e)
 
         if set_as_merchant_address:
-            self.cred.merchant.set_destination_address(address)
+            self.parentcredential.merchant.set_destination_address(address)
 
         return address
 
     def get_any_receiving_address(self, set_as_merchant_address=False):
         return self.get_receiving_address(set_as_merchant_address=set_as_merchant_address)
 
+
+class BTSSentBTC(models.Model):
+
+    BS_STATUS_CHOICES = (
+        ('0', 'Open'),
+        ('1', 'In Process'),
+        ('2', 'Finished'),
+        ('3', 'Canceled'),
+        ('4', 'Failed'),
+        )
+
+    withdrawal_id = models.CharField(max_length=64, blank=False, null=False, db_index=True)
+    status = models.CharField(choices=BS_STATUS_CHOICES, max_length=1,
+            null=True, blank=True, db_index=True)
+    # To use with polling (since we don't get this data on creation)
+    status_last_checked_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.withdrawal_id)
+
     def check_status(self, update_results=True):
         WITHDRAWALS_URL = 'https://www.bitstamp.net/api/withdrawal_requests/'
-        trading_obj = self.get_trading_obj()
+        trading_obj = self.parentsentbtc.parent_credential.get_child_model().get_trading_obj()
 
         try:
             withdrawal_requests = trading_obj.withdrawal_requests()
@@ -222,12 +250,12 @@ class BTSCredential(BaseCredential):
                 url_hit=WITHDRAWALS_URL,
                 response_code=200,
                 post_params=None,
-                api_results=str(withdrawal_requests),
-                merchant=self.cred.merchant)
+                api_results=json.dumps(withdrawal_requests),
+                merchant=self.parentsentbtc.parent_credential.merchant,
+                parent_credential=self.parentsentbtc.parent_credential)
 
-            self.cred.last_succeded_at = now()
-            self.cred.last_failed_at = None
-            self.cred.save()
+            self.parentsentbtc.parent_credential.mark_success()
+
         except Exception as e:
             # Log the API Call
             APICall.objects.create(
@@ -236,18 +264,20 @@ class BTSCredential(BaseCredential):
                 response_code=0,  # not accurate
                 post_params=None,
                 api_results=str(e),
-                merchant=self.cred.merchant)
-            self.cred.last_failed_at = now()
-            self.cred.save()
+                merchant=self.parentsentbtc.parent_credential.merchant,
+                parent_credential=self.parentsentbtc.parent_credential)
+
+            self.parentsentbtc.parent_credential.mark_failure()
+
             raise Exception(e)
 
         for withdrawal_request in withdrawal_requests:
-            if withdrawal_request['id'] == self.cred.bs_withdrawal_id:
+            if withdrawal_request['id'] == self.withdrawal_id:
                 new_status = withdrawal_request['status']
                 if update_results:
-                    self.cred.status = new_status
-                    self.cred.status_last_checked_at = now()
-                    self.cred.save()
+                    self.status = new_status
+                    self.status_last_checked_at = now()
+                    self.save()
                 return new_status
 
         raise Exception('WithdrawalNotFound')

@@ -28,9 +28,9 @@ def blockchain_creds(request):
         if form.is_valid():
             credential, created = BCICredential.objects.get_or_create(
                     merchant=merchant,
-                    username=form.cleaned_data['username'],
-                    main_password=form.cleaned_data['main_password'],
-                    second_password=form.cleaned_data['second_password'],
+                    username=form.cleaned_data['username'].strip(),
+                    main_password=form.cleaned_data['main_password'].strip(),
+                    second_password=form.cleaned_data['second_password'].strip(),
             )
             if created:
                 credential.create_credential_link()
@@ -67,9 +67,9 @@ def coinbase_creds(request):
         if form.is_valid():
             credential, created = CBSCredential.objects.get_or_create(
                     merchant=merchant,
-                    api_key=form.cleaned_data['api_key'],
-                    api_secret=form.cleaned_data['secret_key']
-            )
+                    api_key=form.cleaned_data['api_key'].strip(),
+                    api_secret=form.cleaned_data['secret_key'].strip(),
+                    )
             if created:
                 credential.create_credential_link()
 
@@ -91,7 +91,7 @@ def coinbase_creds(request):
     }
 
 
-@sensitive_post_parameters('customer_id', 'api_key', 'secret_key')
+@sensitive_post_parameters('customer_id', 'api_key', 'api_secret')
 @login_required
 @render_to('merchants/bitstamp.html')
 def bitstamp_creds(request):
@@ -105,10 +105,10 @@ def bitstamp_creds(request):
         if form.is_valid():
             credential, created = BTSCredential.objects.get_or_create(
                     merchant=merchant,
-                    customer_id=form.cleaned_data['customer_id'],
-                    api_key=form.cleaned_data['api_key'],
-                    api_secret=form.cleaned_data['api_secret']
-            )
+                    customer_id=form.cleaned_data['customer_id'].strip(),
+                    api_key=form.cleaned_data['api_key'].strip(),
+                    api_secret=form.cleaned_data['api_secret'].strip(),
+                    )
             if created:
                 credential.create_credential_link()
 

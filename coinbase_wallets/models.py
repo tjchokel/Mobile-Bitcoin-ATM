@@ -316,16 +316,13 @@ class CBSCredential(BaseCredential):
 
         txn_hash = transaction['hsh']
 
-        cbs_sent_btc = CBSSentBTC.objects.create(
-                transaction_id=transaction['id'],
-                notes=notes)
-
         # Record the Send
         send_btc_dict.update({
                 'credential_link': self.credentiallink,
-                'cbs_sent_btc': cbs_sent_btc,
                 'txn_hash': txn_hash,
                 'satoshis': satoshis,
+                'transaction_id': transaction['id'],
+                'notes': notes,
                 })
         CBSSentBTC.objects.create(**send_btc_dict)
 

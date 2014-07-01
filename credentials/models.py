@@ -12,8 +12,8 @@ class CredentialLink(models.Model):
 
     # FIXME: only allow one of these to be set:
     cbs_credential = models.OneToOneField('coinbase_wallets.CBSCredential', blank=True, null=True)
-    #bci_credential = models.OneToOneField('blockhain_wallets.BCICredential', blank=True, null=True)
-    #bts_credential = models.OneToOneField('bitstamp_wallets.BTSCredential', blank=True, null=True)
+    bts_credential = models.OneToOneField('bitstamp_wallets.BTSCredential', blank=True, null=True)
+    bci_credential = models.OneToOneField('blockhain_wallets.BCICredential', blank=True, null=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.get_credential().id)
@@ -75,6 +75,9 @@ class BaseBalance(PolymorphicModel):
     def __str__(self):
         return '%s: %s' % (self.id, self.satoshis)
 
+    def get_credential(self):
+        return self.credential_link.get_credential()
+
 
 class BaseSentBTC(PolymorphicModel):
 
@@ -90,6 +93,9 @@ class BaseSentBTC(PolymorphicModel):
 
     def __str__(self):
         return '%s: %s' % (self.id, self.destination_btc_address or self.destination_email)
+
+    def get_credential(self):
+        return self.credential_link.get_credential()
 
 
 class BaseSellBTC(PolymorphicModel):
@@ -114,9 +120,5 @@ class BaseSellBTC(PolymorphicModel):
     def __str__(self):
         return '%s: %s' % (self.id, self.created_at)
 
-    def get_child_model(self):
-        if self.cbs_sell_btc:
-            return self.cbs_sell_btc
-        elif self.bts_sell_btc:
-            return self.bts_sell_btc
-        raise Exception('No Child Model')
+    def get_credential(self):
+        return self.credential_link.get_credential()

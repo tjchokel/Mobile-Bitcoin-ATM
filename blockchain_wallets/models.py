@@ -2,7 +2,7 @@ from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
 from services.models import APICall
-from credentials.models import ParentCredential, ParentBalance, ParentSentBTC
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, CredentialLink
 from bitcoins.models import BTCTransaction
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -11,11 +11,19 @@ import requests
 import json
 
 
-class BCICredential(ParentCredential):
+class BCICredential(BaseCredential):
 
     username = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
     main_password = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     second_password = EncryptedCharField(max_length=128, blank=True, null=True, db_index=True)
+
+    def save(self, *args, **kwargs):
+        """ Create the CredentialLink object on the first save """
+        if not self.pk:
+            # This only happens if the objects isn't in the database yet.
+            # http://stackoverflow.com/a/2311499/1754586
+            CredentialLink.objects.create(bci_credential=self)
+        super(BCICredential, self).save(*args, **kwargs)
 
     def get_balance(self):
         """
@@ -34,22 +42,22 @@ class BCICredential(ParentCredential):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
         if 'error' in resp_json:
-            self.parentcredential.mark_failure()
+            self.mark_failure()
             raise Exception('BadResponse: %s' % resp_json['error'])
 
         satoshis = int(resp_json['balance'])
 
         # Record the balance results
-        ParentBalance.objects.create(satoshis=satoshis,
-                parent_credential=self.parentcredential)
+        BaseBalance.objects.create(satoshis=satoshis,
+                credential_link=self.credentiallink)
 
         return satoshis
 
@@ -77,10 +85,10 @@ class BCICredential(ParentCredential):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -89,8 +97,8 @@ class BCICredential(ParentCredential):
         assert 'error' not in resp_json, resp_json
 
         # Record the Send
-        ParentSentBTC.objects.create(
-                parent_credential=self.parentcredential,
+        BCISentBTC.objects.create(
+                credential_link=self.credentiallink,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
                 txn_hash=tx_hash,
@@ -119,10 +127,10 @@ class BCICredential(ParentCredential):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=self.parentcredential.merchant,
-            parent_credential=self.parentcredential)
+            merchant=self.merchant,
+            credential_link=self.credentiallink)
 
-        self.parentcredential.handle_status_code(r.status_code)
+        self.handle_status_code(r.status_code)
 
         resp_json = json.loads(r.content)
 
@@ -132,9 +140,16 @@ class BCICredential(ParentCredential):
         assert is_valid_btc_address(address), msg
 
         if set_as_merchant_address:
-            self.parentcredential.merchant.set_destination_address(address)
+            self.merchant.set_destination_address(address)
 
         return address
 
     def get_any_receiving_address(self, set_as_merchant_address=False):
         return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)
+
+
+class BCISentBTC(BaseSentBTC):
+    " No new model fields "
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.transaction_id)

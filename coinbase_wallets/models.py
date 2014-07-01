@@ -2,7 +2,8 @@ from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
-from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, BaseSellBTC
+from credentials.models import (BaseCredential, BaseBalance, BaseSentBTC,
+        BaseSellBTC, CredentialLink)
 from services.models import APICall
 from bitcoins.models import BTCTransaction
 
@@ -68,6 +69,14 @@ class CBSCredential(BaseCredential):
 
     api_key = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     api_secret = EncryptedCharField(max_length=256, blank=False, null=False, db_index=True)
+
+    def save(self, *args, **kwargs):
+        """ Create the CredentialLink object on the first save """
+        if not self.pk:
+            # This only happens if the objects isn't in the database yet.
+            # http://stackoverflow.com/a/2311499/1754586
+            CredentialLink.objects.create(cbs_credential=self)
+        super(CBSCredential, self).save(*args, **kwargs)
 
     def get_balance(self):
         """

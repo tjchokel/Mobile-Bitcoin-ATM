@@ -245,7 +245,7 @@ class BTSSentBTC(BaseSentBTC):
 
     def check_status(self, update_results=True):
         WITHDRAWALS_URL = 'https://www.bitstamp.net/api/withdrawal_requests/'
-        trading_obj = self.parentsentbtc.parent_credential.get_child_model().get_trading_obj()
+        trading_obj = self.get_credential().get_trading_obj()
 
         try:
             withdrawal_requests = trading_obj.withdrawal_requests()

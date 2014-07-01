@@ -13,7 +13,7 @@ class CredentialLink(models.Model):
     # FIXME: only allow one of these to be set:
     cbs_credential = models.OneToOneField('coinbase_wallets.CBSCredential', blank=True, null=True)
     bts_credential = models.OneToOneField('bitstamp_wallets.BTSCredential', blank=True, null=True)
-    bci_credential = models.OneToOneField('blockhain_wallets.BCICredential', blank=True, null=True)
+    bci_credential = models.OneToOneField('blockchain_wallets.BCICredential', blank=True, null=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.get_credential().id)

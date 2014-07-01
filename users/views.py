@@ -62,7 +62,7 @@ def customer_dashboard(request):
                     email=email,
                 )
 
-                credential = merchant.get_valid_api_credentials()
+                credential = merchant.get_valid_api_credential()
 
                 # if sending to email
                 if email_or_btc_address and email_or_btc_address == '1':

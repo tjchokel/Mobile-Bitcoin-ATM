@@ -17,13 +17,12 @@ class BCICredential(BaseCredential):
     main_password = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     second_password = EncryptedCharField(max_length=128, blank=True, null=True, db_index=True)
 
-    def save(self, *args, **kwargs):
-        """ Create the CredentialLink object on the first save """
-        if not self.pk:
-            # This only happens if the objects isn't in the database yet.
-            # http://stackoverflow.com/a/2311499/1754586
-            CredentialLink.objects.create(bci_credential=self)
-        super(BCICredential, self).save(*args, **kwargs)
+    def create_credential_link(self):
+        """
+        One-time method on creating a new Credential object
+        Previously tried to do this by overriding the save method but it didn't work.
+        """
+        return CredentialLink.objects.create(bci_credential=self)
 
     def get_balance(self):
         """

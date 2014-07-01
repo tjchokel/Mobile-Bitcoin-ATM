@@ -6,14 +6,16 @@ from django.contrib import messages
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
-from django.utils.timezone import now
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
-from credentials.models import Credential
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
+
+from coinbase_wallets.models import CBSCredential
+from blockchain_wallets.models import BCICredential
+from bitstamp_wallets.models import BTSCredential
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistrationForm,
         BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm)
@@ -151,6 +153,9 @@ def register_bitcoin(request):
     merchant = user.get_merchant()
     if not merchant:
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
+    if merchant.has_valid_api_credentials():
+        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
     initial = {
             'btc_markup': 2.0,
             'exchange_choice': 'coinbase',
@@ -168,35 +173,34 @@ def register_bitcoin(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 if exchange_choice == 'coinbase':
-                    credentials = Credential.objects.create(
-                            credential_type=Credential.COINBASE,
+                    credential = CBSCredential.objects.create(
                             merchant=merchant,
                             api_key=form.cleaned_data['cb_api_key'],
                             api_secret=form.cleaned_data['cb_secret_key'],
                             )
+                    credential.create_credential_link()
                 elif exchange_choice == 'bitstamp':
-                    credentials = Credential.objects.create(
-                            credential_type=Credential.BITSTAMP,
+                    credential = BTSCredential.objects.create(
                             merchant=merchant,
-                            api_key=form.cleaned_data['bs_username'],
-                            api_secret=form.cleaned_data['bs_api_key'],
-                            secondary_secret=form.cleaned_data['bs_secret_key'],
+                            username=form.cleaned_data['bs_username'],
+                            api_key=form.cleaned_data['bs_api_key'],
+                            api_secret=form.cleaned_data['bs_secret_key'],
                             )
+                    credential.create_credential_link()
                 elif exchange_choice == 'blockchain':
-                    credentials = Credential.objects.create(
-                            credential_type=Credential.BLOCKCHAIN_INFO,
+                    credential = BCICredential.objects.create(
                             merchant=merchant,
-                            api_key=form.cleaned_data['bci_username'],
-                            api_secret=form.cleaned_data['bci_main_password'],
-                            secondary_secret=form.cleaned_data['bci_second_password'],
+                            username=form.cleaned_data['bci_username'],
+                            main_password=form.cleaned_data['bci_main_password'],
+                            second_password=form.cleaned_data['bci_second_password'],
                             )
+                    credential.create_credential_link()
 
                 try:
-                    credentials.get_custom_methods().get_balance()
+                    credential.get_balance()
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
-                    credentials.disabled_at = now()
-                    credentials.save()
+                    credential.mark_disabled()
                     messages.warning(request, _('Your API credentials are not valid. Please try again.'))
 
     return {'form': form, 'user': user}

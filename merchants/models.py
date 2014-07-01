@@ -2,6 +2,10 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
+from coinbase_wallets.models import CBSCredential
+from blockchain_wallets.models import BCICredential
+from bitstamp_wallets.models import BTSCredential
+
 from phonenumber_field.modelfields import PhoneNumberField
 from bitcoins.models import DestinationAddress
 
@@ -122,7 +126,7 @@ class Merchant(models.Model):
         bci = self.has_valid_blockchain_credentials()
         return any([cb, bs, bci])
 
-    def get_valid_api_credentials(self):
+    def get_valid_api_credential(self):
         if self.has_valid_coinbase_credentials():
             return self.get_coinbase_credentials()
         elif self.has_valid_bitstamp_credentials():
@@ -142,16 +146,16 @@ class Merchant(models.Model):
             return False
 
     def get_coinbase_credentials(self):
-        return self.credential_set.filter(disabled_at=None,
-                credential_type='CBS').last()
+        return self.basecredential_set.instance_of(
+                CBSCredential).filter(disabled_at=None).last()
 
     def get_bitstamp_credentials(self):
-        return self.credential_set.filter(disabled_at=None,
-                credential_type='BTS').last()
+        return self.basecredential_set.instance_of(
+                BTSCredential).filter(disabled_at=None).last()
 
     def get_blockchain_credentials(self):
-        return self.credential_set.filter(disabled_at=None,
-                credential_type='BCI').last()
+        return self.basecredential_set.instance_of(
+                BCICredential).filter(disabled_at=None).last()
 
     def has_blockchain_credentials(self):
         return bool(self.get_blockchain_credentials())

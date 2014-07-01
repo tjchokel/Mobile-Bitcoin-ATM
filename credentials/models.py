@@ -50,6 +50,10 @@ class BaseCredential(PolymorphicModel):
         self.last_failed_at = now()
         return self.save()
 
+    def mark_disabled(self):
+        self.disabled_at = now()
+        return self.save()
+
     def handle_status_code(self, status_code):
         status_code_str = str(status_code)
         if len(status_code_str.strip()) == 3 and status_code_str.startswith('2'):

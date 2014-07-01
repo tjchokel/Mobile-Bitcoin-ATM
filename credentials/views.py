@@ -1,15 +1,17 @@
-from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.utils.translation import ugettext as _
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from django.views.decorators.debug import sensitive_post_parameters
 from annoying.decorators import render_to
 
+from coinbase_wallets.models import CBSCredential
+from blockchain_wallets.models import BCICredential
+from bitstamp_wallets.models import BTSCredential
+
 from credentials.forms import BlockchainAPIForm, CoinbaseAPIForm, BitstampAPIForm
-from credentials.models import Credential
 
 
 @sensitive_post_parameters('username', 'main_password', 'second_password', )
@@ -24,20 +26,20 @@ def blockchain_creds(request):
     if request.method == 'POST' and merchant:
         form = BlockchainAPIForm(data=request.POST)
         if form.is_valid():
-            credential, created = Credential.objects.get_or_create(
-                    credential_type='BCI',
+            credential, created = BCICredential.objects.get_or_create(
                     merchant=merchant,
-                    api_key=form.cleaned_data['username'],
-                    api_secret=form.cleaned_data['main_password'],
-                    secondary_secret=form.cleaned_data['second_password'],
+                    username=form.cleaned_data['username'],
+                    main_password=form.cleaned_data['main_password'],
+                    second_password=form.cleaned_data['second_password'],
             )
-            custom_methods = credential.get_custom_methods()
+            if created:
+                credential.create_credential_link()
+
             try:
-                custom_methods.get_balance()
+                credential.get_balance()
                 messages.success(request, _('Your Blockchain API info has been updated'))
             except:
-                credential.disabled_at = now()
-                credential.save()
+                credential.mark_disabled()
                 messages.warning(request, _('Your Blockchain API credentials are not valid'))
 
             return HttpResponseRedirect(reverse_lazy('blockchain_creds'))
@@ -63,19 +65,19 @@ def coinbase_creds(request):
     if request.method == 'POST' and merchant:
         form = CoinbaseAPIForm(data=request.POST)
         if form.is_valid():
-            credentials, created = Credential.objects.get_or_create(
-                    credential_type='CBS',
+            credential, created = CBSCredential.objects.get_or_create(
                     merchant=merchant,
                     api_key=form.cleaned_data['api_key'],
                     api_secret=form.cleaned_data['secret_key']
             )
-            custom_methods = credentials.get_custom_methods()
+            if created:
+                credential.create_credential_link()
+
             try:
-                custom_methods.get_balance()
+                credential.get_balance()
                 messages.success(request, _('Your Coinbase API info has been updated'))
             except:
-                credentials.disabled_at = now()
-                credentials.save()
+                credential.mark_disabled()
                 messages.warning(request, _('Your Coinbase API credentials are not valid'))
 
             return HttpResponseRedirect(reverse_lazy('coinbase_creds'))
@@ -101,20 +103,20 @@ def bitstamp_creds(request):
     if request.method == 'POST' and merchant:
         form = BitstampAPIForm(data=request.POST)
         if form.is_valid():
-            credential, created = Credential.objects.get_or_create(
-                    credential_type='BTS',
+            credential, created = BTSCredential.objects.get_or_create(
                     merchant=merchant,
-                    api_key=form.cleaned_data['username'],
-                    api_secret=form.cleaned_data['api_key'],
-                    secondary_secret=form.cleaned_data['secret_key']
+                    username=form.cleaned_data['username'],
+                    api_key=form.cleaned_data['api_key'],
+                    api_secret=form.cleaned_data['secret_key']
             )
-            custom_methods = credential.get_custom_methods()
+            if created:
+                credential.create_credential_link()
+
             try:
-                custom_methods.get_balance()
+                credential.get_balance()
                 messages.success(request, _('Your Bitstamp API info has been updated'))
             except:
-                credential.disabled_at = now()
-                credential.save()
+                credential.mark_disabled()
                 messages.warning(request, _('Your Bitstamp API credentials are not valid'))
 
             return HttpResponseRedirect(reverse_lazy('bitstamp_creds'))
@@ -133,9 +135,8 @@ def refresh_bci_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_blockchain_credentials()
-    custom_methods = credential.get_custom_methods()
     try:
-        custom_methods.get_balance()
+        credential.get_balance()
         messages.success(request, _('Your Blockchain API info has been refreshed'))
     except:
         messages.warning(request, _('Your Blockchain API info could not be validated'))
@@ -147,9 +148,8 @@ def refresh_cb_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_coinbase_credentials()
-    custom_methods = credential.get_custom_methods()
     try:
-        custom_methods.get_balance()
+        credential.get_balance()
         messages.success(request, _('Your Coinbase API info has been refreshed'))
     except:
         messages.warning(request, _('Your Coinbase API info could not be validated'))
@@ -161,9 +161,8 @@ def refresh_bs_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_bitstamp_credentials()
-    custom_methods = credential.get_custom_methods()
     try:
-        custom_methods.get_balance()
+        credential.get_balance()
         messages.success(request, _('Your Bistamp API info has been refreshed'))
     except:
         messages.warning(request, _('Your Bistamp API info could not be validated'))

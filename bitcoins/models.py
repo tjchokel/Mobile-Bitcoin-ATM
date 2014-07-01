@@ -69,10 +69,8 @@ class DestinationAddress(models.Model):
 
     @classmethod
     def create_address_from_api_creds(cls, merchant):
-        api_credential = merchant.get_valid_api_credentials()
-        api_custom_methods = api_credential.get_custom_methods()
-        address = api_custom_methods.get_any_receiving_address(
-                set_as_merchant_address=True)
+        api_credential = merchant.get_valid_api_credential()
+        address = api_credential.get_any_receiving_address(set_as_merchant_address=True)
         return cls.objects.get(b58_address=address)
 
 
@@ -515,16 +513,17 @@ class ShopperBTCPurchase(models.Model):
 
     def pay_out_bitcoin(self, send_receipt=True):
 
-        if not self.credential:
-            self.credential = self.merchant.get_valid_api_credentials()
+        if not self.credential_link:
+            credential = self.merchant.get_valid_api_credential()
+            self.credential_link = credential.credentiallink
         self.save()
-        methods = self.credential.get_custom_methods()
+        credential = self.credential_link.get_credential()
         if self.b58_address:
-            btc_txn = methods.send_btc(
+            btc_txn = credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn = methods.send_btc(
+            btc_txn = credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)

@@ -69,20 +69,9 @@ class DestinationAddress(models.Model):
 
     @classmethod
     def create_address_from_api_creds(cls, merchant):
-        address_object = None
-        if merchant.has_valid_coinbase_credentials():
-            credentials = merchant.get_coinbase_credentials()
-            address = credentials.get_new_receiving_address(True)
-            address_object = DestinationAddress.objects.get(b58_address=address)
-        elif merchant.has_valid_bitstamp_credentials():
-            credentials = merchant.get_bitstamp_credentials()
-            address = credentials.get_receiving_address(True)
-            address_object = DestinationAddress.objects.get(b58_address=address)
-        elif merchant.has_valid_blockchain_credentials():
-            credentials = merchant.get_blockchain_credentials()
-            address = credentials.get_new_receiving_address(True)
-            address_object = DestinationAddress.objects.get(b58_address=address)
-        return address_object
+        api_credential = merchant.get_valid_api_credential()
+        address = api_credential.get_any_receiving_address(set_as_merchant_address=True)
+        return cls.objects.get(b58_address=address)
 
 
 class ForwardingAddress(models.Model):
@@ -474,12 +463,6 @@ class ShopperBTCPurchase(models.Model):
     Model for bitcoin purchase (cash in) request
     """
 
-    PAYMENT_CHANNELS = (
-            ('CBS', 'CoinBase'),
-            ('BTS', 'BitStamp'),
-            ('BCI', 'blockchain.info'),
-            )
-
     added_at = models.DateTimeField(auto_now_add=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     shopper = models.ForeignKey('shoppers.Shopper', blank=False, null=False)
@@ -491,8 +474,7 @@ class ShopperBTCPurchase(models.Model):
     cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     funds_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    payment_via = models.CharField(choices=PAYMENT_CHANNELS, max_length=3,
-            null=False, blank=False, db_index=True)
+    credential = models.ForeignKey('credentials.BaseCredential', blank=True, null=True)
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
@@ -531,22 +513,20 @@ class ShopperBTCPurchase(models.Model):
 
     def pay_out_bitcoin(self, send_receipt=True):
 
-        self.confirmed_by_merchant_at = now()
-        self.save()
-        credentials = self.merchant.get_valid_api_credentials()
-        assert credentials, 'No Merchant API Credentials'
+        if not self.credential:
+            self.credential = self.merchant.get_valid_api_credential()
+            self.save()
         if self.b58_address:
-            btc_txn = credentials.send_btc(
+            btc_txn = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn = credentials.send_btc(
+            btc_txn = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
-        if btc_txn:
-            # associate btc transaction (if it exists)
-            self.btc_transaction = btc_txn
+        self.btc_transaction = btc_txn
+        self.confirmed_by_merchant_at = now()
         self.funds_sent_at = now()
         self.save()
 
@@ -555,6 +535,7 @@ class ShopperBTCPurchase(models.Model):
             self.send_merchant_receipt()
 
     def send_merchant_receipt(self):
+        assert self.credential
         fiat_amount_formatted = self.get_fiat_amount_formatted()
         if self.btc_transaction:
             tx_hash = self.btc_transaction.txn_hash
@@ -567,8 +548,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_payment_via_display(),
-                'payment_method': self.payment_via,
+                'payment_method_formatted': self.credential.get_credential_to_display(),
+                'payment_method': self.credential.get_credential_abbrev(),
                 'tx_hash': tx_hash,
                 }
         if self.shopper.name:
@@ -587,6 +568,7 @@ class ShopperBTCPurchase(models.Model):
         return email
 
     def send_shopper_receipt(self):
+        assert self.credential
         fiat_amount_formatted = self.get_fiat_amount_formatted()
         if self.btc_transaction:
             tx_hash = self.btc_transaction.txn_hash
@@ -600,8 +582,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_payment_via_display(),
-                'payment_method': self.payment_via,
+                'payment_method_formatted': self.credential.get_credential_to_display(),
+                'payment_method': self.credential.get_credential_abbrev(),
                 'tx_hash': tx_hash,
                 }
         email = send_and_log(

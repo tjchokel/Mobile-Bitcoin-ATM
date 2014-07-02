@@ -2,6 +2,10 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 
+from coinbase_wallets.models import CBSCredential
+from blockchain_wallets.models import BCICredential
+from bitstamp_wallets.models import BTSCredential
+
 from phonenumber_field.modelfields import PhoneNumberField
 from bitcoins.models import DestinationAddress
 
@@ -34,8 +38,7 @@ class Merchant(models.Model):
         if destination_addresses:
             return destination_addresses[0]
         else:
-            address = DestinationAddress.create_address_from_api_creds(self)
-            return address
+            return DestinationAddress.create_address_from_api_creds(self)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
@@ -109,7 +112,7 @@ class Merchant(models.Model):
             percent_complete += 10
         if self.phone_num:
             percent_complete += 10
-        if self.has_valid_api_credentials():
+        if self.has_valid_api_credential():
             percent_complete += 10
 
         return percent_complete
@@ -117,54 +120,57 @@ class Merchant(models.Model):
     def finished_registration(self):
         return self.get_registration_percent_complete() == 100
 
-    def has_valid_api_credentials(self):
+    def has_valid_api_credential(self):
         cb = self.has_valid_coinbase_credentials()
         bs = self.has_valid_bitstamp_credentials()
         bci = self.has_valid_blockchain_credentials()
         return any([cb, bs, bci])
 
-    def get_valid_api_credentials(self):
+    def get_valid_api_credential(self):
         if self.has_valid_coinbase_credentials():
-            return self.get_coinbase_credentials()
+            return self.get_coinbase_credential()
         elif self.has_valid_bitstamp_credentials():
-            return self.get_bitstamp_credentials()
+            return self.get_bitstamp_credential()
         elif self.has_valid_blockchain_credentials():
-            return self.get_blockchain_credentials()
+            return self.get_blockchain_credential()
         return None
 
     def has_coinbase_credentials(self):
-        return bool(self.get_coinbase_credentials())
+        return bool(self.get_coinbase_credential())
 
     def has_valid_coinbase_credentials(self):
-        credentials = self.get_coinbase_credentials()
+        credentials = self.get_coinbase_credential()
         if credentials and not credentials.last_failed_at:
             return True
         else:
             return False
 
-    def get_coinbase_credentials(self):
-        return self.cbcredential_set.filter(disabled_at=None).last()
+    def get_coinbase_credential(self):
+        return self.basecredential_set.instance_of(
+                CBSCredential).filter(disabled_at=None).last()
 
-    def get_bitstamp_credentials(self):
-        return self.bscredential_set.filter(disabled_at=None).last()
+    def get_bitstamp_credential(self):
+        return self.basecredential_set.instance_of(
+                BTSCredential).filter(disabled_at=None).last()
 
-    def get_blockchain_credentials(self):
-        return self.bcicredential_set.filter(disabled_at=None).last()
+    def get_blockchain_credential(self):
+        return self.basecredential_set.instance_of(
+                BCICredential).filter(disabled_at=None).last()
 
     def has_blockchain_credentials(self):
-        return bool(self.get_blockchain_credentials())
+        return bool(self.get_blockchain_credential())
 
     def has_valid_blockchain_credentials(self):
-        credentials = self.get_blockchain_credentials()
+        credentials = self.get_blockchain_credential()
         if credentials and not credentials.last_failed_at:
             return True
         return False
 
     def has_bitstamp_credentials(self):
-        return bool(self.get_bitstamp_credentials())
+        return bool(self.get_bitstamp_credential())
 
     def has_valid_bitstamp_credentials(self):
-        credentials = self.get_bitstamp_credentials()
+        credentials = self.get_bitstamp_credential()
         if credentials and not credentials.last_failed_at:
             return True
         return False

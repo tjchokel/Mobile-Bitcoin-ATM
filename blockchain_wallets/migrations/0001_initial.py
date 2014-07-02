@@ -8,22 +8,28 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'SentSMS'
-        db.create_table(u'phones_sentsms', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('sent_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('phone_num', self.gf('phonenumber_field.modelfields.PhoneNumberField')(max_length=128, db_index=True)),
-            ('message', self.gf('django.db.models.fields.CharField')(max_length=1024)),
-            ('to_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.AuthUser'], null=True, blank=True)),
-            ('to_merchant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['merchants.Merchant'], null=True, blank=True)),
-            ('to_shopper', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['shoppers.Shopper'], null=True, blank=True)),
+        # Adding model 'BCICredential'
+        db.create_table(u'blockchain_wallets_bcicredential', (
+            (u'basecredential_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['credentials.BaseCredential'], unique=True, primary_key=True)),
+            ('username', self.gf('django_fields.fields.EncryptedCharField')(max_length=165, block_type=None, cipher='AES', db_index=True)),
+            ('main_password', self.gf('django_fields.fields.EncryptedCharField')(max_length=293, block_type=None, cipher='AES', db_index=True)),
+            ('second_password', self.gf('django_fields.fields.EncryptedCharField')(block_type=None, max_length=293, blank=True, null=True, cipher='AES', db_index=True)),
         ))
-        db.send_create_signal(u'phones', ['SentSMS'])
+        db.send_create_signal(u'blockchain_wallets', ['BCICredential'])
+
+        # Adding model 'BCISentBTC'
+        db.create_table(u'blockchain_wallets_bcisentbtc', (
+            (u'basesentbtc_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['credentials.BaseSentBTC'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal(u'blockchain_wallets', ['BCISentBTC'])
 
 
     def backwards(self, orm):
-        # Deleting model 'SentSMS'
-        db.delete_table(u'phones_sentsms')
+        # Deleting model 'BCICredential'
+        db.delete_table(u'blockchain_wallets_bcicredential')
+
+        # Deleting model 'BCISentBTC'
+        db.delete_table(u'blockchain_wallets_bcisentbtc')
 
 
     models = {
@@ -40,12 +46,44 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
+        u'blockchain_wallets.bcicredential': {
+            'Meta': {'object_name': 'BCICredential', '_ormbases': [u'credentials.BaseCredential']},
+            u'basecredential_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['credentials.BaseCredential']", 'unique': 'True', 'primary_key': 'True'}),
+            'main_password': ('django_fields.fields.EncryptedCharField', [], {'max_length': '293', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
+            'second_password': ('django_fields.fields.EncryptedCharField', [], {'block_type': 'None', 'max_length': '293', 'blank': 'True', 'null': 'True', 'cipher': "'AES'", 'db_index': 'True'}),
+            'username': ('django_fields.fields.EncryptedCharField', [], {'max_length': '165', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'})
+        },
+        u'blockchain_wallets.bcisentbtc': {
+            'Meta': {'object_name': 'BCISentBTC', '_ormbases': [u'credentials.BaseSentBTC']},
+            u'basesentbtc_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['credentials.BaseSentBTC']", 'unique': 'True', 'primary_key': 'True'})
+        },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
             'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'credentials.basecredential': {
+            'Meta': {'object_name': 'BaseCredential'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'disabled_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'last_failed_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'last_succeded_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
+            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
+            'polymorphic_ctype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'polymorphic_credentials.basecredential_set'", 'null': 'True', 'to': u"orm['contenttypes.ContentType']"})
+        },
+        u'credentials.basesentbtc': {
+            'Meta': {'object_name': 'BaseSentBTC'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['credentials.BaseCredential']"}),
+            'destination_btc_address': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
+            'destination_email': ('django.db.models.fields.EmailField', [], {'db_index': 'True', 'max_length': '75', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'polymorphic_ctype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'polymorphic_credentials.basesentbtc_set'", 'null': 'True', 'to': u"orm['contenttypes.ContentType']"}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
+            'txn_hash': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'})
         },
         u'merchants.merchant': {
             'Meta': {'object_name': 'Merchant'},
@@ -62,23 +100,6 @@ class Migration(SchemaMigration):
             'state': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.AuthUser']", 'null': 'True', 'blank': 'True'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'})
-        },
-        u'phones.sentsms': {
-            'Meta': {'object_name': 'SentSMS'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'message': ('django.db.models.fields.CharField', [], {'max_length': '1024'}),
-            'phone_num': ('phonenumber_field.modelfields.PhoneNumberField', [], {'max_length': '128', 'db_index': 'True'}),
-            'sent_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'to_merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']", 'null': 'True', 'blank': 'True'}),
-            'to_shopper': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['shoppers.Shopper']", 'null': 'True', 'blank': 'True'}),
-            'to_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.AuthUser']", 'null': 'True', 'blank': 'True'})
-        },
-        u'shoppers.shopper': {
-            'Meta': {'object_name': 'Shopper'},
-            'email': ('django.db.models.fields.EmailField', [], {'db_index': 'True', 'max_length': '75', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
-            'phone_num': ('phonenumber_field.modelfields.PhoneNumberField', [], {'db_index': 'True', 'max_length': '128', 'null': 'True', 'blank': 'True'})
         },
         u'users.authuser': {
             'Meta': {'object_name': 'AuthUser'},
@@ -101,4 +122,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['phones']
+    complete_apps = ['blockchain_wallets']

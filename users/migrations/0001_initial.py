@@ -45,6 +45,16 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(m2m_table_name, ['authuser_id', 'permission_id'])
 
+        # Adding model 'LoggedLogin'
+        db.create_table(u'users_loggedlogin', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('login_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
+            ('auth_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.AuthUser'])),
+            ('ip_address', self.gf('django.db.models.fields.IPAddressField')(max_length=15, db_index=True)),
+            ('user_agent', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=1024, blank=True)),
+        ))
+        db.send_create_signal(u'users', ['LoggedLogin'])
+
 
     def backwards(self, orm):
         # Deleting model 'AuthUser'
@@ -55,6 +65,9 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field user_permissions on 'AuthUser'
         db.delete_table(db.shorten_name(u'users_authuser_user_permissions'))
+
+        # Deleting model 'LoggedLogin'
+        db.delete_table(u'users_loggedlogin')
 
 
     models = {
@@ -96,6 +109,14 @@ class Migration(SchemaMigration):
             'phone_num_country': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+        },
+        u'users.loggedlogin': {
+            'Meta': {'object_name': 'LoggedLogin'},
+            'auth_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.AuthUser']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'ip_address': ('django.db.models.fields.IPAddressField', [], {'max_length': '15', 'db_index': 'True'}),
+            'login_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'user_agent': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '1024', 'blank': 'True'})
         }
     }
 

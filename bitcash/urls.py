@@ -11,8 +11,7 @@ urlpatterns = patterns('',
     url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
     url(r'^simulate-deposit/$', 'users.views.simulate_deposit_detected', name='simulate_deposit_detected'),
 
-    url(r'^register/$', 'merchants.views.register_router',
-        name='register_router'),
+    url(r'^register/$', 'merchants.views.register_router', name='register_router'),
     url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),
     url(r'^register-bitcoin/$', 'merchants.views.register_bitcoin', name='register_bitcoin'),
 
@@ -27,9 +26,9 @@ urlpatterns = patterns('',
     url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
 
     # API Partners
-    url(r'^coinbase/$', 'coinbase.views.coinbase', name='coinbase'),
-    url(r'^bitstamp/$', 'bstamp.views.bitstamp', name='bitstamp'),
-    url(r'^blockchain/$', 'bcwallet.views.blockchain', name='blockchain'),
+    url(r'^coinbase/$', 'credentials.views.coinbase_creds', name='coinbase_creds'),
+    url(r'^bitstamp/$', 'credentials.views.bitstamp_creds', name='bitstamp_creds'),
+    url(r'^blockchain/$', 'credentials.views.blockchain_creds', name='blockchain_creds'),
 
     # AJAX Calls
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
@@ -39,15 +38,13 @@ urlpatterns = patterns('',
     url(r'^merchant-complete-deposit/$', 'bitcoins.views.merchant_complete_deposit', name='merchant_complete_deposit'),
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
     url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
-    url(r'^refresh-cb-credentials/$', 'coinbase.views.refresh_credentials', name='refresh_cb_credentials'),
-    url(r'^disable-cb-credentials/$', 'coinbase.views.disable_credentials', name='disable_cb_credentials'),
-    url(r'^refresh-bs-credentials/$', 'bstamp.views.refresh_credentials', name='refresh_bs_credentials'),
-    url(r'^disable-bs-credentials/$', 'bstamp.views.disable_credentials', name='disable_bs_credentials'),
-    url(r'^refresh-bci-credentials/$', 'bcwallet.views.refresh_credentials', name='refresh_bci_credentials'),
-    url(r'^disable-bci-credentials/$', 'bcwallet.views.disable_credentials', name='disable_bci_credentials'),
-
-
-
+    # API Partner AJAX Calls (TODO: DRY this out)
+    url(r'^refresh-cb-credentials/$', 'credentials.views.refresh_cb_credentials', name='refresh_cb_credentials'),
+    url(r'^disable-cb-credentials/$', 'credentials.views.disable_cb_credentials', name='disable_cb_credentials'),
+    url(r'^refresh-bs-credentials/$', 'credentials.views.refresh_bs_credentials', name='refresh_bs_credentials'),
+    url(r'^disable-bs-credentials/$', 'credentials.views.disable_bs_credentials', name='disable_bs_credentials'),
+    url(r'^refresh-bci-credentials/$', 'credentials.views.refresh_bci_credentials', name='refresh_bci_credentials'),
+    url(r'^disable-bci-credentials/$', 'credentials.views.disable_bci_credentials', name='disable_bci_credentials'),
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),

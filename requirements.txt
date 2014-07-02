@@ -8,6 +8,7 @@ django-crispy-forms==1.4.0
 django-debug-toolbar==1.2.1
 django-fields==0.2.2
 django-phonenumber-field==0.5
+django-polymorphic==0.5.5
 django-toolbelt==0.0.1
 gnureadline==6.3.3
 gunicorn==18.0

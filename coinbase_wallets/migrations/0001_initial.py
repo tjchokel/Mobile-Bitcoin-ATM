@@ -8,43 +8,39 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'APICall'
-        db.create_table(u'services_apicall', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('api_name', self.gf('django.db.models.fields.CharField')(max_length=3, db_index=True)),
-            ('url_hit', self.gf('django.db.models.fields.URLField')(max_length=200, db_index=True)),
-            ('response_code', self.gf('django.db.models.fields.PositiveSmallIntegerField')(db_index=True)),
-            ('post_params', self.gf('jsonfield.fields.JSONField')(null=True, blank=True)),
-            ('headers', self.gf('django.db.models.fields.CharField')(max_length=2048, null=True, blank=True)),
-            ('api_results', self.gf('django.db.models.fields.CharField')(max_length=100000, null=True, blank=True)),
-            ('merchant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['merchants.Merchant'], null=True, blank=True)),
-            ('credential', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['credentials.BaseCredential'], null=True, blank=True)),
+        # Adding model 'CBSCredential'
+        db.create_table(u'coinbase_wallets_cbscredential', (
+            (u'basecredential_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['credentials.BaseCredential'], unique=True, primary_key=True)),
+            ('api_key', self.gf('django_fields.fields.EncryptedCharField')(max_length=293, block_type=None, cipher='AES', db_index=True)),
+            ('api_secret', self.gf('django_fields.fields.EncryptedCharField')(max_length=549, block_type=None, cipher='AES', db_index=True)),
         ))
-        db.send_create_signal(u'services', ['APICall'])
+        db.send_create_signal(u'coinbase_wallets', ['CBSCredential'])
 
-        # Adding model 'WebHook'
-        db.create_table(u'services_webhook', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('ip_address', self.gf('django.db.models.fields.IPAddressField')(max_length=15, db_index=True)),
-            ('user_agent', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=1024, blank=True)),
-            ('api_name', self.gf('django.db.models.fields.CharField')(max_length=3, db_index=True)),
-            ('hostname', self.gf('django.db.models.fields.CharField')(max_length=512, db_index=True)),
-            ('request_path', self.gf('django.db.models.fields.CharField')(max_length=2048, db_index=True)),
-            ('uses_https', self.gf('django.db.models.fields.BooleanField')(db_index=True)),
-            ('data_from_get', self.gf('jsonfield.fields.JSONField')(null=True, blank=True)),
-            ('data_from_post', self.gf('jsonfield.fields.JSONField')(null=True, blank=True)),
+        # Adding model 'CBSSentBTC'
+        db.create_table(u'coinbase_wallets_cbssentbtc', (
+            (u'basesentbtc_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['credentials.BaseSentBTC'], unique=True, primary_key=True)),
+            ('transaction_id', self.gf('django.db.models.fields.CharField')(max_length=64, db_index=True)),
+            ('notes', self.gf('django.db.models.fields.CharField')(max_length=2048, null=True, blank=True)),
         ))
-        db.send_create_signal(u'services', ['WebHook'])
+        db.send_create_signal(u'coinbase_wallets', ['CBSSentBTC'])
+
+        # Adding model 'CBSSellBTC'
+        db.create_table(u'coinbase_wallets_cbssellbtc', (
+            (u'basesellbtc_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['credentials.BaseSellBTC'], unique=True, primary_key=True)),
+            ('coinbase_code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=32, db_index=True)),
+        ))
+        db.send_create_signal(u'coinbase_wallets', ['CBSSellBTC'])
 
 
     def backwards(self, orm):
-        # Deleting model 'APICall'
-        db.delete_table(u'services_apicall')
+        # Deleting model 'CBSCredential'
+        db.delete_table(u'coinbase_wallets_cbscredential')
 
-        # Deleting model 'WebHook'
-        db.delete_table(u'services_webhook')
+        # Deleting model 'CBSSentBTC'
+        db.delete_table(u'coinbase_wallets_cbssentbtc')
+
+        # Deleting model 'CBSSellBTC'
+        db.delete_table(u'coinbase_wallets_cbssellbtc')
 
 
     models = {
@@ -60,6 +56,23 @@ class Migration(SchemaMigration):
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
+        },
+        u'coinbase_wallets.cbscredential': {
+            'Meta': {'object_name': 'CBSCredential', '_ormbases': [u'credentials.BaseCredential']},
+            'api_key': ('django_fields.fields.EncryptedCharField', [], {'max_length': '293', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
+            'api_secret': ('django_fields.fields.EncryptedCharField', [], {'max_length': '549', 'block_type': 'None', 'cipher': "'AES'", 'db_index': 'True'}),
+            u'basecredential_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['credentials.BaseCredential']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'coinbase_wallets.cbssellbtc': {
+            'Meta': {'object_name': 'CBSSellBTC', '_ormbases': [u'credentials.BaseSellBTC']},
+            u'basesellbtc_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['credentials.BaseSellBTC']", 'unique': 'True', 'primary_key': 'True'}),
+            'coinbase_code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '32', 'db_index': 'True'})
+        },
+        u'coinbase_wallets.cbssentbtc': {
+            'Meta': {'object_name': 'CBSSentBTC', '_ormbases': [u'credentials.BaseSentBTC']},
+            u'basesentbtc_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['credentials.BaseSentBTC']", 'unique': 'True', 'primary_key': 'True'}),
+            'notes': ('django.db.models.fields.CharField', [], {'max_length': '2048', 'null': 'True', 'blank': 'True'}),
+            'transaction_id': ('django.db.models.fields.CharField', [], {'max_length': '64', 'db_index': 'True'})
         },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
@@ -78,6 +91,28 @@ class Migration(SchemaMigration):
             'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
             'polymorphic_ctype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'polymorphic_credentials.basecredential_set'", 'null': 'True', 'to': u"orm['contenttypes.ContentType']"})
         },
+        u'credentials.basesellbtc': {
+            'Meta': {'object_name': 'BaseSellBTC'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['credentials.BaseCredential']"}),
+            'currency_code': ('django.db.models.fields.CharField', [], {'max_length': '5', 'db_index': 'True'}),
+            'fees_in_fiat': ('django.db.models.fields.DecimalField', [], {'db_index': 'True', 'null': 'True', 'max_digits': '10', 'decimal_places': '2', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'polymorphic_ctype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'polymorphic_credentials.basesellbtc_set'", 'null': 'True', 'to': u"orm['contenttypes.ContentType']"}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
+            'to_receive_in_fiat': ('django.db.models.fields.DecimalField', [], {'max_digits': '10', 'decimal_places': '2', 'db_index': 'True'})
+        },
+        u'credentials.basesentbtc': {
+            'Meta': {'object_name': 'BaseSentBTC'},
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['credentials.BaseCredential']"}),
+            'destination_btc_address': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '34', 'null': 'True', 'blank': 'True'}),
+            'destination_email': ('django.db.models.fields.EmailField', [], {'db_index': 'True', 'max_length': '75', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'polymorphic_ctype': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'polymorphic_credentials.basesentbtc_set'", 'null': 'True', 'to': u"orm['contenttypes.ContentType']"}),
+            'satoshis': ('django.db.models.fields.BigIntegerField', [], {'db_index': 'True'}),
+            'txn_hash': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64', 'unique': 'True', 'null': 'True', 'blank': 'True'})
+        },
         u'merchants.merchant': {
             'Meta': {'object_name': 'Merchant'},
             'address_1': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'}),
@@ -93,32 +128,6 @@ class Migration(SchemaMigration):
             'state': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['users.AuthUser']", 'null': 'True', 'blank': 'True'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '256', 'null': 'True', 'blank': 'True'})
-        },
-        u'services.apicall': {
-            'Meta': {'object_name': 'APICall'},
-            'api_name': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_index': 'True'}),
-            'api_results': ('django.db.models.fields.CharField', [], {'max_length': '100000', 'null': 'True', 'blank': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'credential': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['credentials.BaseCredential']", 'null': 'True', 'blank': 'True'}),
-            'headers': ('django.db.models.fields.CharField', [], {'max_length': '2048', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']", 'null': 'True', 'blank': 'True'}),
-            'post_params': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
-            'response_code': ('django.db.models.fields.PositiveSmallIntegerField', [], {'db_index': 'True'}),
-            'url_hit': ('django.db.models.fields.URLField', [], {'max_length': '200', 'db_index': 'True'})
-        },
-        u'services.webhook': {
-            'Meta': {'object_name': 'WebHook'},
-            'api_name': ('django.db.models.fields.CharField', [], {'max_length': '3', 'db_index': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
-            'data_from_get': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
-            'data_from_post': ('jsonfield.fields.JSONField', [], {'null': 'True', 'blank': 'True'}),
-            'hostname': ('django.db.models.fields.CharField', [], {'max_length': '512', 'db_index': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ip_address': ('django.db.models.fields.IPAddressField', [], {'max_length': '15', 'db_index': 'True'}),
-            'request_path': ('django.db.models.fields.CharField', [], {'max_length': '2048', 'db_index': 'True'}),
-            'user_agent': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '1024', 'blank': 'True'}),
-            'uses_https': ('django.db.models.fields.BooleanField', [], {'db_index': 'True'})
         },
         u'users.authuser': {
             'Meta': {'object_name': 'AuthUser'},
@@ -141,4 +150,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['services']
+    complete_apps = ['coinbase_wallets']

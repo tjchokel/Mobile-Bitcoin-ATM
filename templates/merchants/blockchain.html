@@ -70,7 +70,7 @@
               </p>
             </div>
               
-            <form class="form-horizontal" method="post" action="{% url "bcwallet.views.blockchain" %}" >
+            <form class="form-horizontal" method="post" action="{% url "credentials.views.blockchain_creds" %}" >
               {% load crispy_forms_tags %}
               {{ form|crispy }}
               {% csrf_token %}

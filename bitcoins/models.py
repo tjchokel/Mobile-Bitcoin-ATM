@@ -548,8 +548,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.get_credential_to_display(),
-                'payment_method': self.get_credential_abbrev(),
+                'payment_method_formatted': self.credential.get_credential_to_display(),
+                'payment_method': self.credential.get_credential_abbrev(),
                 'tx_hash': tx_hash,
                 }
         if self.shopper.name:

@@ -93,7 +93,7 @@ class CBSCredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 
@@ -105,7 +105,7 @@ class CBSCredential(BaseCredential):
         satoshis = btc_to_satoshis(resp_json['amount'])
 
         # Record the balance results
-        BaseBalance.objects.create(satoshis=satoshis, credential=self.credential)
+        BaseBalance.objects.create(satoshis=satoshis, credential=self)
 
         return satoshis
 
@@ -128,7 +128,7 @@ class CBSCredential(BaseCredential):
             response_code=r.status_code,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 
@@ -152,7 +152,7 @@ class CBSCredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 
@@ -161,7 +161,7 @@ class CBSCredential(BaseCredential):
         # Record the balance
         BaseBalance.objects.create(
                 satoshis=btc_to_satoshis(json_resp['balance']['amount']),
-                credential=self.credential
+                credential=self
                 )
 
         # Return transactions
@@ -188,7 +188,7 @@ class CBSCredential(BaseCredential):
             api_results=r.content,
             post_params=body_to_use,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 
@@ -221,7 +221,7 @@ class CBSCredential(BaseCredential):
         cbs_sell_btc = CBSSellBTC.objects.create(coinbase_code=transfer['code'])
 
         return CBSSellBTC.objects.create(
-                credential=self.credential,
+                credential=self,
                 cbs_sell_btc=cbs_sell_btc,
                 satoshis=satoshis,
                 currency_code=currency_to_recieve,
@@ -291,7 +291,7 @@ class CBSCredential(BaseCredential):
             post_params=post_params,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 
@@ -315,7 +315,7 @@ class CBSCredential(BaseCredential):
 
         # Record the Send
         send_btc_dict.update({
-                'credential': self.credential,
+                'credential': self,
                 'txn_hash': txn_hash,
                 'satoshis': satoshis,
                 'transaction_id': transaction['id'],
@@ -352,7 +352,7 @@ class CBSCredential(BaseCredential):
             post_params=post_params,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 

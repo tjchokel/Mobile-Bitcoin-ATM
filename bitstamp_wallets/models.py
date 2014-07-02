@@ -46,7 +46,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=balance_dict,
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_success()
 
@@ -59,7 +59,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(e),
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_failure()
 
@@ -69,7 +69,7 @@ class BTSCredential(BaseCredential):
 
         # Record the balance results
         BaseBalance.objects.create(satoshis=satoshis,
-                credential=self.credential)
+                credential=self)
 
         return satoshis
 
@@ -92,7 +92,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(txn_list),
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_success()
 
@@ -105,7 +105,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(e),
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_failure()
 
@@ -143,7 +143,7 @@ class BTSCredential(BaseCredential):
                 post_params=post_params,
                 api_results=str(withdrawal_info),
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_success()
 
@@ -156,14 +156,14 @@ class BTSCredential(BaseCredential):
                 post_params=post_params,
                 api_results=str(e),
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_failure()
 
             raise Exception(e)
 
         BTSSentBTC.objects.create(
-                credential=self.credential,
+                credential=self,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
                 withdrawal_id=withdrawal_id,
@@ -192,7 +192,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=address,
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_success()
 
@@ -205,7 +205,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(e),
                 merchant=self.merchant,
-                credential=self.credential)
+                credential=self)
 
             self.mark_failure()
 

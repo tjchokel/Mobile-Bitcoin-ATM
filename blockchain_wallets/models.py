@@ -41,7 +41,7 @@ class BCICredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 
@@ -54,7 +54,7 @@ class BCICredential(BaseCredential):
         satoshis = int(resp_json['balance'])
 
         # Record the balance results
-        BaseBalance.objects.create(satoshis=satoshis, credential=self.credential)
+        BaseBalance.objects.create(satoshis=satoshis, credential=self)
 
         return satoshis
 
@@ -83,7 +83,7 @@ class BCICredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 
@@ -95,7 +95,7 @@ class BCICredential(BaseCredential):
 
         # Record the Send
         BCISentBTC.objects.create(
-                credential=self.credential,
+                credential=self,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
                 txn_hash=tx_hash,
@@ -125,7 +125,7 @@ class BCICredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential=self.credential)
+            credential=self)
 
         self.handle_status_code(r.status_code)
 

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <br/><br/>
+      <h1 class="hl text-center top-zero">{% trans "Bitstamp API Instructions" %}</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    {% blocktrans %}
+    <p>
+      Connecting your Bitstamp account to CloseCoin allows us to:
+    </p>
+    <ul>
+      <li>
+        Lookup your bitcoin address at Bitstamp so that shoppers can send funds there.
+      </li>
+      <li>
+        Send Bitcoin from your Bitstamp account to shoppers (once you confirm they have paid you in cash for it).
+      </li>
+      <li>
+        Automatically buy or sell bitcoin with Bitstamp using the bank account you already have linked up with them (coming soon).
+      </li>
+    </ul>
+    {% endblocktrans %}
+
+    <p>
+    {% blocktrans %}
+      Please follow these instructions to grant CloseCoin access to your Bitstamp account:
+    {% endblocktrans %}
+    </p>
+
+    <ol>
+      <li>
+        {% blocktrans with bitstamp_url='https://www.bitstamp.net/account/security/api/' %}
+          Go to <a target="_blank" href="{{ bitstamp_url }}">Bitstamp's API Access Page</a>.
+          You may be asked to login with your Bitstamp credentials.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans with generate_key_text="Generate Key" %}
+        Check all the permissions boxes, leave the text input boxes blank and click <b>{{ generate_key_text }}</b>:
+        {% endblocktrans %}
+        <img src="{% static "img/bitstamp/generate_credentials.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {# This must happen now because once they click the link in their email it will hide their secret. Confusing! #}
+        {% blocktrans with key_field="Key" secret_field="Secret" %}
+          Copy the <b>{{ key_field }}</b> and <b>{{ secret_field }}</b> to CloseCoin.
+        {% endblocktrans %}
+        <img src="{% static "img/bitstamp/unactivated_credentials_copy.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {% blocktrans with activate_name="Activate" %}
+          Go back to Bitstamp and click the <b>{{ activate_name }}</b> button.
+          This will send an email to you to confirm.
+        {% endblocktrans %}
+        <img src="{% static "img/bitstamp/unactivated_credentials_button.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {% blocktrans with bitstamp_email="noreply@bitstamp.net" %}
+          Check your email and click the link to confirm API access.
+          If you don't see the email, check your spam folder for a message from <b>{{ bitstamp_email }}</b>.
+        {% endblocktrans %}
+        <img src="{% static "img/bitstamp/confirmation_email.png" %}" width="80%" />
+        <br />
+      </li>
+    </ol>
+
+    <p>
+      {% blocktrans with activate_name="Activate" %}
+        You're all set!
+        You can verify that your credentials are working by clicking the <b>refresh</b> button on CloseCoin anytime.
+      {% endblocktrans %}
+    </p>
+
+    <p>
+      {% blocktrans with electrum_url="https://electrum.org" armory_url='https://bitcoinarmory.com/' %}
+        For security, we always recommend keeping low balances on third party bitcoin sites.
+        For larger amounts of bitcoin, we recommend cold storage using
+        <a href="{{ electrum_url }}">Electrum</a> or
+        <a href="{{ armory_url }}">Armory</a>.
+        You can always unlink your Bitstamp account by deleting your API keys on CloseCoin or Bitstamp.
+      {% endblocktrans %}
+    </p>
+
+  </div>
+</div>
+{% endblock content %}

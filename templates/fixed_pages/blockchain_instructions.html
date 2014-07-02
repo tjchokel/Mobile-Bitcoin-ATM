@@ -43,12 +43,15 @@
         <a href="{{ bci_login_url }}">this page</a>:
       {% endblocktrans %}
       <img src="{% static "img/blockchain-info/login_screen.png" %}" width="80%" />
+      <br />
+      {% blocktrans with forgot_url="https://blockchain.info/wallet/forgot-password" %}
+        (If you've forgotten your identifier you can recover it <a href="{{ forgot_url }}">here</a>)
+      {% endblocktrans %}
     </p>
 
     <p>
       {% blocktrans with secondary_password_text="secondary password" %}
         If you have a {{ secondary_password_text }} we'll need that as well to be able to sign transactions.
-        <br /><br />
         Your secondary password is what you enter on this page:
       {% endblocktrans %}
       <img src="{% static "img/blockchain-info/secondary_password.png" %}" width="80%" />

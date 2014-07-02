@@ -141,7 +141,8 @@ class BCICredential(BaseCredential):
 
         return address
 
-    def get_any_receiving_address(self, set_as_merchant_address=False):
+    def get_best_receiving_address(self, set_as_merchant_address=False):
+        " Get a new receiving address "
         return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)
 
 

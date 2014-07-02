@@ -169,7 +169,7 @@ def register_bitcoin(request):
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
             if exchange_choice == 'selfmanaged':
-                merchant.set_destination_address(btc_address)
+                merchant.set_destination_address(btc_address, credential_used=None)
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 if exchange_choice == 'coinbase':
@@ -194,7 +194,7 @@ def register_bitcoin(request):
                             )
 
                 try:
-                    credential.get_balance()
+                    credential.get_best_receiving_address(set_as_merchant_address=True)
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
                     credential.mark_disabled()

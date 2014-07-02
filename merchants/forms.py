@@ -91,7 +91,12 @@ class BitcoinRegistrationForm(forms.Form):
         label=_('Who Manages Your Bitcoin Address'),
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
-        choices=(('coinbase', 'Coinbase.com',), ('bitstamp', 'Bitstamp.net',),('blockchain', _('Blockchain.info')), ('selfmanaged', _('Self-Managed Address (cannot sell bitcoin)'))),
+        choices=(
+            ('coinbase', 'Coinbase.com'),
+            ('bitstamp', 'Bitstamp.net'),
+            ('blockchain', _('Blockchain.info')),
+            ('selfmanaged', _('Self-Managed Address (cannot sell bitcoin)'))
+            ),
     )
 
     cb_api_key = forms.CharField(

@@ -2,8 +2,7 @@ from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
-from credentials.models import (BaseCredential, BaseBalance, BaseSentBTC,
-        BaseSellBTC, CredentialLink)
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, BaseSellBTC
 from services.models import APICall
 from bitcoins.models import BTCTransaction
 
@@ -70,13 +69,6 @@ class CBSCredential(BaseCredential):
     api_key = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     api_secret = EncryptedCharField(max_length=256, blank=False, null=False, db_index=True)
 
-    def create_credential_link(self):
-        """
-        One-time method on creating a new Credential object
-        Previously tried to do this by overriding the save method but it didn't work.
-        """
-        return CredentialLink.objects.create(cbs_credential=self)
-
     def get_credential_abbrev(self):
         return 'CBS'
 
@@ -101,7 +93,7 @@ class CBSCredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 
@@ -113,8 +105,7 @@ class CBSCredential(BaseCredential):
         satoshis = btc_to_satoshis(resp_json['amount'])
 
         # Record the balance results
-        BaseBalance.objects.create(satoshis=satoshis,
-                credential_link=self.credentiallink)
+        BaseBalance.objects.create(satoshis=satoshis, credential=self.credential)
 
         return satoshis
 
@@ -137,7 +128,7 @@ class CBSCredential(BaseCredential):
             response_code=r.status_code,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 
@@ -161,7 +152,7 @@ class CBSCredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 
@@ -170,7 +161,7 @@ class CBSCredential(BaseCredential):
         # Record the balance
         BaseBalance.objects.create(
                 satoshis=btc_to_satoshis(json_resp['balance']['amount']),
-                credential_link=self.credentiallink
+                credential=self.credential
                 )
 
         # Return transactions
@@ -197,7 +188,7 @@ class CBSCredential(BaseCredential):
             api_results=r.content,
             post_params=body_to_use,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 
@@ -230,7 +221,7 @@ class CBSCredential(BaseCredential):
         cbs_sell_btc = CBSSellBTC.objects.create(coinbase_code=transfer['code'])
 
         return CBSSellBTC.objects.create(
-                credential_link=self.credentiallink,
+                credential=self.credential,
                 cbs_sell_btc=cbs_sell_btc,
                 satoshis=satoshis,
                 currency_code=currency_to_recieve,
@@ -300,7 +291,7 @@ class CBSCredential(BaseCredential):
             post_params=post_params,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 
@@ -324,7 +315,7 @@ class CBSCredential(BaseCredential):
 
         # Record the Send
         send_btc_dict.update({
-                'credential_link': self.credentiallink,
+                'credential': self.credential,
                 'txn_hash': txn_hash,
                 'satoshis': satoshis,
                 'transaction_id': transaction['id'],
@@ -361,7 +352,7 @@ class CBSCredential(BaseCredential):
             post_params=post_params,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 

@@ -178,7 +178,6 @@ def register_bitcoin(request):
                             api_key=form.cleaned_data['cb_api_key'],
                             api_secret=form.cleaned_data['cb_secret_key'],
                             )
-                    credential.create_credential_link()
                 elif exchange_choice == 'bitstamp':
                     credential = BTSCredential.objects.create(
                             merchant=merchant,
@@ -186,7 +185,6 @@ def register_bitcoin(request):
                             api_key=form.cleaned_data['bs_api_key'],
                             api_secret=form.cleaned_data['bs_secret_key'],
                             )
-                    credential.create_credential_link()
                 elif exchange_choice == 'blockchain':
                     credential = BCICredential.objects.create(
                             merchant=merchant,
@@ -194,7 +192,6 @@ def register_bitcoin(request):
                             main_password=form.cleaned_data['bci_main_password'],
                             second_password=form.cleaned_data['bci_second_password'],
                             )
-                    credential.create_credential_link()
 
                 try:
                     credential.get_balance()

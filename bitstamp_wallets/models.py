@@ -2,7 +2,7 @@ from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
-from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, CredentialLink
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC
 from services.models import APICall
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -19,13 +19,6 @@ class BTSCredential(BaseCredential):
     customer_id = EncryptedCharField(max_length=32, blank=False, null=False, db_index=True)
     api_key = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
     api_secret = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
-
-    def create_credential_link(self):
-        """
-        One-time method on creating a new Credential object
-        Previously tried to do this by overriding the save method but it didn't work.
-        """
-        return CredentialLink.objects.create(bts_credential=self)
 
     def get_credential_abbrev(self):
         return 'BTS'
@@ -53,7 +46,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=balance_dict,
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_success()
 
@@ -66,7 +59,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(e),
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_failure()
 
@@ -76,7 +69,7 @@ class BTSCredential(BaseCredential):
 
         # Record the balance results
         BaseBalance.objects.create(satoshis=satoshis,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
         return satoshis
 
@@ -99,7 +92,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(txn_list),
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_success()
 
@@ -112,7 +105,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(e),
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_failure()
 
@@ -150,7 +143,7 @@ class BTSCredential(BaseCredential):
                 post_params=post_params,
                 api_results=str(withdrawal_info),
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_success()
 
@@ -163,14 +156,14 @@ class BTSCredential(BaseCredential):
                 post_params=post_params,
                 api_results=str(e),
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_failure()
 
             raise Exception(e)
 
         BTSSentBTC.objects.create(
-                credential_link=self.credentiallink,
+                credential=self.credential,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
                 withdrawal_id=withdrawal_id,
@@ -199,7 +192,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=address,
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_success()
 
@@ -212,7 +205,7 @@ class BTSCredential(BaseCredential):
                 post_params=None,  # not accurate
                 api_results=str(e),
                 merchant=self.merchant,
-                credential_link=self.credentiallink)
+                credential=self.credential)
 
             self.mark_failure()
 
@@ -260,7 +253,7 @@ class BTSSentBTC(BaseSentBTC):
                 post_params=None,
                 api_results=json.dumps(withdrawal_requests),
                 merchant=self.get_credential().merchant,
-                credential_link=self.credential_link,
+                credential=self.credential,
                 )
 
             self.get_credential().mark_success()
@@ -274,7 +267,7 @@ class BTSSentBTC(BaseSentBTC):
                 post_params=None,
                 api_results=str(e),
                 merchant=self.get_credential().merchant,
-                credential_link=self.credential_link,
+                credential=self.credential,
                 )
 
             self.get_credential().mark_failure()

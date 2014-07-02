@@ -71,7 +71,7 @@ class APICall(models.Model):
 
     # optional FKs
     merchant = models.ForeignKey('merchants.Merchant', null=True, blank=True)
-    credential_link = models.ForeignKey('credentials.CredentialLink', null=True, blank=True)
+    credential = models.ForeignKey('credentials.BaseCredential', null=True, blank=True)
 
 
 class WebHook(models.Model):

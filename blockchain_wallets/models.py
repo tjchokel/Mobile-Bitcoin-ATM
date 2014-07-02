@@ -2,7 +2,7 @@ from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
 from services.models import APICall
-from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, CredentialLink
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC
 from bitcoins.models import BTCTransaction
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -16,13 +16,6 @@ class BCICredential(BaseCredential):
     username = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
     main_password = EncryptedCharField(max_length=128, blank=False, null=False, db_index=True)
     second_password = EncryptedCharField(max_length=128, blank=True, null=True, db_index=True)
-
-    def create_credential_link(self):
-        """
-        One-time method on creating a new Credential object
-        Previously tried to do this by overriding the save method but it didn't work.
-        """
-        return CredentialLink.objects.create(bci_credential=self)
 
     def get_credential_abbrev(self):
         return 'BCI'
@@ -48,7 +41,7 @@ class BCICredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 
@@ -61,8 +54,7 @@ class BCICredential(BaseCredential):
         satoshis = int(resp_json['balance'])
 
         # Record the balance results
-        BaseBalance.objects.create(satoshis=satoshis,
-                credential_link=self.credentiallink)
+        BaseBalance.objects.create(satoshis=satoshis, credential=self.credential)
 
         return satoshis
 
@@ -91,7 +83,7 @@ class BCICredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 
@@ -103,7 +95,7 @@ class BCICredential(BaseCredential):
 
         # Record the Send
         BCISentBTC.objects.create(
-                credential_link=self.credentiallink,
+                credential=self.credential,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
                 txn_hash=tx_hash,
@@ -133,7 +125,7 @@ class BCICredential(BaseCredential):
             post_params=None,
             api_results=r.content,
             merchant=self.merchant,
-            credential_link=self.credentiallink)
+            credential=self.credential)
 
         self.handle_status_code(r.status_code)
 

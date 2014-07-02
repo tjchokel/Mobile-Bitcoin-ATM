@@ -7,33 +7,6 @@ from polymorphic import PolymorphicModel
 from countries import BFH_CURRENCY_DROPDOWN
 
 
-class CredentialLink(models.Model):
-    """ Join table to link an object to a related child credential """
-
-    # FIXME: only allow one of these to be set:
-    cbs_credential = models.OneToOneField('coinbase_wallets.CBSCredential', blank=True, null=True)
-    bts_credential = models.OneToOneField('bitstamp_wallets.BTSCredential', blank=True, null=True)
-    bci_credential = models.OneToOneField('blockchain_wallets.BCICredential', blank=True, null=True)
-
-    def __str__(self):
-        return '%s: %s' % (self.id, self.get_credential().id)
-
-    def get_credential(self):
-        if self.cbs_credential:
-            return self.cbs_credential
-        elif self.bci_credential:
-            return self.bci_credential
-        elif self.bts_credential:
-            return self.bts_credential
-        raise Exception('No Credential')
-
-    def get_credential_abbrev(self):
-        return self.get_credential().get_credential_abbrev()
-
-    def get_credential_to_display(self):
-        return self.get_credential().get_credential_to_display()
-
-
 class BaseCredential(PolymorphicModel):
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -85,20 +58,17 @@ class BaseCredential(PolymorphicModel):
 class BaseBalance(PolymorphicModel):
     """ Probably just used as a log and not implemented anywhere """
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    credential_link = models.ForeignKey(CredentialLink, blank=False, null=False)
+    credential = models.ForeignKey(BaseCredential, blank=False, null=False)
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.satoshis)
 
-    def get_credential(self):
-        return self.credential_link.get_credential()
-
 
 class BaseSentBTC(PolymorphicModel):
 
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    credential_link = models.ForeignKey(CredentialLink, blank=False, null=False)
+    credential = models.ForeignKey(BaseCredential, blank=False, null=False)
 
     txn_hash = models.CharField(max_length=64, blank=True, null=True,
             unique=True, db_index=True)
@@ -110,9 +80,6 @@ class BaseSentBTC(PolymorphicModel):
     def __str__(self):
         return '%s: %s' % (self.id, self.destination_btc_address or self.destination_email)
 
-    def get_credential(self):
-        return self.credential_link.get_credential()
-
 
 class BaseSellBTC(PolymorphicModel):
     """
@@ -121,7 +88,7 @@ class BaseSellBTC(PolymorphicModel):
     Not yet implemented on the site
     """
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    credential_link = models.ForeignKey(CredentialLink, blank=False, null=False)
+    credential = models.ForeignKey(BaseCredential, blank=False, null=False)
 
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
     currency_code = models.CharField(max_length=5, blank=False, null=False,
@@ -135,6 +102,3 @@ class BaseSellBTC(PolymorphicModel):
 
     def __str__(self):
         return '%s: %s' % (self.id, self.created_at)
-
-    def get_credential(self):
-        return self.credential_link.get_credential()

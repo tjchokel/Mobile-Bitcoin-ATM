@@ -474,7 +474,7 @@ class ShopperBTCPurchase(models.Model):
     cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     funds_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     expires_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    credential_link = models.ForeignKey('credentials.CredentialLink', blank=True, null=True)
+    credential = models.ForeignKey('credentials.BaseCredential', blank=True, null=True)
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
@@ -513,17 +513,15 @@ class ShopperBTCPurchase(models.Model):
 
     def pay_out_bitcoin(self, send_receipt=True):
 
-        if not self.credential_link:
-            credential = self.merchant.get_valid_api_credential()
-            self.credential_link = credential.credentiallink
-        self.save()
-        credential = self.credential_link.get_credential()
+        if not self.credential:
+            self.credential = self.merchant.get_valid_api_credential()
+            self.save()
         if self.b58_address:
-            btc_txn = credential.send_btc(
+            btc_txn = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn = credential.send_btc(
+            btc_txn = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
@@ -537,7 +535,7 @@ class ShopperBTCPurchase(models.Model):
             self.send_merchant_receipt()
 
     def send_merchant_receipt(self):
-        assert self.credential_link
+        assert self.credential
         fiat_amount_formatted = self.get_fiat_amount_formatted()
         if self.btc_transaction:
             tx_hash = self.btc_transaction.txn_hash
@@ -550,8 +548,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.credential_link.get_credential_to_display(),
-                'payment_method': self.credential_link.get_credential_abbrev(),
+                'payment_method_formatted': self.get_credential_to_display(),
+                'payment_method': self.get_credential_abbrev(),
                 'tx_hash': tx_hash,
                 }
         if self.shopper.name:
@@ -570,7 +568,7 @@ class ShopperBTCPurchase(models.Model):
         return email
 
     def send_shopper_receipt(self):
-        assert self.credential_link
+        assert self.credential
         fiat_amount_formatted = self.get_fiat_amount_formatted()
         if self.btc_transaction:
             tx_hash = self.btc_transaction.txn_hash
@@ -584,8 +582,8 @@ class ShopperBTCPurchase(models.Model):
                 'shopper_btc_address': self.b58_address,
                 'business_name': self.merchant.business_name,
                 'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                'payment_method_formatted': self.credential_link.get_credential_to_display(),
-                'payment_method': self.credential_link.get_credential_abbrev(),
+                'payment_method_formatted': self.credential.get_credential_to_display(),
+                'payment_method': self.credential.get_credential_abbrev(),
                 'tx_hash': tx_hash,
                 }
         email = send_and_log(

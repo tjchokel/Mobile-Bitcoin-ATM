@@ -22,8 +22,8 @@ admin.site.register(BaseCredential, BaseCredentialAdmin)
 
 class BaseBalanceAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'created_at', 'credential_link', 'satoshis', )
-    raw_id_fields = ('credential_link', )
+    list_display = ('id', 'created_at', 'credential', 'satoshis', )
+    raw_id_fields = ('credential', )
 
     class Meta:
         model = BaseBalance
@@ -36,13 +36,13 @@ class BaseSellBTCAdmin(admin.ModelAdmin):
     list_display = (
             'id',
             'created_at',
-            'credential_link',
+            'credential',
             'satoshis',
             'currency_code',
             'fees_in_fiat',
             'to_receive_in_fiat',
             )
-    raw_id_fields = ('credential_link', )
+    raw_id_fields = ('credential', )
 
     class Meta:
         model = BaseSellBTC
@@ -55,13 +55,13 @@ class BaseSentBTCAdmin(admin.ModelAdmin):
     list_display = (
             'id',
             'created_at',
-            'credential_link',
+            'credential',
             'txn_hash',
             'satoshis',
             'destination_btc_address',
             'destination_email',
             )
-    raw_id_fields = ('credential_link', )
+    raw_id_fields = ('credential', )
 
     class Meta:
         model = BaseSentBTC

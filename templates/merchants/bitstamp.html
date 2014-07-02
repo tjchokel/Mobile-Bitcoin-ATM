@@ -13,7 +13,7 @@
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Bitstamp Api" %}</a>
+            <a style="color:#515151;" href="#">{% trans "Bitstamp API" %}</a>
           </h4>
           {% if merchant.has_bitstamp_credentials %}
             {% with api='bitstamp' %}
@@ -60,16 +60,12 @@
 
           {% else %}
             <p>
-              {% trans "Enter your Bitstamp API credentials here to take advantage of our partnership" %}
-              <!-- Button trigger modal -->
-              (<a href="#" data-toggle="collapse" data-target="#moreinfo">{% trans "learn more" %}</a>).
+              {% trans "Enter your Bitstamp API credentials to take advantage of our partnership." %}
             </p>
-            <div id="moreinfo" class="collapse">
-              <p>
-                TODO: WRITE MORE INFO HERE
-              </p>
-            </div>
-              
+            <p>
+              <a target="_blank" href="{% url "bitstamp_instructions" %}">{% trans "Click here for instructions" %}</a>.
+            </p>
+
             <form class="form-horizontal" method="post" action="{% url "credentials.views.bitstamp_creds" %}" >
               {% load crispy_forms_tags %}
               {{ form|crispy }}
@@ -79,7 +75,7 @@
               </div>
             </form>
           {% endif %}
-          
+
         </div>
       </div>
     </div>
@@ -99,18 +95,18 @@
             location.reload(true);
             $('#refresh-loader').addClass("hidden");
             $('#refresh-button').removeClass("hidden");
-            
+
           },
           error: function(data) {
             console.log('refreshCredentials Failed');
             $('#refresh-loader').addClass("hidden");
             $('#refresh-button').removeClass("hidden");
-            
+
             location.reload(true);
           }
         });
     }
-    
+
     function showDisableModal() {
       $('#delete-credentials-modal').modal();
     }
@@ -126,13 +122,13 @@
             location.reload(true);
             $('#disable-loader').addClass("hidden");
             $('#disable-button').removeClass("hidden");
-            
+
           },
           error: function(data) {
             console.log('refreshCredentials Failed');
             $('#disable-loader').addClass("hidden");
             $('#disable-button').removeClass("hidden");
-            
+
             location.reload(true);
           }
         });

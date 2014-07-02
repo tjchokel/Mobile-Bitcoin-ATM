@@ -12,7 +12,7 @@
             {% endwith %}
              <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
                  {% load crispy_forms_tags %}
-                 {{ form|crispy }}
+                 {% crispy form %}
                  {% csrf_token %}
                  <div class="button-wrapper">
                    <button type="submit" class="btn btn-primary btn-lg">{% trans "Complete Registration" %}</button>
@@ -26,6 +26,23 @@
 {% block extra_js %}
 
      <script>
+
+      {# http://stackoverflow.com/a/1408373/1754586 #}
+      String.prototype.supplant = function (o) {
+        return this.replace(/{([^{}]*)}/g,
+          function (a, b) {
+              var r = o[b];
+              return typeof r === 'string' || typeof r === 'number' ? r : a;
+          }
+        );
+      };
+
+      var BASE_INSTRUCTIONS = '<div id="api_instructions"><p><a target="_blank" href="{0}">Click here for {1} API instructions</a></p></div>';
+      var CB_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "coinbase_instructions" %}', 'Coinbase']);
+      var BS_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "bitstamp_instructions" %}', 'Bitstamp']);
+      var BCI_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "blockchain_instructions" %}', 'Blockchain']);
+      console.log(CB_INSTRUCTIONS + BS_INSTRUCTIONS + BCI_INSTRUCTIONS);
+
       function selectCoinbase() {
         $("#div_id_cb_api_key").removeClass("hidden");
         $("#div_id_cb_secret_key").removeClass("hidden");
@@ -37,8 +54,11 @@
         $("#div_id_bci_main_password").addClass("hidden");
         $("#div_id_bci_second_password").addClass("hidden");
         $("#div_id_bci_username").addClass("hidden");
-        
+
         $("#div_id_btc_address").addClass("hidden");
+
+        $("#api_instructions").remove();
+        $("#div_id_exchange_choice").after(CB_INSTRUCTIONS);
       }
 
       function selectBitstamp() {
@@ -54,6 +74,9 @@
         $("#div_id_bci_username").addClass("hidden");
 
         $("#div_id_btc_address").addClass("hidden");
+
+        $("#api_instructions").remove();
+        $("#div_id_exchange_choice").after(BS_INSTRUCTIONS);
       }
 
       function selectBlockchain() {
@@ -69,6 +92,9 @@
         $("#div_id_bci_username").removeClass("hidden");
 
         $("#div_id_btc_address").addClass("hidden");
+
+        $("#api_instructions").remove();
+        $("#div_id_exchange_choice").after(BCI_INSTRUCTIONS);
       }
 
       function selectSelfManaged() {
@@ -84,6 +110,8 @@
         $("#div_id_bci_username").addClass("hidden");
 
         $("#div_id_btc_address").removeClass("hidden");
+
+        $("#api_instructions").remove();
       }
 
       $("#id_exchange_choice_1, #id_exchange_choice_2, #id_exchange_choice_3, #id_exchange_choice_4").change(function(){

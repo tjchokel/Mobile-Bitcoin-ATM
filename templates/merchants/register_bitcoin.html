@@ -41,7 +41,6 @@
       var CB_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "coinbase_instructions" %}', 'Coinbase']);
       var BS_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "bitstamp_instructions" %}', 'Bitstamp']);
       var BCI_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "blockchain_instructions" %}', 'Blockchain']);
-      console.log(CB_INSTRUCTIONS + BS_INSTRUCTIONS + BCI_INSTRUCTIONS);
 
       function selectCoinbase() {
         $("#div_id_cb_api_key").removeClass("hidden");

@@ -28,7 +28,7 @@ class BlockchainAPIForm(forms.Form):
         widget=forms.PasswordInput(render_value=False),
     )
 
-    def clean_btc_address(self):
+    def clean_username(self):
         username = self.cleaned_data['username']
         if username.startswith('https://blockchain.info/wallet/'):
             username = username.lstrip('https://blockchain.info/wallet/')

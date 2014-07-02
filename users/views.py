@@ -15,8 +15,14 @@ from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBit
 
 @render_to('index.html')
 def home(request):
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+    user = request.user
+    if user.is_authenticated():
+        merchant = user.get_merchant()
+        if merchant:
+            if merchant.has_finished_registration():
+                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+            else:
+                return HttpResponseRedirect(reverse_lazy('register_router'))
     else:
         return {}
 

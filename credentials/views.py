@@ -32,8 +32,6 @@ def blockchain_creds(request):
                     main_password=form.cleaned_data['main_password'].strip(),
                     second_password=form.cleaned_data['second_password'].strip(),
             )
-            if created:
-                credential.create_credential_link()
 
             try:
                 credential.get_balance()
@@ -70,8 +68,6 @@ def coinbase_creds(request):
                     api_key=form.cleaned_data['api_key'].strip(),
                     api_secret=form.cleaned_data['api_secret'].strip(),
                     )
-            if created:
-                credential.create_credential_link()
 
             try:
                 credential.get_balance()
@@ -109,8 +105,6 @@ def bitstamp_creds(request):
                     api_key=form.cleaned_data['api_key'].strip(),
                     api_secret=form.cleaned_data['api_secret'].strip(),
                     )
-            if created:
-                credential.create_credential_link()
 
             try:
                 credential.get_balance()

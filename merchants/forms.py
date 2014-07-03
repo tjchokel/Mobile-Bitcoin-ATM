@@ -140,7 +140,7 @@ class BitcoinRegistrationForm(forms.Form):
     )
 
     bci_username = forms.CharField(
-        label=_('Blockchain Username'),
+        label=_('Blockchain Username (Identifier)'),
         required=False,
         min_length=5,
         max_length=256,

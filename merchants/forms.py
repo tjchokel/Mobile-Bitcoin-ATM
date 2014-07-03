@@ -115,8 +115,8 @@ class BitcoinRegistrationForm(forms.Form):
         widget=forms.TextInput(),
     )
 
-    bs_username = forms.CharField(
-        label=_('Bitstamp Username'),
+    bs_customer_id = forms.CharField(
+        label=_('Bitstamp Customer ID'),
         required=False,
         min_length=5,
         max_length=256,

@@ -12,7 +12,7 @@
             {% endwith %}
              <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
                  {% load crispy_forms_tags %}
-                 {% crispy form %}
+                 {{ form|crispy }}
                  {% csrf_token %}
                  <div class="button-wrapper">
                    <button type="submit" class="btn btn-primary btn-lg">{% trans "Complete Registration" %}</button>
@@ -48,7 +48,7 @@
 
         $("#div_id_bs_api_key").addClass("hidden");
         $("#div_id_bs_secret_key").addClass("hidden");
-        $("#div_id_bs_username").addClass("hidden");
+        $("#div_id_bs_customer_id").addClass("hidden");
 
         $("#div_id_bci_main_password").addClass("hidden");
         $("#div_id_bci_second_password").addClass("hidden");
@@ -66,7 +66,7 @@
 
         $("#div_id_bs_api_key").removeClass("hidden");
         $("#div_id_bs_secret_key").removeClass("hidden");
-        $("#div_id_bs_username").removeClass("hidden");
+        $("#div_id_bs_customer_id").removeClass("hidden");
 
         $("#div_id_bci_main_password").addClass("hidden");
         $("#div_id_bci_second_password").addClass("hidden");
@@ -84,7 +84,7 @@
 
         $("#div_id_bs_api_key").addClass("hidden");
         $("#div_id_bs_secret_key").addClass("hidden");
-        $("#div_id_bs_username").addClass("hidden");
+        $("#div_id_bs_customer_id").addClass("hidden");
 
         $("#div_id_bci_main_password").removeClass("hidden");
         $("#div_id_bci_second_password").removeClass("hidden");
@@ -102,7 +102,7 @@
 
         $("#div_id_bs_api_key").addClass("hidden");
         $("#div_id_bs_secret_key").addClass("hidden");
-        $("#div_id_bs_username").addClass("hidden");
+        $("#div_id_bs_customer_id").addClass("hidden");
 
         $("#div_id_bci_main_password").addClass("hidden");
         $("#div_id_bci_second_password").addClass("hidden");

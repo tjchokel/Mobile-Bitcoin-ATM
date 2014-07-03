@@ -150,4 +150,4 @@ class BCISentBTC(BaseSentBTC):
     " No new model fields "
 
     def __str__(self):
-        return '%s: %s' % (self.id, self.transaction_id)
+        return '%s: %s' % (self.id, self.txn_hash)

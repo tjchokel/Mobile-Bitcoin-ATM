@@ -29,11 +29,6 @@ class Merchant(models.Model):
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
 
-    def get_new_forwarding_address(self):
-        dest_addr_obj = self.get_destination_address()
-        if dest_addr_obj:
-            dest_addr_obj.create_new_forwarding_address()
-
     def get_destination_addresses(self):
         # There should only ever be one at a time
         return self.destinationaddress_set.filter(retired_at__isnull=True)
@@ -62,6 +57,9 @@ class Merchant(models.Model):
                     b58_address=dest_address,
                     merchant=self,
                     credential=credential_used)
+
+    def set_new_forwarding_address(self):
+        return self.get_destination_address().create_new_forwarding_address()
 
     def get_all_forwarding_addresses(self):
         return self.forwardingaddress_set.all()

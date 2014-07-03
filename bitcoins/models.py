@@ -77,7 +77,7 @@ class ForwardingAddress(models.Model):
     b58_address = models.CharField(blank=False, null=False, max_length=34,
             db_index=True, unique=True)
     paid_out_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
+    destination_address = models.ForeignKey(DestinationAddress, blank=False, null=False)
 
     # technically, this is redundant through DestinationAddress
     # but having it here makes for easier querying (especially before there is a destination address)

@@ -243,7 +243,7 @@ def process_blockcypher_webhook(request, random_id):
 def get_next_deposit_address(request):
     user = request.user
     merchant = user.get_merchant()
-    address = merchant.get_new_forwarding_address()
+    address = merchant.set_new_forwarding_address()
     request.session['forwarding_address'] = address
     json_response = json.dumps({"address": address})
     return HttpResponse(json_response, content_type='application/json')

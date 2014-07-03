@@ -181,7 +181,7 @@ def register_bitcoin(request):
                 elif exchange_choice == 'bitstamp':
                     credential = BTSCredential.objects.create(
                             merchant=merchant,
-                            username=form.cleaned_data['bs_username'],
+                            customer_id=form.cleaned_data['bs_customer_id'],
                             api_key=form.cleaned_data['bs_api_key'],
                             api_secret=form.cleaned_data['bs_secret_key'],
                             )

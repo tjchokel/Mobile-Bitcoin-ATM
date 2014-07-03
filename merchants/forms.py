@@ -115,8 +115,8 @@ class BitcoinRegistrationForm(forms.Form):
         widget=forms.TextInput(),
     )
 
-    bs_username = forms.CharField(
-        label=_('Bitstamp Username'),
+    bs_customer_id = forms.CharField(
+        label=_('Bitstamp Customer ID'),
         required=False,
         min_length=5,
         max_length=256,
@@ -196,13 +196,13 @@ class BitcoinRegistrationForm(forms.Form):
             raise forms.ValidationError(msg)
         return cb_secret_key
 
-    def clean_bs_username(self):
+    def clean_bs_customer_id(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        bs_username = self.cleaned_data.get('bs_username').strip()
-        if exchange_choice == 'bitstamp' and not bs_username:
+        bs_customer_id = self.cleaned_data.get('bs_customer_id').strip()
+        if exchange_choice == 'bitstamp' and not bs_customer_id:
             msg = _('Please enter your Bitstamp username')
             raise forms.ValidationError(msg)
-        return bs_username
+        return bs_customer_id
 
     def clean_bs_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
@@ -226,6 +226,8 @@ class BitcoinRegistrationForm(forms.Form):
         if exchange_choice == 'blockchain' and not bci_username:
             msg = _('Please enter your Blockchain username')
             raise forms.ValidationError(msg)
+        if bci_username.startswith('https://blockchain.info/wallet/'):
+            bci_username = bci_username.lstrip('https://blockchain.info/wallet/')
         return bci_username
 
     def clean_bci_main_password(self):

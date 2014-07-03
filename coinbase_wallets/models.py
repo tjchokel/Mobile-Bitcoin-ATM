@@ -317,7 +317,8 @@ class CBSCredential(BaseCredential):
         assert is_valid_btc_address(address), msg
 
         if set_as_merchant_address:
-            self.merchant.set_destination_address(address)
+            self.merchant.set_destination_address(dest_address=address,
+                    credential_used=self)
 
         return address
 

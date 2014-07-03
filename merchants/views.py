@@ -417,7 +417,9 @@ def edit_bitcoin_info(request):
         if form.is_valid():
 
             merchant.currency_code = form.cleaned_data['currency_code']
-            merchant.set_destination_address(form.cleaned_data['btc_address'])
+            merchant.set_destination_address(
+                    dest_address=form.cleaned_data['btc_address'],
+                    credential_used=None)
             merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
             merchant.save()
 

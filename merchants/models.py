@@ -49,21 +49,14 @@ class Merchant(models.Model):
         return bool(self.get_destination_address())
 
     def set_destination_address(self, dest_address, credential_used=None):
-        matching_address = self.destinationaddress_set.filter(b58_address=dest_address)
+        matching_address = self.destinationaddress_set.filter(
+                b58_address=dest_address,
+                credential=credential_used,
+                retired_at=None)
         if matching_address:
             # Should only have one, but still is a queryset
-            for address in matching_address:
-                if address.retired_at:
-                    # unretire it
-                    address.retired_at = None
-                    address.credential = credential_used
-                    address.save()
-                    return address
+            return matching_address[0]
         else:
-            # Mark all other addresses retired
-            for active_address in self.get_destination_addresses():
-                active_address.retired_at = now()
-                active_address.save()
             # Create new address object
             return DestinationAddress.objects.create(
                     b58_address=dest_address,

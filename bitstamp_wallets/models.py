@@ -212,7 +212,8 @@ class BTSCredential(BaseCredential):
             raise Exception(e)
 
         if set_as_merchant_address:
-            self.merchant.set_destination_address(address)
+            self.merchant.set_destination_address(dest_address=address,
+                    credential_used=self)
 
         return address
 

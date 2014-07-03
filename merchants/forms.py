@@ -182,7 +182,7 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_cb_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        cb_api_key = self.cleaned_data.get('cb_api_key')
+        cb_api_key = self.cleaned_data.get('cb_api_key').strip()
         if exchange_choice == 'coinbase' and not cb_api_key:
             msg = _('Please enter your Coinbase API key')
             raise forms.ValidationError(msg)
@@ -190,7 +190,7 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_cb_secret_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        cb_secret_key = self.cleaned_data.get('cb_secret_key')
+        cb_secret_key = self.cleaned_data.get('cb_secret_key').strip()
         if exchange_choice == 'coinbase' and not cb_secret_key:
             msg = _('Please enter your Coinbase secret key')
             raise forms.ValidationError(msg)
@@ -198,7 +198,7 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_bs_username(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        bs_username = self.cleaned_data.get('bs_username')
+        bs_username = self.cleaned_data.get('bs_username').strip()
         if exchange_choice == 'bitstamp' and not bs_username:
             msg = _('Please enter your Bitstamp username')
             raise forms.ValidationError(msg)
@@ -206,7 +206,7 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_bs_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        bs_api_key = self.cleaned_data.get('bs_api_key')
+        bs_api_key = self.cleaned_data.get('bs_api_key').strip()
         if exchange_choice == 'bitstamp' and not bs_api_key:
             msg = _('Please enter your Bitstamp API key')
             raise forms.ValidationError(msg)
@@ -214,7 +214,7 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_bs_secret_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        bs_secret_key = self.cleaned_data.get('bs_secret_key')
+        bs_secret_key = self.cleaned_data.get('bs_secret_key').strip()
         if exchange_choice == 'bitstamp' and not bs_secret_key:
             msg = _('Please enter your Bitstamp Secret Key')
             raise forms.ValidationError(msg)
@@ -222,7 +222,7 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_bci_username(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        bci_username = self.cleaned_data.get('bci_username')
+        bci_username = self.cleaned_data.get('bci_username').strip()
         if exchange_choice == 'blockchain' and not bci_username:
             msg = _('Please enter your Blockchain username')
             raise forms.ValidationError(msg)
@@ -230,14 +230,14 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_bci_main_password(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        bci_main_password = self.cleaned_data.get('bci_main_password')
+        bci_main_password = self.cleaned_data.get('bci_main_password').strip()
         if exchange_choice == 'blockchain' and not bci_main_password:
             msg = _('Please enter your Blockchain API key')
             raise forms.ValidationError(msg)
         return bci_main_password
 
     def clean_btc_address(self):
-        address = self.cleaned_data.get('btc_address')
+        address = self.cleaned_data.get('btc_address').strip()
         exchange_choice = self.cleaned_data.get('exchange_choice')
         if address and not is_valid_btc_address(address):
             msg = "Sorry, that's not a valid bitcoin address"

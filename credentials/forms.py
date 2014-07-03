@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 class BlockchainAPIForm(forms.Form):
 
     username = forms.CharField(
-        label=_('Identifier'),
+        label=_('Username (Identifier)'),
         required=True,
         min_length=2,
         max_length=256,

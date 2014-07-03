@@ -168,6 +168,7 @@ def register_bitcoin(request):
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
+            merchant.save()
             if exchange_choice == 'selfmanaged':
                 merchant.set_destination_address(btc_address, credential_used=None)
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
@@ -192,7 +193,6 @@ def register_bitcoin(request):
                             main_password=form.cleaned_data['bci_main_password'],
                             second_password=form.cleaned_data['bci_second_password'],
                             )
-
                 try:
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)

@@ -18,7 +18,7 @@
 
   {% include "customer_dash/cash_out/_deposit_address_modal.html" %}
   {% include "customer_dash/cash_in/_buy_bitcoin_modal.html" %}
-        
+
       <div class="pricing">
 
       {% if merchant.has_valid_api_credential %}
@@ -40,20 +40,37 @@
               <i class="fa fa-spinner fa-spin"></i>
             </span>
           </a>
-          <table class="table">
-            <tbody>
-              <tr>
-                <td align="left" style="padding-left: 25%;">1. {% trans "Enter Email or Bitcoin Address" %}</td>
-              </tr>
-              <tr>
-                <td align="left" style="padding-left: 25%;">2. {% trans "Pay Cash to Merchant" %}</td>
-              </tr>
-              
-              <tr>
-                <td align="left" style="padding-left: 25%;">3. {% trans "Receive Bitcoin from Merchant" %}</td>
-              </tr>
-            </tbody>
-          </table>
+          {% with merchant_credential_abbrev=merchant.get_valid_api_credential.get_credential_abbrev %}
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td align="left" style="padding-left: 25%;">
+                    1.
+                    {% ifequal merchant_credential_abbrev 'CBS' %}
+                      {% trans "Enter Your Email or BTC Address" %}
+                    {% else %}
+                      {% trans "Enter Your BTC Address" %}
+                    {% endifequal %}
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding-left: 25%;">
+                    2. {% trans "Pay Physical Cash to Business" %}
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left" style="padding-left: 25%;">
+                    3.
+                    {% ifequal merchant_credential_abbrev 'CBS' %}
+                      {% trans "Receive BTC by Email or BTC Address" %}
+                    {% else %}
+                      {% trans "Receive BTC from Business" %}
+                    {% endifequal %}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {% endwith %}
           <a class="btn btn-primary btn-xl has-spinner" id="buy-bitcoin-button" onclick="buyBitcoinModal();">
             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
             {% trans "Buy Bitcoin" %}
@@ -66,43 +83,49 @@
     {% else %}
       <div class="col-sm-6 col-sm-offset-3">
     {% endif %}
-        <div class="item">
-          <div class="head">
-            <h3>Sell Bitcoin <span style="color: #81D685; font-size: 42px;"> <i class="fa fa-money"></i></span></h3>
-          <div class="arrow"></div>
-        </div>
-        <div class="sceleton">
-          <h5 class="hidden" id="sell-price-holder">
-            <span class="currency_symbol"></span><span id="sell-price"></span><span> / BTC</span>
-            <span class="text-muted">(-<span class="percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
-          </h5>
-          <a class="active has-spinner price-loader">
-            <span class="spinner">
-              <i class="fa fa-spinner fa-spin"></i>
-            </span>
-          </a>
 
-          <table class="table">
-            <tbody>
-              <tr>
-                <td align="left" style="padding-left: 25%;">1. {% trans "Get Deposit Address" %}</td>
-              </tr>
-              <tr>
-                <td align="left" style="padding-left: 25%;">2. {% trans "Send Bitcoin to Merchant" %}</td>
-              </tr>
-              
-              <tr>
-                <td align="left" style="padding-left: 25%;">3. {% trans "Receive Cash from Merchant" %}</td>
-              </tr>
-            </tbody>
-          </table>
-          <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
-            <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-            {% trans "Sell Bitcoin" %}
-          </a>
-        </div>
-      </div>
+    <div class="item">
+      <div class="head">
+        <h3>Sell Bitcoin <span style="color: #81D685; font-size: 42px;"> <i class="fa fa-money"></i></span></h3>
+      <div class="arrow"></div>
     </div>
+
+    <div class="sceleton">
+
+      <h5 class="hidden" id="sell-price-holder">
+        <span class="currency_symbol"></span><span id="sell-price"></span><span> / BTC</span>
+        <span class="text-muted">(-<span class="percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
+      </h5>
+      <a class="active has-spinner price-loader">
+        <span class="spinner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </span>
+      </a>
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <td align="left" style="padding-left: 25%;">1. {% trans "Get Business BTC Address" %}</td>
+          </tr>
+          <tr>
+            <td align="left" style="padding-left: 25%;">2. {% trans "Send Bitcoin to Business BTC Address" %}</td>
+          </tr>
+          <tr>
+            <td align="left" style="padding-left: 25%;">3. {% trans "Receive Physical Cash from Business" %}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
+        <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+        {% trans "Sell Bitcoin" %}
+      </a>
+
+    </div>
+
+
+  </div>
+</div>
 
 
   </div>

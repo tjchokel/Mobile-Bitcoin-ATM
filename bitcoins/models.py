@@ -553,7 +553,6 @@ class ShopperBTCPurchase(models.Model):
                 subject='%s Received' % fiat_amount_formatted,
                 body_template='merchant/shopper_cashin.html',
                 to_merchant=self.merchant,
-                to_email=self.shopper.email,
                 body_context=body_context,
                 )
 

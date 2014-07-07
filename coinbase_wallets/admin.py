@@ -14,7 +14,18 @@ admin.site.register(CBSCredential, CBSCredentialAdmin)
 
 
 class CBSSentBTCAdmin(admin.ModelAdmin):
-    list_display = ('id', 'transaction_id', 'notes', )
+
+    list_display = (
+            'id',
+            'created_at',
+            'credential',
+            'txn_hash',
+            'satoshis',
+            'destination_btc_address',
+            'destination_email',
+            'transaction_id',
+            'notes',
+            )
 
     class Meta:
         model = CBSSentBTC

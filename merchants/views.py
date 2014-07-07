@@ -148,7 +148,7 @@ def register_merchant(request):
 @render_to('merchants/register_bitcoin.html')
 def register_bitcoin(request):
     user = request.user
-    if not user:
+    if not user.is_authenticated():
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
     if not merchant:
@@ -168,8 +168,9 @@ def register_bitcoin(request):
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
+            merchant.save()
             if exchange_choice == 'selfmanaged':
-                merchant.set_destination_address(btc_address)
+                merchant.set_destination_address(btc_address, credential_used=None)
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 if exchange_choice == 'coinbase':
@@ -192,9 +193,9 @@ def register_bitcoin(request):
                             main_password=form.cleaned_data['bci_main_password'],
                             second_password=form.cleaned_data['bci_second_password'],
                             )
-
                 try:
-                    credential.get_balance()
+                    # Get new address if API partner permits, otherwise get an existing one
+                    credential.get_best_receiving_address(set_as_merchant_address=True)
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
                     credential.mark_disabled()
@@ -416,7 +417,9 @@ def edit_bitcoin_info(request):
         if form.is_valid():
 
             merchant.currency_code = form.cleaned_data['currency_code']
-            merchant.set_destination_address(form.cleaned_data['btc_address'])
+            merchant.set_destination_address(
+                    dest_address=form.cleaned_data['btc_address'],
+                    credential_used=None)
             merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
             merchant.save()
 

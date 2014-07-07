@@ -19,7 +19,7 @@
 
               <p>
                 {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount %}
-                  Merchant: please enter your password once you have recieved
+                  Cashier: please enter your password once you have recieved
                   <b>{{ currency_symbol }}{{fiat_amount}}</b> from the customer.
                 {% endblocktrans %}
               </p>
@@ -51,7 +51,7 @@
 
       <p class="lead text-center text-green">
         {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount format_mbtc_amount=buy_request.format_mbtc_amount b58_address=buy_request.b58_address email=buy_request.email %}
-          Please pay the merchant <b>{{currency_symbol}}{{fiat_amount}}</b> to receive <b>{{format_mbtc_amount}}</b> mBTC.
+          Please pay the business <b>{{currency_symbol}}{{fiat_amount}}</b> to receive <b>{{format_mbtc_amount}}</b> mBTC.
         {% endblocktrans %}
       </p>
 

@@ -137,11 +137,13 @@ class BCICredential(BaseCredential):
         assert is_valid_btc_address(address), msg
 
         if set_as_merchant_address:
-            self.merchant.set_destination_address(address)
+            self.merchant.set_destination_address(dest_address=address,
+                    credential_used=self)
 
         return address
 
-    def get_any_receiving_address(self, set_as_merchant_address=False):
+    def get_best_receiving_address(self, set_as_merchant_address=False):
+        " Get a new receiving address "
         return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)
 
 
@@ -149,4 +151,4 @@ class BCISentBTC(BaseSentBTC):
     " No new model fields "
 
     def __str__(self):
-        return '%s: %s' % (self.id, self.transaction_id)
+        return '%s: %s' % (self.id, self.txn_hash)

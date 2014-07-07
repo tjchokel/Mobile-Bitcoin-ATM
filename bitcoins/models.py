@@ -33,6 +33,7 @@ class DestinationAddress(models.Model):
     b58_address = models.CharField(blank=False, null=False, max_length=34, db_index=True)
     retired_at = models.DateTimeField(blank=True, null=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
+    credential = models.ForeignKey('credentials.BaseCredential', blank=True, null=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
@@ -67,12 +68,6 @@ class DestinationAddress(models.Model):
 
         return forwarding_address
 
-    @classmethod
-    def create_address_from_api_creds(cls, merchant):
-        api_credential = merchant.get_valid_api_credential()
-        address = api_credential.get_any_receiving_address(set_as_merchant_address=True)
-        return cls.objects.get(b58_address=address)
-
 
 class ForwardingAddress(models.Model):
     """
@@ -82,7 +77,7 @@ class ForwardingAddress(models.Model):
     b58_address = models.CharField(blank=False, null=False, max_length=34,
             db_index=True, unique=True)
     paid_out_at = models.DateTimeField(blank=True, null=True, db_index=True)
-    destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
+    destination_address = models.ForeignKey(DestinationAddress, blank=False, null=False)
 
     # technically, this is redundant through DestinationAddress
     # but having it here makes for easier querying (especially before there is a destination address)

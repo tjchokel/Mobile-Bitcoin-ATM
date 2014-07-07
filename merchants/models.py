@@ -26,41 +26,40 @@ class Merchant(models.Model):
     basis_points_markup = models.IntegerField(blank=True, null=True, db_index=True, default=100)
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
 
-    def get_new_forwarding_address(self):
-        return self.get_destination_address().create_new_forwarding_address()
+    def __str__(self):
+        return '%s: %s' % (self.id, self.business_name)
 
-    def get_active_dest_addresses(self):
+    def get_destination_addresses(self):
         # There should only ever be one at a time
         return self.destinationaddress_set.filter(retired_at__isnull=True)
 
     def get_destination_address(self):
-        destination_addresses = self.get_active_dest_addresses()
+        destination_addresses = self.get_destination_addresses()
         if destination_addresses:
             return destination_addresses[0]
         else:
-            return DestinationAddress.create_address_from_api_creds(self)
-
-    def __str__(self):
-        return '%s: %s' % (self.id, self.business_name)
+            return None
 
     def has_destination_address(self):
         return bool(self.get_destination_address())
 
-    def set_destination_address(self, dest_address):
-        matching_address = self.destinationaddress_set.filter(b58_address=dest_address)
+    def set_destination_address(self, dest_address, credential_used=None):
+        matching_address = self.destinationaddress_set.filter(
+                b58_address=dest_address,
+                credential=credential_used,
+                retired_at=None)
         if matching_address:
             # Should only have one, but still is a queryset
-            for address in matching_address:
-                if address.retired_at:
-                    address.retired_at = None
-                    address.save()
+            return matching_address[0]
         else:
-            # Mark all other addresses retired
-            for active_address in self.get_active_dest_addresses():
-                active_address.retired_at = now()
-                active_address.save()
             # Create new address object
-            DestinationAddress.objects.create(b58_address=dest_address, merchant=self)
+            return DestinationAddress.objects.create(
+                    b58_address=dest_address,
+                    merchant=self,
+                    credential=credential_used)
+
+    def set_new_forwarding_address(self):
+        return self.get_destination_address().create_new_forwarding_address()
 
     def get_all_forwarding_addresses(self):
         return self.forwardingaddress_set.all()

@@ -212,11 +212,13 @@ class BTSCredential(BaseCredential):
             raise Exception(e)
 
         if set_as_merchant_address:
-            self.merchant.set_destination_address(address)
+            self.merchant.set_destination_address(dest_address=address,
+                    credential_used=self)
 
         return address
 
-    def get_any_receiving_address(self, set_as_merchant_address=False):
+    def get_best_receiving_address(self, set_as_merchant_address=False):
+        " Get existing receiving address (no way to get a new one with BTS) "
         return self.get_receiving_address(set_as_merchant_address=set_as_merchant_address)
 
 

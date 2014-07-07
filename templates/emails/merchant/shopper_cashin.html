@@ -12,7 +12,7 @@ so we requested that {{ payment_method_formatted }} immediately send <b>{{ satos
 
 {% if tx_hash %}
   You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>
-  as well as in <a href="{{ BASE_URL }}{{ closecoin_tx_uri }}">your dashboard on CloseCoin</a>.
+  as well as in <a href="{{ BASE_URL }}{{ coinsafe_tx_uri }}">your dashboard on CoinSafe</a>.
 {% elif shopper_btc_address %}
   You can <a href="https://blockchain.info/address/{{ shopper_btc_address }}">see this transaction on the bitcoin blockchain here</a>
   (may be mixed with other transactions at this address).
@@ -22,7 +22,7 @@ so we requested that {{ payment_method_formatted }} immediately send <b>{{ satos
 {% else %}
   {# coinbase email transaction #}
   You can <a href="https://coinbase.com/accounts/">see this transaction in your CoinBase account</a>
-  as well as in <a href="{{ BASE_URL }}{{ closecoin_tx_uri }}">your dashboard on CloseCoin</a>.
+  as well as in <a href="{{ BASE_URL }}{{ coinsafe_tx_uri }}">your dashboard on CoinSafe</a>.
 {% endif %}
 
 

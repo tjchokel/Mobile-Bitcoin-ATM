@@ -286,7 +286,7 @@ class CBSCredential(BaseCredential):
         """
         ADDRESS_URL = 'https://coinbase.com/api/v1/account/generate_receive_address'
 
-        post_params = 'address[label]=CloseCoin %s' % now().strftime("%Y-%m-%d")
+        post_params = 'address[label]=CoinSafe Address %s' % now().strftime("%Y-%m-%d")
 
         r = get_cb_request(
                 url=ADDRESS_URL,

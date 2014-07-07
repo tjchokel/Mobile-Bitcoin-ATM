@@ -91,7 +91,12 @@ class BitcoinRegistrationForm(forms.Form):
         label=_('Who Manages Your Bitcoin Address'),
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
-        choices=(('coinbase', 'Coinbase.com',), ('bitstamp', 'Bitstamp.net',),('blockchain', _('Blockchain.info')), ('selfmanaged', _('Self-Managed Address (cannot sell bitcoin)'))),
+        choices=(
+            ('coinbase', 'Coinbase.com'),
+            ('bitstamp', 'Bitstamp.net'),
+            ('blockchain', _('Blockchain.info')),
+            ('selfmanaged', _('Self-Managed Address (cannot sell bitcoin)'))
+            ),
     )
 
     cb_api_key = forms.CharField(
@@ -110,8 +115,8 @@ class BitcoinRegistrationForm(forms.Form):
         widget=forms.TextInput(),
     )
 
-    bs_username = forms.CharField(
-        label=_('Bitstamp Username'),
+    bs_customer_id = forms.CharField(
+        label=_('Bitstamp Customer ID'),
         required=False,
         min_length=5,
         max_length=256,
@@ -191,9 +196,9 @@ class BitcoinRegistrationForm(forms.Form):
             raise forms.ValidationError(msg)
         return cb_secret_key
 
-    def clean_bs_username(self):
+    def clean_bs_customer_id(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
-        bs_username = self.cleaned_data.get('bs_username')
+        bs_username = self.cleaned_data.get('bs_customer_id')
         if exchange_choice == 'bitstamp' and not bs_username:
             msg = _('Please enter your Bitstamp username')
             raise forms.ValidationError(msg)
@@ -221,6 +226,8 @@ class BitcoinRegistrationForm(forms.Form):
         if exchange_choice == 'blockchain' and not bci_username:
             msg = _('Please enter your Blockchain username')
             raise forms.ValidationError(msg)
+        if bci_username.startswith('https://blockchain.info/wallet/'):
+            bci_username = bci_username.lstrip('https://blockchain.info/wallet/')
         return bci_username
 
     def clean_bci_main_password(self):

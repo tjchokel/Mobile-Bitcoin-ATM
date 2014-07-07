@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <br/><br/>
+      <h1 class="hl text-center top-zero">{% trans "Blockchain.info API Instructions" %}</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    {% blocktrans %}
+    <p>
+      Connecting your Blockchain.info account to CloseCoin allows us to:
+    </p>
+    <ul>
+      <li>
+        Lookup your bitcoin address at Blockchain.info so that shoppers can send funds there.
+        We can also generate new addresses for you.
+      </li>
+      <li>
+        Send Bitcoin from your Blockchain.info account to shoppers (once you confirm they have paid you in cash for it).
+      </li>
+    </ul>
+    {% endblocktrans %}
+
+
+    <p>
+      {% blocktrans %}
+        Unfortunately the Blockchain.info API currently does not work for accounts with two factor authentication (2FA) enabled.
+        We recommend Coinbase for a web wallet with full 2FA support.
+      {% endblocktrans %}
+    </p>
+
+    <p>
+      {% blocktrans with login_text="login" identifier_text="identifier" password_text="password" bci_login_url="https://blockchain.info/wallet/login" %}
+        All we need to access your Blockchain.info account is your {{ login_text }} ({{ identifier_text }}) and {{ password_text }}.
+        <br /><br />
+        Your <b>{{ identifier_text }}</b> and <b>{{password_text}}</b> are what you enter on
+        <a href="{{ bci_login_url }}">this page</a>:
+      {% endblocktrans %}
+      <img src="{% static "img/blockchain-info/login_screen.png" %}" width="80%" />
+      <br />
+      {% blocktrans with forgot_url="https://blockchain.info/wallet/forgot-password" %}
+        (If you've forgotten your identifier you can recover it <a href="{{ forgot_url }}">here</a>)
+      {% endblocktrans %}
+    </p>
+
+    <p>
+      {% blocktrans with secondary_password_text="secondary password" %}
+        If you have a {{ secondary_password_text }} we'll need that as well to be able to sign transactions.
+        Your secondary password is what you enter on this page:
+      {% endblocktrans %}
+      <img src="{% static "img/blockchain-info/secondary_password.png" %}" width="80%" />
+    </p>
+
+    <p>
+      {% blocktrans with identifier_text="identifier" password_text="password" secondary_password_text="secondary password" %}
+        Copy the <b>{{ identifier_text }}</b>, <b>{{ password_text }}</b> and <b>{{ secondary_password_text }}</b> (if applicable) to CloseCoin.
+      {% endblocktrans %}
+    </p>
+
+    <p>
+      {% blocktrans %}
+        You're all set!
+        You can verify that your credentials are working by clicking the <b>refresh</b> button on CloseCoin anytime.
+      {% endblocktrans %}
+    </p>
+
+    <p>
+      {% blocktrans with electrum_url="https://electrum.org" armory_url='https://bitcoinarmory.com/' %}
+        For security, we always recommend keeping low balances on third party bitcoin sites.
+        For larger amounts of bitcoin, we recommend cold storage using
+        <a href="{{ electrum_url }}">Electrum</a> or
+        <a href="{{ armory_url }}">Armory</a>.
+        You can always unlink your Blockchain.info account by deleting your API keys on CloseCoin or changing your credentials on Blockchain.info.
+      {% endblocktrans %}
+    </p>
+
+  </div>
+</div>
+{% endblock content %}
+

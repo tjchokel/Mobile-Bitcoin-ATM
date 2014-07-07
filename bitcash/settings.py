@@ -199,7 +199,8 @@ CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']
 # http://scanova.io/blog/engineering/2014/05/21/error-logging-in-javascript-and-python-using-sentry/
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    # https://docs.djangoproject.com/en/dev/topics/logging/#configuring-logging
+    'disable_existing_loggers': True,
     'root': {
         'level': 'WARNING',
         'handlers': ['sentry'],

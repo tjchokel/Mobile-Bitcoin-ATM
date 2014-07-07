@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 class BlockchainAPIForm(forms.Form):
 
     username = forms.CharField(
-        label=_('Username'),
+        label=_('Identifier'),
         required=True,
         min_length=2,
         max_length=256,
@@ -27,6 +27,12 @@ class BlockchainAPIForm(forms.Form):
         required=False,
         widget=forms.PasswordInput(render_value=False),
     )
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if username.startswith('https://blockchain.info/wallet/'):
+            username = username.lstrip('https://blockchain.info/wallet/')
+        return username
 
 
 class CoinbaseAPIForm(forms.Form):

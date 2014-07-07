@@ -125,10 +125,9 @@ def customer_dashboard(request):
             show_confirm_purchase_modal = 'true'
             if password_form.is_valid():
                 if buy_request:
-                    buy_request.pay_out_bitcoin()
+                    buy_request.pay_out_bitcoin(send_receipt=True)
                     show_confirm_purchase_modal = 'false'
                     msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.shopper.email)
-                    # FIXME: send receipt!
                     messages.success(request, msg, extra_tags='safe')
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
     if forwarding_address_obj:

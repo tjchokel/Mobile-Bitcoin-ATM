@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <br/><br/>
+      <h1 class="hl text-center top-zero">{% trans "Coinbase API Instructions" %}</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    {% blocktrans %}
+    <p>
+      Connecting your Coinbase account to CloseCoin allows us to:
+    </p>
+    <ul>
+      <li>
+        Lookup your bitcoin address at Coinbase so that shoppers can send funds there.
+        We can also generate new addresses for you.
+      </li>
+      <li>
+        Send Bitcoin from your Coinbase account to shoppers (once you confirm they have paid you in cash for it).
+      </li>
+      <li>
+        Automatically buy or sell bitcoin with Coinbase using the bank account you already have linked up with them (coming soon).
+      </li>
+    </ul>
+    {% endblocktrans %}
+
+    <p>
+    {% blocktrans %}
+      Please follow these instructions to grant CloseCoin access to your Coinbase account:
+    {% endblocktrans %}
+    </p>
+
+    <ol>
+      <li>
+        {% blocktrans with coinbase_url='https://coinbase.com/settings/api' %}
+          Go to <a target="_blank" href="{{ coinbase_url }}">Coinbase's API Access Page</a>.
+          You may be asked to login with your Coinbase credentials.
+        {% endblocktrans %}
+      </li>
+      <li>
+        {% blocktrans with generate_key_text="New API Key" %}
+        Click <b>{{ generate_key_text }}</b>. You may be asked to enter a two factor authentication phone code if you have that configured for your account:
+        {% endblocktrans %}
+        <img src="{% static "img/coinbase/new_api_key_button.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {% blocktrans with select_all_text="all" accounts_text="Accounts" permisions_text="Permission" allowed_ip_text="Allowed IP Addresses" create_text="Create" %}
+        Check the box for <b>{{ select_all_text }}</b> under <b>{{ accounts_text }}</b> and <b>{{ permisions_text }}</b> and leave <b>{{ allowed_ip_text }}</b> blank, then hit {{<b>{{ create_text }}</b>.
+        {% endblocktrans %}
+        <img src="{% static "img/coinbase/new_api_key_checkboxes.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {% blocktrans with activate_name="Enable" %}
+          You've created API credentials, but they aren't activated yet.
+          Now click the <b>{{ activate_name }}</b> button to activate them.
+        {% endblocktrans %}
+        <img src="{% static "img/coinbase/enable_credentials_button.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {% blocktrans with coinbase_email="contact@coinbase.com" api_code_text="API verification code" %}
+          Check your email and copy the <b{{ >api_code_text }}</b>.
+          If you don't see the email, check your spam folder for a message from <b>{{ coinbase_email }}</b>.
+        {% endblocktrans %}
+        <img src="{% static "img/coinbase/confirmation_email.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {% blocktrans with coinbase_email="contact@coinbase.com" %}
+          Activate the API credential by pasting it onto Coinbase.
+        {% endblocktrans %}
+        <img src="{% static "img/coinbase/credential_email_code.png" %}" width="80%" />
+        <br />
+      </li>
+      <li>
+        {% blocktrans with key_field="Key" %}
+          Your API key is now active!
+          To get it, click on the <b>{{ key_field }}</b> in blue.
+        {% endblocktrans %}
+        <img src="{% static "img/coinbase/get_api_key_details.png" %}" width="80%" />
+        <br />
+      <li>
+        {% blocktrans with key_field="API Key" secret_field="API Secret" %}
+          Copy the <b>{{ key_field }}</b> and <b>{{ secret_field }}</b> to CloseCoin.
+        {% endblocktrans %}
+        <img src="{% static "img/coinbase/api_key_details.png" %}" width="80%" />
+        <br />
+      </li>
+    </ol>
+
+    <p>
+      {% blocktrans %}
+        You're all set!
+        You can verify that your credentials are working by clicking the <b>refresh</b> button on CloseCoin anytime.
+      {% endblocktrans %}
+    </p>
+
+    <p>
+      {% blocktrans with electrum_url="https://electrum.org" armory_url='https://bitcoinarmory.com/' %}
+        For security, we always recommend keeping low balances on third party bitcoin sites.
+        For larger amounts of bitcoin, we recommend cold storage using
+        <a href="{{ electrum_url }}">Electrum</a> or
+        <a href="{{ armory_url }}">Armory</a>.
+        You can always unlink your Coinbase account by deleting your API keys on CloseCoin or Coinbase.
+      {% endblocktrans %}
+    </p>
+
+  </div>
+</div>
+{% endblock content %}

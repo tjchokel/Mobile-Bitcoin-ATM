@@ -39,7 +39,7 @@ class ShopperInformationForm(forms.Form):
 
 class BuyBitcoinForm(forms.Form):
     amount = forms.DecimalField(
-            label=_('Cash Amount'),
+            label=_('Amount of Cash to Pay'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)],
             help_text=_('The amount of cash you will be handing to the merchant'),
@@ -47,7 +47,7 @@ class BuyBitcoinForm(forms.Form):
     )
 
     email = forms.EmailField(
-        label=_('Email'),
+        label=_('Customer Email'),
         required=True,
         widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
     )

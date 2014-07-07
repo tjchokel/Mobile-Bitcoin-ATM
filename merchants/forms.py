@@ -92,10 +92,10 @@ class BitcoinRegistrationForm(forms.Form):
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
         choices=(
-            ('coinbase', 'Coinbase.com'),
-            ('bitstamp', 'Bitstamp.net'),
-            ('blockchain', _('Blockchain.info')),
-            ('selfmanaged', _('Self-Managed Address (cannot sell bitcoin)'))
+            ('coinbase', 'coinbase.com'),
+            ('bitstamp', 'bitstamp.net'),
+            ('blockchain', 'blockchain.info'),
+            ('selfmanaged', _('Me (can only receive bitcoin)'))
             ),
     )
 

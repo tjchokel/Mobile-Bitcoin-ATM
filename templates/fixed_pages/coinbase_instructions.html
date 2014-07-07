@@ -67,7 +67,7 @@
       </li>
       <li>
         {% blocktrans with coinbase_email="contact@coinbase.com" api_code_text="API verification code" %}
-          Check your email and copy the <b{{ >api_code_text }}</b>.
+          Check your email and copy the <b>{{ api_code_text }}</b>.
           If you don't see the email, check your spam folder for a message from <b>{{ coinbase_email }}</b>.
         {% endblocktrans %}
         <img src="{% static "img/coinbase/confirmation_email.png" %}" width="80%" />

@@ -163,7 +163,9 @@
           if (entered_amount){
             var buy_price_no_format = parseFloat($('#buy-price').text());
             var final_btc = parseFloat(entered_amount) / buy_price_no_format;
-            $("#btc-amount").html(' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
+            var final_mbtc = final_btc * 1000;
+
+            $("#btc-amount").html(' ≈ '+final_mbtc.toFixed(1) + ' mBTC');
           }
           
 
@@ -234,10 +236,9 @@
       var entered_amount = $('#id_amount').val();
       if (entered_amount=="" || isNaN(entered_amount)){
         $('#id_amount').val("");
-        $("#btc-amount").html('≈ <i class="fa fa-bitcoin"></i>'+0.00.toFixed(2));
+        $("#btc-amount").html('≈ '+0.00.toFixed(1) + ' mBTC');
         $("#submit-button").prop('disabled', true);
       }else{
-
         $("#div_id_email_or_btc_address").removeClass("hidden");
         $("#div_id_email").removeClass("hidden");
         if (!$('#div_id_email_or_btc_address').length){
@@ -246,8 +247,9 @@
         var entered_amount = $('#id_amount').val();
         var buy_price_no_format = parseFloat($('#buy-price').text());
         var final_btc = parseFloat(entered_amount) / buy_price_no_format;
+        var final_mbtc = final_btc * 1000;
         
-        $("#btc-amount").html(' ≈ <i class="fa fa-bitcoin"></i>'+final_btc.toFixed(4));
+        $("#btc-amount").html(' ≈ '+final_mbtc.toFixed(1) +' mBTC');
         $("#submit-button").prop('disabled', false);
       }
 
@@ -268,11 +270,9 @@
         $('#buy-bitcoin-modal').modal('show');
         $("#submit-button").prop('disabled', false);
       }
-
       if( {{ show_confirm_purchase_modal }} === true){
         $('#confirm-purchase-modal').modal('show');
       }
-
       if ($('input[name=email_or_btc_address]:checked').val() == 1) {
         $("#div_id_btc_address").addClass("hidden");
       }
@@ -282,7 +282,7 @@
       $( ".needs-input-group" ).wrapAll( "<div class='input-group' />");
       $('#email-field').after('<span id="email_message"></span>');
 
-      $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ <i class="fa fa-bitcoin"></i>0.00</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
+      $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ 0.00 mBTC</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
 
       {% if transactions or current_address.customer_confirmed_deposit_at %}
 

@@ -19,7 +19,7 @@
 
               <p>
                 {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount %}
-                  Cashier: please enter your password once you have recieved
+                  Cashier: please enter your CoinSafe password to confirm you have recieved
                   <b>{{ currency_symbol }}{{fiat_amount}}</b> from the customer.
                 {% endblocktrans %}
               </p>
@@ -29,7 +29,7 @@
                 {{ password_form|crispy }}
                 {% csrf_token %}
                 <div class="button-wrapper">
-                  <button type="submit" class="btn btn-primary btn-lg">{% trans "Send BTC" %}</button>
+                  <button type="submit" class="btn btn-primary btn-lg">{% trans "Send BTC to Customer" %}</button>
                 </div>
               </form>
 
@@ -49,9 +49,10 @@
         (<a href="" onclick="cancelBuy();">{% trans "Cancel" %}</a>)
       </p>
 
+
       <p class="lead text-center text-green">
-        {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount format_mbtc_amount=buy_request.format_mbtc_amount b58_address=buy_request.b58_address email=buy_request.email %}
-          Please pay the business <b>{{currency_symbol}}{{fiat_amount}}</b> to receive <b>{{format_mbtc_amount}}</b> mBTC.
+        {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount format_mbtc_amount=buy_request.format_mbtc_amount b58_address=buy_request.b58_address email=buy_request.email business_name=merchant.business_name currency_code=buy_request.currency_code_when_created %}
+          Customer: please pay {{ business_name }} <b>{{currency_symbol}}{{fiat_amount}} {{ currency_code }}</b> to receive <b>{{format_mbtc_amount}} mBTC</b>.
         {% endblocktrans %}
       </p>
 
@@ -62,7 +63,7 @@
         <!-- Button trigger modal -->
         <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#confirm-purchase-modal">
           {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount %}
-            I Have Paid <b>{{get_currency_symbol}}{{fiat_amount}}</b>
+            I Have Paid <b>{{currency_symbol}}{{fiat_amount}}</b>
           {% endblocktrans %}
         </button>
 

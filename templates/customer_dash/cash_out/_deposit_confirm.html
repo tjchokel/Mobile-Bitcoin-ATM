@@ -2,7 +2,8 @@
 <div class="container">
   <div class="page-header">
       <h3 class="pull-left">{{merchant.business_name}}</h3>
-      <h3 class="pull-right" id="last-polled" style="color: #72a53b; float:right;">
+      {# hiding this, no need to see it until you've submitted the page #}
+      <h3 class="pull-right hidden" id="last-polled" style="color: #72a53b; float:right;">
         {% trans "Last Updated" %}: <span id='last-polled-time'>0</span> {% trans "seconds ago" %}
         </h3>
       <div class="clearfix"></div>
@@ -10,12 +11,12 @@
 
   <div class="row">
     {% if not transactions %}
-      <p class="lead text-center">{% trans "Waiting for deposit to" %} <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">({% trans "Cancel" %})</a></p>
+      <p class="lead text-center">{% trans "Waiting for customer's deposit to" %} <span style="color: #72a53b;">{{current_address.b58_address}}</span> <a href="" onclick="cancelAddress();">({% trans "Cancel" %})</a></p>
     {% endif %}
     {% if shopper %}
       <div class="col-sm-12">
       <br/>
-        <h3><i class="fa fa-map-marker"></i>{% trans "Transactions" %}</h3>
+        <h3><i class="fa fa-map-marker"></i>{% trans "Transaction" %}</h3>
         {% include "customer_dash/cash_out/_deposit_dash_table.html" %}
         <hr>
       </div>
@@ -45,7 +46,7 @@
 
     {% else %}
       <p class="lead text-center">
-        {% trans "Please enter a name for your receipt" %}.
+        {% trans "Please enter a name for this order. If you'd like a receipt, please include an email and/or phone number." %}
       </p>
       <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
           {% load crispy_forms_tags %}
@@ -56,5 +57,7 @@
           </div>
       </form>
     {% endif %}
+    <br />
+    <p class="lead text-center text-red">{% trans "Cashier: <b>do not pay out cash</b> until CoinSafe notifies you that the customer's transaction has been confirmed by the bitcoin network." %}</p>
   </div>
 </div>

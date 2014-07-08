@@ -14,15 +14,14 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
-            <p class="lead text-center">1. {% trans "Deposit to this address"%}: 
+            <p class="lead text-center">{% trans "Customer: send BTC to this address"%}: 
             </p>
             <p class="lead text-center text-green" id="current_address"></p>
 
               <div id="qr_code_span" style="display:none;">
                 <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
 
-                <p class="lead text-center">2. {% trans "After depositing, click the following button"%}: </p>
-                <a class="btn btn-primary btn-lg" onClick="confirmAddressDeposit();" style="margin-left: auto; margin-right: auto; display: block;">{% trans "Confirm My Deposit" %}</a>
+                <a class="btn btn-primary btn-lg" onClick="confirmAddressDeposit();" style="margin-left: auto; margin-right: auto; display: block;">{% trans "The Bitcoin Has Been Sent" %}</a>
               </div>
             </span>
           </div>

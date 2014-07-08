@@ -10,26 +10,26 @@ from bitcoins.BCAddressField import is_valid_btc_address
 class ShopperInformationForm(forms.Form):
     name = forms.CharField(
         required=True,
-        label=_('Name'),
+        label=_('Customer Name'),
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
         min_length=2,
     )
 
     email = forms.EmailField(
-        label=_('Email'),
+        label=_('Customer Email'),
         required=False,
         widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
     )
 
     phone_country = forms.ChoiceField(
-        label=_('Phone Country'),
+        label=_('Country'),
         required=False,
         choices=COUNTRY_DROPDOWN,
         widget=forms.Select(attrs={'data-country': 'USA'}),
     )
 
     phone_num = forms.CharField(
-        label=_('Cell Phone Number in International Format'),
+        label=_('Customer Mobile Phone'),
         required=False,
         widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_phone_country'}),
     )

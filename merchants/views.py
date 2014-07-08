@@ -196,6 +196,9 @@ def register_bitcoin(request):
                 try:
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)
+
+                    msg = _('Your account has been created! Customers can use this page while at your store to trade bitcoin with you.')
+                    messages.success(request, msg)
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 except:
                     credential.mark_disabled()

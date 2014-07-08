@@ -458,8 +458,8 @@ class ShopperBTCPurchaseManager(models.Manager):
         """
         Addresses that have been revealed to users
         """
-        return super(ShopperBTCPurchaseManager, self).get_query_set(*args,
-                **kwargs).filter(cancelled_at=None).order_by('-added_at')
+        return super(ShopperBTCPurchaseManager, self).get_query_set().filter(
+                cancelled_at=None, *args, **kwargs).order_by('-added_at')
 
 
 class ShopperBTCPurchase(models.Model):

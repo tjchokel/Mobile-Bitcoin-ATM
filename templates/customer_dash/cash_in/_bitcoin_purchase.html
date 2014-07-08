@@ -18,9 +18,9 @@
             <div class="col-sm-12">
 
               <p>
-                {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount %}
+                {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount currency_code=buy_request.currency_code_when_created %}
                   Cashier: please enter your CoinSafe password to confirm you have recieved
-                  <b>{{ currency_symbol }}{{fiat_amount}}</b> from the customer.
+                  <b>{{ currency_symbol }}{{fiat_amount}} {{ currency_code }}</b> from the customer.
                 {% endblocktrans %}
               </p>
 

@@ -32,13 +32,12 @@
             </tbody>
           </table>
           <span class="hidden" id="bitcoin-info-edit">
-            
             <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_bitcoin_info" %}" >
               {% load crispy_forms_tags %}
               {{ bitcoin_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Save Changes" %}</button>
               </div>
             </form>
           </span>

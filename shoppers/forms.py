@@ -42,7 +42,7 @@ class BuyBitcoinForm(forms.Form):
             label=_('Amount of Cash to Pay'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(1000.0)],
-            help_text=_('The amount of cash you will be handing to the merchant'),
+            help_text=_('This is what you will give to the cashier'),
             widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0.00', 'style': 'width:50%;'}),
     )
 
@@ -53,7 +53,7 @@ class BuyBitcoinForm(forms.Form):
     )
 
     email_or_btc_address = forms.ChoiceField(
-        label=_('Send to Email or Bitcoin Address'),
+        label=_('Send Bitcoin to Email or BTC Address'),
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'address'}),
         choices=(('1', 'Email Address',), ('2', 'Bitcoin Address',)),

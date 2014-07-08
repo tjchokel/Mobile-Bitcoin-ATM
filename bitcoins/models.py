@@ -179,8 +179,7 @@ class BTCTransaction(models.Model):
     (relay) are tracked separately in this same model.
     """
     added_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    txn_hash = models.CharField(max_length=64, blank=True, null=True,
-            unique=True, db_index=True)
+    txn_hash = models.CharField(max_length=64, blank=False, null=False, unique=True, db_index=True)
     satoshis = models.BigIntegerField(blank=True, null=True, db_index=True)
     conf_num = models.PositiveSmallIntegerField(blank=False, null=False, db_index=True)
     irreversible_by = models.DateTimeField(blank=True, null=True, db_index=True)

@@ -1,10 +1,14 @@
 {% load i18n %}
-<div class="modal fade" id="deposit-address-modal" tabindex="-1" role="dialog" aria-labelledby="sendemailtitle" aria-hidden="true" >
+<div class="modal fade" id="deposit-address-modal" tabindex="-1" role="dialog" aria-labelledby="cashoutmodal" aria-hidden="true" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="sendemailtitle">{% trans "Send Bitcoin" %}</h4>
+        <h4 class="modal-title" id="cashoutmodal">
+          {% blocktrans with merchant_name=merchant.business_name %}
+            Sell Your Bitcoin to {{ merchant_name }} for Cash
+          {% endblocktrans %}
+        </h4>
         <div class="clearfix"></div>
       </div>
       <div class="modal-body">

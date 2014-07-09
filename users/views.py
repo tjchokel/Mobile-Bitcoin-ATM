@@ -189,7 +189,7 @@ def bitstamp_instructions(request):
 @render_to('fixed_pages/coinbase_instructions.html')
 def coinbase_instructions(request):
     return {}
-    
+
 
 @reset_admin_password_validation
 @render_to('fixed_pages/blockchain_instructions.html')

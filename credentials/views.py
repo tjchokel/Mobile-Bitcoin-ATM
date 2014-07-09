@@ -13,11 +13,9 @@ from bitstamp_wallets.models import BTSCredential
 
 from credentials.forms import BlockchainAPIForm, CoinbaseAPIForm, BitstampAPIForm
 
-from bitcash.decorators import is_merchant_admin_page
 
 @sensitive_post_parameters('username', 'main_password', 'second_password', )
 @login_required
-@is_merchant_admin_page
 @render_to('merchants/blockchain.html')
 def blockchain_creds(request):
     user = request.user
@@ -55,7 +53,6 @@ def blockchain_creds(request):
 
 @sensitive_post_parameters('api_key', 'api_secret')
 @login_required
-@is_merchant_admin_page
 @render_to('merchants/coinbase.html')
 def coinbase_creds(request):
     user = request.user
@@ -92,7 +89,6 @@ def coinbase_creds(request):
 
 @sensitive_post_parameters('customer_id', 'api_key', 'api_secret')
 @login_required
-@is_merchant_admin_page
 @render_to('merchants/bitstamp.html')
 def bitstamp_creds(request):
     user = request.user

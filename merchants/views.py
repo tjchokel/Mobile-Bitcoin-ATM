@@ -12,8 +12,6 @@ import datetime
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
-from bitcash.decorators import is_merchant_admin_page, reset_admin_password_validation
-
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
 
@@ -25,7 +23,6 @@ from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistr
         BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm, PasswordConfirmForm)
 
 
-@reset_admin_password_validation
 @sensitive_variables('password', )
 @sensitive_post_parameters('password', )
 @render_to('login.html')
@@ -64,7 +61,6 @@ def login_request(request):
     return {'form': form}
 
 
-@reset_admin_password_validation
 def logout_request(request):
     " Log a user out using Django's logout function and redirect them "
     logout(request)
@@ -73,7 +69,6 @@ def logout_request(request):
     return HttpResponseRedirect(reverse_lazy('login_request'))
 
 
-@reset_admin_password_validation
 def register_router(request):
     user = request.user
     if not user.is_authenticated():  # if user is not authenticated
@@ -85,7 +80,6 @@ def register_router(request):
         return HttpResponsePermanentRedirect(reverse_lazy('register_bitcoin'))
 
 
-@reset_admin_password_validation
 @render_to('merchants/register.html')
 def register_merchant(request):
     user = request.user
@@ -149,7 +143,6 @@ def register_merchant(request):
     return {'form': form, 'user': user, 'form_valid': form_valid}
 
 
-@reset_admin_password_validation
 @sensitive_variables('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
 @sensitive_post_parameters('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
 @render_to('merchants/register_bitcoin.html')
@@ -215,7 +208,6 @@ def register_bitcoin(request):
 
 
 @login_required
-@is_merchant_admin_page
 @render_to('merchants/settings.html')
 def merchant_settings(request):
     user = request.user
@@ -239,7 +231,6 @@ def merchant_settings(request):
 
 
 @login_required
-@is_merchant_admin_page
 @render_to('merchants/profile.html')
 def merchant_profile(request):
     user = request.user
@@ -302,7 +293,6 @@ def merchant_profile(request):
 
 
 @login_required
-@is_merchant_admin_page
 @render_to('merchants/transactions.html')
 def merchant_transactions(request):
     user = request.user

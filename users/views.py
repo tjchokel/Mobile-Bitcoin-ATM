@@ -10,7 +10,9 @@ from annoying.functions import get_object_or_None
 
 from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
 from shoppers.models import Shopper
+from users.models import CustomerToBeNotified
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
+from users.forms import CustomerRegistrationForm
 
 
 @render_to('index.html')
@@ -155,3 +157,29 @@ def customer_dashboard(request):
         'show_buy_modal': show_buy_modal,
         'show_confirm_purchase_modal': show_confirm_purchase_modal,
     }
+
+
+@render_to('register_customer.html')
+def register_customer(request):
+    form = CustomerRegistrationForm()
+    if request.method == 'POST':
+        form = CustomerRegistrationForm(data=request.POST)
+        if form.is_valid():
+
+            email = form.cleaned_data['email']
+            city = form.cleaned_data['city']
+            country = form.cleaned_data['country']
+            intention = form.cleaned_data['intention']
+
+            # create customer
+            customer = CustomerToBeNotified.objects.create(
+                    email=email,
+                    city=city,
+                    country=country,
+                    intention=intention,
+            )
+            msg = _('Thank you for registering with CoinSafe.')
+            messages.success(request, msg, extra_tags='safe')
+            return HttpResponseRedirect(reverse_lazy('home'))
+
+    return {'form': form}

@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^register/$', 'merchants.views.register_router', name='register_router'),
     url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),
     url(r'^register-bitcoin/$', 'merchants.views.register_bitcoin', name='register_bitcoin'),
+    url(r'^register-customer/$', 'users.views.register_customer', name='register_customer'),
 
 
     # Merchant Settings

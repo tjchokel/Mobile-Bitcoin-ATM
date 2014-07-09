@@ -448,7 +448,7 @@ class BitcoinInfoForm(forms.Form):
 
 class PasswordConfirmForm(forms.Form):
     password = forms.CharField(
-        label=_('Password'),
+        label=_('CoinSafe Password'),
         required=True,
         widget=forms.PasswordInput(render_value=False)
     )

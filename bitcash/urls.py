@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -9,7 +10,6 @@ urlpatterns = patterns('',
     url(r'^logout/?$', 'merchants.views.logout_request', name='logout'),
 
     url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
-    url(r'^simulate-deposit/$', 'users.views.simulate_deposit_detected', name='simulate_deposit_detected'),
 
     url(r'^register/$', 'merchants.views.register_router', name='register_router'),
     url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),
@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^edit-hours-info/$', 'merchants.views.edit_hours_info', name='edit_hours_info'),
     url(r'^edit-merchant-info/$', 'merchants.views.edit_merchant_info', name='edit_merchant_info'),
     url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
+    url(r'^password/$', 'merchants.views.password_prompt', name='password_prompt'),
 
     # API Partners
     url(r'^coinbase/$', 'credentials.views.coinbase_creds', name='coinbase_creds'),
@@ -52,12 +53,12 @@ urlpatterns = patterns('',
 
     # Static Pages
     url(r'^$', 'users.views.home', name='home'),  # homepage
-    url(r'^help/', TemplateView.as_view(template_name='fixed_pages/help.html'), name='help'),
-    url(r'^team/', TemplateView.as_view(template_name='fixed_pages/team.html'), name='team'),
-    url(r'^contact/', TemplateView.as_view(template_name='fixed_pages/contact.html'), name='contact'),
-    url(r'^bitstamp-instructions/', TemplateView.as_view(template_name='fixed_pages/bitstamp_instructions.html'), name='bitstamp_instructions'),
-    url(r'^coinbase-instructions/', TemplateView.as_view(template_name='fixed_pages/coinbase_instructions.html'), name='coinbase_instructions'),
-    url(r'^blockchain-instructions/', TemplateView.as_view(template_name='fixed_pages/blockchain_instructions.html'), name='blockchain_instructions'),
+    url(r'^help/', 'users.views.help', name='help'),
+    url(r'^team/', 'users.views.team', name='team'),
+    url(r'^contact/', 'users.views.contact', name='contact'),
+    url(r'^bitstamp-instructions/', 'users.views.bitstamp_instructions', name='bitstamp_instructions'),
+    url(r'^coinbase-instructions/', 'users.views.coinbase_instructions', name='coinbase_instructions'),
+    url(r'^blockchain-instructions/', 'users.views.blockchain_instructions', name='blockchain_instructions'),
 
     url(r'^admin/', include(admin.site.urls)),
     (r'^i18n/', include('django.conf.urls.i18n')),

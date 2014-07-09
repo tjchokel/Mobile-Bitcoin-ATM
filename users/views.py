@@ -12,7 +12,10 @@ from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchas
 from shoppers.models import Shopper
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 
+from bitcash.decorators import reset_admin_password_validation
 
+
+@reset_admin_password_validation
 @render_to('index.html')
 def home(request):
     user = request.user
@@ -30,6 +33,7 @@ def home(request):
 @sensitive_variables('password', 'password_form')
 @sensitive_post_parameters('password', )
 @login_required
+@reset_admin_password_validation
 @render_to('customer_dash/main.html')
 def customer_dashboard(request):
     user = request.user
@@ -157,13 +161,37 @@ def customer_dashboard(request):
     }
 
 
-def simulate_deposit_detected(request):
-    user = request.user
-    merchant = user.get_merchant()
-    btc_address = merchant.get_all_forwarding_addresses()[0]
-    BTCTransaction.objects.create(
-        satoshis=100000,
-        forwarding_address=btc_address,
-        merchant=merchant
-    )
-    return HttpResponseRedirect(reverse_lazy('deposit_dashboard'))
+@reset_admin_password_validation
+@render_to('fixed_pages/help.html')
+def help(request):
+    return {}
+
+
+@reset_admin_password_validation
+@render_to('fixed_pages/team.html')
+def team(request):
+    return {}
+
+
+@reset_admin_password_validation
+@render_to('fixed_pages/contact.html')
+def contact(request):
+    return {}
+
+
+@reset_admin_password_validation
+@render_to('fixed_pages/bitstamp_instructions.html')
+def bitstamp_instructions(request):
+    return {}
+
+
+@reset_admin_password_validation
+@render_to('fixed_pages/coinbase_instructions.html')
+def coinbase_instructions(request):
+    return {}
+    
+
+@reset_admin_password_validation
+@render_to('fixed_pages/blockchain_instructions.html')
+def blockchain_instructions(request):
+    return {}

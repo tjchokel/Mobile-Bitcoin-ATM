@@ -112,7 +112,7 @@ class BitcoinRegistrationForm(forms.Form):
         min_length=5,
         max_length=50,
         required=False,
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )
 
     bs_customer_id = forms.CharField(
@@ -136,7 +136,7 @@ class BitcoinRegistrationForm(forms.Form):
         min_length=5,
         max_length=50,
         required=False,
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )
 
     bci_username = forms.CharField(
@@ -444,3 +444,20 @@ class BitcoinInfoForm(forms.Form):
             msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address
+
+
+class PasswordConfirmForm(forms.Form):
+    password = forms.CharField(
+        label=_('Password'),
+        required=True,
+        widget=forms.PasswordInput(render_value=False)
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(PasswordConfirmForm, self).__init__(*args, **kwargs)
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if not self.user.check_password(password):
+            raise forms.ValidationError('Invalid password')

@@ -226,7 +226,8 @@ def merchant_settings(request):
         'merchant': merchant,
         'on_admin_page': True,
         'bitcoin_form': bitcoin_form,
-        'dest_address': dest_address
+        'dest_address': dest_address, 
+        'show_admin_footer': True,
     }
 
 
@@ -289,6 +290,7 @@ def merchant_profile(request):
         'merchant_form': MerchantInfoForm(initial=initial),
         'hours_form': BusinessHoursForm(initial=initial),
         'biz_hours': hours_formatted,
+        'show_admin_footer': True,
     }
 
 
@@ -304,7 +306,8 @@ def merchant_transactions(request):
         'user': user,
         'merchant': merchant,
         'transactions': transactions,
-        'on_admin_page': True
+        'on_admin_page': True,
+        'show_admin_footer': True,
     }
 
 
@@ -451,4 +454,5 @@ def password_prompt(request):
         'on_admin_page': True,
         'user': user,
         'merchant': merchant,
+        'show_admin_footer': True,
         }

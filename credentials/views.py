@@ -48,6 +48,7 @@ def blockchain_creds(request):
         'form': form,
         'on_admin_page': True,
         'credential': credential,
+        'show_admin_footer': True,
     }
 
 
@@ -84,6 +85,7 @@ def coinbase_creds(request):
         'form': form,
         'on_admin_page': True,
         'cb_credential': cb_credential,
+        'show_admin_footer': True,
     }
 
 
@@ -121,6 +123,7 @@ def bitstamp_creds(request):
         'form': form,
         'on_admin_page': True,
         'credential': credential,
+        'show_admin_footer': True,
     }
 
 

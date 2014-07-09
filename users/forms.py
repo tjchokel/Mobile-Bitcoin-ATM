@@ -29,3 +29,20 @@ class CustomerRegistrationForm(forms.Form):
             ('sell_btc', 'Sell Bitcoin to Receive Cash'),
         ),
     )
+
+
+class ContactForm(forms.Form):
+    email = forms.EmailField(
+        label=_('Your Email'),
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
+    )
+    name = forms.CharField(
+        label=_('Name'),
+        required=True,
+    )
+    message = forms.CharField(
+        label=_('Message'),
+        required=True,
+        widget=forms.Textarea(),
+    )

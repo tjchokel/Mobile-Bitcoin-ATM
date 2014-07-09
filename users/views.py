@@ -12,8 +12,9 @@ from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchas
 from shoppers.models import Shopper
 from users.models import CustomerToBeNotified
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
-from users.forms import CustomerRegistrationForm
+from users.forms import CustomerRegistrationForm, ContactForm
 
+from emails.trigger import send_and_log
 
 @render_to('index.html')
 def home(request):
@@ -156,6 +157,7 @@ def customer_dashboard(request):
         'buy_form': buy_form,
         'show_buy_modal': show_buy_modal,
         'show_confirm_purchase_modal': show_confirm_purchase_modal,
+        'show_admin_footer': True,
     }
 
 
@@ -181,5 +183,36 @@ def register_customer(request):
             msg = _("Thanks! We'll email you when new businesses near you sign up")
             messages.success(request, msg, extra_tags='safe')
             return HttpResponseRedirect(reverse_lazy('home'))
+
+    return {'form': form}
+
+
+@render_to('fixed_pages/contact.html')
+def contact(request):
+    form = ContactForm()
+    if request.method == 'POST':
+        form = ContactForm(data=request.POST)
+        if form.is_valid():
+
+            email = form.cleaned_data['email']
+            name = form.cleaned_data['name']
+            message = form.cleaned_data['message']
+            body_context = {
+                    'email': email,
+                    'name': name,
+                    'message': message,
+                    }
+
+            send_and_log(
+                subject='CoinSafe Support Form',
+                body_template='admin/contact_form.html',
+                to_merchant=None,
+                to_email='support@coinsafe.com',
+                to_name='CoinSafe Support',
+                body_context=body_context,
+                )
+            msg = _("Thanks! We'll contact you shortly.")
+            messages.success(request, msg, extra_tags='safe')
+            return HttpResponseRedirect(reverse_lazy('contact'))
 
     return {'form': form}

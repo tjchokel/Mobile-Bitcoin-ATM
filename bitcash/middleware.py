@@ -13,6 +13,8 @@ class MerchantAdminSectionMiddleware(object):
                 return None
             else:
                 return HttpResponseRedirect(MERCHANT_LOGIN_PW_URL)
+        elif request.is_ajax():
+            return None
         else:
             request.session['last_password_validation'] = None
             return None

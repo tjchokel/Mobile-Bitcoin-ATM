@@ -14,7 +14,7 @@
   <div class="row">
     {% blocktrans %}
     <p>
-      Connecting your Coinbase account to CloseCoin allows us to:
+      Connecting your Coinbase account to CoinSafe allows us to:
     </p>
     <ul>
       <li>
@@ -32,7 +32,7 @@
 
     <p>
     {% blocktrans %}
-      Please follow these instructions to grant CloseCoin access to your Coinbase account:
+      Please follow these instructions to grant CoinSafe access to your Coinbase account:
     {% endblocktrans %}
     </p>
 
@@ -89,7 +89,7 @@
         <br />
       <li>
         {% blocktrans with key_field="API Key" secret_field="API Secret" %}
-          Copy the <b>{{ key_field }}</b> and <b>{{ secret_field }}</b> to CloseCoin.
+          Copy the <b>{{ key_field }}</b> and <b>{{ secret_field }}</b> to CoinSafe.
         {% endblocktrans %}
         <img src="{% static "img/coinbase/api_key_details.png" %}" width="80%" />
         <br />
@@ -99,7 +99,7 @@
     <p>
       {% blocktrans %}
         You're all set!
-        You can verify that your credentials are working by clicking the <b>refresh</b> button on CloseCoin anytime.
+        You can verify that your credentials are working by clicking the <b>refresh</b> button on CoinSafe anytime.
       {% endblocktrans %}
     </p>
 
@@ -109,7 +109,7 @@
         For larger amounts of bitcoin, we recommend cold storage using
         <a href="{{ electrum_url }}">Electrum</a> or
         <a href="{{ armory_url }}">Armory</a>.
-        You can always unlink your Coinbase account by deleting your API keys on CloseCoin or Coinbase.
+        You can always unlink your Coinbase account by deleting your API keys on CoinSafe or Coinbase.
       {% endblocktrans %}
     </p>
 

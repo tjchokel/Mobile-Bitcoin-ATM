@@ -6,7 +6,7 @@ The exchange rate when the bitcoin was sent was {{ exchange_rate_formatted }} / 
 Please pay {% firstof shopper_name 'the customer' %} immediately.
 <br /><br />
 
-You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>, as well as in <a href="{{ BASE_URL }}{{ closecoin_tx_uri }}">in your dashboard on CloseCoin</a>.
+You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>, as well as in <a href="{{ BASE_URL }}{{ coinsafe_tx_uri }}">in your dashboard on CoinSafe</a>.
 {% endblock content %}
 
 {% block ps %}

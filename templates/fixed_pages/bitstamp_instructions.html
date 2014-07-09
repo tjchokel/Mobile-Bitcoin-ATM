@@ -14,7 +14,7 @@
   <div class="row">
     {% blocktrans %}
     <p>
-      Connecting your Bitstamp account to CloseCoin allows us to:
+      Connecting your Bitstamp account to CoinSafe allows us to:
     </p>
     <ul>
       <li>
@@ -31,7 +31,7 @@
 
     <p>
     {% blocktrans %}
-      Please follow these instructions to grant CloseCoin access to your Bitstamp account:
+      Please follow these instructions to grant CoinSafe access to your Bitstamp account:
     {% endblocktrans %}
     </p>
 
@@ -52,7 +52,7 @@
       <li>
         {# This must happen now because once they click the link in their email it will hide their secret. Confusing! #}
         {% blocktrans with key_field="Key" secret_field="Secret" %}
-          Copy the <b>{{ key_field }}</b> and <b>{{ secret_field }}</b> to CloseCoin.
+          Copy the <b>{{ key_field }}</b> and <b>{{ secret_field }}</b> to CoinSafe.
         {% endblocktrans %}
         <img src="{% static "img/bitstamp/unactivated_credentials_copy.png" %}" width="80%" />
         <br />
@@ -78,7 +78,7 @@
     <p>
       {% blocktrans with activate_name="Activate" %}
         You're all set!
-        You can verify that your credentials are working by clicking the <b>refresh</b> button on CloseCoin anytime.
+        You can verify that your credentials are working by clicking the <b>refresh</b> button on CoinSafe anytime.
       {% endblocktrans %}
     </p>
 
@@ -88,7 +88,7 @@
         For larger amounts of bitcoin, we recommend cold storage using
         <a href="{{ electrum_url }}">Electrum</a> or
         <a href="{{ armory_url }}">Armory</a>.
-        You can always unlink your Bitstamp account by deleting your API keys on CloseCoin or Bitstamp.
+        You can always unlink your Bitstamp account by deleting your API keys on CoinSafe or Bitstamp.
       {% endblocktrans %}
     </p>
 

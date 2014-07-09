@@ -30,15 +30,15 @@ else:
     TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = (
-    'www.closecoin.com',
-    '.closecoin.com',
-    'closecoin.herokuapp.com',
+    'www.coinsafe.com',
+    '.coinsafe.com',
+    'coinsafe.herokuapp.com',
     'bitcashstaging.herokuapp.com',
     '127.0.0.1',
     )
 
 ADMINS = (
-    ('Michael Flaxman', 'michael@closecoin.com'),
+    ('Michael Flaxman', 'michael@coinsafe.com'),
     ('Tom Chokel', 'tom@coinsafe.com'),
 )
 
@@ -103,7 +103,7 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 AUTH_USER_MODEL = 'users.AuthUser'
 
 
-PRODUCTION_DOMAIN = 'www.closecoin.com'
+PRODUCTION_DOMAIN = 'www.coinsafe.com'
 STAGING_DOMAIN = 'bitcashstaging.herokuapp.com'
 SITE_DOMAIN = os.getenv('SITE_DOMAIN', PRODUCTION_DOMAIN)
 

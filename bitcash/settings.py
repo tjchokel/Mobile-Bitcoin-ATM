@@ -33,6 +33,9 @@ ALLOWED_HOSTS = (
     'www.coinsafe.com',
     '.coinsafe.com',
     'coinsafe.herokuapp.com',
+    'www.closecoin.com',
+    '.closecoin.com',
+    'closecoin.herokuapp.com',
     'bitcashstaging.herokuapp.com',
     '127.0.0.1',
     )

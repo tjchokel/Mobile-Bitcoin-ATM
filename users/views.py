@@ -155,15 +155,3 @@ def customer_dashboard(request):
         'show_buy_modal': show_buy_modal,
         'show_confirm_purchase_modal': show_confirm_purchase_modal,
     }
-
-
-def simulate_deposit_detected(request):
-    user = request.user
-    merchant = user.get_merchant()
-    btc_address = merchant.get_all_forwarding_addresses()[0]
-    BTCTransaction.objects.create(
-        satoshis=100000,
-        forwarding_address=btc_address,
-        merchant=merchant
-    )
-    return HttpResponseRedirect(reverse_lazy('deposit_dashboard'))

@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -9,7 +10,6 @@ urlpatterns = patterns('',
     url(r'^logout/?$', 'merchants.views.logout_request', name='logout'),
 
     url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
-    url(r'^simulate-deposit/$', 'users.views.simulate_deposit_detected', name='simulate_deposit_detected'),
 
     url(r'^register/$', 'merchants.views.register_router', name='register_router'),
     url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),
@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^edit-hours-info/$', 'merchants.views.edit_hours_info', name='edit_hours_info'),
     url(r'^edit-merchant-info/$', 'merchants.views.edit_merchant_info', name='edit_merchant_info'),
     url(r'^edit-btc-info/$', 'merchants.views.edit_bitcoin_info', name='edit_bitcoin_info'),
+    url(r'^password/$', 'merchants.views.password_prompt', name='password_prompt'),
 
     # API Partners
     url(r'^coinbase/$', 'credentials.views.coinbase_creds', name='coinbase_creds'),

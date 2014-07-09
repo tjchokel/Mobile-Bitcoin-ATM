@@ -7,6 +7,7 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
+
 import re
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -88,6 +89,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'bitcash.middleware.AjaxMessaging',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'bitcash.middleware.MerchantAdminSectionMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -196,6 +198,9 @@ assert PLIVO_AUTH_ID, 'Must have plivo API access'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/app/'
+
+MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/coinbase/', '/bitstamp/', '/blockchain/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']
+MERCHANT_LOGIN_PW_URL = '/password/'
 
 CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']
 

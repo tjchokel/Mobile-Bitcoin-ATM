@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.utils.html import escape
 from django.utils.translation import ugettext as _
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
+from django.utils.timezone import now
+import datetime
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
@@ -18,9 +20,7 @@ from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistrationForm,
-        BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm)
-
-import datetime
+        BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm, PasswordConfirmForm)
 
 
 @sensitive_variables('password', )
@@ -431,3 +431,24 @@ def edit_bitcoin_info(request):
 
     messages.warning(request, _('Your bitcoin info was not updated'))
     return HttpResponseRedirect(reverse_lazy('merchant_settings'))
+
+
+@login_required
+@render_to('merchants/password_prompt.html')
+def password_prompt(request):
+    user = request.user
+    merchant = user.get_merchant()
+    if not merchant or not merchant.has_finished_registration():
+        return HttpResponseRedirect(reverse_lazy('register_router'))
+    form = PasswordConfirmForm(user=user)
+    if request.method == 'POST':
+        form = PasswordConfirmForm(user=user, data=request.POST)
+        if form.is_valid():
+            request.session['last_password_validation'] = now().ctime()
+            return HttpResponseRedirect(reverse_lazy('merchant_transactions'))
+    return {
+        'form': form,
+        'on_admin_page': True,
+        'user': user,
+        'merchant': merchant,
+        }

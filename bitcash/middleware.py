@@ -2,6 +2,23 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 import json
 
+from bitcash.settings import MERCHANT_LOGIN_REQUIRED_PATHS, MERCHANT_LOGIN_PW_URL
+
+
+class MerchantAdminSectionMiddleware(object):
+    def process_request(self, request):
+        if request.path in MERCHANT_LOGIN_REQUIRED_PATHS:
+            if request.session.get('last_password_validation'):
+                # TODO: maybe make it so that it has to be recent?
+                return None
+            else:
+                return HttpResponseRedirect(MERCHANT_LOGIN_PW_URL)
+        elif request.is_ajax():
+            return None
+        else:
+            request.session['last_password_validation'] = None
+            return None
+
 
 class SSLMiddleware(object):
     # http://stackoverflow.com/a/9207726/1754586

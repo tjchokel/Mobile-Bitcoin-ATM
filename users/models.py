@@ -46,7 +46,7 @@ class CustomerToBeNotified(models.Model):
     """
     Customer that signed up to be notified when merchants are in their area
     """
-    email = models.EmailField(blank=True, null=True, db_index=True)
+    email = models.EmailField(blank=False, null=False, db_index=True)
     city = models.CharField(max_length=256, blank=True, null=True, db_index=True)
-    country = models.CharField(max_length=256, blank=True, null=True, db_index=True, choices=ALL_COUNTRIES)
+    country = models.CharField(max_length=256, blank=False, null=False, db_index=True, choices=ALL_COUNTRIES)
     intention = models.CharField(max_length=256, blank=True, null=True, db_index=True)

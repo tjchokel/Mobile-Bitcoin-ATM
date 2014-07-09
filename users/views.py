@@ -178,7 +178,7 @@ def register_customer(request):
                     country=country,
                     intention=intention,
             )
-            msg = _('Thank you for registering with CoinSafe.')
+            msg = _("Thanks! We'll email you when new businesses near you sign up")
             messages.success(request, msg, extra_tags='safe')
             return HttpResponseRedirect(reverse_lazy('home'))
 

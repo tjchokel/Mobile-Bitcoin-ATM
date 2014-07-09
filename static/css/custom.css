@@ -959,7 +959,6 @@ footer {
     background: #3E7A8C;
     color: white;
     font-weight: 300;
-    position: fixed;
 }
 .push {
     height: 155px; /* .push must be the same height as .footer */

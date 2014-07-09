@@ -14,8 +14,10 @@ Please remind them politely if they haven't already noticed that the transaction
 You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see your transaction on the bitcoin blockchain here</a>.
 <br /><br />
 
+{% comment %}
 When you have some time, here's a link for you to review {{ merchant_name }}:<br />
 <a href="{{ BASE_URL }}{{ review_link }}">{{ BASE_URL }}{{ review_link }}</a>
+{% endcomment %}
 {% endblock content %}
 
 {% block ps %}

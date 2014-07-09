@@ -7,7 +7,7 @@ from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from phonenumber_field.modelfields import PhoneNumberField
-from bitcoins.models import DestinationAddress
+from bitcoins.models import DestinationAddress, ShopperBTCPurchase
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
@@ -77,7 +77,7 @@ class Merchant(models.Model):
             Sorts by added_at
         """
         cash_out_txns = self.get_all_forwarding_transactions()
-        cash_in_txns = self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True).all()
+        cash_in_txns = ShopperBTCPurchase.objects.active(merchant=self)
 
         combined_transactions = [w for w in cash_in_txns]
         combined_transactions.extend(cash_out_txns)

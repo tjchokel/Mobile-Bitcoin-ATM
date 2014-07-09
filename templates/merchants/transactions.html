@@ -33,18 +33,18 @@
                   <td>{{transaction.format_satoshis_amount}}</td>
                   <td>{{transaction.get_fiat_amount_formatted}}</td>
                   <td>
-                    {% if transaction.credential.credential_type == 'CBS' %}
+                    {% if transaction.credential.get_credential_abbrev == 'CBS' %}
                       <a href="https://coinbase.com/accounts/" target="_blank">CoinBase</a>
-                    {% elif transaction.credential.credential_type == 'BTS' %}
+                    {% elif transaction.credential.get_credential_abbrev == 'BTS' %}
                       <a href="https://www.bitstamp.net/account/transactions/" target="_blank">BitStamp</a>
-                    {% elif transaction.credential.credential_type == 'BCI' %}
+                    {% elif transaction.credential.get_credential_abbrev == 'BCI' %}
                       <a href="https://blockchain.info/wallet/login" target="_blank">BlockChain</a>
                     {% else %}
                       Bitcoin Network
                     {% endif %}
                   </td>
                   <td>
-                    {% if transaction.txn_hash or transaction.btc_transaction.txn_hash %}
+                    {% if transaction.txn_hash or transaction.btc_transaction %}
                       <a href="https://blockchain.info/tx/{% firstof transaction.txn_hash transaction.btc_transaction.txn_hash %}" target="_blank">{{transaction.get_status|format_status_string}}</a>
                     {% elif transaction.b58_address %}
                       <a href="https://blockchain.info/address/{{ transaction.b58_address }}" target="_blank">{{transaction.get_status|format_status_string}}</a>

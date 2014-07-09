@@ -179,8 +179,7 @@ class BTCTransaction(models.Model):
     (relay) are tracked separately in this same model.
     """
     added_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    txn_hash = models.CharField(max_length=64, blank=True, null=True,
-            unique=True, db_index=True)
+    txn_hash = models.CharField(max_length=64, blank=False, null=False, unique=True, db_index=True)
     satoshis = models.BigIntegerField(blank=True, null=True, db_index=True)
     conf_num = models.PositiveSmallIntegerField(blank=False, null=False, db_index=True)
     irreversible_by = models.DateTimeField(blank=True, null=True, db_index=True)
@@ -453,6 +452,15 @@ class BTCTransaction(models.Model):
             return content['last']
 
 
+class ShopperBTCPurchaseManager(models.Manager):
+    def active(self, *args, **kwargs):
+        """
+        Addresses that have been revealed to users
+        """
+        return super(ShopperBTCPurchaseManager, self).get_query_set().filter(
+                cancelled_at=None, *args, **kwargs).order_by('-added_at')
+
+
 class ShopperBTCPurchase(models.Model):
     """
     Model for bitcoin purchase (cash in) request
@@ -473,6 +481,7 @@ class ShopperBTCPurchase(models.Model):
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    objects = ShopperBTCPurchaseManager()
 
     def __str__(self):
         return '%s: %s' % (self.id, self.added_at)
@@ -553,7 +562,6 @@ class ShopperBTCPurchase(models.Model):
                 subject='%s Received' % fiat_amount_formatted,
                 body_template='merchant/shopper_cashin.html',
                 to_merchant=self.merchant,
-                to_email=self.shopper.email,
                 body_context=body_context,
                 )
 

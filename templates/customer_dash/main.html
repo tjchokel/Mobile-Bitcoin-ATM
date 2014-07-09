@@ -284,6 +284,15 @@
 
       $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ <i class="fa fa-bitcoin"></i>0.00</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
 
+      $('#deposit-address-modal').on('hide.bs.modal', function () {
+        {% comment %}
+          Trigger a deposit confirmation whenever this modal is closed.
+          This is easy for the user to correct and fixes a potentially nasty broken UX state.
+          Long term we may want a better solution.
+        {% endcomment %}
+        confirmAddressDeposit()
+      })
+
       {% if transactions or current_address.customer_confirmed_deposit_at %}
 
         {% if transactions %}

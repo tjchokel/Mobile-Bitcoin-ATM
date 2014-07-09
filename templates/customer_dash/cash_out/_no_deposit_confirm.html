@@ -1,19 +1,19 @@
 {% load i18n %}
 <div class="container">
   <div class="page-header">
-
-      <h3 class="pull-left">{{merchant.business_name}}</h3>
-      <h3 class="pull-right hidden-xs" style="color: #72a53b; float:right;">
-        <span id='pricing-info' class="hidden">
-          {% trans "Market BTC Price"%}: <span id="fiat-amt"></span> <span class="currency-code"></span>
+    <h3 class="pull-left">Welcome to <b>{{merchant.business_name}}</b></h3>
+    <h3 class="pull-right hidden-xs" style="color: #72a53b; float:right;">
+      <span id='pricing-info' class="hidden">
+        {% trans "Market BTC Price"%}:
+        <span id="fiat-amt"></span> <span class="currency-code"></span>
+      </span>
+      <a class="active has-spinner" id="fiat-amt-loader">
+        <span class="spinner">
+          <i class="fa fa-spinner fa-spin"></i>
         </span>
-        <a class="active has-spinner" id="fiat-amt-loader">
-          <span class="spinner">
-            <i class="fa fa-spinner fa-spin"></i>
-          </span>
-        </a>
-      </h3>
-      <div class="clearfix"></div>
+      </a>
+    </h3>
+    <div class="clearfix"></div>
   </div>
 
   {% include "customer_dash/cash_out/_deposit_address_modal.html" %}
@@ -26,7 +26,11 @@
         <div class="col-sm-6">
           <div class="item">
             <div class="head">
-              <h3>{% trans "Buy Bitcoin" %} <span style="color: #81D685; font-size: 42px;"><i class="fa fa-bitcoin"></i></span></h3>
+              <h3>
+                {% blocktrans with merchant_name=merchant.business_name %}
+                  Buy Bitcoin from {{ merchant_name }}
+                {% endblocktrans %}
+                <span style="color: #81D685; font-size: 42px;"><i class="fa fa-bitcoin"></i></span></h3>
             <div class="arrow"></div>
           </div>
           <div class="sceleton">
@@ -73,7 +77,7 @@
           {% endwith %}
           <a class="btn btn-primary btn-xl has-spinner" id="buy-bitcoin-button" onclick="buyBitcoinModal();">
             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-            {% trans "Buy Bitcoin" %}
+            {% trans "Buy Bitcoin with Cash" %}
           </a>
           </div>
         </div>
@@ -86,7 +90,11 @@
 
     <div class="item">
       <div class="head">
-        <h3>Sell Bitcoin <span style="color: #81D685; font-size: 42px;"> <i class="fa fa-money"></i></span></h3>
+        <h3>
+          {% blocktrans with merchant_name=merchant.business_name %}
+            Sell Bitcoin to {{ merchant_name }}
+          {% endblocktrans %}
+        <span style="color: #81D685; font-size: 42px;"> <i class="fa fa-money"></i></span></h3>
       <div class="arrow"></div>
     </div>
 
@@ -118,7 +126,7 @@
 
       <a class="btn btn-primary btn-xl has-spinner" id="show-address-button" onclick="getNextAddress();">
         <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-        {% trans "Sell Bitcoin" %}
+        {% trans "Sell Your Bitcoin for Cash" %}
       </a>
 
     </div>

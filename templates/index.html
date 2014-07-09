@@ -35,7 +35,7 @@
 <div class="container">
     <div class="row" style="margin-top: -30px;">
 
-      <div class="col-lg-7">
+      <div class="col-lg-7 col-md-7">
             <h2>{% trans "Businesses" %}</h2>
             <p style="padding-left:15px; font-size: 16px; padding-top:8px;">
               <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Set Your Own Prices" %}</b><br/>
@@ -59,7 +59,7 @@
             <a class="btn btn-primary btn-lg" href="{% url 'register_merchant' %}" role="button" style="margin-left: 15px;">{% trans "List Your Business Today" %}</a>
 
       </div>
-      <div class="col-lg-4 col-lg-offset-1 hidden-sm hidden-xs">
+      <div class="col-lg-4 col-lg-offset-1 col-md-5 hidden-sm hidden-xs">
         </span>
         <img src="{%static "img/shop.png" %}" style="margin-top: 30%;" width="90%" height="90%" />
       </div>
@@ -67,7 +67,7 @@
     <hr>
     <div class="row">
 
-      <div class="col-lg-7">
+      <div class="col-lg-7 col-md-7">
             <h2>{% trans "Consumers" %}</h2>
             <p style="padding-left:15px; font-size: 16px; padding-top:8px;">
               <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Bitcoin <-> Cash" %}</b><br/>
@@ -83,10 +83,14 @@
               {% trans "Each business is rated by their users to ensure that the continue to provide the best service." %}
               <br/>
             </p>
-            <p><a class="btn btn-primary btn-lg" href="https://docs.google.com/forms/d/1h7Z996Y5vIHE-uOc03vxnFa6jN-vRNF_CFW4e89MdTk/viewform?usp=send_form" role="button" style="margin-left: 15px;white-space: normal !important;max-width: 300px;" target="_blank">{% trans "Get Notified of New Nearby Locations" %}</a></p>
+            <p>
+              <a class="btn btn-primary btn-lg" href="{% url 'register_customer' %}" role="button" style="margin-left: 15px;white-space: normal !important;max-width: 300px;">
+                {% trans "Get Notified of Nearby Locations" %}
+              </a>
+            </p>
 
       </div>
-      <div class="col-lg-4 col-lg-offset-1 hidden-sm hidden-xs">
+      <div class="col-lg-4 col-lg-offset-1 col-md-5 hidden-sm hidden-xs">
         <img src="{%static "img/money.png" %}" style="margin-top: 5%;" width="90%" height="90%" />
       </div>
     </div>

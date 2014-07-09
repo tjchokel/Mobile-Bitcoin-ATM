@@ -155,33 +155,3 @@ def customer_dashboard(request):
         'show_buy_modal': show_buy_modal,
         'show_confirm_purchase_modal': show_confirm_purchase_modal,
     }
-
-
-@render_to('fixed_pages/help.html')
-def help(request):
-    return {}
-
-
-@render_to('fixed_pages/team.html')
-def team(request):
-    return {}
-
-
-@render_to('fixed_pages/contact.html')
-def contact(request):
-    return {}
-
-
-@render_to('fixed_pages/bitstamp_instructions.html')
-def bitstamp_instructions(request):
-    return {}
-
-
-@render_to('fixed_pages/coinbase_instructions.html')
-def coinbase_instructions(request):
-    return {}
-
-
-@render_to('fixed_pages/blockchain_instructions.html')
-def blockchain_instructions(request):
-    return {}

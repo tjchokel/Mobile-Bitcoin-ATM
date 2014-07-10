@@ -1,16 +1,60 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>{% trans "Contact Us" %}</h1>
+    </div>
+
+
     <div class="container">
-        <div class="page-header">
-            <h1>{% trans "CoinSafe Contact" %}</h1>
+      <div class="row">
+        <!-- Contact us form -->
+        <div class="col-sm-8">
+          <p class="lead">{% blocktrans %}We are here to help! Please feel free to contact us any time at <a href="mailto:support@coinsafe.com?Subject=CoinSafe%20Support" target="_top">support@coinsafe.com</a>{% endblocktrans %}</p>
+            <form class="form-horizontal" method="post" action="{% url "users.views.contact" %}" >
+                {% load crispy_forms_tags %}
+                {{ form|crispy }}
+                {% csrf_token %}
+                <div class="button-wrapper">
+                  <button type="submit" class="btn btn-primary btn-lg">{% trans "Send Message" %}</button>
+                </div>
+            </form>
         </div>
-
-        <p>
-          {% blocktrans %}We are here to help! Please feel free to contact us any time at <a href="mailto:support@coinsafe.com?Subject=CoinSafe%20Support" target="_top">support@coinsafe.com</a>{% endblocktrans %}
-        </p>
-
-        <br /><br />
-            <p>We are proudly located in Seattle, WA. Send us a message if you're in town!<p>
+        <!-- Right column -->
+        <div class="col-sm-4">
+          <!-- Out Address -->
+          <h4>{% trans "Our Address" %}</h4>
+          <hr>
+          <p>
+            1601 13th Ave<br />
+            Seattle, WA 98122<br />
+            USA<br />
+            <a href="mailto:support@coinsafe.com?Subject=CoinSafe%20Support" target="_top">support@coinsafe.com</a>
+          </p>
+          <hr>
+          <!-- Google Maps -->
+          <h4>{% trans "Google Maps" %}</h4>
+          <hr>
+          <div class="map">
+            <iframe width="350" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q=1601+13th+ave,Seattle,WA"></iframe><br /><small><a href="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q=1601+13th+ave,Seattle,WA" style="color:#0000FF;text-align:left">{% trans "View Larger Map" %}</a></small>
+          </div>
+        </div>
       </div>
+    </div>
+
+
+</div>
+<footer style="background-color:#2a3b48;position:absolute;width:100%;height:400px; text-align:center;">
+  <div class="container">
+    <div class="row">
+      <h1 style="color:white; padding-top:30px;padding-bottom:30px;">
+      {% trans "Join The CoinSafe Network"%}
+      </h1>
+      <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="margin-bottom:40px;" >{% trans "Sign Up Today" %}</a>
+    </div>
+  </div>
+  <br/><br/><br/><br/><br/>
+  © 2014 CoinSafe Inc.
+</footer>
 {% endblock content %}

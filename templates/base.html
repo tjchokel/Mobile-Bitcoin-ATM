@@ -158,36 +158,9 @@
     <!-- Begin page content -->
     {% block content %}{% endblock content %}
 
-    <!-- Foooter
-    ================== -->
-    {% if user.is_authenticated and user.get_merchant and user.get_merchant.has_finished_registration %}
-      <div class="navbar navbar-inverse navbar-fixed-bottom" id="footer" style="background: white">
-        <div class="container">
+    <!-- Admin Foooter -->
+    {% block admin_footer %}{% endblock admin_footer %}
 
-          <ul class="nav nav-tabs">
-            {% if on_admin_page %}
-              <li style="width:50%;">
-                <a href="{% url "customer_dashboard" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
-    border-top-right-radius: 10px;">{% trans "Customers" %}</a>
-              </li>
-              <li class="active" style="width:50%">
-                <a href="{% url "merchant_settings" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
-    border-top-right-radius: 10px;">{% trans "Admin" %}</a>
-              </li>
-            {% else %}
-            <li class="active" style="width:50%;">
-              <a href="#" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
-    border-top-right-radius: 10px;">{% trans "Customers" %}</a>
-            </li>
-            <li style="width:50%">
-              <a href="{% url "merchant_transactions" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px;
-    border-top-right-radius: 10px;">{% trans "Admin" %}</a>
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    {% endif %}
     <script src="{% static "js/jquery.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->

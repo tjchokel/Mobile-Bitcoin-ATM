@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load app_extras %}
+
 {% block content %}
   {% if transactions or current_address.customer_confirmed_deposit_at %}
     {% if current_address.all_transactions_complete and shopper %}
@@ -15,6 +16,11 @@
     {% endif %}
   {% endif %}
 {% endblock content %}
+
+
+{% block admin_footer %}
+  {% include "partials/customer_footer.html" %}
+{% endblock admin_footer %}
 
 {% block extra_js %}
   <script>
@@ -167,7 +173,6 @@
 
             $("#btc-amount").html(' ≈ '+final_mbtc.toFixed(1) + ' mBTC');
           }
-          
 
           BTC_PRICE_TIMEOUT_MS *= 1.3;
           setTimeout(getBtcPrice,BTC_PRICE_TIMEOUT_MS);

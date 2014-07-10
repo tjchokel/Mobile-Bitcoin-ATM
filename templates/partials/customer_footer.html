@@ -1,0 +1,13 @@
+{% load i18n %}
+<div class="navbar navbar-inverse navbar-fixed-bottom" id="footer" style="background: white">
+  <div class="container">
+    <ul class="nav nav-tabs">
+      <li class="active" style="width:50%;">
+        <a href="#" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">{% trans "Customers" %}</a>
+      </li>
+      <li style="width:50%">
+        <a href="{% url "merchant_transactions" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">{% trans "Admin" %}</a>
+      </li>
+    </ul>
+  </div>
+</div>

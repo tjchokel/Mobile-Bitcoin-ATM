@@ -116,8 +116,9 @@ SITE_DOMAIN = os.getenv('SITE_DOMAIN', PRODUCTION_DOMAIN)
 if SITE_DOMAIN in (PRODUCTION_DOMAIN, STAGING_DOMAIN):
     BASE_URL = 'https://%s' % SITE_DOMAIN
     # SSL stuff:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    # FIXME: fix this
+    # SESSION_COOKIE_SECURE = True
+    # CSRF_COOKIE_SECURE = True
     MIDDLEWARE_CLASSES += ('bitcash.middleware.SSLMiddleware',)
 else:
     BASE_URL = 'http://%s' % SITE_DOMAIN

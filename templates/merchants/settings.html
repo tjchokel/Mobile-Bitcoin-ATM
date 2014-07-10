@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+
 {% block content %}
 <div class="container">
     <!-- Profile Menu -->
@@ -47,6 +48,11 @@
     </div>
     </div>
 {% endblock content %}
+
+{% block admin_footer %}
+  {% include "partials/admin_footer.html" %}
+{% endblock admin_footer %}
+
 {% block extra_js %}
   <script>
     function editBitcoinInfo() {

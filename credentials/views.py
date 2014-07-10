@@ -46,7 +46,6 @@ def blockchain_creds(request):
         'user': user,
         'merchant': merchant,
         'form': form,
-        'on_admin_page': True,
         'credential': credential,
     }
 
@@ -82,7 +81,6 @@ def coinbase_creds(request):
         'user': user,
         'merchant': merchant,
         'form': form,
-        'on_admin_page': True,
         'cb_credential': cb_credential,
     }
 
@@ -119,7 +117,6 @@ def bitstamp_creds(request):
         'user': user,
         'merchant': merchant,
         'form': form,
-        'on_admin_page': True,
         'credential': credential,
     }
 

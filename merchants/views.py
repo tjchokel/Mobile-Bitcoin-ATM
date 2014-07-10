@@ -224,9 +224,8 @@ def merchant_settings(request):
     return {
         'user': user,
         'merchant': merchant,
-        'on_admin_page': True,
         'bitcoin_form': bitcoin_form,
-        'dest_address': dest_address
+        'dest_address': dest_address,
     }
 
 
@@ -284,7 +283,6 @@ def merchant_profile(request):
         'user': user,
         'merchant': merchant,
         'transactions': transactions,
-        'on_admin_page': True,
         'personal_form': OwnerInfoForm(initial=initial),
         'merchant_form': MerchantInfoForm(initial=initial),
         'hours_form': BusinessHoursForm(initial=initial),
@@ -304,7 +302,6 @@ def merchant_transactions(request):
         'user': user,
         'merchant': merchant,
         'transactions': transactions,
-        'on_admin_page': True
     }
 
 
@@ -448,7 +445,6 @@ def password_prompt(request):
             return HttpResponseRedirect(reverse_lazy('merchant_transactions'))
     return {
         'form': form,
-        'on_admin_page': True,
         'user': user,
         'merchant': merchant,
         }

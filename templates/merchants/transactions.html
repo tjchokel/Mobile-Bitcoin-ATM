@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load app_extras %}
+
 {% block content %}
   <div class="container">
     <!-- Profile Menu -->
@@ -67,5 +68,7 @@
     </div>
     </div>
 {% endblock content %}
-{% block extra_js %}
-{% endblock %}
+
+{% block admin_footer %}
+  {% include "partials/admin_footer.html" %}
+{% endblock admin_footer %}

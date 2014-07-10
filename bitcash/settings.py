@@ -117,7 +117,7 @@ if SITE_DOMAIN in (PRODUCTION_DOMAIN, STAGING_DOMAIN):
     BASE_URL = 'https://%s' % SITE_DOMAIN
     # SSL stuff:
     # FIXME: fix this
-    # SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
     # CSRF_COOKIE_SECURE = True
     MIDDLEWARE_CLASSES += ('bitcash.middleware.SSLMiddleware',)
 else:

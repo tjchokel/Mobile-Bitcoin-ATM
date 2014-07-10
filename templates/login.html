@@ -1,21 +1,33 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-    <div class="container">
-        <div class="page-header">
-            <h3 class="pull-left">{% trans "Sign In" %}</h3>
-            <div class="clearfix"></div>
-        </div>
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="hl top-50">{% trans "Sign In" %}</h2>
+        <hr>
+      </div>
+    </div>
 
-        <div class="col-md-8 col-md-offset-2">
-            <form class="form-horizontal" method="post" action="{% url "merchants.views.login_request" %}" >
-                {% load crispy_forms_tags %}
-                {{ form|crispy }}
-                {% csrf_token %}
-                <div class="button-wrapper">
-                  <button type="submit" class="btn btn-primary btn-lg">{% trans "Sign In" %}</button>
-                </div>
-            </form>
+    <div class="col-md-8 col-md-offset-2">
+        <form class="form-horizontal" method="post" action="{% url "merchants.views.login_request" %}" >
+            {% load crispy_forms_tags %}
+            {{ form|crispy }}
+            {% csrf_token %}
+            <div class="button-wrapper">
+              <button type="submit" class="btn btn-primary btn-lg">{% trans "Sign In" %}</button>
+            </div>
+        </form>
         
         <hr/>
         <p class="lead">

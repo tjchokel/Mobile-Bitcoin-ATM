@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-    <div class="container">
-        <div class="page-header">
-          <h3 class="pull-left">{% trans "Register Business" %}</h3>
-          <div class="clearfix"></div>
-        </div>
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="hl top-50">{% trans "Register Business" %}</h2>
+        <hr>
+      </div>
+    </div>
 
         <div class="col-md-8 col-md-offset-2">
           {% with current_step=0 %}

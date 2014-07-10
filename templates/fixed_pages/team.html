@@ -3,12 +3,28 @@
 {% load staticfiles %}
 
 {% block content %}
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <br/><br/>
-      <h1 class="hl text-center top-zero">{% trans "Team" %}</h1>
-      <p class="lead text-center">{% trans "We are Bitcoin enthusiasts who believe that bitcoin's success requires transactional use and decentralized way to get in and out of bitcoin" %}.</p>
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="hl top-50">{% trans "Team" %}</h2>
+        <hr>
+      </div>
+    </div>
+      <div class="col-sm-10 col-sm-offset-1">
+      <p class="lead text-center">
+        <!-- TOO WORDY? -->
+        {% trans "We are a team of crypto-currency enthusiasts who believe that a network of decentralized bitcoin exchanges will change how money flows around the world" %}.
+      </p>
     </div>
   </div>
 

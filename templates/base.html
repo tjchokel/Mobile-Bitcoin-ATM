@@ -47,7 +47,7 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#">{% trans "FAQ" %}</a></li>
+            <li><a href="{% url 'help' %}">{% trans "FAQ" %}</a></li>
             <li class="hidden-sm"><a href="{% url 'team' %}">{% trans "Team" %}</a></li>
             <li><a href="{% url 'contact' %}">{% trans "Contact Us" %}</a></li>
             
@@ -145,6 +145,7 @@
     </div>
 
     <!-- Begin page content -->
+    
     {% block content %}{% endblock content %}
 
     <!-- Admin Footer -->
@@ -152,7 +153,6 @@
 
     <!-- Static Page Footer -->
     {% block static_page_footer %}{% endblock static_page_footer %}
-
 
     <script src="{% static "js/jquery.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>

@@ -157,7 +157,6 @@ def customer_dashboard(request):
         'buy_form': buy_form,
         'show_buy_modal': show_buy_modal,
         'show_confirm_purchase_modal': show_confirm_purchase_modal,
-        'show_admin_footer': True,
     }
 
 

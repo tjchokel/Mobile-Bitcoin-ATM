@@ -10,11 +10,12 @@ from annoying.functions import get_object_or_None
 
 from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
 from shoppers.models import Shopper
-from users.models import CustomerToBeNotified
+from users.models import FutureShopper
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 from users.forms import CustomerRegistrationForm, ContactForm
 
 from emails.trigger import send_and_log
+
 
 @render_to('index.html')
 def home(request):
@@ -165,20 +166,15 @@ def register_customer(request):
     if request.method == 'POST':
         form = CustomerRegistrationForm(data=request.POST)
         if form.is_valid():
-
-            email = form.cleaned_data['email']
-            city = form.cleaned_data['city']
-            country = form.cleaned_data['country']
-            intention = form.cleaned_data['intention']
-
             # create customer
-            customer = CustomerToBeNotified.objects.create(
-                    email=email,
-                    city=city,
-                    country=country,
-                    intention=intention,
+            FutureShopper.objects.create(
+                    email=form.cleaned_data['email'],
+                    city=form.cleaned_data['city'],
+                    country=form.cleaned_data['country'],
+                    intention=form.cleaned_data['intention'],
+                    message=form.cleaned_data['message'],
             )
-            msg = _("Thanks! We'll email you when new businesses near you sign up")
+            msg = _("Thanks! We'll email you when new businesses near you sign up.")
             messages.success(request, msg, extra_tags='safe')
             return HttpResponseRedirect(reverse_lazy('home'))
 
@@ -209,7 +205,7 @@ def contact(request):
                 to_name='CoinSafe Support',
                 body_context=body_context,
                 )
-            msg = _("Thanks! We'll contact you shortly.")
+            msg = _("Thanks! We'll get back to you soon.")
             messages.success(request, msg, extra_tags='safe')
             return HttpResponseRedirect(reverse_lazy('contact'))
 

@@ -1,5 +1,4 @@
 from django import forms
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
 from countries import COUNTRY_DROPDOWN
 
@@ -21,13 +20,18 @@ class CustomerRegistrationForm(forms.Form):
         widget=forms.Select(attrs={'data-country': 'USA'}),
     )
     intention = forms.ChoiceField(
-        label=_('Which service interests you the most?'),
+        label=_('Which Service Interests You Most?'),
         required=False,
         widget=forms.RadioSelect(),
         choices=(
             ('buy_btc', 'Spend Cash to Buy Bitcoin'),
             ('sell_btc', 'Sell Bitcoin to Receive Cash'),
         ),
+    )
+    message = forms.CharField(
+        label=_('Feedback for CoinSafe (optional)'),
+        widget=forms.Textarea(),
+        required=False
     )
 
 

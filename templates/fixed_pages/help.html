@@ -2,23 +2,44 @@
 {% load i18n %}
 {% block content %}
 <div class="container">
-  <!-- Help Center -->
+
   <div class="row">
-    <div class="col-sm-12">
-      <h2 class="hl top-zero">{% trans "Frequently Asked Questions" %}</h2>
-      <hr>
+    <div class="col-xs-12">
+      <br/><br/>
+      <h1 class="hl text-center top-zero">{% trans "Frequently Asked Questions" %}</h1>
     </div>
   </div>
+
   <div class="row">
     <!-- FAQs accordion -->
-    <div class="col-md-12 col-sm-9">
+    <div class="row">
+      <h3>Table of Contents</h3>
+      <br />
 
-      <ul>
-        <li><a href="#overview">{% trans "What Does CoinSafe Do?" %}</a></li>
-      </ul>
+      <h4>For Businesses</h4>
+        <ul>
+          <li><a href="#overview">{% trans "What Does CoinSafe Do?" %}</a></li>
+          <li><a href="#easy_to_use">{% trans "Does my Cashier/Teller Need to Understand Bitcoin?" %}</a></li>WRITE THIS
+          <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do We Have to Wait Before Releasing the Cash?" %}</a></li>WRITE THIS
+          <li><a href="#market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a></li>WRITE THIS
+          <li><a href="#private_keys">{% trans "Does CoinSafe Have My Bitcoin Private Keys?" %}</a></li>
+          <li><a href="#which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a></li>WRITE THIS
+          <li><a href="#legality">{% trans "Is CoinSafe Legal in My Country?" %}</a></li>
+          <li><a href="#api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a></li>
+          <li><a href="#new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a></li>WRITE THIS
+        </ul>
+
+      <h4>For Customers</h4>WRITE ALL OF THESE!
+        <ul>
+          <li><a href="#pricing">{% trans "Am I Getting a Fair Price?" %}</a></li>
+          <li><a href="#btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a></li>
+          <li><a href="#merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a></li>
+        </ul>
+      </h2>
       <br/>
+
       {% url 'contact' as contact_url %}
-      <h4>{% blocktrans %}If you have additional questions, please don't hesitate to <a href="{{ contract_url}}">contact us</a>{% endblocktrans %}.</h4>
+      <h4>{% blocktrans %}If you have additional questions, please don't hesitate to <a href="{{ contact_url}}">contact us</a>{% endblocktrans %}.</h4>
       <hr>
 
       <div class="panel-group">
@@ -32,7 +53,106 @@
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                {% trans "CoinSafe makes it easy for people individuals and small businesses to connect offline to buy and sell bitcoin." %}
+                {% blocktrans %}
+                  CoinSafe makes it easy for individuals and small businesses to connect offline to buy and sell bitcoin.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="private_keys">{% trans "Does CoinSafe Have My Bitcoin Private Keys?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>{% trans "No." %}</p>
+              <p>
+                {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
+                  If you want to sell bitcoin to customers (for cash), CoinSafe has to have a way to send the funds once the transaction is complete, so we do this via API.
+                  The way this works is that you grant us access to your
+                  <a href="{{ coinbase_url }}">coinbase</a>,
+                  <a href="{{ blockchain_url }}">blockchain.info</a>, or
+                  <a href="{{ bitstamp_url }}">bitstamp</a> wallet.
+                  For security, we always recommend keeping low balances on third party bitcoin sites.
+                  Remember that you always have absolute power to unlink a third party wallet from CoinSafe by revoking the credential.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  If all you want to do is buy bitcoin from customers (with the cash in your cash register), then all CoinSafe needs is a valid bitcoin address for customers to send your funds to.
+                  That can be any address and we won't even know who holds the private key or what software or service you used to generated it.
+                {% endblocktrans %}
+              </p>
+
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="legality">{% trans "Is CoinSafe Legal in My Country?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with coindesk_url='http://www.coindesk.com/information/is-bitcoin-legal/' wikipedia_url='http://en.wikipedia.org/wiki/Legality_of_Bitcoins_by_country' %}
+                  Bitcoin is so new that the laws surrounding it many countries are still unclear.
+                  We're not lawyers, so we can't give you legal advice.
+                  CoinDesk has
+                  <a href="coindesk_url">a great piece on bitcoin legality by country</a>
+                  and
+                  <a href="wikipedia_url">wikipedia some info as well</a>
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  Please note that some countries may require you to comply with "Know Your Customer" (KYC) and "Anti-Money Laundering" (AML) regulations, which might include things like checking the customer's government ID and copying down their name, address, and telephone number.
+                  If you'd like us to build support for your country's requiredments into our software,
+                  please <a href="{{ contact_url}}">tell us about it</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with electrum_url="https://electrum.org" armory_url='https://bitcoinarmory.com/' %}
+                  We encrypt all information while in transit to our servers and store credentials encrypted in our database as well.
+                  For security, we always recommend keeping low balances on third party bitcoin sites.
+                  For larger amounts of bitcoin, we recommend cold storage using
+                  <a href="{{ electrum_url }}">Electrum</a> or
+                  <a href="{{ armory_url }}">Armory</a>.
+                  Remember that you always have absolute power to unlink a third party wallet from CoinSafe by revoking the credential.
+                {% endblocktrans %}
+              </p>
+              <p>
+              {% url 'coinbase_instructions' as coinbase_url %}
+              {% url 'blockchain_instructions' as blockchain_url %}
+              {% url 'bitstamp_instructions' as bitstamp_url %}
+              {% blocktrans %}
+                Here are links to our API access instructions for
+                <a href="{{ coinbase_url }}">coinbase</a>,
+                <a href="{{ blockchain_url }}">blockchain.info</a>, and
+                <a href="{{ bitstamp_url }}">bitstamp</a>.
+              {% endblocktrans %}
               </p>
             </div>
           </div>
@@ -41,6 +161,8 @@
 
       </div>
       <br />
+
+      <h4>{% blocktrans %}If you have additional questions, please don't hesitate to <a href="{{ contact_url}}">contact us</a>{% endblocktrans %}.</h4>
 
     </div>
   </div>

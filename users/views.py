@@ -50,7 +50,13 @@ def customer_dashboard(request):
         buy_form = NoEmailBuyBitcoinForm(user=user)
     password_form = ConfirmPasswordForm(user=user)
     shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
-    show_buy_modal, show_confirm_purchase_modal = 'false', 'false'
+    override_confirmation_form = ConfirmPasswordForm(user=user)
+    show_buy_modal, show_confirm_purchase_modal, show_override_confirmations_modal = 'false', 'false', 'false'
+    if forwarding_address_obj:
+        # In case of refreshing the page later
+        # Will be None on first use and be overwritten below
+        shopper = forwarding_address_obj.shopper
+        transactions = forwarding_address_obj.get_all_forwarding_transactions()
     if request.method == 'POST':
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
@@ -129,20 +135,27 @@ def customer_dashboard(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
         # if submitting password confirmation form
         elif 'password' in request.POST:
-            password_form = ConfirmPasswordForm(user=user, data=request.POST)
-            show_confirm_purchase_modal = 'true'
-            if password_form.is_valid():
-                if buy_request:
+            # cash in scenario, sending bitcoin to shopper
+            if buy_request:
+                password_form = ConfirmPasswordForm(user=user, data=request.POST)
+                if password_form.is_valid():
                     buy_request.pay_out_bitcoin(send_receipt=True)
                     show_confirm_purchase_modal = 'false'
                     msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.shopper.email)
                     messages.success(request, msg, extra_tags='safe')
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
-    if forwarding_address_obj:
-        # In case of refreshing the page later
-        # Will be None on first use and be overwritten below
-        shopper = forwarding_address_obj.shopper
-        transactions = forwarding_address_obj.get_all_forwarding_transactions()
+                else:
+                    show_confirm_purchase_modal = 'true'
+            # cash out scenario, overriding required confirmations
+            else:
+                override_confirmation_form = ConfirmPasswordForm(user=user, data=request.POST)
+                if override_confirmation_form.is_valid():
+                    # TODO: Having transactions an array is pretty confusing here
+                    for transaction in transactions:
+                        transaction.handle_merchant_confirmations_override()
+                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                else:
+                    show_override_confirmations_modal = 'true'
 
     return {
         'user': user,
@@ -154,8 +167,10 @@ def customer_dashboard(request):
         'password_form': password_form,
         'shopper_form': shopper_form,
         'buy_form': buy_form,
+        'override_confirmation_form': override_confirmation_form,
         'show_buy_modal': show_buy_modal,
         'show_confirm_purchase_modal': show_confirm_purchase_modal,
+        'show_override_confirmations_modal': show_override_confirmations_modal
     }
 
 

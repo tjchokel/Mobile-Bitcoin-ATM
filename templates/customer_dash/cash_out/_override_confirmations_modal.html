@@ -1,0 +1,49 @@
+{% load i18n %}
+<div class="modal fade" id="override-confirmations-modal" tabindex="-1" role="dialog" aria-labelledby="cashinmodal" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="cashinmodal">
+          {% trans "Override Required Confirmations?" %}
+        </h4>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- <p class="lead text-center text-green">
+              <span id="btc-amount">{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>0.00</span>
+              <a class="active has-spinner hidden" id="btc-amt-loader">
+                <span class="spinner">
+                  <i class="fa fa-spinner fa-spin"></i>
+                </span>
+              </a>
+            </p> -->
+
+            <!-- <p class="lead text-center" id="step_1">1. Enter the amount of bitcoin you want to buy (in {{merchant.get_currency_name}})
+            </p>
+            <p class="lead text-center hidden" id="step_2">2. Enter where we should send your bitcoin
+            </p> -->
+            <p class="">
+              {% blocktrans with conf_num=transactions.first.conf_num %}
+                While a transaction has been detected, it has only been confirmed by the Bitcoin network {{conf_num}} times.
+              {% endblocktrans %}
+              {% trans "If this is for a small amount of funds or if you aren't worried about a double spend attack, you can finish this transaction by entering your password below." %}
+            </p>
+
+            <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
+              {% load crispy_forms_tags %}
+              {{ override_confirmation_form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg" id="submit-button">{% trans "Confirm" %}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <br/>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

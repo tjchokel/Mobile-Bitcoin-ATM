@@ -459,5 +459,6 @@ class PasswordConfirmForm(forms.Form):
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
+        import pdb; pdb.set_trace()
         if not self.user.check_password(password):
             raise forms.ValidationError('Invalid password')

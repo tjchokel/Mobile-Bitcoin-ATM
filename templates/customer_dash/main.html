@@ -130,7 +130,10 @@
 
     function buyBitcoinModal() {
       $('#buy-bitcoin-modal').modal();
-      
+    }
+
+    function overrideConfirmationsModal() {
+      $('#override-confirmations-modal').modal();
     }
 
     function confirmAddressDeposit() {
@@ -277,6 +280,9 @@
       }
       if( {{ show_confirm_purchase_modal }} === true){
         $('#confirm-purchase-modal').modal('show');
+      }
+      if( {{ show_override_confirmations_modal }} === true){
+        $('#override-confirmations-modal').modal('show');
       }
       if ($('input[name=email_or_btc_address]:checked').val() == 1) {
         $("#div_id_btc_address").addClass("hidden");

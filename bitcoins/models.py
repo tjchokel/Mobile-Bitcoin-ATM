@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 import datetime
+from django.utils.timezone import now
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
@@ -193,6 +194,7 @@ class BTCTransaction(models.Model):
     fiat_amount = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
     currency_code_when_created = models.CharField(max_length=5, blank=True, null=True, db_index=True)
     met_minimum_confirmation_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    min_confirmations_overrode_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.txn_hash)
@@ -202,6 +204,11 @@ class BTCTransaction(models.Model):
 
     def get_shopper(self):
         return self.forwarding_address.shopper
+
+    def handle_merchant_confirmations_override(self):
+        self.min_confirmations_overrode_at = now()
+        self.met_minimum_confirmation_at = now()
+        self.save()
 
     @classmethod
     def get_forwarding_txns(cls, self):

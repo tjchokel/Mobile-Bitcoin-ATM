@@ -45,9 +45,9 @@ def customer_dashboard(request):
     buy_request = merchant.get_bitcoin_purchase_request()
 
     if merchant.has_valid_coinbase_credentials():
-        buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'})
+        buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, user=user)
     else:
-        buy_form = NoEmailBuyBitcoinForm()
+        buy_form = NoEmailBuyBitcoinForm(user=user)
     password_form = ConfirmPasswordForm(user=user)
     shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
     show_buy_modal, show_confirm_purchase_modal = 'false', 'false'
@@ -55,9 +55,9 @@ def customer_dashboard(request):
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
             if merchant.has_valid_coinbase_credentials():
-                buy_form = BuyBitcoinForm(data=request.POST)
+                buy_form = BuyBitcoinForm(data=request.POST, user=user)
             else:
-                buy_form = NoEmailBuyBitcoinForm(data=request.POST)
+                buy_form = NoEmailBuyBitcoinForm(data=request.POST, user=user)
             if buy_form.is_valid():
                 if merchant.has_valid_coinbase_credentials():
                     email_or_btc_address = buy_form.cleaned_data['email_or_btc_address']
@@ -72,7 +72,6 @@ def customer_dashboard(request):
                 )
 
                 credential = merchant.get_valid_api_credential()
-
                 # if sending to email
                 if email_or_btc_address and email_or_btc_address == '1':
                     ShopperBTCPurchase.objects.create(

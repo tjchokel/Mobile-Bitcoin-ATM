@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import AuthUser, CustomerToBeNotified
+from users.models import AuthUser, FutureShopper
 
 
 class AuthUserAdmin(admin.ModelAdmin):
@@ -14,12 +14,12 @@ class AuthUserAdmin(admin.ModelAdmin):
 admin.site.register(AuthUser, AuthUserAdmin)
 
 
-class CustomerToBeNotifiedAdmin(admin.ModelAdmin):
+class FutureShopperAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'email', 'city', 'country', 'intention'
     )
 
     class Meta:
-        model = CustomerToBeNotified
+        model = FutureShopper
 
-admin.site.register(CustomerToBeNotified, CustomerToBeNotifiedAdmin)
+admin.site.register(FutureShopper, FutureShopperAdmin)

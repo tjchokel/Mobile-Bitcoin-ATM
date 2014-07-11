@@ -1195,6 +1195,9 @@ table {
 .top-zero {
     margin-top: 0;
 }
+.top-50 {
+    margin-top: 50;
+}
 .bottom-15 {
     margin-bottom: 15px;
 }

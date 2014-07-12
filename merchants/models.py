@@ -9,6 +9,8 @@ from bitstamp_wallets.models import BTSCredential
 from phonenumber_field.modelfields import PhoneNumberField
 from bitcoins.models import DestinationAddress, ShopperBTCPurchase
 
+from utils import format_satoshis_with_units, mbtc_to_satoshis
+
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
 
@@ -229,6 +231,12 @@ class Merchant(models.Model):
 
     def has_finished_registration(self):
         return self.has_destination_address()
+
+    def get_max_mbtc_sale_formatted(self):
+        return format_satoshis_with_units(mbtc_to_satoshis(self.max_mbtc_shopper_sale))
+
+    def get_max_mbtc_purchase_formatted(self):
+        return format_satoshis_with_units(mbtc_to_satoshis(self.max_mbtc_shopper_purchase))
 
 
 class OpenTime(models.Model):

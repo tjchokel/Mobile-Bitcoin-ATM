@@ -19,17 +19,18 @@
       <h4>For Businesses</h4>
         <ul>
           <li><a href="#overview">{% trans "What Does CoinSafe Do?" %}</a></li>
-          <li><a href="#easy_to_use">{% trans "Does my Cashier/Teller Need to Understand Bitcoin?" %}</a></li>WRITE THIS
-          <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do We Have to Wait Before Releasing the Cash?" %}</a></li>WRITE THIS
-          <li><a href="#market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a></li>WRITE THIS
+          <li><a href="#easy_to_use">{% trans "Does my Cashier/Teller Need to Understand Bitcoin?" %}</a></li>
+          <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a></li>
+          <li><a href="#market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a></li>
           <li><a href="#private_keys">{% trans "Does CoinSafe Have My Bitcoin Private Keys?" %}</a></li>
-          <li><a href="#which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a></li>WRITE THIS
+          <li><a href="#which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a></li>
           <li><a href="#legality">{% trans "Is CoinSafe Legal in My Country?" %}</a></li>
           <li><a href="#api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a></li>
-          <li><a href="#new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a></li>WRITE THIS
+          <li><a href="#new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a></li>
+          <li><a href="#accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a></li>
         </ul>
 
-      <h4>For Customers</h4>WRITE ALL OF THESE!
+      <h4>For Customers</h4>
         <ul>
           <li><a href="#pricing">{% trans "Am I Getting a Fair Price?" %}</a></li>
           <li><a href="#btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a></li>
@@ -39,11 +40,12 @@
       <br/>
 
       {% url 'contact' as contact_url %}
-      <h4>{% blocktrans %}If you have additional questions, please don't hesitate to <a href="{{ contact_url}}">contact us</a>{% endblocktrans %}.</h4>
+      <h4>{% blocktrans %}If you have other questions, please don't hesitate to <a href="{{ contact_url}}">contact us</a>{% endblocktrans %}.</h4>
       <hr>
 
       <div class="panel-group">
 
+        <h4>For Business</h4>
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
@@ -65,6 +67,80 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
+              <a class="anchor" id="easy_to_use">{% trans "Does my Cashier/Teller Need to Understand Bitcoin?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  Not at all!
+                  The app is designed to be used by someone who has no idea what bitcoin is.
+                  All the teller needs to do is confirm when they have recieved cash (so that the app can pay out bitcoin).
+                  The app will also monitor the bitcoin network and notify the teller when it is safe to pay out cash to a customer (if buying bitcoin).
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  Bitcoin transactions take 10 minutes on average to be included in a block, though it varies greatly.
+                  While <a href="{{ double_spend_url }}">double-spend attacks</a> are rare, we recommend waiting for one confirmation just to be safe.
+                  You can set your own number of confirmations if you like.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans with coindesk_url='http://www.coindesk.com/information/how-do-bitcoin-transactions-work/' %}
+                  You can read more about how bitcoin transactions work in
+                  <a href="{{ coindesk_url }}">this article from CoinDesk</a>
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  Yes, but you can't force customers to transact with you at those prices.
+                  Just like any other product, you have to charge a competitive price if you want to get business.
+                  CoinSafe transparently displays your price markup to customers, so they can see exactly what they're paying.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  That said, providing instant bitcoin in person provides a lot of benefits and so it can command retail pricing.
+                  Your customers don't have to have a bank account (or link it to a third party exchange) nor wait several days for their fiat transactions to process.
+                  Cash is instantaneous.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
               <a class="anchor" id="private_keys">{% trans "Does CoinSafe Have My Bitcoin Private Keys?" %}</a>
             </h4>
           </div>
@@ -75,9 +151,9 @@
                 {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
                   If you want to sell bitcoin to customers (for cash), CoinSafe has to have a way to send the funds once the transaction is complete, so we do this via API.
                   The way this works is that you grant us access to your
-                  <a href="{{ coinbase_url }}">coinbase</a>,
+                  <a href="{{ coinbase_url }}">Coinbase</a>,
                   <a href="{{ blockchain_url }}">blockchain.info</a>, or
-                  <a href="{{ bitstamp_url }}">bitstamp</a> wallet.
+                  <a href="{{ bitstamp_url }}">Bitstamp</a> wallet.
                   For security, we always recommend keeping low balances on third party bitcoin sites.
                   Remember that you always have absolute power to unlink a third party wallet from CoinSafe by revoking the credential.
                 {% endblocktrans %}
@@ -94,6 +170,30 @@
         </div>
         <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
+                  We support
+                  <a href="{{ coinbase_url }}">Coinbase</a>,
+                  <a href="{{ blockchain_url }}">blockchain.info</a>, and
+                  <a href="{{ bitstamp_url }}">Bitstamp</a> wallet.
+                  If you're new to bitcoin, we recommend
+                  <a href="{{ coinbase_url }}">Coinbase</a>
+                  because it has the most features and flexibility.
+                {% endblocktrans %}
+              </p>
+
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -149,9 +249,9 @@
               {% url 'bitstamp_instructions' as bitstamp_url %}
               {% blocktrans %}
                 Here are links to our API access instructions for
-                <a href="{{ coinbase_url }}">coinbase</a>,
+                <a href="{{ coinbase_url }}">Coinbase</a>,
                 <a href="{{ blockchain_url }}">blockchain.info</a>, and
-                <a href="{{ bitstamp_url }}">bitstamp</a>.
+                <a href="{{ bitstamp_url }}">Bitstamp</a>.
               {% endblocktrans %}
               </p>
             </div>
@@ -159,10 +259,122 @@
         </div>
         <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
+                  We currently support
+                  <a href="{{ coinbase_url }}">Coinbase</a>,
+                  <a href="{{ blockchain_url }}">blockchain.info</a>, and
+                  <a href="{{ bitstamp_url }}">Bitstamp</a> wallet.
+                  We're always looking for more API partners,
+                  so if there's a wallet you'd like us to add please <a href="{{ contact_url }}">let us know</a> so we can add it.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  You can, but we strongly recommend against it.
+                  Besides the transactions fees they charge, there is a very high risk of chargeback.
+                  Someone could use a stolen credit card (or use their own card and later claim it was stolen) and then your payment processor might take that money back from you weeks later.
+                  Remember that bitcoin transactions are irreversible, so if that happens you would have lost both the money and the bitcoin.
+                  Yikes!
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <hr />
+        <h4>For Customers</h4>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="pricing">{% trans "Am I Getting a Fair Price?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with lb_url='https://localbitcoins.com/' %}
+                  We display prices very transparently so you know exactly what price you're getting and what percentage markup it is from the major exchanges.
+                  Plus, you can easily shop around between different businesses on CoinSafe to find the ones with the best price.
+                  Bitcoin in person is always more expensive than online exchanges because you're getting bitcoin immediately (no multiple business day waiting periods) and without having to have a bank account (or link it to a third party).
+                  A good baseline for comparing prices is <a href="{{ lb_url }}">localbitcoins.com</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with coinbase_url='https://coinbase.com/' %}
+                  <a href="{{ coinbase_url }}">Coinbase</a>
+                  has a feature where you can send bitcoin to an email address, so when a merchant hooks up their Coinbase account to CoinSafe we're able to use that.
+                  Coinbase will immediately email you a simple link to claim your bitcoin, <b>please do that immediately</b>.
+                  After a few weeks, if the bitcoin is unclaimed they will return it to the business you transacted with.
+                  Don't forget to claim your bitcoin!
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% url 'register_customer' as register_customer_url %}
+                {% blocktrans %}
+                  Of course!
+                  <a href="{{ register_customer_url }}">Click here to signup for email alerts</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
       </div>
+
       <br />
 
-      <h4>{% blocktrans %}If you have additional questions, please don't hesitate to <a href="{{ contact_url}}">contact us</a>{% endblocktrans %}.</h4>
+      <h4>{% blocktrans %}If you have other questions, please don't hesitate to <a href="{{ contact_url}}">contact us</a>{% endblocktrans %}.</h4>
 
     </div>
   </div>

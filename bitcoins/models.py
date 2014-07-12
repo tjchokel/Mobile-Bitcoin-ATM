@@ -204,8 +204,8 @@ class BTCTransaction(models.Model):
 
     def get_shopper(self):
         return self.forwarding_address.shopper
-
-    def handle_merchant_confirmations_override(self):
+        
+    def set_merchant_confirmation_override(self):
         self.min_confirmations_overrode_at = now()
         self.met_minimum_confirmation_at = now()
         self.save()

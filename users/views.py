@@ -153,7 +153,7 @@ def customer_dashboard(request):
                 if override_confirmation_form.is_valid():
                     # TODO: Having transactions an array is pretty confusing here
                     for transaction in transactions:
-                        transaction.handle_merchant_confirmations_override()
+                        transaction.set_merchant_confirmation_override()
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_override_confirmations_modal = 'true'

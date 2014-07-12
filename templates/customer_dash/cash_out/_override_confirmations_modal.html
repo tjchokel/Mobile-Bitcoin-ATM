@@ -12,24 +12,18 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
-            <!-- <p class="lead text-center text-green">
-              <span id="btc-amount">{{merchant.get_currency_symbol}}0.00 ≈ <i class="fa fa-bitcoin"></i>0.00</span>
-              <a class="active has-spinner hidden" id="btc-amt-loader">
-                <span class="spinner">
-                  <i class="fa fa-spinner fa-spin"></i>
-                </span>
-              </a>
-            </p> -->
-
-            <!-- <p class="lead text-center" id="step_1">1. Enter the amount of bitcoin you want to buy (in {{merchant.get_currency_name}})
-            </p>
-            <p class="lead text-center hidden" id="step_2">2. Enter where we should send your bitcoin
-            </p> -->
+            
             <p class="">
-              {% blocktrans with conf_num=transactions.first.conf_num %}
-                While a transaction has been detected, it has only been confirmed by the Bitcoin network {{conf_num}} times.
+              {% blocktrans %}
+                A transaction has been detected, but it has not yet been confirmed by the Bitcoin network.
+                It is possible (though very rare) for an unconfirmed transaction to later be undone via a
+                <a href="https://en.bitcoin.it/wiki/Double-spending" target="_blank">Double Spend Attack</a>,
+                so we recommend you wait for the transaction to confirm.
+                This usually takes 10 minutes on average, but can sometimes take up to twice that long.
+
+                If this is a small amount of funds for you or if you are sure this customer isn't a malicious attacker,
+                you can mark the transaction as complete now by entering your password below.
               {% endblocktrans %}
-              {% trans "If this is for a small amount of funds or if you aren't worried about a double spend attack, you can finish this transaction by entering your password below." %}
             </p>
 
             <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >

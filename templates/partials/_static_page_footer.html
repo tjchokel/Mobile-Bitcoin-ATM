@@ -16,13 +16,11 @@
         <a href="{% url 'team' %}">{% trans "Team" %}</a> <br/>
         <a href="{% url 'contact' %}">{% trans "Contact" %}</a> <br/>
         <a href="{% url 'cold_storage_guide' %}">{% trans "Cold Storage Guide" %}</a> <br/>
-        <a href="{% url 'terms' %}">Terms</a><br />
-        <a href="{% url 'privacy' %}">Privacy</a>
       </div>
     </div>
     <br/><br/>
     © 2014 CoinSafe Inc. 
-    <a href="#">{% trans "Privacy Policy" %}</a> | 
-    <a href="#">{% trans "Terms of Service" %}</a> 
+    <a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a> | 
+    <a href="{% url 'terms' %}">{% trans "Terms of Service" %}</a> 
   </div>
 </footer>

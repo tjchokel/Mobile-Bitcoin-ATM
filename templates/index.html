@@ -95,16 +95,7 @@
       </div>
     </div>
 </div>
-<footer style="background-color:#2a3b48;position:absolute;width:100%;height:400px; text-align:center;">
-  <div class="container">
-    <div class="row">
-      <h1 style="color:white; padding-top:30px;padding-bottom:30px;">
-      {% trans "Join The CoinSafe Network"%}
-      </h1>
-      <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="margin-bottom:40px;" >{% trans "Sign Up Today" %}</a>
-    </div>
-  </div>
-  <br/><br/><br/><br/><br/>
-  © 2014 CoinSafe Inc.
-</footer>
 {% endblock content %}
+{% block static_page_footer %}
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}

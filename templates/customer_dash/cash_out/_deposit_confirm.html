@@ -1,9 +1,9 @@
 {% load i18n %}
 <div class="container">
   <div class="page-header">
-      <h3 class="pull-left">{{merchant.business_name}}</h3>
+      <h3 class="pull-left hl">{{merchant.business_name}}</h3>
       {# hiding this, no need to see it until you've submitted the page #}
-      <h3 class="pull-right hidden" id="last-polled" style="color: #72a53b; float:right;">
+      <h3 class="pull-right hidden hl" id="last-polled" style="color: #72a53b; float:right;">
         {% trans "Last Updated" %}: <span id='last-polled-time'>0</span> {% trans "seconds ago" %}
         </h3>
       <div class="clearfix"></div>

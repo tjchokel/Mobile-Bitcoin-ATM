@@ -1,26 +1,37 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-    <div class="container">
-        <div class="page-header">
-          <h3 class="pull-left">{% trans "Get Notified" %}</h3>
-          <div class="clearfix"></div>
-        </div>
-
-        <div class="col-md-8 col-md-offset-2">
-          <p class="lead">
-            {% trans "We are building out a network of merchants in cities around the world. Sign up here to be notified when a merchant is available in your area." %}
-          </p>
-           <form class="form-horizontal" method="post" action="{% url "users.views.register_customer" %}" >
-               {% load crispy_forms_tags %}
-               {{ form|crispy }}
-               {% csrf_token %}
-               <div class="button-wrapper">
-                 <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
-               </div>
-           </form>
-        </div>
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
     </div>
+  </div>
+</div>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="hl top-50">{% trans "Get Notified" %}</h2>
+        <hr>
+      </div>
+    </div>
+   <div class="col-md-8 col-md-offset-2">
+     <p class="lead">
+       {% trans "We are building out a network of merchants in cities around the world. Sign up here to be notified when a merchant is available in your area." %}
+     </p>
+      <form class="form-horizontal" method="post" action="{% url "users.views.register_customer" %}" >
+          {% load crispy_forms_tags %}
+          {{ form|crispy }}
+          {% csrf_token %}
+          <div class="button-wrapper">
+            <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+          </div>
+      </form>
+   </div>
+</div>
 {% endblock content %}
 {% block extra_js %}
   <script>

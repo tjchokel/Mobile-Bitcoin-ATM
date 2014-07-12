@@ -66,6 +66,10 @@ class BuyBitcoinForm(forms.Form):
         widget=forms.TextInput(),
     )
 
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(BuyBitcoinForm, self).__init__(*args, **kwargs)
+
     def clean_btc_address(self):
         address = self.cleaned_data.get('btc_address')
         email_or_btc_address = self.cleaned_data.get('email_or_btc_address')
@@ -75,6 +79,17 @@ class BuyBitcoinForm(forms.Form):
                 msg = _("Please enter a valid bitcoin address")
                 raise forms.ValidationError(msg)
         return address
+
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount')
+        merchant = self.user.get_merchant()
+        credential = get_valid_api_credential()
+        if credential:
+            balance = merchant.credential.get_balance()
+            if balance < amount:
+                msg = _("Sorry, the amount you entered exceeds the available balance (%s btc)" % balance)
+                raise forms.ValidationError(msg)
+        return amount
 
 
 class NoEmailBuyBitcoinForm(forms.Form):
@@ -101,12 +116,27 @@ class NoEmailBuyBitcoinForm(forms.Form):
         widget=forms.TextInput(),
     )
 
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(NoEmailBuyBitcoinForm, self).__init__(*args, **kwargs)
+
     def clean_btc_address(self):
         address = self.cleaned_data.get('btc_address')
         if not is_valid_btc_address(address):
             msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address
+
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount')
+        merchant = self.user.get_merchant()
+        credential = merchant.get_valid_api_credential()
+        if credential:
+            balance = credential.get_balance()
+            if balance < amount:
+                msg = _("Sorry, the amount you entered exceeds the available balance (%s btc)" % balance)
+                raise forms.ValidationError(msg)
+        return amount
 
 
 class ConfirmPasswordForm(forms.Form):

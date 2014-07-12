@@ -25,6 +25,8 @@ class Merchant(models.Model):
     currency_code = models.CharField(max_length=5, blank=False, null=False, db_index=True, choices=BFH_CURRENCY_DROPDOWN)
     basis_points_markup = models.IntegerField(blank=True, null=True, db_index=True, default=100)
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
+    max_mbtc_shopper_purchase = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
+    max_mbtc_shopper_sale = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)

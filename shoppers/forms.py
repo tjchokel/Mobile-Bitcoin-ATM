@@ -2,9 +2,11 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinValueValidator, MaxValueValidator
 from countries import COUNTRY_DROPDOWN
+from decimal import Decimal
 
 from utils import clean_phone_num
 from bitcoins.BCAddressField import is_valid_btc_address
+from bitcoins.models import BTCTransaction
 
 
 class ShopperInformationForm(forms.Form):
@@ -83,11 +85,21 @@ class BuyBitcoinForm(forms.Form):
     def clean_amount(self):
         amount = self.cleaned_data.get('amount')
         merchant = self.user.get_merchant()
-        credential = get_valid_api_credential()
+
+        # Check if amount exceeds merhcant's buy limit
+        max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase
+        btc_price = Decimal(BTCTransaction.get_btc_price(merchant.currency_code))
+        amount_in_mbtc = (amount / btc_price) * 1000
+        if max_mbtc_shopper_purchase < amount_in_mbtc:
+            msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)
+            raise forms.ValidationError(msg)
+
+        # Check if amount exceeds available balance
+        credential = merchant.get_valid_api_credential()
         if credential:
-            balance = merchant.credential.get_balance()
+            balance = credential.get_balance()
             if balance < amount:
-                msg = _("Sorry, the amount you entered exceeds the available balance (%s btc)" % balance)
+                msg = _("Sorry, the amount you entered exceeds the available balance (%s BTC)" % balance)
                 raise forms.ValidationError(msg)
         return amount
 
@@ -130,11 +142,21 @@ class NoEmailBuyBitcoinForm(forms.Form):
     def clean_amount(self):
         amount = self.cleaned_data.get('amount')
         merchant = self.user.get_merchant()
+
+        # Check if amount exceeds merhcant's buy limit
+        max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase
+        btc_price = Decimal(BTCTransaction.get_btc_price(merchant.currency_code))
+        amount_in_mbtc = (amount / btc_price) * 1000
+        if max_mbtc_shopper_purchase < amount_in_mbtc:
+            msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)
+            raise forms.ValidationError(msg)
+
+        # Check if amount exceeds available balance
         credential = merchant.get_valid_api_credential()
         if credential:
             balance = credential.get_balance()
             if balance < amount:
-                msg = _("Sorry, the amount you entered exceeds the available balance (%s btc)" % balance)
+                msg = _("Sorry, the amount you entered exceeds the available balance (%s BTC)" % balance)
                 raise forms.ValidationError(msg)
         return amount
 

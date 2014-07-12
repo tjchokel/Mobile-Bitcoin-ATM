@@ -28,11 +28,6 @@ class CustomerRegistrationForm(forms.Form):
             ('sell_btc', 'Sell Bitcoin to Receive Cash'),
         ),
     )
-    message = forms.CharField(
-        label=_('Feedback for CoinSafe (optional)'),
-        widget=forms.Textarea(),
-        required=False
-    )
 
 
 class ContactForm(forms.Form):

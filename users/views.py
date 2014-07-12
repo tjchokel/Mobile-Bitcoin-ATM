@@ -187,7 +187,6 @@ def register_customer(request):
                     city=form.cleaned_data['city'],
                     country=form.cleaned_data['country'],
                     intention=form.cleaned_data['intention'],
-                    message=form.cleaned_data['message'],
             )
             msg = _("Thanks! We'll email you when new businesses near you sign up.")
             messages.success(request, msg, extra_tags='safe')

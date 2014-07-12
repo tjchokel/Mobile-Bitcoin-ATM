@@ -1,7 +1,8 @@
 {% load i18n %}
 <table class="table table-condensed" style="border-collapse:collapse;">
   <thead>
-    <tr>    
+    <tr>   
+      <th>{% trans "Shopper" %}</th>
       <th>{% trans "Amount" %} ({{merchant.currency_code}})</th>
       <th>Bitcoin</th>
       <th>{% trans "Status" %}</th>
@@ -16,6 +17,7 @@
             <i class="fa fa-plus-square-o text-blue" style="font-size: 18px;cursor: pointer;">
             </i>
           </td> -->
+          <td>{{shopper.name}}</td>
           <td>{{transaction.get_fiat_amount_formatted}}</td>
           <td><a href="https://blockchain.info/tx/{{ transaction.txn_hash }}" target="_blank">{{transaction.format_satoshis_amount}}</a></td>
           <td id="tx-status-{{transaction.txn_hash}}">{{transaction.get_status}}</td>

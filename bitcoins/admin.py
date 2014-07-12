@@ -46,6 +46,8 @@ class BTCTransactionAdmin(admin.ModelAdmin):
         'destination_address',
         'fiat_amount',
         'currency_code_when_created',
+        'met_minimum_confirmation_at',
+        'min_confirmations_overrode_at'
     )
 
     class Meta:

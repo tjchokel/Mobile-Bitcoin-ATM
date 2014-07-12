@@ -24,6 +24,7 @@
           <li><a href="#merchant_kyc">{% trans "Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?" %}</a></li>
           <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a></li>
           <li><a href="#market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a></li>
+          <li><a href="#price_feed">{% trans "How Does CoinSafe Calculate the Market Price for BTC?" %}</a></li>
           <li><a href="#private_keys">{% trans "Does CoinSafe Have My Bitcoin Private Keys?" %}</a></li>
           <li><a href="#api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a></li>
           <li><a href="#which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a></li>
@@ -187,6 +188,39 @@
                   That said, providing instant bitcoin in person provides a lot of benefits and so it can command retail pricing.
                   Your customers don't have to have a bank account (or link it to a third party exchange) nor wait several days for their fiat transactions to process.
                   Cash is instantaneous.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="price_feed">{% trans "How Does CoinSafe Calculate the Market Price for BTC?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with btc_avg_url='https://bitcoinaverage.com/' coinbase_url='https://coinbase.com/' bitstamp_url='https://www.bitstamp.net/' %}
+                  For most countries, we use
+                  <a href="{{ btc_avg_url }}">bitcoinaverage.com</a>
+                  to get the latest bitcion price in your local currency.
+                  It's usually very close to
+                  <a href="{{ coinbase_url }}">Coinbase</a> and
+                  <a href="{{ bitstamp_url }}">Bitstamp</a>.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans with dual_exchange_rate_url='http://www.investopedia.com/terms/d/dualexchangerate.asp' %}
+                  For countries with capital controls that cause
+                  <a href="{{ dual_exchange_rate_url }}">dual exchange rates</a>
+                  (like Argentina and Venezuela) we do something more complicated.
+                  We take market exchange rate (from various sources) and use that to convert the USD price of bitcoin to your local currency.
+                  Please let us know if you think our market prices are innaccurate in your country.
+                  We're always looking for better data.
                 {% endblocktrans %}
               </p>
             </div>

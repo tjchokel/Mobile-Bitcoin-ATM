@@ -1,615 +1,511 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-<div class="section-header">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <!-- Remove the .animated class if you don't want things to move -->
-        <h1 class="animated slideInLeft"><span></span></h1>
-      </div>
-    </div>
-  </div>
-</div>
 <div class="container">
-  <!-- Help Center -->
+
   <div class="row">
-    <div class="col-sm-12">
-      <h2 class="hl top-50">Frequently Asked Questions</h2>
-      <hr>
+    <div class="col-xs-12">
+      <br/><br/>
+      <h1 class="hl text-center top-zero">{% trans "Frequently Asked Questions" %}</h1>
     </div>
   </div>
+
   <div class="row">
     <!-- FAQs accordion -->
-    <div class="col-md-12 col-sm-9">
+    <div class="row">
+      <h3>Table of Contents</h3>
+      <br />
 
-      <ul>
-        <li><a href="#overview">What Does CoinSafe Do?</a></li>
-        <li><a href="#how_it_works">How Does CoinSafe Work?</a></li>
-        <li><a href="#cold_storage">What Is Cold Storage?</a></li>
-        <li><a href="#lost_bitcoin">How Do You Ensure My Bitcoin Is Never Lost?</a></li>
-        <li><a href="#stolen_bitcoin">How Do You Ensure My Bitcoin Is Never Stolen?</a></li>
-        <li><a href="#safe_servers">I'm A Security Nerd - How Do You Protect Your Servers?</a></li>
-        <li><a href="#withdrawal_time">How Long Does It Take to Get My Funds Back?</a></li>
-        <li><a href="#deposit_time">How Long Does It Take to Deposit Funds?</a></li>
-        <li><a href="#hit_by_bus">What Happens to my Bitcoin if I Get Hit by a Bus?</a></li>
-        <li><a href="#cost">How Much Does CoinSafe Cost?</a></li>
-        <li><a href="#complicated">Bitcoin Is Complicated, Am I Going to Make One Mistake and Lose All My Bitcoin?</a></li>
-        <li><a href="#rogue_employee">What If a Rogue Bank Employee Broke into a Vault?</a></li>
-        <li><a href="#vault_location">Where Are Your Bank Vaults?</a></li>
-        <li><a href="#forgot_pw">What Happens If I Forget My CoinSafe Password?</a></li>
-        <li><a href="#responsible_disclosure">Does CoinSafe Have a Responsible Disclosure Policy?</a></li>
-        <li><a href="#insurance">Why Doesn't CoinSafe Offer Insurance?</a></li>
-        <li><a href="#hot_wallet">Is it Safe to Store Bitcoin on My Desktop Computer?</a></li>
-        <li><a href="#blockchain_info">How is CoinSafe Different from a Hot Wallet Like blockchain.info?</a></li>
-        <li><a href="#off_blockchain">How is CoinSafe Different from an Off-Blockchain Wallets like Coinbase and Mt. Gox?</a></li>
-        <li><a href="#document_scan">Why Did CoinSafe Ask for a Scan of My Government ID?</a></li>
-        <li><a href="#private_info">How does CoinSafe Protect my Personal Information?</a></li>
-        <li><a href="#private_keys">How Are My Private Keys Accessed?</a></li>
-        <li><a href="#contested_guardian">What Happens if I Designate a Guardian and They Block My Withdrawals?</a></li>
-        <li><a href="#third_party">Do I Need to Trust a Service like CoinSafe for Cold Storage?</a></li>
-      </ul>
+      <h4>For Businesses</h4>
+        <ul>
+          <li><a href="#overview">{% trans "What Does CoinSafe Do?" %}</a></li>
+          <li><a href="#coinsafe_free">{% trans "Is CoinSafe Really Free?" %}</a></li>
+          <li><a href="#easy_to_use">{% trans "Does My Cashier/Teller Need to Understand Bitcoin?" %}</a></li>
+          <li><a href="#merchant_kyc">{% trans "Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?" %}</a></li>
+          <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a></li>
+          <li><a href="#market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a></li>
+          <li><a href="#price_feed">{% trans "How Does CoinSafe Calculate the Market Price for BTC?" %}</a></li>
+          <li><a href="#private_keys">{% trans "Does CoinSafe Have My Bitcoin Private Keys?" %}</a></li>
+          <li><a href="#api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a></li>
+          <li><a href="#which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a></li>
+          <li><a href="#new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a></li>
+          <li><a href="#legality">{% trans "Is CoinSafe Legal in My Country?" %}</a></li>
+          <li><a href="#accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a></li>
+          <li><a href="#btc_forwarding">{% trans "Why is there a Different Deposit Address for Each Customer that Sends me BTC?" %}</a></li>
+        </ul>
+
+      <h4>For Customers</h4>
+        <ul>
+          <li><a href="#pricing">{% trans "Am I Getting a Fair Price?" %}</a></li>
+          <li><a href="#btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a></li>
+          <li><a href="#merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a></li>
+        </ul>
+      </h2>
       <br/>
 
-      <h4>If you have additional questions, please don't hesitate to <a href="{% url "users.views.contact" %}">contact us</a>.</h4>
+      {% url 'contact' as contact_url %}
+      <h4>
+        {% blocktrans %}
+          If you have other questions, please don't hesitate to <a href="{{ contact_url }}">contact us</a>.
+        {% endblocktrans %}
+      </h4>
       <hr>
 
       <div class="panel-group">
 
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="overview">What Does CoinSafe Do?</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>We store bitcoin offline in physical bank vaults in three US states to ensure they are never lost or stolen. For the technically minded, it's more accurate to say that we store highly redundant copies of bitcoin private keys on encrypted USB drives that are kept in extremely secure facilities.</p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <h4>For Business</h4>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="how_it_works">How Does CoinSafe Work?</a>
+              <a class="anchor" id="overview">{% trans "What Does CoinSafe Do?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              <p>You begin by creating an account</a>. After registration, you are given your own personal Bitcoin address. This address is entirely on the blockchain and will only be shared with you. It works like any other Bitcoin address - you are free to send any amount to it at anytime, and it will safely remain in deep cold storage for as long as you'd like. Once you are ready to make a withdrawal, you submit a withdrawal request through our site and tell us where you would like the bitcoin sent. After we have verified that the request really came from you, two members of our transaction signing committee will travel to one of our bank locations to sign the transaction with your private keys. The withdrawal transaction is cryptographically signed within the bank vault so that your private key never leaves the premises. Then we take the signed transaction (which cannot be edited) back to the office and broadcast it to the bitcoin network to return your funds to you.</p>
+              <p>
+                {% blocktrans %}
+                  CoinSafe makes it easy for individuals and small businesses to connect offline to buy and sell bitcoin.
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="cold_storage">What Is Cold Storage?</a>
+              <a class="anchor" id="coinsafe_free">{% trans "Is CoinSafe Really Free?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              <p>Most bitcoin wallets are considered "hot", meaning that funds can be spent immediately. This is great when you want to use them (i.e. to pay for lunch), but also a great target for thieves.</p>
-              <p>Cold storage refers to keeping your bitcoin offline so that it isn't accessible to hackers and malware. Cold storage is a way to give up some convenience (being able to spend all of your money instantly) for added security (not having someone else able to do that). You can read more about cold storage on the official bitcoin wiki <a href="https://en.bitcoin.it/wiki/Cold_storage">here</a>.</p>
+              <p>{% trans "Yes." %}</p>
+              <p>
+                {% blocktrans %}
+                  We are currently 100% free to use, and we don't charge any fees of any kind.
+                  With CoinSafe, there's no contract or commitment to continue using us.
+                  We hope you'll use CoinSafe because you love it,
+                  but you're always free to leave anytime.
+                  Remember, <a href="#private_keys">we don't have access to your bitcoin private keys</a>.
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="lost_bitcoin">How Do You Ensure My Bitcoin Is Never Lost?</a>
+              <a class="anchor" id="easy_to_use">{% trans "Does My Cashier/Teller Need to Understand Bitcoin?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              <p>By taking every extreme precaution.</p>
               <p>
-                We use bank vaults with encrypted USB drives in three non-neighboring US states.
-                Each bank vault has 4 redundant USB drives made by 4 different drive manufacturers with an encrypted copy of all your private keys.
-                We store the drives on high shelves in case of flooding, in plastic bags in case the sprinkler system goes off, and inside of Faraday Bags in case of an EMP.
-                We cycle in new USB drives periodically as well.
-             </p>
-             <p>Even if two of our bank vaults were simultaneously vaporized with our entire team inside them, none of our users would lose any bitcoin.</p>
+                {% blocktrans %}
+                  Not at all!
+                  The app is designed to be used by someone who has no idea what bitcoin is.
+                  All the teller needs to do is confirm when they have recieved cash (so that the app can pay out bitcoin).
+                  The app will also monitor the bitcoin network and notify the teller when it is safe to pay out cash to a customer (if buying bitcoin).
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="stolen_bitcoin">How Do You Ensure My Bitcoin Is Never Stolen?</a>
+              <a class="anchor" id="merchant_kyc">{% trans "Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              <p>With CoinSafe, no bitcoin private keys ever touch an internet connected machine. 
-              Even if an attacker were able to compromise our server, there are never any bitcoin there to steal.</p>
-              <p>In order to prevent someone from impersonating you to withdraw your bitcoin, every single withdrawal requires <b>three factor authentication</b> at a minimum:</p>
-              <ul>
-                <li><b>Login with your username and password</b>: your username is not your email, so you're covered case you were using that password on another site that got hacked</li>
-                <li><b>Receive a code via SMS</b>: an attacker would have to compromise your phone as well</li>
-                <li><b>Click a link in your email</b>: an attacker would have to compromise your email as well</li>
-              </ul>
-              <p>In addition, we highly encourage each of our users to add a vault guardian. 
-              This is somebody you trust (a friend, family member, lawyer, etc) who must also sign-off on your withdrawals. 
-              We're always looking into ways to add even more security to accounts without sacrificing too much on convenience, please contact us</a> if you have any ideas.</p>
+              <p>{% trans "Nope!" %}</p>
+              {% url 'register_merchant' as register_merchant_url %}
+              <p>
+                {% blocktrans %}
+                  We encourage you to share some basic business info (like your business address and phone number) so that we can list your in our directory,
+                  but it's not required.
+                  You can see all the required personal info on
+                  <a href="{{ register_merchant_url }}">our merchant signup page</a>.
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="safe_servers">I'm A Security Nerd - How Do You Protect Your Servers?</a>
+              <a class="anchor" id="btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              <p>None of our private keys ever touch the internet (or leave our bank vaults) so there is no way for a hacker to steal your bitcoin. 
-              That being said, theoretically a hacker could gain access to our server and attempt to trick us into processing a fraudulent withdrawal request. 
-              To protect against this, we have designed a system that we believe is unlike any other (extensive blog post forthcoming!).
-              </p>
-
               <p>
-              When a new user registers, all of their data is immediately backed up on a completely separate cluster of severs. 
-              These machines are behind a very strict firewall that only accept incoming connections via 2FA ssh and never from the web server. 
-              Their job is to continuously "poll" the web server to check for any data discrepancies (e.g. a verification phone number being changed) as well as any unexpected changes in the code base. 
-              If anything fishy was ever detected, we would immediately be notified and would halt all trips to the bank vault until our team got to the bottom of it.
+                {% blocktrans %}
+                  Bitcoin transactions take 10 minutes on average to be included in a block, though it varies greatly.
+                  While <a href="{{ double_spend_url }}">double-spend attacks</a> are rare, we recommend waiting for one confirmation just to be safe.
+                  You can set your own number of confirmations if you like.
+                {% endblocktrans %}
               </p>
               <p>
-              Above all, we believe we are more secure than anyone else because of the human layer we add. 
-              If anything ever feels off, we will not hesitate to pick up the phone and call you directly. 
-              Our job is to be overly cautious so you don't have to be!
+                {% blocktrans with coindesk_url='http://www.coindesk.com/information/how-do-bitcoin-transactions-work/' %}
+                  You can read more about how bitcoin transactions work in
+                  <a href="{{ coindesk_url }}">this article from CoinDesk</a>
+                {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="withdrawal_time">How Long Does It Take to Get My Funds Back?</a>
+              <a class="anchor" id="market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                We're really good for security, but not great for speed. 
-                If you're looking to daytrade, CoinSafe is not a good choice for you.
+                {% blocktrans %}
+                  Yes.
+                  We continuously monitor exchange rates, and let merchants charge a markup on these prices.
+                  Just like any other product, you have to charge a competitive price if you want to get business.
+                  CoinSafe transparently displays your price markup to customers, so they can see exactly what they're paying.
+                {% endblocktrans %}
               </p>
               <p>
-                Your bitcoin private keys are kept on encrypted USB drives in US bank vaults.
-                Accessing them requires two members of our transaction signing committee to simultaneously enter their decryption keys into an offline machine inside the bank vault.
-                This can take up to 2 business days, though we're usually faster.
-              </p>
-              <p>
-                The best practice in bitcoin security is to keep most of your funds offline in cold storage and then keep only a small ammount in warm/hot wallets and transfer between the two periodically.
-                Think of your hot wallet like you checking account and your cold storage like your savings account.
+                {% blocktrans %}
+                  That said, providing instant bitcoin in person provides a lot of benefits and so it can command retail pricing.
+                  Your customers don't have to have a bank account (or link it to a third party exchange) nor wait several days for their fiat transactions to process.
+                  Cash is instantaneous.
+                {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="deposit_time">How Long Does It Take to Deposit Funds?</a>
+              <a class="anchor" id="price_feed">{% trans "How Does CoinSafe Calculate the Market Price for BTC?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                You can deposit funds instantly at anytime.
-                Once your account is setup, you don't need to ever contact us before a deposit, just make them whenever you like.
+                {% blocktrans with btc_avg_url='https://bitcoinaverage.com/' coinbase_url='https://coinbase.com/' bitstamp_url='https://www.bitstamp.net/' %}
+                  For most countries, we use
+                  <a href="{{ btc_avg_url }}">bitcoinaverage.com</a>
+                  to get the latest bitcion price in your local currency.
+                  It's usually very close to
+                  <a href="{{ coinbase_url }}">Coinbase</a> and
+                  <a href="{{ bitstamp_url }}">Bitstamp</a>.
+                {% endblocktrans %}
               </p>
               <p>
-                The way the bitcoin protocol works, a machine doesn't need to be online to accept transactions (that happens automatically by miners and is recorded in the blockchain).
-                That means you can deposit anytime and your bitcoin private keys stay safely offline in our bank vaults.
-                The only time we need to access the private keys is when we send your bitcoin back to you.
+                {% blocktrans with dual_exchange_rate_url='http://www.investopedia.com/terms/d/dualexchangerate.asp' %}
+                  For countries with capital controls that cause
+                  <a href="{{ dual_exchange_rate_url }}">dual exchange rates</a>
+                  (like Argentina and Venezuela) we do something more complicated.
+                  We take market exchange rate (from various sources) and use that to convert the USD price of bitcoin to your local currency.
+                  Please let us know if you think our market prices are innaccurate in your country.
+                  We're always looking for better data.
+                {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
-
-         <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="hit_by_bus">What Happens to My Bitcoin If I Get Hit by a Bus?</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>Please don't get hit by a bus! The world would be a much worse place without you.</p>
-              <p>
-                However, in the unlikely event of your death, we make sure that all of your funds are transferred to your estate.
-                There's a bit of paperwork involved to make sure that you're really deceased and to confirm who now controls your estate, but it's similar to your bank accounts and other property you own.
-              </p>
-              <p>We've got you covered. You don't need to worry about your family members remembering some secret password or knowing how to access your bitcoin wallet.</p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="cost">How Much Does CoinSafe Cost?</a>
+              <a class="anchor" id="private_keys">{% trans "Does CoinSafe Have My Bitcoin Private Keys?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
+              <p>{% trans "No." %}</p>
               <p>
-                The first 10 bitcoins you store are 100% free!
-                Above that, we charge 1% of the deposit amount per year in bitcoin.
-                This amount is annualized based on fractions of a year (e.g. 0.5% for 6 months).
-                We don't collect our fee until you withdraw.
+                {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
+                  If you want to sell bitcoin to customers (for cash), CoinSafe has to have a way to send the funds once the transaction is complete, so for those businesses we do this via API.
+                  The way this works is that you grant us API access to your
+                  <a href="{{ coinbase_url }}">Coinbase</a>,
+                  <a href="{{ blockchain_url }}">blockchain.info</a>, or
+                  <a href="{{ bitstamp_url }}">Bitstamp</a> wallet.
+                  For security, we always recommend keeping low balances on third party bitcoin sites.
+                  Remember that you always have absolute power to unlink a third party wallet from CoinSafe by revoking the credential.
+                {% endblocktrans %}
               </p>
               <p>
-                To clarify, if you store 15 bitcoin for 6 months, we would only charge you for storing 5 bitcoins (the first 10 are always free).
-                Since 6 months is half of a year, we'd charge 0.5% for those 5 bitcoins, or 0.025 BTC in total.
-                So, we'd send you back 14.975 BTC of your 15 BTC, for an average fee of ~0.167%.
+                {% blocktrans %}
+                  If all you want to do is buy bitcoin from customers (with the cash in your cash register), then all CoinSafe needs is a valid bitcoin address for customers to send your funds to.
+                  That can be any address and we won't even know who holds the private key or what software/service you used to generated that address.
+                {% endblocktrans %}
               </p>
-              <p>
-                Our prices are strictly in Bitcoin and we don't accept government currencies.
-                We don't adjust our pricing if the value of a bitcoin (in government currencies) goes up or down.
-              </p>
+
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="complicated">Bitcoin Is Complicated, Am I Going to Make One Mistake and Lose All My Bitcoin?</a>
+              <a class="anchor" id="api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              <p>Not with CoinSafe!</p>
               <p>
-                Bitcoin is complicated, but we take care of all the hard parts.
-                The only way you could lose bitcoin is if you explicitly sent it to someone else.
-                We confirm everything repeatedly and there are no gotchas.
-                The whole site is designed to be very easy to use, even for beginners. We've got your back!
+                {% blocktrans with electrum_url="https://electrum.org" armory_url='https://bitcoinarmory.com/' %}
+                  We encrypt all information while in transit to our servers and store credentials encrypted in our database as well.
+                  For security, we always recommend keeping low balances on third party bitcoin sites.
+                  For larger amounts of bitcoin, we recommend cold storage using
+                  <a href="{{ electrum_url }}">Electrum</a> or
+                  <a href="{{ armory_url }}">Armory</a>.
+                  Remember that you always have absolute power to unlink a third party wallet from CoinSafe by revoking the credential.
+                {% endblocktrans %}
               </p>
               <p>
-                Unsure if you're doing something right? Contact us</a> anytime, we'd love to hear from you.
+              {% url 'coinbase_instructions' as coinbase_url %}
+              {% url 'blockchain_instructions' as blockchain_url %}
+              {% url 'bitstamp_instructions' as bitstamp_url %}
+              {% blocktrans %}
+                Here are links to our API access instructions for
+                <a href="{{ coinbase_url }}">Coinbase</a>,
+                <a href="{{ blockchain_url }}">blockchain.info</a>, and
+                <a href="{{ bitstamp_url }}">Bitstamp</a>.
+              {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="rogue_employee">What If a Rogue Bank Employee Broke into a Vault?</a>
+              <a class="anchor" id="which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                All of our USB drives are encrypted using AES 256 with a CBC cipher (see more in our <a href="/cold-storage-guide/">cold storage guide</a>), which is effectively unbreakable.
-                That said, this would still be a security breach and we'd probably move the bitcoin just to be safe.
+                {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
+                  We support
+                  <a href="{{ coinbase_url }}">Coinbase</a>,
+                  <a href="{{ blockchain_url }}">blockchain.info</a>, and
+                  <a href="{{ bitstamp_url }}">Bitstamp</a> wallet.
+                  If you're new to bitcoin, we recommend
+                  <a href="{{ coinbase_url }}">Coinbase</a>
+                  because it has the most features and flexibility.
+                {% endblocktrans %}
               </p>
+
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="vault_location">Where Are Your Bank Vaults?</a>
+              <a class="anchor" id="new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                Out of an abundance of caution, we don't reveal the exact location of our US bank vaults.
-                The only thing we confirm is that we have one in Seattle WA because that is where we're headquartered; the other two are in non-neighboring US states.
-                They're all major banks that are used by millions of Americans.
-              </p>
-              <p>
-                Breaking into a bank vault is extremely difficult.
-                All of our banks have armed guards, silent alarms, and very thick steel walls.
+                {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
+                  We currently support
+                  <a href="{{ coinbase_url }}">Coinbase</a>,
+                  <a href="{{ blockchain_url }}">blockchain.info</a>, and
+                  <a href="{{ bitstamp_url }}">Bitstamp</a> wallet.
+                  We're always looking for more API partners,
+                  so if there's a wallet you'd like us to add please <a href="{{ contact_url }}">let us know</a> so we can add it.
+                {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="forgot_pw">What Happens If I Forget My CoinSafe Password?</a>
+              <a class="anchor" id="legality">{% trans "Is CoinSafe Legal in My Country?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                First off, please don't lose your password!
-                It's intentionally hard to reset so that someone else can't impersonate you.
+                {% blocktrans with coindesk_url='http://www.coindesk.com/information/is-bitcoin-legal/' wikipedia_url='http://en.wikipedia.org/wiki/Legality_of_Bitcoins_by_country' %}
+                  Bitcoin is so new that the laws surrounding it many countries are still unclear.
+                  We're not lawyers, so we can't give you legal advice.
+                  CoinDesk has
+                  <a href="coindesk_url">a great piece on bitcoin legality by country</a>
+                  and
+                  <a href="wikipedia_url">wikipedia some info as well</a>
+                {% endblocktrans %}
               </p>
               <p>
-                When you create an account, we require you to not only verify your phone and email, but also provide detailed identity info which we can later use to authenticate you. 
-                We scrutinize each request, and use many signals to detect impostors.
+                {% blocktrans %}
+                  Please note that some countries may require you to comply with "Know Your Customer" (KYC) and "Anti-Money Laundering" (AML) regulations, which might include things like checking the customer's government ID and copying down their name, address, and telephone number.
+                  If you'd like us to build support for your country's requiredments into our software,
+                  please <a href="{{ contact_url}}">tell us about it</a>.
+                {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="responsible_disclosure">Does CoinSafe Have a Responsible Disclosure Policy?</a>
+              <a class="anchor" id="accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                Yes we do, please send us any bugs you may find!
-                Our program is managed by CrowdCurity, you can see the details <a href="https://www.crowdcurity.com/users/coinsafe-inc/programs/coinsafe_inc">here</a>.
-                We support the <b>responsible</b> disclosure of all potential security vulnerabilities and promise not to bring legal action against researchers who do their best to follow the CrowdCurity guidelines.
-                </p>
+                {% blocktrans %}
+                  You can, but we strongly recommend against it.
+                  Besides the transactions fees they charge, there is a very high risk of chargeback.
+                  Someone could use a stolen credit card (or use their own card and later claim it was stolen) and then your payment processor might take that money back from you weeks later.
+                  Remember that bitcoin transactions are irreversible, so if that happens you would have lost both the money and the bitcoin.
+                  Yikes!
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="insurance">Why Doesn't CoinSafe Offer Insurance?</a>
+              <a class="anchor" id="btc_forwarding">{% trans "Why is there a Different Deposit Address for Each Customer that Sends me BTC?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                We're in talks with major underwriters and trying to be the first ones to offer a capitalized and publicly verifiable insurance plan, but nobody has been able to do this yet :(
+                {% blocktrans %}
+                  In order to uniquely identify each bitcoin transaction,
+                  we generate a new bitcoin address every time a customer sends bitcoin to your business.
+                  That way, we're able to know for sure who sent you that bitcoin.
+                  We forward these transactions to your destination address automatically,
+                  and there is no fee to you at all
+                  (we cover the bitcoin network fee when forwarding the transaction).
+                  As always, you can verify this on the bitcoin blockchain for yourself!
+                {% endblocktrans %}
               </p>
               <p>
-                Some bitcoin companies have engaged in unethical insurance practices like:
-              </p>
-              <ul>
-                <li>Claiming they had insurance that they didn't</li>
-                <li>Buying a data breach plan that covers against damages arising from hackers stealing personally identifiable information (PII) like social security numbers and trying to use this for bitcoin. Even worse, the bitcoin is supposed to be kept offline, so it really doesn't apply.</li>
-                <li>Self-insuring through their own subsidiary/captive that doesn't have capital to pay losses, while not disclosing any of this info</li>
-              </ul>
-              <p>
-                Do your homework very careful to be sure that any "insurance" you're paying for is real.
-                Real insurance plans are always publicly verifiable and have the capital to cover loss events if they occur.
-                The underwriter should have enough capital so that in the event of a claim they don't have to decide between paying it and going out of business, or fighting it and staying alive.
-                Feel free to contact us if you're considering using a service that claims to offer insurance but doesn't doesn't meet these basic standards and we'd be happy to evaluate it for you.
+                {% blocktrans %}
+                  Usually, our automated system forwards the bitcoin immediately,
+                  but sometimes there can be a slight delay.
+                  We're working on improving this.
+                  If your transaction is delayed, please don't hesitate to
+                  <a href="{{ contact_url}}">contact us</a>.
+                  No transaction has ever been lost,
+                  but sometimes our automated system can fall slightly behind.
+                {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="hot_wallet">Is it Safe to Store Bitcoin on My Desktop Computer?</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>Here are the main problems associated with storing bitcoin on your personal computer:</p>
-              <ul>
-                <li><b>Your computer is connected to the internet</b> which is really dangerous. We cannot stress this enough: <b>you should only store an amount of bitcoin you're comfortable losing on internet connected machines</b>.
-                <li><b>Your computer may be infected with malware</b>. Over 40% of all personal computers are infected with malware and bitcoin wallets are a prime target. This happens far too often and is very difficult to detect until it is too late.</li>
-                <li><b>Everything must be backed up</b> in case of hardware failure. Furthermore, these backups must be properly encrypted and stored in geographically diverse locations to protect against theft, fire, and acts of nature.</li>
-                <li><b>There is no room for mistakes</b>. Bitcoin is quite complex, and stories of simple oversights causing catastrophic results are unfortunately too common. The Bitcoin protocol is incredibly secure, but only when everything is done properly.</li>
-              </ul>
-              <p>It's not a bad idea to keep a small amount of funds on a desktop computer, but probably no more than you would hold in your physical wallet unless you really know what you're doing.</p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <hr />
+        <h4>For Customers</h4>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="blockchain_info">How is CoinSafe Different from a Hot Wallet Like blockchain.info?</a>
+              <a class="anchor" id="pricing">{% trans "Am I Getting a Fair Price?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                Blockchain.info offers a solid hot wallet that we recommend for storing small amounts of funds.
-                The main difference is that with blockchain.info is that the information necessary to spend your bitcoin exists on an internet-connected machines.
-                You control a password to unlock those funds, so theoretically your bitcoin is secure.
-                There are many instances in which a bug, malicious employee, or socially engineered attack could lead someone to steal your bitcoin from that machine.
+                {% blocktrans with lb_url='https://localbitcoins.com/' %}
+                  We display prices very transparently so you know exactly what price you're getting and what percentage markup it is from the major exchanges.
+                  Plus, you can easily shop around between different businesses on CoinSafe to find the ones with the best price.
+                  Bitcoin in person is always more expensive than online exchanges because you're getting bitcoin immediately (no multiple business day waiting periods) and without having to have a bank account (or link it to a third party).
+                  A good baseline for comparing prices is <a href="{{ lb_url }}">localbitcoins.com</a>.
+                {% endblocktrans %}
               </p>
-              <p>To protect your funds, there is no way to reset your password if you forget it or transfer your bitcoin to your estate if you die.</p>
-              <p>Also, as a foreign company they're not bound by US laws.</p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="off_blockchain">How is CoinSafe Different from an Off-Blockchain Wallets like Coinbase and Mt. Gox?</a>
+              <a class="anchor" id="btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                Since these companies don't open-source their code and processes, we can only infer how their system works based on the limited info they do share.
-                Their basic model is that they hold a lot of bitcoin in many pooled addresses (most of which are offline) and internally they keep track of which users are owed which bitcoin.
-                They also engage in a broker-dealer business of buying and selling bitcoin, which they probably make a profit on.
-                Like all risk-taking enterprises it has the potential to fail catastrophically.
+                {% blocktrans with coinbase_url='https://coinbase.com/' %}
+                  <a href="{{ coinbase_url }}">Coinbase</a>
+                  has a feature where you can send bitcoin to an email address, so when a merchant hooks up their Coinbase account to CoinSafe we're able to use that.
+                  Coinbase will immediately email you a simple link to claim your bitcoin, <b>please do that right away</b>.
+                  After a few weeks, if the bitcoin is unclaimed they will return it to the business you transacted with.
+                  Don't forget to claim your bitcoin!
+                {% endblocktrans %}
               </p>
-              <p>
-                While all transactions in the blockchain are public, Coinbase and Mt. Gox's pooling of funds makes it nearly impossible to measure or audit if they are solvent.
-                A hacker (or disgruntled employee) could steal a large percentage of their bitcoin and users wouldn't have any way to know.
-                It's possible that they've lost private keys to wallets.
-              </p>
-              <p>
-                We have no idea what losses these off-blockchain services have suffered. As a point of reference, at one point PayPal was losing $10 MM USD <b>per month</b> due to fraud.
-              </p>
-              <p>To summarize: <b>there is never a valid reason to store bitcoin off the blockchain</b>.</p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="document_scan">Why Did CoinSafe Ask for a Scan of My Government ID?</a>
+              <a class="anchor" id="merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                We are required to check all new users before granting access to the site and unfortunately we are sometimes unable to find a person's information in government databases.
-                This can happen because:
-              </p>
-              <ul>
-                <li>Our data provider has imperfect information.</li>
-                <li>A person recently moved.</li>
-                <li>A person submitted fake info assuming it wouldn't be checked.</li>
-              </ul>
-              <p>
-                Sorry for the hassle, we know it can be a real a pain.
-                We don't make the rules but we have to follow them.
+                {% url 'register_customer' as register_customer_url %}
+                {% blocktrans %}
+                  Of course!
+                  <a href="{{ register_customer_url }}">Click here to signup for email alerts</a>.
+                {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="private_info">How does CoinSafe Protect my Personal Information?</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>
-                We take your protecting your personal info very seriuosy and gaurd it as if it were our own.
-                We encrypt all information while in transit to our servers and store sensitive information encrypted as well.
-                Only authorized staff have access, and only for approved tasks.
-              </p>
-              <p>
-                You can see our privacy policy >here</a>, please <a href="{% url "users.views.contact" %}">contact us</a> with any questions.
-              </p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="private_keys">How Are My Private Keys Accessed?</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>
-                Your bitcoin private keys are kept on encrypted USB drives in our US bank vaults.
-                In order to sign a transaction with your private key, two members of our transaction signing committee must simultaneously enter their decryption keys into an offline machine inside the bank vault.
-                In other words, no single individual has access to your private funds.
-              </p>
-              <p>
-                Because CoinSafe is on the blockchain all customers always know that 100% of their funds have never left their account.
-                By using the very same cryptography that secures the Bitcoin protocol, it's like having a vault with an unfakeable one-way camera for all our users to see.
-              </p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="contested_guardian">What Happens if I Designate a Guardian and They Block My Withdrawals?</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>
-                Remember that <a href="#stolen_bitcoin">the primary purpose of the Guardian is to protect your account</a>, so you want to choose someone that you trust.
-                However, relationships can sour and we have to plan for the worst.
-                Fundamentally, the account belongs to you, so if we can authenticate that you really do want to withdraw the funds then we can remove your Guardian's status.
-              </p>
-                Authenticating you is harder than it sounds (there are lots of people who would like to impersonate you!) so we go to great lengths to be sure that it's really you trying to remove your Guardian.
-                We can use lots of additional signals to authenticate that you're you, depending on the specifics of your case:
-              </p>
-              <ul>
-                <li>
-                  <b>Knowledge Based Authentication</b> -
-                  We give you a series of questions (e.g. which of the following streets have you lived near in the last 5 years?) that you must answer instantly.
-                  We can do this easily because we verified all your info when you created your account.
-                </li>
-                <li>
-                  <b>Login History</b> -
-                  We log all activity on the site, so we can tell if you're logging in from the same browsers and IP addresses that you've previously used to access the site.
-                </li>
-                <li>
-                  <b>Secondary Documents Scans</b> -
-                  Identification documents, utility bills, bank statements, etc
-                </li>
-                <li>
-                  <b>Licensed US Notary</b> -
-                  Notarized documents from a licensed US notary who has verified your identity document in person to confirm it matches what we have on file.
-                </li>
-              </ul>
-              <p>
-                No one of these signals is sufficient to restore access to an account, and in a very rare case that is highly contested we may require a valid court order in order to override your guardian's consent.
-                Our policy is to always err on the side of caution, meaning that if we can't authenticate an account we will take our time to sort it out.
-                During this process, the funds never move and this is always publicly visible on the bitcoin blockchain.
-              </p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="third_party">Do I Need to Trust a Service like CoinSafe for Cold Storage?</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>Nope! In fact, we even publish a <a href="/cold-storage-guide/">cold storage guide</a> that will walk you through most of the best practices we use as CoinSafe.</p>
-              <p>
-                Securing your bitcoin is not an easy task and requires technical knowledge, patience, diligence and some specialized equipment.
-                We are very proud of the service we provide at CoinSafe.
-                If you have feedback for how we could improve, please let us know</a>.
-              </p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">Back to Top</a></p>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
       </div>
+
       <br />
+
+      <h4>
+        {% blocktrans %}
+          If you have other questions, please don't hesitate to <a href="{{ contact_url }}">contact us</a>.
+        {% endblocktrans %}
+      </h4>
 
     </div>
   </div>
 </div>
-{% endblock content %}
-{% block static_page_footer %}
-  {% include "partials/_static_page_footer.html" %}
-{% endblock static_page_footer %}
 
+{% endblock content %}

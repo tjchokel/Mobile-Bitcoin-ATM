@@ -50,7 +50,6 @@
             <li><a href="{% url 'help' %}">{% trans "FAQ" %}</a></li>
             <li class="hidden-sm"><a href="{% url 'team' %}">{% trans "Team" %}</a></li>
             <li><a href="{% url 'contact' %}">{% trans "Contact Us" %}</a></li>
-            
           </ul>
           <ul class="nav navbar-nav navbar-right ">
             <!-- {% if user.is_authenticated %}
@@ -145,7 +144,6 @@
     </div>
 
     <!-- Begin page content -->
-    
     {% block content %}{% endblock content %}
 
     <!-- Admin Footer -->
@@ -160,8 +158,7 @@
     <script src="{% static "js/bootstrap-formhelpers.js" %}"></script><!-- http://vincentlamanna.com/BootstrapFormHelpers/phone/#jquery-plugins -->
     <script src="{% static "js/custom.js" %}"></script>
     <script src="{% static "js/autoNumeric.js" %}"></script> <!--https://github.com/BobKnothe/autoNumeric -->
-    {% block extra_js %}
-    {% endblock extra_js %}
+    {% block extra_js %}{% endblock extra_js %}
     {% include "partials/ga.html" %}
   </body>
 </html>

@@ -8,21 +8,19 @@
       <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="margin-bottom:40px;" >{% trans "Sign Up Today" %}</a>
     </div>
   </div>
-  <br/>
-  
+
   <div class="container" style="text-align:left;">
     <div class="row">
       <div class="col-sm-4">
-        <a href="#">{% trans "Help" %}</a> <br/>
-        <a href="#">{% trans "Team" %}</a> <br/>
-        <a href="#">{% trans "Contact" %}</a> <br/>
-        <a href="#">{% trans "Cold Storage Guide" %}</a> <br/>
-            
+        <a href="{% url 'help' %}">{% trans "Help" %}</a> <br/>
+        <a href="{% url 'team' %}">{% trans "Team" %}</a> <br/>
+        <a href="{% url 'contact' %}">{% trans "Contact" %}</a> <br/>
+        <a href="{% url 'cold_storage_guide' %}">{% trans "Cold Storage Guide" %}</a> <br/>
       </div>
     </div>
     <br/><br/>
     © 2014 CoinSafe Inc. 
-    <a href="#">{% trans "Privacy Policy" %}</a> | 
-    <a href="#">{% trans "Terms of Service" %}</a> 
+    <a href="{% url 'privacy' %}">{% trans "Privacy Policy" %}</a> | 
+    <a href="{% url 'terms' %}">{% trans "Terms of Service" %}</a> 
   </div>
 </footer>

@@ -220,6 +220,8 @@ def merchant_settings(request):
     initial['currency_code'] = merchant.currency_code
     initial['btc_address'] = dest_address.b58_address
     initial['btc_markup'] = merchant.basis_points_markup / 100.0
+    initial['max_mbtc_shopper_purchase'] = merchant.max_mbtc_shopper_purchase
+    initial['max_mbtc_shopper_sale'] = merchant.max_mbtc_shopper_sale
     bitcoin_form = BitcoinInfoForm(initial=initial)
     return {
         'user': user,

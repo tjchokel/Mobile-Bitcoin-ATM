@@ -433,6 +433,20 @@ class BitcoinInfoForm(forms.Form):
             widget=forms.TextInput(),
     )
 
+    max_mbtc_shopper_purchase = forms.IntegerField(
+            label=_('Max Shopper Purchase'),
+            required=True,
+            help_text=_('The maximum amount of mBTC a shopper can purchase.'),
+            widget=forms.TextInput(),
+    )
+
+    max_mbtc_shopper_sale = forms.IntegerField(
+            label=_('Max Shopper Sale'),
+            required=True,
+            help_text=_('The maximum amount of mBTC a shopper can sell.'),
+            widget=forms.TextInput(),
+    )
+
     def __init__(self, *args, **kwargs):
         super(BitcoinInfoForm, self).__init__(*args, **kwargs)
         if kwargs and 'initial' in kwargs and 'currency_code' in kwargs['initial']:
@@ -459,6 +473,5 @@ class PasswordConfirmForm(forms.Form):
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        import pdb; pdb.set_trace()
         if not self.user.check_password(password):
             raise forms.ValidationError('Invalid password')

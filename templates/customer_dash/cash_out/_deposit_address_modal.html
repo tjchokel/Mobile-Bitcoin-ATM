@@ -14,8 +14,12 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
-            <p class="lead text-center">{% trans "Customer: send BTC to this address"%}: 
+            <p class="lead text-center">{% trans "Customer: send BTC to this address"%}: <br/>
+            {% blocktrans with max_mbtc=merchant.max_mbtc_shopper_sale %}
+              (Max: {{ max_mbtc }} mBTC)
+            {% endblocktrans %}
             </p>
+            
             <p class="lead text-center text-green" id="current_address"></p>
 
               <div id="qr_code_span" style="display:none;">

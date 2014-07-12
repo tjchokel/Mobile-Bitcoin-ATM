@@ -419,11 +419,13 @@ def edit_bitcoin_info(request):
         if form.is_valid():
 
             merchant.currency_code = form.cleaned_data['currency_code']
+            merchant.max_mbtc_shopper_sale = form.cleaned_data['max_mbtc_shopper_sale']
+            merchant.max_mbtc_shopper_purchase = form.cleaned_data['max_mbtc_shopper_purchase']
+            merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
+            merchant.save()
             merchant.set_destination_address(
                     dest_address=form.cleaned_data['btc_address'],
                     credential_used=None)
-            merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
-            merchant.save()
 
             messages.success(request, _('Your bitcoin info has been updated'))
             return HttpResponseRedirect(reverse_lazy('merchant_settings'))

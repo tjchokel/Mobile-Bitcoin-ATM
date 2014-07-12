@@ -19,6 +19,11 @@ def satoshis_to_mbtc(satoshis):
     return satoshis / float(SATOSHIS_PER_MILLIBITCOIN)
 
 
+def mbtc_to_satoshis(mbtc):
+    # invertible, ugly for printing
+    return mbtc * SATOSHIS_PER_MILLIBITCOIN
+
+
 def btc_to_satoshis(btc):
     # invertible, ugly for printing
     return long(float(btc) * SATOSHIS_PER_BTC)

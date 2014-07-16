@@ -42,6 +42,8 @@ def login_request(request):
                 if user:
                     login(request, user)
 
+                    request.session['last_password_validation'] = now().ctime()
+
                     # Log the login
                     LoggedLogin.record_login(request)
 
@@ -121,6 +123,9 @@ def register_merchant(request):
                     country=country,
                     currency_code=currency_code,
             )
+
+            # Send welcome email (it's really for later)
+            merchant.send_welcome_email()
 
             # login user
             user_to_login = authenticate(username=email, password=password)

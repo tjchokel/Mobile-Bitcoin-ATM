@@ -22,6 +22,7 @@
           <li><a href="#coinsafe_free">{% trans "Is CoinSafe Really Free?" %}</a></li>
           <li><a href="#easy_to_use">{% trans "Does My Cashier/Teller Need to Understand Bitcoin?" %}</a></li>
           <li><a href="#merchant_kyc">{% trans "Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?" %}</a></li>
+          <li><a href="#merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display?" %}</a></li>
           <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a></li>
           <li><a href="#market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a></li>
           <li><a href="#price_feed">{% trans "How Does CoinSafe Calculate the Market Price for BTC?" %}</a></li>
@@ -53,7 +54,7 @@
 
       <div class="panel-group">
 
-        <h4>For Business</h4>
+        <h4>For Businesses</h4>
 
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -133,6 +134,29 @@
                   but it's not required.
                   You can see all the required personal info on
                   <a href="{{ register_merchant_url }}">our merchant signup page</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>{% trans "Nope!" %}</p>
+              {% url 'merchant_advertisements' as merchant_advertisements_url %}
+              <p>
+                {% blocktrans %}
+                  Absolutely!
+                  We have
+                  <a href="{{ merchant_advertisements_url }}">a full page of them here</a>.
+                  Feel free to submit your own!
                 {% endblocktrans %}
               </p>
             </div>

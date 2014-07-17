@@ -4,22 +4,21 @@
 {% load staticfiles %}
 {% block content %}
     <!-- <div class="container"> -->
-<div id="wrap">
+<div id="wrap" style="position:relative;">
   <div class="container">
     <div class="row">
       <div class="col-md-5 col-sm-5">
         <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
       </div>
-
       <div class="col-sm-4 col-sm-offset-3 sign-up-box">
         <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="padding-right: 5px;padding-left:5px;width: 100%;">{% trans "List Your Business for Free" %}</a>
       </div>
-      <!-- <div class="sign-up-box" id="sign-up-box" style="width:24%; position:relative;left:70%">
-
-        <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="padding-right: 5px;padding-left:5px;width: 100%;">List Your Business for Free</a>
-      </div> -->
+      {% include "_play_video_modal.html" %}
     </div>
   </div>
+  <a style="cursor: pointer;position:absolute;top:50%;left:50%;margin-top:-18px;margin-left:-104px;" onclick="$('#play-video-modal').modal();">
+    <img src="{%static "img/play-button.png" %}"/>
+  </a>
 </div>
 <div class="divider-bar">
   <div class="container">
@@ -99,3 +98,28 @@
 {% block static_page_footer %}
   {% include "partials/_static_page_footer.html" %}
 {% endblock static_page_footer %}
+{% block extra_js %}
+  <script>
+    function toggleVideo(state) {
+        // if state == 'hide', hide. Else: show video
+        var div = document.getElementById("play-video-modal");
+        var iframe = div.getElementsByTagName("iframe")[0].contentWindow;
+        // div.style.display = state == 'hide' ? 'none' : '';
+        func = state == 'hide' ? 'pauseVideo' : 'playVideo';
+        iframe.postMessage('{"event":"command","func":"' + func + '","args":""}', '*');
+    }
+
+    $(document).ready(function(){
+      // If not mobile, web video is incredibly broken
+      if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        $('#play-video-modal').on('shown.bs.modal', function() {
+            toggleVideo();
+        })
+        $('#play-video-modal').on('hidden.bs.modal', function() {
+            toggleVideo('hide');
+        })
+      }
+    });
+
+  </script>
+{% endblock %}

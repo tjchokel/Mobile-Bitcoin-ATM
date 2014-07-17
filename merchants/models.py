@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
@@ -8,6 +9,8 @@ from bitstamp_wallets.models import BTSCredential
 
 from phonenumber_field.modelfields import PhoneNumberField
 from bitcoins.models import DestinationAddress, ShopperBTCPurchase
+
+from emails.trigger import send_and_log
 
 from utils import format_satoshis_with_units, mbtc_to_satoshis
 
@@ -237,6 +240,20 @@ class Merchant(models.Model):
 
     def get_max_mbtc_purchase_formatted(self):
         return format_satoshis_with_units(mbtc_to_satoshis(self.max_mbtc_shopper_purchase))
+
+    def send_welcome_email(self):
+        """
+        Send graphics and upsell to fill out profile (if neccesary)
+        """
+        body_context = {
+                'profile_url': reverse('merchant_profile'),
+                }
+        return send_and_log(
+                subject='Welcome to CoinSafe ',
+                body_template='merchant/welcome_to_coinsafe.html',
+                to_merchant=self,
+                body_context=body_context,
+                )
 
 
 class OpenTime(models.Model):

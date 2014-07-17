@@ -91,27 +91,7 @@
             </a>
           {% endif %}
         </li>
-        <li>
-          {% if current_tab == 'bitstamp' %}
-            <a href="#" class="active">
-              <img src="{% static "img/bitstamp-logo-full.png" %}" />
-              {% if merchant.has_valid_bitstamp_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
-              {% endif %}
-            </a>
-          {% else %}
-            <a href="{% url "credentials.views.bitstamp_creds" %}">
-              <img src="{% static "img/bitstamp-logo-full.png" %}" />
-              {% if merchant.has_valid_bitstamp_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
-              {% endif %}
-            </a>
-          {% endif %}
-        </li>
+
         <li>
           {% if current_tab == 'blockchain' %}
             <a href="#" class="active">
@@ -133,6 +113,29 @@
             </a>
           {% endif %}
         </li>
+
+        <li>
+          {% if current_tab == 'bitstamp' %}
+            <a href="#" class="active">
+              <img src="{% static "img/bitstamp-logo-full.png" %}" />
+              {% if merchant.has_valid_bitstamp_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{% url "credentials.views.bitstamp_creds" %}">
+              <img src="{% static "img/bitstamp-logo-full.png" %}" />
+              {% if merchant.has_valid_bitstamp_credentials %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+              {% endif %}
+            </a>
+          {% endif %}
+        </li>
+
       </ul>
 
     </div>

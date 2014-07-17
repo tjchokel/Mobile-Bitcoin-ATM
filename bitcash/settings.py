@@ -155,7 +155,7 @@ LANGUAGE_CODE = 'en-us'
 # LANGUAGE_CODE = 'es'
 LANGUAGES = (
     ('en-us', 'English'),
-    ('es', 'Spanish'),
+    # ('es', 'Spanish'), # TODO: ADD BACK IN WHEN ADDING NEW LANGUAGES
 )
 
 TIME_ZONE = 'UTC'

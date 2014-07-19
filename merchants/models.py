@@ -247,6 +247,7 @@ class Merchant(models.Model):
         """
         body_context = {
                 'profile_url': reverse('merchant_profile'),
+                'promotional_material': reverse('promotional_material'),
                 }
         return send_and_log(
                 subject='Welcome to CoinSafe ',

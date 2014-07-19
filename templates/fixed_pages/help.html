@@ -22,7 +22,7 @@
           <li><a href="#coinsafe_free">{% trans "Is CoinSafe Really Free?" %}</a></li>
           <li><a href="#easy_to_use">{% trans "Does My Cashier/Teller Need to Understand Bitcoin?" %}</a></li>
           <li><a href="#merchant_kyc">{% trans "Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?" %}</a></li>
-          <li><a href="#merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display?" %}</a></li>
+          <li><a href="#merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display in my Store?" %}</a></li>
           <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a></li>
           <li><a href="#market_pricing">{% trans "Can I Really Set Whatever Price I Want?" %}</a></li>
           <li><a href="#price_feed">{% trans "How Does CoinSafe Calculate the Market Price for BTC?" %}</a></li>
@@ -144,17 +144,17 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display?" %}</a>
+              <a class="anchor" id="merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display in my Store?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              {% url 'merchant_advertisements' as merchant_advertisements_url %}
+              {% url 'promotional_material' as promotional_material_url %}
               <p>
                 {% blocktrans %}
                   Absolutely!
-                  We have
-                  <a href="{{ merchant_advertisements_url }}">a full page of them here</a>.
+                  Check out our 
+                  <a href="{{ promotional_material_url }}">promotional materials page here</a>.
                   Feel free to submit your own!
                 {% endblocktrans %}
               </p>
@@ -532,3 +532,6 @@
 </div>
 
 {% endblock content %}
+{% block static_page_footer %}
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}

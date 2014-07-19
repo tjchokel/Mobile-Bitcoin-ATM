@@ -63,7 +63,7 @@ urlpatterns = patterns('',
     url(r'^bitstamp-instructions/', TemplateView.as_view(template_name='fixed_pages/bitstamp_instructions.html'), name='bitstamp_instructions'),
     url(r'^coinbase-instructions/', TemplateView.as_view(template_name='fixed_pages/coinbase_instructions.html'), name='coinbase_instructions'),
     url(r'^blockchain-instructions/', TemplateView.as_view(template_name='fixed_pages/blockchain_instructions.html'), name='blockchain_instructions'),
-    url(r'^business-advertisements/', TemplateView.as_view(template_name='fixed_pages/merchant_advertisements.html'), name='merchant_advertisements'),
+    url(r'^promotional-material/', TemplateView.as_view(template_name='fixed_pages/promotional_material.html'), name='promotional_material'),
 
     url(r'^admin/', include(admin.site.urls)),
     (r'^i18n/', include('django.conf.urls.i18n')),

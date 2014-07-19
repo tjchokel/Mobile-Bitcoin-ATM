@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <br/><br/>
+      <h1 class="hl text-center top-zero">{% trans "Promotional Posters for Merchants" %}</h1>
+    </div>
+  </div>
+  <br/><br/>
+  <div class="row">
+    <div class="col-sm-4">
+      <!-- Remove .animated .fadeInDown .first classes if you don't want item to move -->
+      <div class="item">
+        <div class="head">
+          <h4>{% trans "Poster 1" %}</h4>
+          <div class="arrow"></div>
+        </div>
+        <div class="sceleton">
+          <a href="https://s3.amazonaws.com/coinsafe-public/merchant-ads/btc_sold_here.pdf" target="_blank">
+            <img src="{%static "img/poster1.png" %}"/>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <!-- Remove .animated .fadeInDown .first classes if you don't want item to move -->
+      <div class="item">
+        <div class="head">
+          <h4>{% trans "Poster 2" %}</h4>
+          <div class="arrow"></div>
+        </div>
+        <div class="sceleton">
+          <a href="https://s3.amazonaws.com/coinsafe-public/merchant-ads/buy_and_sell_bitcoin_here.pdf" target="_blank">
+            <img src="{%static "img/poster3.png" %}"/>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <!-- Remove .animated .fadeInDown .first classes if you don't want item to move -->
+      <div class="item">
+        <div class="head">
+          <h4>{% trans "Poster 3" %}</h4>
+          <div class="arrow"></div>
+        </div>
+        <div class="sceleton">
+          <a href="https://s3.amazonaws.com/coinsafe-public/merchant-ads/we_buy_and_sell_btc_here.pdf" target="_blank">
+            <img src="{%static "img/poster2.png" %}"/>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br/><br/>
+  <p class="lead">
+    {% blocktrans with vector_files_url="https://s3.amazonaws.com/coinsafe-public/merchant-ads/CoinSafe-vector+files.eps" %}
+      Original vector files are available <a href="{{vector_files_url}}" target="_blank">here</a>.
+      Made your own?
+      We'd love to see it!
+    {% endblocktrans %}
+  </p>
+</div>
+{% endblock content %}
+{% block static_page_footer %}
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}

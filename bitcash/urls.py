@@ -71,6 +71,4 @@ urlpatterns = patterns('',
     # Logging Test
     url(r'^fail500/$', 'services.views.fail500', name='services500'),
 
-    url(r'^email/', TemplateView.as_view(template_name='emails/merchant/welcome_to_coinsafe.html'), name='email'),
-
 )

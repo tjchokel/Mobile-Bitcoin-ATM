@@ -20,7 +20,8 @@
         <ul>
           <li><a href="#overview">{% trans "What Does CoinSafe Do?" %}</a></li>
           <li><a href="#coinsafe_free">{% trans "Is CoinSafe Really Free?" %}</a></li>
-          <li><a href="#easy_to_use">{% trans "Does My Cashier/Teller Need to Understand Bitcoin?" %}</a></li>
+          <li><a href="#easy_to_use">{% trans "Does My Cashier Need to Understand Bitcoin?" %}</a></li>
+          <li><a href="#trading_apps">{% trans "How is CoinSafe Different from Using the Bitcoin Wallet on My Phone to Trade with Customers?" %}</a></li>
           <li><a href="#merchant_kyc">{% trans "Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?" %}</a></li>
           <li><a href="#merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display in my Store?" %}</a></li>
           <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a></li>
@@ -30,7 +31,8 @@
           <li><a href="#api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a></li>
           <li><a href="#which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a></li>
           <li><a href="#new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a></li>
-          <li><a href="#legality">{% trans "Is CoinSafe Legal in My Country?" %}</a></li>
+          <li><a href="#local_legality">{% trans "Is CoinSafe Legal in My Country?" %}</a></li>
+          <li><a href="#language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a></li>
           <li><a href="#accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a></li>
           <li><a href="#btc_forwarding">{% trans "Why is there a Different Deposit Address for Each Customer that Sends me BTC?" %}</a></li>
         </ul>
@@ -100,7 +102,7 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="easy_to_use">{% trans "Does My Cashier/Teller Need to Understand Bitcoin?" %}</a>
+              <a class="anchor" id="easy_to_use">{% trans "Does My Cashier Need to Understand Bitcoin?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
@@ -110,9 +112,51 @@
                   Not at all!
                   The app is designed to be used by someone who has no idea what bitcoin is.
                   All the teller needs to do is confirm when they have recieved cash (so that the app can pay out bitcoin).
-                  The app will also monitor the bitcoin network and notify the teller when it is safe to pay out cash to a customer (if buying bitcoin).
+                  The app will also monitor the bitcoin network and notify the cashier when it is safe to pay out cash to a customer (if buying bitcoin).
                 {% endblocktrans %}
               </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="trading_apps">{% trans "How is CoinSafe Different from Using the Bitcoin Wallet on My Phone to Trade with Customers?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  You could always use something like Mycelium Local Trader or Local Bitcoins, but there are a number of advantages to using CoinSafe:
+                {% endblocktrans %}
+              </p>
+              <ul>
+                <li>
+                  {% blocktrans %}
+                    <b>No more messaging with prospective customers</b>.
+                    We're only for use in-person.
+                    Customers just show up at your store when they want to buy or sell bitcoin.
+                    If you give us your address we can post your prices online to get you additional customers.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>Ridiculously easy to use</b>.
+                    The cashier at your store using the app doesn't have to know anything about bitcoin.
+                    It's designed so that both the cashier and the customer can be complete bitcoin newbies and it will walk them through everything.
+                    You don't have to worry about your cashiers running away with all of your bitcoins, double-spend attacks, if a bitcoin address is valid, managing private keys, etc.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>Better prices</b>.
+                    Because it's so much more safe and convenient for the customer to go to a reputable business and not have to send messages back and forth, you can often command prices that are more favorable to you.
+                  {% endblocktrans %}
+                </li>
+              <ul>
             </div>
           </div>
         </div>
@@ -367,7 +411,7 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="legality">{% trans "Is CoinSafe Legal in My Country?" %}</a>
+              <a class="anchor" id="local_legality">{% trans "Is CoinSafe Legal in My Country?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
@@ -387,6 +431,30 @@
                   Please note that some countries may require you to comply with "Know Your Customer" (KYC) and "Anti-Money Laundering" (AML) regulations, which might include things like checking the customer's government ID and copying down their name, address, and telephone number.
                   If you'd like us to build support for your country's requirements into our software,
                   please <a href="{{ contact_url }}">tell us about it</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  We're working on it!
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  Currently we're testing Spanish with some customers in our beta program, and we're going to add support for more languages soon.
+                  If there's a language you'd like us to support, please <a href="{{ contact_url }}">let us know</a>.
                 {% endblocktrans %}
               </p>
             </div>

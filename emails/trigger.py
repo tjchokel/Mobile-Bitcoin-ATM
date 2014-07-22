@@ -68,7 +68,7 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     Send and log an email
     """
 
-    #TODO: find a better way to handle the circular dependency
+    # TODO: find a better way to handle the circular dependency
     from emails.models import SentEmail
 
     if not from_email:
@@ -78,7 +78,7 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     body_context_modified['BASE_URL'] = BASE_URL
 
     if to_merchant:
-        body_context_modified['salutation'] = to_merchant.business_name
+        body_context_modified['salutation'] = to_merchant.user.full_name
 
     # Generate html body
     html_body = render_to_string('emails/'+body_template, body_context_modified)

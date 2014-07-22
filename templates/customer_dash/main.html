@@ -1,6 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load app_extras %}
-
+{% block title %}
+  {% trans "Customer Dashboard | CoinSafe" %}
+{% endblock title %}
 {% block content %}
   {% if transactions or current_address.customer_confirmed_deposit_at %}
     {% if current_address.all_transactions_complete and shopper %}

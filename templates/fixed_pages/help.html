@@ -40,6 +40,7 @@
         <ul>
           <li><a href="#pricing">{% trans "Am I Getting a Fair Price?" %}</a></li>
           <li><a href="#btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a></li>
+          <li><a href="#transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a></li>
           <li><a href="#merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a></li>
         </ul>
       </h2>
@@ -557,6 +558,49 @@
                   Coinbase will immediately email you a simple link to claim your bitcoin, <b>please do that right away</b>.
                   After a few weeks, if the bitcoin is unclaimed they will return it to the business you transacted with.
                   Don't forget to claim your bitcoin!
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with tx_fee_url='https://en.bitcoin.it/wiki/Transaction_fees' %}
+                  Contrary to popular belief, all bitcoin transactions require a very small fee in order to process in a reasonable amount of time.
+                  Currently, bitcoin's standard transaction fee is approximately 0.0001 BTC (0.1 mBTC).
+                  You can read more about this
+                  <a href="{{ tx_fee_url }}">here</a>.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  When you are buying bitcoin with cash, this means that the store will pay the associated transaction fee so that you receive the exact amount of bitcoin you were quoted.
+                  CoinSafe will handle this case automatically.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  When you are selling bitcoin for cash, this means that you have to pay a sufficient fee for your transaction to be processed by the bitcoin network (just like any other bitcoin transaction).
+                  The exchange rate is calculated using the amount the store <b>received</b> (the amount after the bitcoin network fee).
+                  Your wallet software should handle fees for you automatically, but please note that a store cannot give you cash for your bitcoin until they have recieved your bitcoin.
+                  If you use a non-standard fee that is too low, it's possible your transaction will take many hours to be confirmed by the network (or in extreme cases never be confirmed by the bitcoin network).
+                  Our software automatically notifies the store to not release any cash until your transaction is confirmed by the bitcoin network.
+                  In other words, save yourself a lot of headache by paying the standard fee on your bitcoin transactions to be sure they are processed by the bitcoin network (and in a reasonable amount of time).
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  We feel this is the de facto standard in bitcoin transactions and the most fair solution for all parties.
+                  Please <a href="{{ contact_url }}">let us know</a> if you disagree!
                 {% endblocktrans %}
               </p>
             </div>

@@ -51,7 +51,7 @@ class BuyBitcoinForm(forms.Form):
     email = forms.EmailField(
         label=_('Customer Email'),
         required=True,
-        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
+        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com', 'style': 'width:60%;'}),
     )
 
     email_or_btc_address = forms.ChoiceField(
@@ -65,7 +65,7 @@ class BuyBitcoinForm(forms.Form):
         label=_('Bitcoin Deposit Address'),
         required=False,
         help_text=_('The wallet address where you want your bitcoin sent'),
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'style': 'width:60%; display:inline;'}),
     )
 
     def __init__(self, user, *args, **kwargs):
@@ -116,7 +116,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
     email = forms.EmailField(
         label=_('Customer Email'),
         required=True,
-        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com'}),
+        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com', 'style': 'width:60%;'}),
     )
 
     btc_address = forms.CharField(
@@ -125,7 +125,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
         min_length=27,
         max_length=34,
         help_text=_('The wallet address where you want to recieve your bitcoin'),
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'style': 'width:60%; display:inline;'}),
     )
 
     def __init__(self, user, *args, **kwargs):

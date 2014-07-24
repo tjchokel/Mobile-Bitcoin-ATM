@@ -28,24 +28,24 @@
       var LAST_POLL_TIME = new Date();
 
       function poll_new_deposits() {
-          $.ajax({
-              type: 'get',
-              url: '/poll-deposits/',
-              success: function (data) {
-                LAST_POLL_TIME = new Date();
-                var time_since = timeSince(LAST_POLL_TIME);
-                $('#last-polled-time').html(time_since);
-                var deposits = data['deposits']['txns']
-                if(deposits.length == 0){
-                  setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
-                }else{
-                  location.reload(true);
-                }
-              },
-              error: function(data) {
-                setTimeout(poll_new_deposits,TIMEOUT_LENGTH*10);
-              }
-          });
+          // $.ajax({
+          //     type: 'get',
+          //     url: '/poll-deposits/',
+          //     success: function (data) {
+          //       LAST_POLL_TIME = new Date();
+          //       var time_since = timeSince(LAST_POLL_TIME);
+          //       $('#last-polled-time').html(time_since);
+          //       var deposits = data['deposits']['txns']
+          //       if(deposits.length == 0){
+          //         setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+          //       }else{
+          //         location.reload(true);
+          //       }
+          //     },
+          //     error: function(data) {
+          //       setTimeout(poll_new_deposits,TIMEOUT_LENGTH*10);
+          //     }
+          // });
       }
 
       function poll_new_confirmations() {
@@ -130,6 +130,39 @@
 
     function buyBitcoinModal() {
       $('#buy-bitcoin-modal').modal();
+    }
+
+    function updateBitcoinAddress(address) {
+      $('#v').addClass("hidden");
+      $('#result').html('<span style="color:green;">Address Successfully Read</span>');
+      $('#id_btc_address').val(address);
+    }
+    function scanQrCode() {
+      // $('#div_id_btc_address').prepend('<div id="reader" style="width:420px;height:350px"><span id="qr-code-text" style="color:green;">Please allow access to your device camera</span></div><br/>');
+      $('#div_id_btc_address').prepend('<div id="mainbody"><canvas id="qr-canvas" width="420" height="350" style="display:none;"></canvas></div><div id="result"></div><div id="outdiv"></div>');
+
+      $('#scan-qr-code').addClass("disabled");
+      load();
+      // $('#reader').html5_qrcode(function(data){
+      //         $('#qr-code-text').addClass('hidden');
+      //         if (data.indexOf('bitcoin:') > -1){
+      //           data = data.replace('bitcoin:', '');
+      //         }
+      //         $('#id_btc_address').val(data);
+      //         $('#reader').addClass('hidden');
+      //         $('#scan-qr-code').addClass("hidden");
+      //         if (! $('#success-icon').length ){
+      //           $("#id_btc_address").after('<i id="success-icon" class="fa fa-check-circle-o text-green" style="margin-left: 10px; font-size: 20px;"></i>');
+      //         }
+      //     },
+      //     function(error){
+      //         $('#qr-code-text').text('Hold QR Code in front of the camera');
+      //     }, function(videoError){
+      //         $('#reader').css('height', '20px');
+      //         $('#reader').html('<span id="qr-code-text" style="color:red;">Sorry, this browser does not support camera access</span>');
+      //         //the video stream could be opened
+      //     }
+      // );
     }
 
     function overrideConfirmationsModal() {
@@ -294,6 +327,11 @@
       $('#email-field').after('<span id="email_message"></span>');
 
       $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ 0.00 mBTC</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
+
+      $("#id_btc_address").after('<a class="btn btn-primary btn-med" id="scan-qr-code" style="margin-left: 10px;" onclick="scanQrCode();">Scan QR Code</a>');
+      
+
+
 
       $('#deposit-address-modal').on('hide.bs.modal', function () {
         {% comment %}

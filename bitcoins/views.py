@@ -243,6 +243,14 @@ def process_blockcypher_webhook(request, random_id):
 def get_next_deposit_address(request):
     user = request.user
     merchant = user.get_merchant()
+    forwarding_address = request.session.get('forwarding_address')
+    if forwarding_address:
+        forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
+        # if cookie forwarding address has not been used (user just closed modal)
+        if forwarding_obj and not forwarding_obj.customer_confirmed_deposit_at and not forwarding_obj.get_transaction():
+            json_response = json.dumps({"address": forwarding_address})
+            return HttpResponse(json_response, content_type='application/json')
+
     address = merchant.set_new_forwarding_address()
     request.session['forwarding_address'] = address
     json_response = json.dumps({"address": address})

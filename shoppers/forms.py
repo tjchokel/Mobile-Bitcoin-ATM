@@ -65,7 +65,7 @@ class BuyBitcoinForm(forms.Form):
         label=_('Bitcoin Deposit Address'),
         required=False,
         help_text=_('The wallet address where you want your bitcoin sent'),
-        widget=forms.TextInput(attrs={'style': 'width:60%; display:inline;'}),
+        widget=forms.TextInput(attrs={'style': 'width:55%; display:inline;'}),
     )
 
     def __init__(self, user, *args, **kwargs):
@@ -125,7 +125,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
         min_length=27,
         max_length=34,
         help_text=_('The wallet address where you want to recieve your bitcoin'),
-        widget=forms.TextInput(attrs={'style': 'width:60%; display:inline;'}),
+        widget=forms.TextInput(attrs={'style': 'width:55%; display:inline;'}),
     )
 
     def __init__(self, user, *args, **kwargs):

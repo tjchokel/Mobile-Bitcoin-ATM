@@ -10,15 +10,14 @@ var webkit=false;
 var moz=false;
 var v=null;
 
-var imghtml='<div id="qrfile"><canvas id="out-canvas" width="320" height="240"></canvas>'+
-    '<div id="imghelp">drag and drop a QRCode here'+
-    '<br>or select a file'+
+var imghtml='<div id="qrfile">'+
+    '<div id="imghelp"><div id="help-message" style="color:green; display:inline;">Click below to take a photo:</div>'+
     '<input type="file" onchange="handleFiles(this.files)"/>'+
     '</div>'+
 '</div>';
 
-// var vidhtml = '<video id="v" style="width:420px;" autoplay></video>';
-var vidhtml = '<video id="v" autoplay></video>';
+var vidhtml = '<video id="v" style="width:420px;" autoplay></video>';
+// var vidhtml = '<video id="v" autoplay></video>';
 
 function dragenter(e) {
   e.stopPropagation();
@@ -47,7 +46,8 @@ function drop(e) {
 }
 
 function handleFiles(f)
-{
+{   
+    $('#help-message').after('<span id="image-spinner">&nbsp;&nbsp;<a class="active has-spinner"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a></span>');
     var o=[];
     
     for(var i =0;i<f.length;i++)
@@ -62,6 +62,10 @@ function handleFiles(f)
         })(f[i]);
         reader.readAsDataURL(f[i]); 
     }
+}
+
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
 
 function initCanvas(w,h)
@@ -107,6 +111,7 @@ function read(a)
     if (a.indexOf('bitcoin:') > -1){
         a = a.replace('bitcoin:', '');
     }
+    a = a.replace(/\?.*$/,"");
     updateBitcoinAddress(a);
 }   
 
@@ -142,8 +147,8 @@ function hasGetUserMedia() {
 
 function load()
 {   
-    var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
-    if(iOS){
+    // if on mobile device
+    if( isMobileDevice() ) {
         initCanvas(400, 300);
         qrcode.callback = read;
         document.getElementById("mainbody").style.display="inline";
@@ -153,19 +158,13 @@ function load()
         qrcode.callback = read;
         document.getElementById("mainbody").style.display="inline";
         setwebcam();
+        // setimg();
     } else{
         document.getElementById("mainbody").style.display="inline";
         document.getElementById("mainbody").innerHTML='<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>'+
         '<br><p id="mp2">sorry your browser is not supported</p><br><br>'+
         '<p id="mp1">try <a href="http://www.mozilla.com/firefox"><img src="firefox.png"/></a> or <a href="http://chrome.google.com"><img src="chrome_logo.gif"/></a> or <a href="http://www.opera.com"><img src="Opera-logo.png"/></a></p>';
     }
-    // else
-    // {
-    //     document.getElementById("mainbody").style.display="inline";
-    //     document.getElementById("mainbody").innerHTML='<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>'+
-    //     '<br><p id="mp2">sorry your browser is not supported</p><br><br>'+
-    //     '<p id="mp1">try <a href="http://www.mozilla.com/firefox"><img src="firefox.png"/></a> or <a href="http://chrome.google.com"><img src="chrome_logo.gif"/></a> or <a href="http://www.opera.com"><img src="Opera-logo.png"/></a></p>';
-    // }
 }
 
 function sourceSelected(audioSource, videoSource) {
@@ -188,7 +187,7 @@ function setwebcam()
     document.getElementById("result").innerHTML='<span style="color:green;">Please allow access to your device camera</span>';
     if(stype==1)
     {
-        setTimeout(captureToCanvas, 300);    
+        setTimeout(captureToCanvas, 500);    
         return;
     }
     var n=navigator;
@@ -240,7 +239,7 @@ function setwebcam()
       var audioSource = false;
       var videoSource = null;
 
-      for (var i = 0; i != sourceInfos.length; ++i) {
+      for (var i = 0; i != sourceInfos.length -1; ++i) {
         var sourceInfo = sourceInfos[i];
         if (sourceInfo.kind === 'video') {
           console.log(sourceInfo.id, sourceInfo.label || 'camera');

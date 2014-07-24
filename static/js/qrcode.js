@@ -26,9 +26,46 @@ qrcode.maxImgSize = 1024*1024;
 qrcode.sizeOfDataLengthInfo =  [  [ 10, 9, 8, 8 ],  [ 12, 11, 16, 10 ],  [ 14, 13, 16, 12 ] ];
 
 qrcode.callback = null;
+<!--http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios/17086329#17086329 -->
+function detectVerticalSquash(img) {
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    var canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = ih;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    var data = ctx.getImageData(0, 0, 1, ih).data;
+    // search image edge pixel position in case it is squashed vertically.
+    var sy = 0;
+    var ey = ih;
+    var py = ih;
+    while (py > sy) {
+        var alpha = data[(py - 1) * 4 + 3];
+        if (alpha === 0) {
+            ey = py;
+        } else {
+            sy = py;
+        }
+        py = (ey + sy) >> 1;
+    }
+    var ratio = (py / ih);
+    return (ratio===0)?1:ratio;
+}
 
+/**
+ * A replacement for context.drawImage
+ * (args are for source and destination).
+ */
+function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+    var vertSquashRatio = detectVerticalSquash(img);
+ // Works only if whole image is displayed:
+ // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+ // The following works correct also when only a part of the image is displayed:
+    ctx.drawImage(img, sx * vertSquashRatio, sy * vertSquashRatio, 
+                       sw * vertSquashRatio, sh * vertSquashRatio, 
+                       dx, dy, dw, dh );
+}
 qrcode.decode = function(src){
-    
     if(arguments.length==0)
     {
         var canvas_qr = document.getElementById("qr-canvas");
@@ -60,7 +97,8 @@ qrcode.decode = function(src){
             canvas_qr.width = nwidth;
             canvas_qr.height = nheight;
             
-            context.drawImage(image, 0, 0, canvas_qr.width, canvas_qr.height );
+            // context.drawImage(image, 0, 0, canvas_qr.width, canvas_qr.height );
+            drawImageIOSFix(context, image, 0, 0, image.width, image.height, 0, 0, nwidth, nheight);
             qrcode.width = canvas_qr.width;
             qrcode.height = canvas_qr.height;
             try{

@@ -51,7 +51,7 @@ class BuyBitcoinForm(forms.Form):
     email = forms.EmailField(
         label=_('Customer Email'),
         required=True,
-        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com', 'style': 'width:60%;'}),
+        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com', 'style': 'width:55%;'}),
     )
 
     email_or_btc_address = forms.ChoiceField(
@@ -116,7 +116,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
     email = forms.EmailField(
         label=_('Customer Email'),
         required=True,
-        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com', 'style': 'width:60%;'}),
+        widget=forms.TextInput(attrs={'id': 'email-field', 'placeholder': 'me@example.com', 'style': 'width:55%;'}),
     )
 
     btc_address = forms.CharField(

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load app_extras %}
+{% load staticfiles %}
 {% block title %}
   {% trans "Customer Dashboard | CoinSafe" %}
 {% endblock title %}
@@ -134,6 +135,25 @@
 
     function buyBitcoinModal() {
       $('#buy-bitcoin-modal').modal();
+    }
+
+    function updateBitcoinAddress(address) {
+      $('#image-spinner').addClass("hidden");
+      $('#v').addClass("hidden");
+      if (address.indexOf('error') > -1){
+          $('#result').html('<span style="color:red;">'+address+'</span>');
+      }else{
+        $('#result').html('<span style="color:green;">Address Successfully Read</span>');
+        $('#id_btc_address').val(address);
+        $('#imghelp').addClass('hidden');
+      }
+    }
+    function scanQrCode() {
+      $('#div_id_btc_address').prepend('<div id="mainbody"><canvas id="qr-canvas" width="320" height="240" style="display:none;"></canvas></div><div id="result"></div><div id="outdiv"></div>');
+
+      $('#scan-qr-code').addClass("hidden");
+      $('#id_btc_address').css('width', '100%');
+      load();
     }
 
     function overrideConfirmationsModal() {
@@ -299,6 +319,8 @@
 
       $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ 0.00 mBTC</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
 
+      $("#id_btc_address").after('<a class="btn btn-primary btn-med" id="scan-qr-code" style="margin-left: 5px;" onclick="scanQrCode();"><i class="fa fa-camera"></i> QR Code</a>');
+
       {% if transactions or current_address.customer_confirmed_deposit_at %}
 
         {% if transactions %}
@@ -349,4 +371,25 @@
       {% endif %}
     });
   </script>
+
+  <!-- Stuff for QR codes - https://github.com/LazarSoft/jsqrcode -->
+  <script type="text/javascript" src="{% static "js/qrcode.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/grid.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/version.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/detector.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/formatinf.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/errorlevel.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/bitmat.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/datablock.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/bmparser.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/datamask.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/rsdecoder.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/gf256poly.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/gf256.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/decoder.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/qrcode.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/findpat.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/alignpat.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/databr.js" %}"></script>
+  <script type="text/javascript" src="{% static "js/webqr.js" %}"></script>
 {% endblock %}

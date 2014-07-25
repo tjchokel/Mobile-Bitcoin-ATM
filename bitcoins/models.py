@@ -174,8 +174,7 @@ class ForwardingAddress(models.Model):
     # If an address has already been shown to the user, can it be shown again
     def can_be_reused(self):
         seconds_old = (now() - self.generated_at).total_seconds()
-        print seconds_old
-        if seconds_old > 60:
+        if seconds_old > 600:
             return False
         if self.customer_confirmed_deposit_at:
             return False

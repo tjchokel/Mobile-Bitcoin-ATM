@@ -461,6 +461,11 @@ class BitcoinInfoForm(forms.Form):
 
 
 class PasswordConfirmForm(forms.Form):
+    redir_path = forms.CharField(
+            required=False,
+            widget=forms.HiddenInput(),
+            )
+
     password = forms.CharField(
         label=_('CoinSafe Password'),
         required=True,

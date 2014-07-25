@@ -12,7 +12,8 @@ class MerchantAdminSectionMiddleware(object):
                 # TODO: maybe make it so that it has to be recent?
                 return None
             else:
-                return HttpResponseRedirect(MERCHANT_LOGIN_PW_URL)
+                redirect_url = '%s?next=%s' % (MERCHANT_LOGIN_PW_URL, request.path.strip('/'))
+                return HttpResponseRedirect(redirect_url)
         elif request.is_ajax():
             return None
         else:

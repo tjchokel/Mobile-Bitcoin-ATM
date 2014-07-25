@@ -171,6 +171,17 @@ class ForwardingAddress(models.Model):
                 self.get_fiat_transactions_total(),
                 self.get_first_forwarding_transaction().currency_code_when_created)
 
+    # If an address has already been shown to the user, can it be shown again
+    def can_be_reused(self):
+        seconds_old = (now() - self.generated_at).total_seconds()
+        if seconds_old > 600:
+            return False
+        if self.customer_confirmed_deposit_at:
+            return False
+        if self.get_transaction():
+            return False
+        return True
+
 
 class BTCTransaction(models.Model):
     """

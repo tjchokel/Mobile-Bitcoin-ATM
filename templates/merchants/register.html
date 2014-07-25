@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
+
 {% block title %}
   {% trans "Your Free Bitcoin ATM App | Register | CoinSafe" %}
 {% endblock title %}
+
 {% block content %}
+
 <div class="section-header">
   <div class="container">
     <div class="row">
@@ -14,28 +17,40 @@
     </div>
   </div>
 </div>
-<div class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        <h2 class="hl top-50">{% trans "Register Business" %}</h2>
-        <hr>
-      </div>
-    </div>
 
-        <div class="col-md-8 col-md-offset-2">
-          {% with current_step=0 %}
-               {% include "merchants/_registration_breadcrumb.html" %}
-          {% endwith %}
-             <form class="form-horizontal" method="post" action="{% url "merchants.views.register_merchant" %}" >
-                 {% load crispy_forms_tags %}
-                 {{ form|crispy }}
-                 {% csrf_token %}
-                 <div class="button-wrapper">
-                   <button type="submit" class="btn btn-primary btn-lg">{% trans "Create Account" %}</button>
-                 </div>
-             </form>
-          </div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2 class="hl top-50">{% trans "Register Business" %}</h2>
+      <hr>
     </div>
+  </div>
+
+  <div class="col-md-8 col-md-offset-2">
+    {% with current_step=0 %}
+         {% include "merchants/_registration_breadcrumb.html" %}
+    {% endwith %}
+       <form class="form-horizontal" method="post" action="{% url "register_merchant" %}" >
+           {% load crispy_forms_tags %}
+           {{ form|crispy }}
+           {% csrf_token %}
+           <div class="button-wrapper">
+             <button type="submit" class="btn btn-primary btn-lg">{% trans "Create Account" %}</button>
+           </div>
+       </form>
+
+       <br />
+       <p class="lead">
+         {% url 'register_customer' as rc_url %}
+         {% blocktrans %}
+           To register as an individual customer (not a business) please
+           <a href="{{ rc_url }}">click here</a>.
+         {% endblocktrans %}
+       </p>
+
+  </div>
+</div>
+
 {% endblock content %}
 
 

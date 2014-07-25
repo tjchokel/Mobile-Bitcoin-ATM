@@ -28,10 +28,11 @@
 
 {% block extra_js %}
   <script>
-      var TIMEOUT_LENGTH = 5000;
+      var TIMEOUT_LENGTH = 30000;
       var LAST_POLL_TIME = new Date();
 
       function poll_new_deposits() {
+        console.log('poll new desposits');
           $.ajax({
               type: 'get',
               url: '/poll-deposits/',
@@ -47,7 +48,7 @@
                 }
               },
               error: function(data) {
-                setTimeout(poll_new_deposits,TIMEOUT_LENGTH*10);
+                setTimeout(poll_new_deposits,TIMEOUT_LENGTH*3);
               }
           });
       }
@@ -172,7 +173,7 @@
         });
     }
 
-    var BTC_PRICE_TIMEOUT_MS = 10000;
+    var BTC_PRICE_TIMEOUT_MS = 30000;
     function getBtcPrice() {
       $.ajax({
         type: 'get',
@@ -319,18 +320,6 @@
       $("#id_amount").after('<span id="btc-amount" class="lead text-green" style="padding-left: 5px;">≈ 0.00 mBTC</span><a class="active has-spinner hidden" id="btc-amt-loader"><span class="spinner"><i class="fa fa-spinner fa-spin"></i></span></a>');
 
       $("#id_btc_address").after('<a class="btn btn-primary btn-med" id="scan-qr-code" style="margin-left: 5px;" onclick="scanQrCode();"><i class="fa fa-camera"></i> QR Code</a>');
-      
-
-
-
-      $('#deposit-address-modal').on('hide.bs.modal', function () {
-        {% comment %}
-          Trigger a deposit confirmation whenever this modal is closed.
-          This is easy for the user to correct and fixes a potentially nasty broken UX state.
-          Long term we may want a better solution.
-        {% endcomment %}
-        confirmAddressDeposit()
-      })
 
       {% if transactions or current_address.customer_confirmed_deposit_at %}
 
@@ -353,7 +342,7 @@
           setTimeout(
           function() {
             poll_new_deposits();
-          }, 15000);
+          }, 30000);
 
           setTimeout(
           function() {

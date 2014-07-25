@@ -9,6 +9,7 @@ var gUM=false;
 var webkit=false;
 var moz=false;
 var v=null;
+var changeHelpText=true;
 
 var imghtml='<div id="qrfile">'+
     '<div id="imghelp"><div id="help-message" style="color:green; display:inline;">Click below to take a photo:</div>'+
@@ -84,7 +85,11 @@ function captureToCanvas() {
     if(stype!=1)
         return;
     if(gUM)
-    {
+    {   
+        if(changeHelpText){
+            document.getElementById("result").innerHTML='<span style="color:green;">Tip: Hold QR code ~1 foot from camera</span>';
+            changeHelpText = false;
+        }
         try{
             gCtx.drawImage(v,0,0);
             try{
@@ -108,10 +113,14 @@ function htmlEntities(str) {
 
 function read(a)
 {
+    if (a.indexOf('bitcoin://') > -1){
+        a = a.replace('bitcoin://', '');
+    }
     if (a.indexOf('bitcoin:') > -1){
         a = a.replace('bitcoin:', '');
     }
     a = a.replace(/\?.*$/,"");
+    a = a.replace(/\W/g, '');
     updateBitcoinAddress(a);
 }   
 
@@ -183,11 +192,10 @@ function sourceSelected(audioSource, videoSource) {
 
 function setwebcam()
 {
-    console.log('setwebcam');
     document.getElementById("result").innerHTML='<span style="color:green;">Please allow access to your device camera</span>';
     if(stype==1)
     {
-        setTimeout(captureToCanvas, 500);    
+        setTimeout(captureToCanvas, 300);    
         return;
     }
     var n=navigator;

@@ -463,7 +463,6 @@ def password_prompt(request):
                 redir_path = '/%s/' % redir_path
             else:
                 redir_path = reverse_lazy('merchant_transactions')
-            print 'REDIRECTING TO:', redir_path
             return HttpResponseRedirect(redir_path)
     return {
         'form': form,

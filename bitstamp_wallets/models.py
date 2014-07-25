@@ -62,8 +62,8 @@ class BTSCredential(BaseCredential):
                 credential=self)
 
             self.mark_failure()
-
-            raise Exception(e)
+            print 'Error was: %s' % e
+            return False
 
         satoshis = btc_to_satoshis(balance_dict['btc_available'])
 
@@ -108,8 +108,7 @@ class BTSCredential(BaseCredential):
                 credential=self)
 
             self.mark_failure()
-
-            raise Exception(e)
+            print 'Error was: %s' % e
 
         return txn_list
 
@@ -159,8 +158,7 @@ class BTSCredential(BaseCredential):
                 credential=self)
 
             self.mark_failure()
-
-            raise Exception(e)
+            print 'Error was: %s' % e
 
         BTSSentBTC.objects.create(
                 credential=self,
@@ -209,7 +207,7 @@ class BTSCredential(BaseCredential):
 
             self.mark_failure()
 
-            raise Exception(e)
+            print 'Error was: %s' % e
 
         if set_as_merchant_address:
             self.merchant.set_destination_address(dest_address=address,
@@ -258,7 +256,7 @@ class BTSSentBTC(BaseSentBTC):
                 credential=self.credential,
                 )
 
-            self.get_credential().mark_success()
+            self.credential.mark_success()
 
         except Exception as e:
             # Log the API Call
@@ -272,9 +270,8 @@ class BTSSentBTC(BaseSentBTC):
                 credential=self.credential,
                 )
 
-            self.get_credential().mark_failure()
-
-            raise Exception(e)
+            self.credential.mark_failure()
+            print 'Error was: %s' % e
 
         for withdrawal_request in withdrawal_requests:
             if withdrawal_request['id'] == self.withdrawal_id:

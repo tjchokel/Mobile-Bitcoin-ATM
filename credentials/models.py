@@ -34,13 +34,16 @@ class BaseCredential(PolymorphicModel):
         return self.save()
 
     def handle_status_code(self, status_code):
+        """
+        Return True if status code valid, False otherwise
+        """
         status_code_str = str(status_code)
         if len(status_code_str.strip()) == 3 and status_code_str.startswith('2'):
             self.mark_success()
+            return True
         else:
-            self.mark_failure
-            err_msg = 'Expected 2xx but got %s' % status_code
-            raise Exception('StatusCode: %s' % err_msg)
+            self.mark_failure()
+            return False
 
     def get_credential_abbrev(self):
         raise Exception('Not Implemented')

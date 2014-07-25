@@ -98,8 +98,13 @@ class BuyBitcoinForm(forms.Form):
         credential = merchant.get_valid_api_credential()
         if credential:
             balance = credential.get_balance()
-            if balance < amount:
-                msg = _("Sorry, the amount you entered exceeds the available balance (%s BTC)" % balance)
+            if balance is False:
+                # This will incorrecty display on the amount input and not the form as a whole
+                # That's worth it here for simplicity and not having to make 2 API calls
+                msg = _("Sorry, the business API credentials for %s are invalid." % credential.get_credential_to_display())
+                raise forms.ValidationError(msg)
+            elif balance < amount:
+                msg = _("Sorry, the amount you entered exceeds the available balance")
                 raise forms.ValidationError(msg)
         return amount
 
@@ -155,8 +160,13 @@ class NoEmailBuyBitcoinForm(forms.Form):
         credential = merchant.get_valid_api_credential()
         if credential:
             balance = credential.get_balance()
-            if balance < amount:
-                msg = _("Sorry, the amount you entered exceeds the available balance (%s BTC)" % balance)
+            if balance is False:
+                # This will incorrecty display on the amount input and not the form as a whole
+                # That's worth it here for simplicity and not having to make 2 API calls
+                msg = _("Sorry, the business API credentials for %s are invalid." % credential.get_credential_to_display())
+                raise forms.ValidationError(msg)
+            elif balance < amount:
+                msg = _("Sorry, the amount you entered exceeds the available balance")
                 raise forms.ValidationError(msg)
         return amount
 

@@ -43,13 +43,17 @@ class BCICredential(BaseCredential):
             merchant=self.merchant,
             credential=self)
 
-        self.handle_status_code(r.status_code)
+        status_code_is_valid = self.handle_status_code(r.status_code)
+
+        if not status_code_is_valid:
+            return False
 
         resp_json = json.loads(r.content)
 
         if 'error' in resp_json:
             self.mark_failure()
-            raise Exception('BadResponse: %s' % resp_json['error'])
+            print 'Blockchain Error: %s' % resp_json['error']
+            return False
 
         satoshis = int(resp_json['balance'])
 

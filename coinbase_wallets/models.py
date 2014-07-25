@@ -29,6 +29,10 @@ class CBSCredential(BaseCredential):
     def get_balance(self):
         """
         Return acount balance in satoshis
+
+        We return False when there's an API fail
+        This prevents the front-end from breaking while still passing the neccessary info back
+
         """
         BALANCE_URL = 'https://coinbase.com/api/v1/account/balance'
         r = get_cb_request(
@@ -46,12 +50,16 @@ class CBSCredential(BaseCredential):
             merchant=self.merchant,
             credential=self)
 
-        self.handle_status_code(r.status_code)
+        status_code_is_valid = self.handle_status_code(r.status_code)
+
+        if not status_code_is_valid:
+            return False
 
         resp_json = json.loads(r.content)
 
-        currency_returned = resp_json['currency']
-        assert currency_returned == 'BTC', currency_returned
+        if 'currency' not in resp_json and resp_json['currency'] != 'BTC':
+            self.mark_failure()
+            return False
 
         satoshis = btc_to_satoshis(resp_json['amount'])
 

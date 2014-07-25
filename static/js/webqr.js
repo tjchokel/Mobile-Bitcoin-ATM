@@ -10,6 +10,7 @@ var webkit=false;
 var moz=false;
 var v=null;
 var changeHelpText=true;
+var cameraStream=null;
 
 var imghtml='<div id="qrfile">'+
     '<div id="imghelp"><div id="help-message" style="color:green; display:inline;">Click below to take a photo:</div>'+
@@ -122,6 +123,12 @@ function read(a)
     a = a.replace(/\?.*$/,"");
     a = a.replace(/\W/g, '');
     updateBitcoinAddress(a);
+    if(v){
+        v.src = '';
+    }
+    if(cameraStream){
+        cameraStream.stop();
+    }
 }   
 
 function isCanvasSupported(){
@@ -129,7 +136,7 @@ function isCanvasSupported(){
   return !!(elem.getContext && elem.getContext('2d'));
 }
 function success(stream) {
-
+    cameraStream = stream;
     if(webkit)
         v.src = window.webkitURL.createObjectURL(stream);
     else
@@ -162,17 +169,19 @@ function load()
         qrcode.callback = read;
         document.getElementById("mainbody").style.display="inline";
         setimg();
-    } else if(isCanvasSupported() && window.File && window.FileReader) {
+    } else if(isCanvasSupported() && window.File && window.FileReader && hasGetUserMedia()) {
         initCanvas(400, 300);
         qrcode.callback = read;
         document.getElementById("mainbody").style.display="inline";
         setwebcam();
         // setimg();
     } else{
+        initCanvas(400, 300);
+        qrcode.callback = read;
         document.getElementById("mainbody").style.display="inline";
-        document.getElementById("mainbody").innerHTML='<p id="mp1">QR code scanner for HTML5 capable browsers</p><br>'+
-        '<br><p id="mp2">sorry your browser is not supported</p><br><br>'+
-        '<p id="mp1">try <a href="http://www.mozilla.com/firefox"><img src="firefox.png"/></a> or <a href="http://chrome.google.com"><img src="chrome_logo.gif"/></a> or <a href="http://www.opera.com"><img src="Opera-logo.png"/></a></p>';
+        setimg();
+        // document.getElementById("mainbody").style.display="inline";
+        // document.getElementById("mainbody").innerHTML='<p id="mp1" style="color:red;">Sorry, your browser does not support webcam access. Please try Mozilla Firefox or Google Chrome.</p><br>';
     }
 }
 
@@ -202,67 +211,20 @@ function setwebcam()
     document.getElementById("outdiv").innerHTML = vidhtml;
     v=document.getElementById("v");
 
-    // var videoSource = null;
-    // for (var i = 0; i != sourceInfos.length; ++i) {
-    //     var sourceInfo = sourceInfos[i];
-    //     if (sourceInfo.kind === 'video') {
-    //       console.log(sourceInfo.id, sourceInfo.label || 'camera');
-
-    //       videoSource = sourceInfo.id;
-    //     }
-    // }
-
-    // if(n.getUserMedia)
-    //     n.getUserMedia({
-    //         video: 
-    //             {
-    //                 optional: [{sourceId: videoSource}]
-    //             }, 
-    //         audio: false
-    //     }, success, error);
-    // else
-    // if(n.webkitGetUserMedia)
-    // {
-    //     webkit=true;
-    //     n.webkitGetUserMedia({video: 
-    //             {
-    //                 optional: [{sourceId: videoSource}]
-    //             }, 
-    //         audio: false
-    //     }, success, error);
-    // }
-    // else
-    // if(n.mozGetUserMedia)
-    // {
-    //     moz=true;
-    //     n.mozGetUserMedia({video: 
-    //             {
-    //                 optional: [{sourceId: videoSource}]
-    //             }, 
-    //         audio: false
-    //     }, success, error);
-    // }
-
-    MediaStreamTrack.getSources(function(sourceInfos) {
-      var audioSource = false;
-      var videoSource = null;
-
-      for (var i = 0; i != sourceInfos.length -1; ++i) {
-        var sourceInfo = sourceInfos[i];
-        if (sourceInfo.kind === 'video') {
-          console.log(sourceInfo.id, sourceInfo.label || 'camera');
-
-          videoSource = sourceInfo.id;
-        }
-      }
-
-      sourceSelected(audioSource, videoSource);
-    });
-
-    //document.getElementById("qrimg").src="qrimg2.png";
-    //document.getElementById("webcamimg").src="webcam.png";
-    // document.getElementById("qrimg").style.opacity=0.2;
-    // document.getElementById("webcamimg").style.opacity=1.0;
+    if(n.getUserMedia)
+        n.getUserMedia({video: true, audio: false}, success, error);
+    else
+    if(n.webkitGetUserMedia)
+    {
+        webkit=true;
+        n.webkitGetUserMedia({video: true, audio: false}, success, error);
+    }
+    else
+    if(n.mozGetUserMedia)
+    {
+        moz=true;
+        n.mozGetUserMedia({video: true, audio: false}, success, error);
+    }
 
     stype=1;
     setTimeout(captureToCanvas, 300);

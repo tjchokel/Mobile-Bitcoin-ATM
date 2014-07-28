@@ -631,9 +631,13 @@
                 {% endblocktrans %}
               </p>
               <p>
-                {% blocktrans %}
+                {% blocktrans with off_chain_url='https://en.bitcoin.it/wiki/Off-Chain_Transactions' %}
                   When you are buying bitcoin with cash, this means that the store will pay the associated transaction fee so that you receive the exact amount of bitcoin you were quoted.
                   CoinSafe will handle this case automatically.
+                  In the event both the customer and the store are using Coinbase, Coinbase can sends the funds
+                  <a href="{{ off_chain_url }}">off the blockchain</a>
+                  which has no transaction fees.
+                  This will happen automatically if the customer puts in an email address to send bitcoin to.
                 {% endblocktrans %}
               </p>
               <p>

@@ -27,8 +27,7 @@ def home(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 return HttpResponseRedirect(reverse_lazy('register_router'))
-    else:
-        return {}
+    return {}
 
 
 @sensitive_variables('password', 'password_form')

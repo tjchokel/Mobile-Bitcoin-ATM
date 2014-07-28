@@ -34,6 +34,7 @@
           <li><a href="#api_credentials">{% trans "Is It Safe to Give CoinSafe API Access to My Online Wallet?" %}</a></li>
           <li><a href="#which_api">{% trans "Which Wallet Service Does CoinSafe Recommend?" %}</a></li>
           <li><a href="#new_api_partner">{% trans "Does CoinSafe have any plans to support API Access to More Wallets?" %}</a></li>
+          <li><a href="#btc_inventory">{% trans "How Much BTC Do I Need to Keep in Stock for Customers?" %}</a></li>
           <li><a href="#local_legality">{% trans "Is CoinSafe Legal in My Country?" %}</a></li>
           <li><a href="#language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a></li>
           <li><a href="#accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a></li>
@@ -406,6 +407,51 @@
                   so if there's a wallet you'd like us to add please <a href="{{ contact_url }}">let us know</a> so we can add it.
                 {% endblocktrans %}
               </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="btc_inventory">{% trans "How Much BTC Do I Need to Keep in Stock for Customers?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  Selling bitcoin is similar to selling any other product in that you need to have it in stock before you can sell it to potential customers.
+                  The difference with bitcoin is that the value of that inventory can fluctuate wildly.
+                  Over the long-term the volatility has tended upwards more than downards, but there's no guarantee that will continue, and that fact is little consolation when bitcoin falls 10% in a single day
+                  (which has happened several times).
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  We're working on two beta features to address this, please
+                  <a href="{{ contact_url }}">contact us</a>
+                  if you'd like to pilot them:
+                {% endblocktrans %}
+              </p>
+              <ul>
+                <li>
+                  {% blocktrans with cb_instant_url='http://blog.coinbase.com/post/55203204550/instant-bitcoin-purchases-at-coinbase' %}
+                    <b>Instant buy with Coinbase</b>.
+                    If you have a verified account with Coinbase
+                    (<a href="{{ cb_instant_url }}">more info</a>),
+                    you can keep 0 BTC in stock and instant buy it as needed to send to customers in your store.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans with coinbase_url='https://coinbase.com/' blockchain_url='https://blockchain.info/' bitstamp_url='https://www.bitstamp.net/' %}
+                    <b>Nightly top-up with <a href="{{ coinbase_url }}">coinbase</a> or <a href="{{ bitstamp_url }}">bitstamp</a></b>.
+                    You set the amount of bitcoin you want to maintain and every night we'll ask your local exchange to top up your wallet so you're ready for new customers.
+                    More exchanges coming soon.
+                  {% endblocktrans %}
+                </li>
+              </ul>
             </div>
           </div>
         </div>

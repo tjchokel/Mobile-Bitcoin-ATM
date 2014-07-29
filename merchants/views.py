@@ -33,7 +33,7 @@ def login_request(request):
         form = LoginForm(data=request.POST)
         if form.is_valid():
             # Log in user
-            email = form.cleaned_data['email'].lower().strip()
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
             user_found = get_object_or_None(AuthUser, username=email)
@@ -110,7 +110,7 @@ def register_merchant(request):
 
             # create user
             user = AuthUser.objects.create_user(
-                    email,
+                    username=email.lower(),
                     email=email,
                     password=password,
                     full_name=full_name,

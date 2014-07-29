@@ -88,7 +88,7 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
         if not to_email:
             to_email = to_merchant.user.email
         if not to_name:
-            to_name = to_merchant.business_name
+            to_name = to_merchant.full_name
 
         # append ?e=email to all links in email
         html_body = append_qs(

@@ -181,6 +181,23 @@ class Merchant(models.Model):
             return True
         return False
 
+    def disable_all_credentials(self):
+        " use this when reseting a user's password "
+        for credential in self.basecredential_set.filter(disabled_at=None):
+            credential.disabled_at = now()
+            credential.save()
+
+    def disable_all_destination_addresses(self):
+        " use this when reseting a user's password "
+        for dest_addr in self.get_destination_addresses():
+            dest_addr.retired_at = now()
+            dest_addr.save()
+
+    def disable_sensitive_info(self):
+        " Use this when reseting a user's password "
+        self.disable_all_credentials()
+        self.disable_all_destination_addresses()
+
     def get_hours(self):
         return self.opentime_set.all()
 

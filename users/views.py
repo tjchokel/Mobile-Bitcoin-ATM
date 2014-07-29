@@ -11,8 +11,10 @@ from annoying.functions import get_object_or_None
 from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
 from shoppers.models import Shopper
 from users.models import FutureShopper
+
+
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
-from users.forms import CustomerRegistrationForm, ContactForm
+from users.forms import CustomerRegistrationForm, ContactForm, ChangePWForm
 
 from emails.trigger import send_and_log
 
@@ -223,3 +225,26 @@ def contact(request):
             return HttpResponseRedirect(reverse_lazy('home'))
 
     return {'form': form}
+
+
+@login_required
+@render_to('users/change_pw.html')
+def change_password(request):
+    user = request.user
+    form = ChangePWForm(user=user)
+    if request.method == 'POST':
+        form = ChangePWForm(user=user, data=request.POST)
+        if form.is_valid():
+            new_pw = form.cleaned_data['newpassword']
+            user.set_password(new_pw)
+            user.save()
+
+            msg = _('Your password has been changed.')
+            messages.success(request, msg, extra_tags='safe')
+
+            return HttpResponseRedirect(reverse_lazy('home'))
+
+    return {
+            'form': form,
+            'merchant': user.get_merchant(),
+            }

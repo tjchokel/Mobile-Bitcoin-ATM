@@ -101,7 +101,7 @@ class Merchant(models.Model):
 
     def get_currency_symbol(self):
         if self.currency_code:
-            return BFHCurrenciesList[self.currency_code]['symbol']
+            return BFHCurrenciesList[self.currency_code]['symbol'].decode('utf-8')
         else:
             return '$'
 

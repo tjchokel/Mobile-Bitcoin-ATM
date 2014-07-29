@@ -42,7 +42,7 @@ class CoinbaseAPIForm(forms.Form):
         required=True,
         min_length=5,
         max_length=256,
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )
 
     api_secret = forms.CharField(
@@ -50,7 +50,7 @@ class CoinbaseAPIForm(forms.Form):
         min_length=5,
         max_length=50,
         required=True,
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )
 
 
@@ -69,7 +69,7 @@ class BitstampAPIForm(forms.Form):
         required=True,
         min_length=5,
         max_length=256,
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )
 
     api_secret = forms.CharField(
@@ -77,5 +77,5 @@ class BitstampAPIForm(forms.Form):
         min_length=5,
         max_length=50,
         required=True,
-        widget=forms.TextInput(),
+        widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )

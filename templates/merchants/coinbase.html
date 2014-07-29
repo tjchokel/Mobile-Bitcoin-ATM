@@ -25,6 +25,7 @@
                   <th>{% trans "Added At" %}</th>
                   <th>{% trans "Status" %}</th>
                   <th>{% trans "API Key" %}</th>
+                  <th>{% trans "Balance" %}</th>
                   <th>{% trans "Refresh" %}</th>
                   <th>{% trans "Delete" %}</th>
                 </tr>
@@ -34,6 +35,7 @@
                   <td>{{cb_credential.created_at|naturaltime}}</td>
                   <td>{{cb_credential.get_status|format_status_string}}</td>
                   <td>{{cb_credential.api_key|obscure_except_ending}}</td>
+                  <td>{{balance}} mBTC</td>
                   <td style="font-size: 22px;">
 
                     <a href="javascript: refreshCredentials();" id='refresh-button'><i class="fa fa-refresh"></i></a>

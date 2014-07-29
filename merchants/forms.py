@@ -27,6 +27,10 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(render_value=False)
     )
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        return email.lower().strip()
+
 
 class MerchantRegistrationForm(forms.Form):
     email = forms.EmailField(
@@ -76,7 +80,7 @@ class MerchantRegistrationForm(forms.Form):
             self.fields['currency_code'].widget.attrs['data-currency'] = kwargs['initial']['currency_code']
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+        email = self.cleaned_data['email'].lower().strip()
         existing_user = get_object_or_None(self.AuthUser, username=email)
         if existing_user:
             # TODO: move this to clean_email

@@ -1,5 +1,5 @@
 from django import forms
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.utils.translation import ugettext_lazy as _
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -10,6 +10,10 @@ from annoying.functions import get_object_or_None
 from countries import COUNTRY_DROPDOWN, BFH_CURRENCY_DROPDOWN
 
 from utils import clean_phone_num
+
+
+ALPHANUMERIC_VALIDATOR = RegexValidator(r'^[0-9a-zA-Z -]*$',
+    _('Letters and numbers only please.'))
 
 
 class LoginForm(forms.Form):
@@ -42,6 +46,7 @@ class MerchantRegistrationForm(forms.Form):
         min_length=2,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
+        validators=[ALPHANUMERIC_VALIDATOR],
     )
     business_name = forms.CharField(
         label=_('Business Name'),
@@ -272,6 +277,9 @@ class OwnerInfoForm(forms.Form):
         min_length=2,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
+        validators=[ALPHANUMERIC_VALIDATOR],
+        # TODO: the way errors are handled in the views will not display this
+        # correctly to users
     )
 
     email = forms.EmailField(

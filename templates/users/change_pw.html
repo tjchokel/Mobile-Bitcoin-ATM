@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+
+<div class="container">
+    <!-- Profile Menu -->
+    {% with current_tab='' %}
+      {% include "merchants/breadcrumb.html" %}
+    {% endwith %}
+  <div class="col-sm-8 col-md-9">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="hl">
+          <a style="color:#515151;" href="#">{% trans "Change Password" %}</a>
+        </h4>
+
+        <form class="form-horizontal" method="post" action="{% url "change_password" %}" >
+          {% load crispy_forms_tags %}
+          {{ form|crispy }}
+          {% csrf_token %}
+          <div class="button-wrapper">
+            <button type="submit" class="hl-btn hl-btn-green">{% trans "Change Password" %}</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block admin_footer %}
+  {% include "partials/admin_footer.html" %}
+{% endblock admin_footer %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#id_oldpassword').focus()
+      });
+  </script>
+{% endblock %}

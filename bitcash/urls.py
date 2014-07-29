@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^login/$', 'merchants.views.login_request', name='login_request'),
     url(r'^logout/?$', 'merchants.views.logout_request', name='logout'),
+    url(r'^change-password/?$', 'users.views.change_password', name='change_password'),
 
     url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
 

@@ -45,3 +45,45 @@ class ContactForm(forms.Form):
         required=True,
         widget=forms.Textarea(),
     )
+
+
+class ChangePWForm(forms.Form):
+
+    oldpassword = forms.CharField(
+            required=True,
+            label=_('Current Password'),
+            widget=forms.PasswordInput(attrs={'autocomplete': 'off'}),
+            help_text=_('Your existing password that you no longer want to use'),
+    )
+
+    newpassword = forms.CharField(
+            required=True,
+            label=_('New Password'),
+            widget=forms.PasswordInput(attrs={'autocomplete': 'off'}),
+            min_length=7,
+            help_text=_('Please choose a new secure password'),
+    )
+
+    newpassword_confirm = forms.CharField(
+            required=True,
+            label=_('Confirm New Password'),
+            widget=forms.PasswordInput(attrs={'autocomplete': 'off'}),
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(ChangePWForm, self).__init__(*args, **kwargs)
+
+    def clean_oldpassword(self):
+        password = self.cleaned_data['oldpassword']
+        if not self.user.check_password(password):
+            raise forms.ValidationError(_('Sorry, that password is not correct'))
+        return password
+
+    def clean(self):
+        if self.cleaned_data.get('newpassword') != self.cleaned_data.get('newpassword_confirm'):
+            raise forms.ValidationError(_('Your new passwords did not match.  Please try again.'))
+        if self.cleaned_data.get('newpassword') == self.cleaned_data.get('oldpassword'):
+            raise forms.ValidationError(_('Your old password matches your new password. Your password was not changed.'))
+        else:
+            return self.cleaned_data

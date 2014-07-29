@@ -3,7 +3,6 @@ from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 import datetime
-from django.utils.timezone import now
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
@@ -215,7 +214,7 @@ class BTCTransaction(models.Model):
 
     def get_shopper(self):
         return self.forwarding_address.shopper
-        
+
     def set_merchant_confirmation_override(self):
         self.min_confirmations_overrode_at = now()
         self.met_minimum_confirmation_at = now()
@@ -295,7 +294,7 @@ class BTCTransaction(models.Model):
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
-            return BFHCurrenciesList[self.currency_code_when_created]['symbol']
+            return BFHCurrenciesList[self.currency_code_when_created]['symbol'].decode('utf-8')
         else:
             return '$'
 
@@ -633,7 +632,7 @@ class ShopperBTCPurchase(models.Model):
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
-            return BFHCurrenciesList[self.currency_code_when_created]['symbol']
+            return BFHCurrenciesList[self.currency_code_when_created]['symbol'].decode('utf-8')
         else:
             return '$'
 

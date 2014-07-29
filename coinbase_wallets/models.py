@@ -145,7 +145,7 @@ class CBSCredential(BaseCredential):
             url_hit=SELL_URL,
             response_code=r.status_code,
             api_results=r.content,
-            post_params=body_to_use,
+            post_params={'qty': btc_to_sell},
             merchant=self.merchant,
             credential=self)
 
@@ -223,24 +223,27 @@ class CBSCredential(BaseCredential):
 
         SEND_URL = 'https://coinbase.com/api/v1/transactions/send_money'
 
-        post_params = 'transaction[to]=%s&transaction[amount]=%s' % (
+        body = 'transaction[to]=%s&transaction[amount]=%s' % (
                 dest_addr_to_use, btc_to_send)
+        post_params = {'to': dest_addr_to_use, 'amount': btc_to_send}
 
         if satoshis_to_send < btc_to_satoshis(.01) and not destination_email_address:
             # https://coinbase.com/api/doc/1.0/transactions/send_money.html
             # Coinbase pays transaction fees on payments greater than or equal to 0.01 BTC.
             # But for smaller amounts you may want to add your own amount."
-            post_params += '&transaction[user_fee]=0.0001'
+            body += '&transaction[user_fee]=0.0001'
+            post_params['user_fee'] = 0.0001
 
         if notes:
             # TODO: url encode this?
-            post_params += '&transaction[notes]=' + notes
+            body += '&transaction[notes]=' + notes
+            post_params['notes'] = notes
 
         r = get_cb_request(
                 url=SEND_URL,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
-                body=post_params)
+                body=body)
 
         # Log the API call
         APICall.objects.create(
@@ -294,13 +297,14 @@ class CBSCredential(BaseCredential):
         """
         ADDRESS_URL = 'https://coinbase.com/api/v1/account/generate_receive_address'
 
-        post_params = 'address[label]=CoinSafe Address %s' % now().strftime("%Y-%m-%d")
+        label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d")
+        body = 'address[label]=%s' % label
 
         r = get_cb_request(
                 url=ADDRESS_URL,
                 api_key=self.api_key,
                 api_secret=self.api_secret,
-                body=post_params,
+                body=body,
                 )
 
         # Log the API call
@@ -308,7 +312,7 @@ class CBSCredential(BaseCredential):
             api_name=APICall.COINBASE_NEW_ADDRESS,
             url_hit=ADDRESS_URL,
             response_code=r.status_code,
-            post_params=post_params,
+            post_params={'label': label},
             api_results=r.content,
             merchant=self.merchant,
             credential=self)

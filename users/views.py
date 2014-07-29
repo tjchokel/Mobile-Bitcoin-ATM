@@ -200,7 +200,6 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(data=request.POST)
         if form.is_valid():
-
             email = form.cleaned_data['email']
             name = form.cleaned_data['name']
             message = form.cleaned_data['message']
@@ -209,7 +208,6 @@ def contact(request):
                     'name': name,
                     'message': message,
                     }
-
             send_and_log(
                 subject='CoinSafe Support Form',
                 body_template='admin/contact_form.html',
@@ -217,9 +215,11 @@ def contact(request):
                 to_email='support@coinsafe.com',
                 to_name='CoinSafe Support',
                 body_context=body_context,
+                replyto_name=name,
+                replyto_email=email,
                 )
             msg = _("Thanks! We'll get back to you soon.")
             messages.success(request, msg, extra_tags='safe')
-            return HttpResponseRedirect(reverse_lazy('contact'))
+            return HttpResponseRedirect(reverse_lazy('home'))
 
     return {'form': form}

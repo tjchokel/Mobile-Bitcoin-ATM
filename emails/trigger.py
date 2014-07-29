@@ -62,8 +62,8 @@ def append_qs(html, qs_dict, link_text):
 
 # TODO: create non-blocking queue system and move email sending to queue
 def send_and_log(subject, body_template, to_merchant=None, to_email=None,
-        to_name=None, body_context={}, from_name=None,
-        from_email=None, cc_name=None, cc_email=None):
+        to_name=None, body_context={}, from_name=None, from_email=None,
+        cc_name=None, cc_email=None, replyto_name=None, replyto_email=None):
     """
     Send and log an email
     """
@@ -88,7 +88,7 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
         if not to_email:
             to_email = to_merchant.user.email
         if not to_name:
-            to_name = to_merchant.business_name
+            to_name = to_merchant.user.full_name
 
         # append ?e=email to all links in email
         html_body = append_qs(
@@ -111,6 +111,9 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
 
     if cc_email:
         pm_dict['cc'] = cat_email_header(cc_name, cc_email)
+
+    if replyto_email:
+        pm_dict['reply_to'] = cat_email_header(replyto_name, replyto_email)
 
     # Make email object
     pm = PMMail(**pm_dict)

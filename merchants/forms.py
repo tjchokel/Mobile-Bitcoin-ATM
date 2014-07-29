@@ -88,8 +88,8 @@ class MerchantRegistrationForm(forms.Form):
             msg = _('That email is already taken, do you want to <a href="%s">login</a>?' % login_url)
             raise forms.ValidationError(mark_safe(msg))
 
-        if len(email) > 30:
-            msg = _('Sorry, your email address must be less than 31 characters')
+        if len(email) > 100:
+            msg = _('Sorry, your email address must be less than 100 characters')
             raise forms.ValidationError(msg)
         return email
 

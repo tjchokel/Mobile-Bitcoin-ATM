@@ -6,6 +6,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 from utils import get_client_ip
 from countries import ALL_COUNTRIES
 
+AbstractUser._meta.get_field_by_name('username')[0].max_length = 100
+AbstractUser._meta.get_field('username').validators[0].limit_value = 100
+
 
 class AuthUser(AbstractUser):
     """

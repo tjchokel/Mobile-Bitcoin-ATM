@@ -129,7 +129,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
         required=True,
         min_length=27,
         max_length=34,
-        help_text=_('The wallet address where you want to recieve your bitcoin'),
+        help_text=_('The wallet address where you want to receive your bitcoin'),
         widget=forms.TextInput(attrs={'style': 'width:55%; display:inline;'}),
     )
 

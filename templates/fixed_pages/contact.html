@@ -52,7 +52,7 @@
           <h4>{% trans "Google Maps" %}</h4>
           <hr>
           <div class="map">
-            <iframe width="350" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q=1601+13th+ave,Seattle,WA"></iframe><br /><small><a href="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q=1601+13th+ave,Seattle,WA" style="color:#0000FF;text-align:left">{% trans "View Larger Map" %}</a></small>
+            <iframe width="350" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q=1601+13th+ave,Seattle,WA"></iframe>
           </div>
         </div>
       </div>
@@ -61,6 +61,16 @@
 
 </div>
 {% endblock content %}
+
 {% block static_page_footer %}
   {% include "partials/_static_page_footer.html" %}
 {% endblock static_page_footer %}
+
+
+{% block extra_js %}
+  <script>
+    $(document).ready(function(){
+      $('#id_email').focus();
+    });
+  </script>
+{% endblock extra_js %}

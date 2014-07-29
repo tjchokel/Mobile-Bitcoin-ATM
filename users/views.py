@@ -196,7 +196,14 @@ def register_customer(request):
 
 @render_to('fixed_pages/contact.html')
 def contact(request):
-    form = ContactForm()
+    if request.user.is_authenticated():
+        initial = {
+                'name': request.user.full_name,
+                'email': request.user.username,
+                }
+        form = ContactForm(initial=initial)
+    else:
+        form = ContactForm()
     if request.method == 'POST':
         form = ContactForm(data=request.POST)
         if form.is_valid():
@@ -209,7 +216,7 @@ def contact(request):
                     'message': message,
                     }
             send_and_log(
-                subject='CoinSafe Support Form',
+                subject='CoinSafe Support Message From %s' % name,
                 body_template='admin/contact_form.html',
                 to_merchant=None,
                 to_email='support@coinsafe.com',
@@ -218,7 +225,7 @@ def contact(request):
                 replyto_name=name,
                 replyto_email=email,
                 )
-            msg = _("Thanks! We'll get back to you soon.")
+            msg = _("Message Received! We'll get back to you soon.")
             messages.success(request, msg, extra_tags='safe')
             return HttpResponseRedirect(reverse_lazy('home'))
 

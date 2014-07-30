@@ -15,6 +15,7 @@ class SentEmailAdmin(admin.ModelAdmin):
             'body_context',
             'subject'
             )
+    raw_id_fields = ('to_merchant', )
 
     class Meta:
         model = SentEmail

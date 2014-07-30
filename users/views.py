@@ -12,7 +12,6 @@ from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchas
 from shoppers.models import Shopper
 from users.models import FutureShopper
 
-
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 from users.forms import CustomerRegistrationForm, ContactForm, ChangePWForm
 

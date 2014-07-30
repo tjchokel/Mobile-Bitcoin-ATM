@@ -5,7 +5,16 @@ from bitstamp_wallets.models import BTSCredential, BTSSentBTC
 
 class BTSCredentialAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'customer_id', 'api_key', )
+    list_display = (
+            'id',
+            'merchant',
+            'disabled_at',
+            'last_succeded_at',
+            'last_failed_at',
+            'customer_id',
+            'api_key',
+            )
+    raw_id_fields = ('merchant', )
 
     class Meta:
         model = BTSCredential
@@ -27,6 +36,7 @@ class BTSSentBTCAdmin(admin.ModelAdmin):
             'status',
             'status_last_checked_at',
             )
+    raw_id_fields = ('credential', )
 
     class Meta:
         model = BTSSentBTC

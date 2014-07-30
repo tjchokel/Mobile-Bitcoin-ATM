@@ -6,6 +6,8 @@ from polymorphic import PolymorphicModel
 
 from countries import BFH_CURRENCY_DROPDOWN
 
+from utils import format_satoshis_with_units
+
 
 class BaseCredential(PolymorphicModel):
 
@@ -65,7 +67,7 @@ class BaseBalance(PolymorphicModel):
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
 
     def __str__(self):
-        return '%s: %s' % (self.id, self.satoshis)
+        return '%s: %s' % (self.id, format_satoshis_with_units(self.satoshis))
 
 
 class BaseSentBTC(PolymorphicModel):

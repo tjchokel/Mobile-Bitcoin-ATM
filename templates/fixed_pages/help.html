@@ -51,6 +51,7 @@
           <li><a href="#accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a></li>
           <li><a href="#btc_forwarding">{% trans "Why is there a Different Deposit Address for Each Customer that Sends me BTC?" %}</a></li>
           <li><a href="#transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a></li>
+          <li><a href="#forgot_pw">{% trans "I Forgot My Password, How Can I Reset It?" %}</a></li>
           <li><a href="#altcoin_support">{% trans "Does CoinSafe Support Any Altcoins?" %}</a></li>
         </ul>
       <h4>For Both Customers & Businesses</h4>
@@ -533,6 +534,34 @@
                   <a href="{{ contact_url}}">contact us</a>.
                   No transaction has ever been lost,
                   but sometimes our automated system can fall slightly behind.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="forgot_pw">{% trans "I Forgot My Password, How Can I Reset It?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  Please send an email to
+                  <a href="mailto:support@coinsafe.com?Subject=Forgot%20Password">support@coinsafe.com</a>
+                  from the email address that is associated with your account and we can restore your access.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  For security, when you email us we will immediately remove any third party API credentials associated with your account.
+                  You'll need to add your API credentials back in the admin tab before you can use the app to sell bitcoin.
+                  We do this in case someone has compromised your email account and is trying to use that to gain access to your bitcoin.
+                  Sorry for the inconvenience, we're working on a better 2FA mechanism to restore your access without but it's not ready yet.
                 {% endblocktrans %}
               </p>
             </div>

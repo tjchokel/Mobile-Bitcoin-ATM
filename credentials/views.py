@@ -12,6 +12,7 @@ from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from credentials.forms import BlockchainAPIForm, CoinbaseAPIForm, BitstampAPIForm
+from utils import format_satoshis_with_units_rounded
 
 
 @sensitive_post_parameters('username', 'main_password', 'second_password', )
@@ -21,6 +22,9 @@ def blockchain_creds(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_blockchain_credential()
+    balance = 0
+    if credential:
+        balance = credential.get_balance()
 
     form = BlockchainAPIForm()
     if request.method == 'POST' and merchant:
@@ -47,6 +51,7 @@ def blockchain_creds(request):
         'merchant': merchant,
         'form': form,
         'credential': credential,
+        'balance': format_satoshis_with_units_rounded(balance),
     }
 
 
@@ -57,7 +62,9 @@ def coinbase_creds(request):
     user = request.user
     merchant = user.get_merchant()
     cb_credential = merchant.get_coinbase_credential()
-
+    balance = 0
+    if cb_credential:
+        balance = cb_credential.get_balance()
     form = CoinbaseAPIForm()
     if request.method == 'POST' and merchant:
         form = CoinbaseAPIForm(data=request.POST)
@@ -82,6 +89,7 @@ def coinbase_creds(request):
         'merchant': merchant,
         'form': form,
         'cb_credential': cb_credential,
+        'balance': format_satoshis_with_units_rounded(balance),
     }
 
 
@@ -92,7 +100,9 @@ def bitstamp_creds(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_bitstamp_credential()
-
+    balance = 0
+    if credential:
+        balance = credential.get_balance()
     form = BitstampAPIForm()
     if request.method == 'POST' and merchant:
         form = BitstampAPIForm(data=request.POST)
@@ -118,6 +128,7 @@ def bitstamp_creds(request):
         'merchant': merchant,
         'form': form,
         'credential': credential,
+        'balance': format_satoshis_with_units_rounded(balance),
     }
 
 

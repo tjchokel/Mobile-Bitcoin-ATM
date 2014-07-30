@@ -12,6 +12,7 @@ class APICallAdmin(admin.ModelAdmin):
             'response_code',
             'post_params',
             'headers',
+            'api_results',
             )
     # https://coderwall.com/p/ppqusg
     raw_id_fields = ('merchant', )

@@ -441,7 +441,6 @@ class BTCTransaction(models.Model):
             msg = msg % (
                     self.format_satoshis_amount(),
                     customer_string,
-                    merchant.business_name,
                     self.get_fiat_amount_formatted(),
                     )
             return SentSMS.send_and_log(

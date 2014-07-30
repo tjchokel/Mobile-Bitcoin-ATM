@@ -444,7 +444,7 @@ class BTCTransaction(models.Model):
                     self.get_fiat_amount_formatted(),
                     )
             return SentSMS.send_and_log(
-                    phone_num=self.merchant.phone_num,
+                    phone_num=merchant.phone_num,
                     message=msg,
                     to_user=merchant.user,
                     to_merchant=merchant,

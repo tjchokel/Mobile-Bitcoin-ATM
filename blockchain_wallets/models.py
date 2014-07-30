@@ -119,6 +119,9 @@ class BCICredential(BaseCredential):
         BASE_URL = 'https://blockchain.info/merchant/%s/new_address?password=%s&label=%s'
         ADDRESS_URL = BASE_URL % (self.username, self.main_password, label)
 
+        if self.second_password:
+            ADDRESS_URL += '&second_password=%s' % self.second_password
+
         r = requests.get(url=ADDRESS_URL)
 
         # Log the API call

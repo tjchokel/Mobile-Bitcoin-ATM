@@ -19,9 +19,20 @@
       <h3>Table of Contents</h3>
       <br />
 
+      <h4>For Customers</h4>
+        <ul>
+          <li><a href="#coinsafe_overview">{% trans "What Does CoinSafe Do?" %}</a></li>
+          <li><a href="#merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a></li>
+          <li><a href="#pricing">{% trans "Am I Getting a Fair Price?" %}</a></li>
+          <li><a href="#btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a></li>
+          <li><a href="#transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a></li>
+          <li><a href="#language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a></li>
+          <li><a href="#altcoin_support">{% trans "Does CoinSafe Support Any Altcoins?" %}</a></li>
+        </ul>
+      </h2>
       <h4>For Businesses</h4>
         <ul>
-          <li><a href="#overview">{% trans "What Does CoinSafe Do?" %}</a></li>
+          <li><a href="#coinsafe_overview">{% trans "What Does CoinSafe Do?" %}</a></li>
           <li><a href="#coinsafe_free">{% trans "Is CoinSafe Really Free?" %}</a></li>
           <li><a href="#easy_to_use">{% trans "Does My Cashier Need to Understand Bitcoin?" %}</a></li>
           <li><a href="#trading_apps">{% trans "How is CoinSafe Different from Using the Bitcoin Wallet on My Phone to Trade with Customers?" %}</a></li>
@@ -39,15 +50,18 @@
           <li><a href="#language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a></li>
           <li><a href="#accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a></li>
           <li><a href="#btc_forwarding">{% trans "Why is there a Different Deposit Address for Each Customer that Sends me BTC?" %}</a></li>
-        </ul>
-      <h4>For Customers</h4>
-        <ul>
-          <li><a href="#pricing">{% trans "Am I Getting a Fair Price?" %}</a></li>
-          <li><a href="#btc_via_email">{% trans "How Are You Able To Send Me Bitcoin Via Email?" %}</a></li>
           <li><a href="#transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a></li>
-          <li><a href="#merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a></li>
+          <li><a href="#altcoin_support">{% trans "Does CoinSafe Support Any Altcoins?" %}</a></li>
+        </ul>
+      <h4>For Both Customers & Businesses</h4>
+        <ul>
+          <li><a href="#coinsafe_overview">{% trans "What Does CoinSafe Do?" %}</a></li>
+          <li><a href="#transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a></li>
+          <li><a href="#language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a></li>
+          <li><a href="#altcoin_support">{% trans "Does CoinSafe Support Any Altcoins?" %}</a></li>
         </ul>
       </h2>
+
       <br/>
 
       {% url 'contact' as contact_url %}
@@ -61,24 +75,6 @@
       <div class="panel-group">
 
         <h4>For Businesses</h4>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="overview">{% trans "What Does CoinSafe Do?" %}</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>
-                {% blocktrans %}
-                  CoinSafe makes it easy for individuals and small businesses to connect offline to buy and sell bitcoin.
-                {% endblocktrans %}
-              </p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">
@@ -490,30 +486,6 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>
-                {% blocktrans %}
-                  We're working on it!
-                {% endblocktrans %}
-              </p>
-              <p>
-                {% blocktrans %}
-                  Currently we're testing Spanish with some customers in our beta program, and we're going to add support for more languages soon.
-                  If there's a language you'd like us to support, please <a href="{{ contact_url }}">let us know</a>.
-                {% endblocktrans %}
-              </p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
               <a class="anchor" id="accept_cards">{% trans "Can I Accept Credit Cards for Bitcoin Purchases?" %}</a>
             </h4>
           </div>
@@ -574,6 +546,26 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
+              <a class="anchor" id="merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% url 'register_customer' as register_customer_url %}
+                {% blocktrans %}
+                  Of course!
+                  <a href="{{ register_customer_url }}">Click here to signup for email alerts</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
               <a class="anchor" id="pricing">{% trans "Am I Getting a Fair Price?" %}</a>
             </h4>
           </div>
@@ -607,6 +599,27 @@
                   Coinbase will immediately email you a simple link to claim your bitcoin, <b>please do that right away</b>.
                   After a few weeks, if the bitcoin is unclaimed they will return it to the business you transacted with.
                   Don't forget to claim your bitcoin!
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <hr />
+        <h4>For Both Customers and Businesses</h4>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="coinsafe_overview">{% trans "What Does CoinSafe Do?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  CoinSafe makes it easy for individuals and small businesses to connect offline to buy and sell bitcoin.
                 {% endblocktrans %}
               </p>
             </div>
@@ -664,22 +677,54 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a class="anchor" id="merchant_notification">{% trans "Can You Notify Me When New Merchants Sign Up in My City?" %}</a>
+              <a class="anchor" id="language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a>
             </h4>
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                {% url 'register_customer' as register_customer_url %}
                 {% blocktrans %}
-                  Of course!
-                  <a href="{{ register_customer_url }}">Click here to signup for email alerts</a>.
+                  We're working on it!
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  Currently we're testing Spanish with some customers in our beta program, and we're going to add support for more languages soon.
+                  If there's a language you'd like us to support, please <a href="{{ contact_url }}">let us know</a>.
                 {% endblocktrans %}
               </p>
             </div>
           </div>
         </div>
         <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="altcoin_support">{% trans "Does CoinSafe Support Any Altcoins?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  Not currently, but we'd like to get there one day.
+                  One issue is that the web wallet API's are less developed for altcoins vs bitcoin, this will hopefully improve over time.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  If you're a merchant who is currently using CoinSafe for bitcoin and would like us to add support for altcoins, please
+                  <a href="{{ contact_url }}">contact us</a>
+                  and let us know which coins you'd like us to add.
+                  We love adding features to make our users happy!
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
 
       </div>
 

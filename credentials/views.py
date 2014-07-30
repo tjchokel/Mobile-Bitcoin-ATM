@@ -12,7 +12,8 @@ from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from credentials.forms import BlockchainAPIForm, CoinbaseAPIForm, BitstampAPIForm
-from utils import satoshis_to_mbtc
+from utils import format_satoshis_with_units_rounded
+
 
 @sensitive_post_parameters('username', 'main_password', 'second_password', )
 @login_required
@@ -50,7 +51,7 @@ def blockchain_creds(request):
         'merchant': merchant,
         'form': form,
         'credential': credential,
-        'balance': round(satoshis_to_mbtc(balance), 2),
+        'balance': format_satoshis_with_units_rounded(balance),
     }
 
 
@@ -88,7 +89,7 @@ def coinbase_creds(request):
         'merchant': merchant,
         'form': form,
         'cb_credential': cb_credential,
-        'balance': round(satoshis_to_mbtc(balance), 2),
+        'balance': format_satoshis_with_units_rounded(balance),
     }
 
 
@@ -127,7 +128,7 @@ def bitstamp_creds(request):
         'merchant': merchant,
         'form': form,
         'credential': credential,
-        'balance': round(satoshis_to_mbtc(balance), 2),
+        'balance': format_satoshis_with_units_rounded(balance),
     }
 
 

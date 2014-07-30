@@ -5,7 +5,15 @@ from blockchain_wallets.models import BCICredential, BCISentBTC
 
 class BCICredentialAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'username', 'main_password', 'second_password', )
+    list_display = (
+            'id',
+            'merchant',
+            'disabled_at',
+            'last_succeded_at',
+            'last_failed_at',
+            'username',
+            )
+    raw_id_fields = ('merchant', )
 
     class Meta:
         model = BCICredential

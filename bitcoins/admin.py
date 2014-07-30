@@ -11,6 +11,7 @@ class DestinationAddressAdmin(admin.ModelAdmin):
             'merchant',
             'credential',
             )
+    raw_id_fields = ('merchant', 'credential', )
 
     class Meta:
         model = DestinationAddress
@@ -27,6 +28,7 @@ class ForwardingAddressAdmin(admin.ModelAdmin):
             'destination_address',
             'merchant',
             )
+    raw_id_fields = ('merchant', 'destination_address', )
 
     class Meta:
         model = ForwardingAddress
@@ -44,11 +46,13 @@ class BTCTransactionAdmin(admin.ModelAdmin):
         'suspected_double_spend_at',
         'forwarding_address',
         'destination_address',
+        'input_btc_transaction',
         'fiat_amount',
         'currency_code_when_created',
         'met_minimum_confirmation_at',
         'min_confirmations_overrode_at'
     )
+    raw_id_fields = ('forwarding_address', 'destination_address', 'input_btc_transaction', )
 
     class Meta:
         model = BTCTransaction
@@ -60,6 +64,7 @@ class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'merchant',
+        'shopper',
         'b58_address',
         'fiat_amount',
         'satoshis',
@@ -68,6 +73,7 @@ class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
         'expires_at',
         'cancelled_at',
     )
+    raw_id_fields = ('merchant', 'shopper', 'credential', 'btc_transaction', )
 
     class Meta:
         model = ShopperBTCPurchase

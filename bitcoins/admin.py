@@ -1,6 +1,8 @@
 from django.contrib import admin
 from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransaction, ShopperBTCPurchase
 
+from utils import format_satoshis_with_units
+
 
 class DestinationAddressAdmin(admin.ModelAdmin):
     list_display = (
@@ -11,6 +13,7 @@ class DestinationAddressAdmin(admin.ModelAdmin):
             'merchant',
             'credential',
             )
+    raw_id_fields = ('merchant', 'credential', )
 
     class Meta:
         model = DestinationAddress
@@ -27,6 +30,7 @@ class ForwardingAddressAdmin(admin.ModelAdmin):
             'destination_address',
             'merchant',
             )
+    raw_id_fields = ('merchant', 'destination_address', )
 
     class Meta:
         model = ForwardingAddress
@@ -35,20 +39,27 @@ admin.site.register(ForwardingAddress, ForwardingAddressAdmin)
 
 
 class BTCTransactionAdmin(admin.ModelAdmin):
+
+    def satoshis_formatted(self, instance):
+        return format_satoshis_with_units(instance.satoshis)
+    satoshis_formatted.allow_tags = True
+
     list_display = (
         'id',
         'txn_hash',
-        'satoshis',
+        'satoshis_formatted',
         'conf_num',
         'irreversible_by',
         'suspected_double_spend_at',
         'forwarding_address',
         'destination_address',
+        'input_btc_transaction',
         'fiat_amount',
         'currency_code_when_created',
         'met_minimum_confirmation_at',
         'min_confirmations_overrode_at'
     )
+    raw_id_fields = ('forwarding_address', 'destination_address', 'input_btc_transaction', )
 
     class Meta:
         model = BTCTransaction
@@ -57,17 +68,24 @@ admin.site.register(BTCTransaction, BTCTransactionAdmin)
 
 
 class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
+
+    def satoshis_formatted(self, instance):
+        return format_satoshis_with_units(instance.satoshis)
+    satoshis_formatted.allow_tags = True
+
     list_display = (
         'id',
         'merchant',
+        'shopper',
         'b58_address',
         'fiat_amount',
-        'satoshis',
+        'satoshis_formatted',
         'currency_code_when_created',
         'confirmed_by_merchant_at',
         'expires_at',
         'cancelled_at',
     )
+    raw_id_fields = ('merchant', 'shopper', 'credential', 'btc_transaction', )
 
     class Meta:
         model = ShopperBTCPurchase

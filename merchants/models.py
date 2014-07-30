@@ -281,9 +281,16 @@ class OpenTime(models.Model):
     from_time = models.TimeField()
     to_time = models.TimeField()
 
+    def __str__(self):
+        return '%s: %s from %s to %s' % (self.id, self.weekday,
+                self.from_time, self.to_time)
+
 
 class MerchantWebsite(models.Model):
     # Allow multiple websites for future-proofing
     merchant = models.ForeignKey(Merchant)
     url = models.URLField(blank=False, null=False, db_index=True)
     deleted_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.url)

@@ -1,5 +1,5 @@
 from django import forms
-from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -11,9 +11,17 @@ from countries import COUNTRY_DROPDOWN, BFH_CURRENCY_DROPDOWN
 
 from utils import clean_phone_num
 
+from unidecode import unidecode
 
-ALPHANUMERIC_VALIDATOR = RegexValidator(r'^[0-9a-zA-Z -]*$',
-    _('Letters and numbers only please.'))
+
+def clean_full_name(self):
+    """ Helper function for transliterating full_name field """
+    return unidecode(self.cleaned_data['full_name'])
+
+
+def clean_business_name(self):
+    """ Helper function for transliterating business_name field """
+    return unidecode(self.cleaned_data['business_name'])
 
 
 class LoginForm(forms.Form):
@@ -50,7 +58,6 @@ class MerchantRegistrationForm(forms.Form):
         min_length=2,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
-        validators=[ALPHANUMERIC_VALIDATOR],
     )
     business_name = forms.CharField(
         label=_('Business Name'),
@@ -92,6 +99,9 @@ class MerchantRegistrationForm(forms.Form):
             msg = _('Sorry, your email address must be less than 100 characters')
             raise forms.ValidationError(msg)
         return email
+
+    clean_full_name = clean_full_name
+    clean_business_name = clean_business_name
 
 
 class BitcoinRegistrationForm(forms.Form):
@@ -281,7 +291,6 @@ class OwnerInfoForm(forms.Form):
         min_length=2,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
-        validators=[ALPHANUMERIC_VALIDATOR],
         # TODO: the way errors are handled in the views will not display this
         # correctly to users
     )
@@ -306,6 +315,7 @@ class OwnerInfoForm(forms.Form):
     )
 
     clean_phone_num = clean_phone_num
+    clean_full_name = clean_full_name
 
 
 class MerchantInfoForm(forms.Form):
@@ -372,6 +382,7 @@ class MerchantInfoForm(forms.Form):
             )
 
     clean_phone_num = clean_phone_num
+    clean_business_name = clean_business_name
 
 
 class BusinessHoursForm(forms.Form):

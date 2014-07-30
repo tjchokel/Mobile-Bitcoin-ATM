@@ -4,9 +4,12 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from countries import COUNTRY_DROPDOWN
 from decimal import Decimal
 
-from utils import clean_phone_num
 from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction
+
+from utils import clean_phone_num
+
+from unidecode import unidecode
 
 
 class ShopperInformationForm(forms.Form):
@@ -37,6 +40,9 @@ class ShopperInformationForm(forms.Form):
     )
 
     clean_phone_num = clean_phone_num
+
+    def clean_name(self):
+        return unidecode(self.cleaned_data['name'])
 
 
 class BuyBitcoinForm(forms.Form):

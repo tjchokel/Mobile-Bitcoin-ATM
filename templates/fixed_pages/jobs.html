@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+  {% trans "Your Free Bitcoin ATM App | Careers | CoinSafe" %}
+{% endblock title %}
+{% load staticfiles %}
+{% block content %}
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="hl top-50">{% trans "Jobs" %}</h2>
+        <hr>
+      </div>
+    </div>
+      <div class="col-sm-10 col-sm-offset-1">
+      <p class="lead text-center">
+        {% trans "CoinSafe is funded and growing fast. Come join a team who believe in what they're building." %}
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="team">
+        <div class="member-left">
+          <!-- <img src="{%static "img/michael.jpg" %}" alt="Michael Flaxman" class="left" /> -->
+          <h4>{% trans "Director of Sales and Marketing" %}</h4>
+          <p class="position">Full Time | Seattle, WA.</p>
+          <p>
+            {% blocktrans %}
+              <b>Help us grow</b>. 
+              We are looking for a self-starter with exceptional communication skills who shares our passion for Bitcoin. 
+              You would be responsible for helping develop a content marking strategy, driving brand awareness, and exploring business development opportunities. 
+              Experience working at a startup is a plus.
+              <br/> <br/>
+              If you think you are a good fit, email jobs@coinsafe.com with some info about yourself.
+            {% endblocktrans %}
+          </p>
+        </div>
+        <div class="member-left">
+          <!-- <img src="{%static "img/tom.jpg" %}" alt="Tom Chokel" class="right" /> -->
+
+          <h4>{% trans "Product Designer" %}</h4>
+
+          <p class="position">Full Time or Contract | Seattle or Remote</p>
+          <p>
+            {% blocktrans %}
+              <b>Help us define our user experience and design easy to use products</b>.
+              We are looking for a designer who understands user interface design principles, has a critical eye for detail, and is capable of taking an idea through implementation. 
+              Familiarity with Photoshop, HTML, and CSS is essential, and experience designing for the mobile web is a definite plus. 
+              <br/><br/>
+              If you think you are a good fit, email jobs@coinsafe.com with some info about yourself and a link to your portfolio.
+            {% endblocktrans %}
+          </p>
+        </div>
+        <div class="member-left">
+          <!-- <img src="{%static "img/tom.jpg" %}" alt="Tom Chokel" class="right" /> -->
+
+          <h4>{% trans "Community Manager / Account Rep" %}</h4>
+
+          <p class="position">Full Time | Seattle, WA.</p>
+          <p>
+            {% blocktrans %}
+              <b>Help us delight our users</b>.
+              We are looking for a community manager to help support current users and communicate our vision with the masses. 
+              Exceptional communication skills are essential, and experience with content marketing and social media is a plus.
+              <br/><br/>
+              If you think you are a good fit, email jobs@coinsafe.com with some info about yourself.
+            {% endblocktrans %}
+          </p>
+        </div>
+
+        <div class="member-left">
+          <!-- <img src="{%static "img/tom.jpg" %}" alt="Tom Chokel" class="right" /> -->
+
+          <h4>{% trans "Software Engineer" %}</h4>
+
+          <p class="position">Full Time | Seattle, WA.</p>
+          <p>
+            {% blocktrans %}
+              <b>Help us build the future of international payments</b>.
+              We are looking for a software engineer who understands Bitcoin and is ready to contribute right away. 
+              Experience with Python/Django and JavaScript/jQuery is essential as is a firm understanding of standard web development principles.
+              <br/><br/>
+              If you think you are a good fit, email jobs@coinsafe.com with some info about yourself and a link to your Github profile.
+            {% endblocktrans %}
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block static_page_footer %}
+  <br/><br/><br/><br/>
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}

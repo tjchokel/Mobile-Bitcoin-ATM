@@ -1,6 +1,8 @@
 from django.contrib import admin
 from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransaction, ShopperBTCPurchase
 
+from utils import format_satoshis_with_units
+
 
 class DestinationAddressAdmin(admin.ModelAdmin):
     list_display = (
@@ -37,10 +39,15 @@ admin.site.register(ForwardingAddress, ForwardingAddressAdmin)
 
 
 class BTCTransactionAdmin(admin.ModelAdmin):
+
+    def satoshis_formatted(self, instance):
+        return format_satoshis_with_units(instance.satoshis)
+    satoshis_formatted.allow_tags = True
+
     list_display = (
         'id',
         'txn_hash',
-        'satoshis',
+        'satoshis_formatted',
         'conf_num',
         'irreversible_by',
         'suspected_double_spend_at',
@@ -61,13 +68,18 @@ admin.site.register(BTCTransaction, BTCTransactionAdmin)
 
 
 class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
+
+    def satoshis_formatted(self, instance):
+        return format_satoshis_with_units(instance.satoshis)
+    satoshis_formatted.allow_tags = True
+
     list_display = (
         'id',
         'merchant',
         'shopper',
         'b58_address',
         'fiat_amount',
-        'satoshis',
+        'satoshis_formatted',
         'currency_code_when_created',
         'confirmed_by_merchant_at',
         'expires_at',

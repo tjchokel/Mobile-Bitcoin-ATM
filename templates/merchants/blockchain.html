@@ -18,6 +18,7 @@
           {% if merchant.has_blockchain_credentials %}
             {% with api='blockchain' %}
               {% include "merchants/_delete_api_credentials_modal.html" %}
+              {% include "merchants/_add_funds_modal.html" %}
             {% endwith %}
             <table class="table table-condensed" style="border-collapse:collapse;">
               <thead>
@@ -59,6 +60,9 @@
               </tbody>
             </table>
 
+            <a class="btn btn-primary btn-lg" id="fund-wallet-button" onclick="fundWalletModal();" style="margin-left: auto; margin-right: auto; display: block;">
+              {% trans "Add funds to this wallet" %}
+            </a>
 
           {% else %}
             <p>
@@ -116,6 +120,10 @@
 
     function showDisableModal() {
       $('#delete-credentials-modal').modal();
+    }
+
+    function fundWalletModal() {
+      $('#add-funds-modal').modal();
     }
 
     function disableCredentials() {

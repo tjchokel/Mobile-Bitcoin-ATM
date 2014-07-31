@@ -1,0 +1,48 @@
+{% load i18n %}
+<div class="modal fade" id="add-funds-modal" tabindex="-1" role="dialog" aria-labelledby="credential_delete_modal" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="credential_delete_modal">
+          {% if api == 'coinbase' %}
+            {% trans "Add Funds to Coinbase Wallet" %}
+          {% endif %}
+          {% if api == 'bitstamp' %}
+            {% trans "Add Funds to Bitstamp Wallet" %}
+          {% endif %}
+          {% if api == 'blockchain' %}
+            {% trans "Add Funds to Blockchain.info Wallet" %}
+          {% endif %}
+        </h4>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <p class="lead text-center">
+              {% blocktrans %}
+                To top of your wallet, send funds to this address:
+              {% endblocktrans %}
+              <span class="text-green">
+                {{merchant.get_destination_address_b58}}
+                  <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{{merchant.get_destination_address_b58}}&choe=UTF-8&chs=275x275"/>
+              </span>
+              {% trans "Or visit" %}
+              {% if api == 'coinbase' %}
+                <a href="https://coinbase.com/signin" target="_blank">Coinbase.com</a>
+              {% endif %}
+              {% if api == 'bitstamp' %}
+                <a href="https://www.bitstamp.net/account/login/" target="_blank">Bitstamp.net</a>
+              {% endif %}
+              {% if api == 'blockchain' %}
+                <a href="https://blockchain.info/wallet/login" target="_blank">Blockchain.info</a>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        <br/>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

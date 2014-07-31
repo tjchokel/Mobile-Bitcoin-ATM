@@ -47,6 +47,26 @@ class Merchant(models.Model):
         else:
             return None
 
+    def get_destination_address_b58(self):
+        
+
+
+
+
+        # MIKE!!!! What address should I give the users so they can top off their API wallet?
+
+
+
+
+
+
+
+        destination_addresses = self.get_destination_addresses()
+        if destination_addresses:
+            return destination_addresses[0].b58_address
+        else:
+            return None
+
     def has_destination_address(self):
         return bool(self.get_destination_address())
 

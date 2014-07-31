@@ -725,9 +725,9 @@
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                {% blocktrans %}
+                {% blocktrans with crowdcurity_url='https://www.crowdcurity.com/coinsafe' %}
                   Yes we do, please send us any bugs you may find!
-                  Our program is managed by CrowdCurity, you can see the details <a href="https://www.crowdcurity.com/coinsafe">here</a>.
+                  Our program is managed by CrowdCurity, you can see the details <a href="{{ crowdcurity_url }}">here</a>.
                   We support the <b>responsible</b> disclosure of all potential security vulnerabilities and promise not to bring legal action against researchers who do their best to follow the CrowdCurity guidelines.
                 {% endblocktrans %}
                 </p>

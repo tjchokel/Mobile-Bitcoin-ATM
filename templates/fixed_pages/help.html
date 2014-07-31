@@ -346,15 +346,25 @@
                 {% endblocktrans %}
               </p>
               <p>
-              {% url 'coinbase_instructions' as coinbase_url %}
-              {% url 'blockchain_instructions' as blockchain_url %}
-              {% url 'bitstamp_instructions' as bitstamp_url %}
-              {% blocktrans %}
-                Here are links to our API access instructions for
-                <a href="{{ coinbase_url }}">Coinbase</a>,
-                <a href="{{ blockchain_url }}">blockchain.info</a>, and
-                <a href="{{ bitstamp_url }}">Bitstamp</a>.
-              {% endblocktrans %}
+                {% url 'coinbase_instructions' as coinbase_url %}
+                {% url 'blockchain_instructions' as blockchain_url %}
+                {% url 'bitstamp_instructions' as bitstamp_url %}
+                {% blocktrans %}
+                  Here are links to our API access instructions for
+                  <a href="{{ coinbase_url }}">Coinbase</a>,
+                  <a href="{{ blockchain_url }}">blockchain.info</a>, and
+                  <a href="{{ bitstamp_url }}">Bitstamp</a>.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans with df_url='https://github.com/svetlyak40wt/django-fields' %}
+                  For the technically inclined, we use
+                  <a href="{{ df_url }}">django-fields</a>
+                  to store all credentials in an
+                  <code>EncryptedCharField</code>
+                  using the Advanced Encryption Standard (AES) which was established by the National Institute of Standards and Technology (NIST) in 2001.
+                  If our database were ever compromised, it would still be impossible to decrypt the ciphertext without our secret key, which is not kept in the database.
+                {% endblocktrans %}
               </p>
             </div>
           </div>

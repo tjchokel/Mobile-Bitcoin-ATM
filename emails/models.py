@@ -22,4 +22,4 @@ class SentEmail(models.Model):
     subject = models.CharField(max_length=512, null=False, blank=False)
 
     def __str__(self):
-        return '%s' % self.id
+        return '%s to %s' % (self.id, self.to_email)

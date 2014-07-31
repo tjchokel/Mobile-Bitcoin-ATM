@@ -34,7 +34,7 @@
                 <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
                   <td>{{credential.created_at|naturaltime}}</td>
                   <td>{{credential.get_status|format_status_string}}</td>
-                  <td>{{credential.username|obscure_except_ending}}</td>
+                  <td>{{credential.username}}</td>
                   <td>{{balance}}</td>
                   <td style="font-size: 22px;">
 

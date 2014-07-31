@@ -25,6 +25,11 @@
         {% with current_step=1 %}
              {% include "merchants/_registration_breadcrumb.html" %}
         {% endwith %}
+          <p class="lead">
+            {% blocktrans %}
+              In order to sell bitcoin to customers, your must link a Bitcoin wallet <a href="#">(learn more)</a>.
+            {% endblocktrans %}
+          </p>
          <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
              {% load crispy_forms_tags %}
              {{ form|crispy }}
@@ -128,6 +133,50 @@
         $("#api_instructions").remove();
       }
 
+      function selectNewWallet() {
+        $("#div_id_cb_api_key").addClass("hidden");
+        $("#div_id_cb_secret_key").addClass("hidden");
+
+        $("#div_id_bs_api_key").addClass("hidden");
+        $("#div_id_bs_secret_key").addClass("hidden");
+        $("#div_id_bs_customer_id").addClass("hidden");
+
+        $("#div_id_bci_main_password").addClass("hidden");
+        $("#div_id_bci_second_password").addClass("hidden");
+        $("#div_id_bci_username").addClass("hidden");
+
+        $("#div_id_btc_address").addClass("hidden");
+        $("#div_id_exchange_choice").addClass("hidden");
+
+        $("#div_id_new_blockchain_password").removeClass("hidden");
+
+        $("#api_instructions").remove();
+      }
+
+      function selectExistingWallet() {
+        if ($('input[name=exchange_choice]:checked').val() == 'coinbase') {
+               selectCoinbase();
+        }else if ($('input[name=exchange_choice]:checked').val() == 'bitstamp') {
+             selectBitstamp();
+        }else if ($('input[name=exchange_choice]:checked').val() == 'blockchain') {
+             selectBlockchain();
+        }else if ($('input[name=exchange_choice]:checked').val() == 'selfmanaged') {
+             selectSelfManaged();
+        }
+        $("#div_id_exchange_choice").removeClass("hidden");
+        $("#div_id_new_blockchain_password").addClass("hidden");
+
+        $("#api_instructions").remove();
+      }
+
+      $("#id_wallet_type_choice_1, #id_wallet_type_choice_2").change(function(){
+           if ($('input[name=wallet_type_choice]:checked').val() == 'new') {
+                selectNewWallet();
+           }else {
+                selectExistingWallet();
+           }
+      });
+
       $("#id_exchange_choice_1, #id_exchange_choice_2, #id_exchange_choice_3, #id_exchange_choice_4").change(function(){
            if ($('input[name=exchange_choice]:checked').val() == 'coinbase') {
                 selectCoinbase();
@@ -146,16 +195,20 @@
           $('label:not(.requiredField):not(.radio)').append(required_asterisk);
           // blockchain second password not required 
           $('#div_id_bci_second_password .asteriskField').remove();
-          
-          if ($('input[name=exchange_choice]:checked').val() == 'coinbase') {
-               selectCoinbase();
-          }else if ($('input[name=exchange_choice]:checked').val() == 'bitstamp') {
-               selectBitstamp();
-          }else if ($('input[name=exchange_choice]:checked').val() == 'blockchain') {
-               selectBlockchain();
-          }else if ($('input[name=exchange_choice]:checked').val() == 'selfmanaged') {
-               selectSelfManaged();
+          if ($('input[name=wallet_type_choice]:checked').val() == 'new') {
+            selectNewWallet();
+          }else {
+            selectExistingWallet();
           }
+          // if ($('input[name=exchange_choice]:checked').val() == 'coinbase') {
+          //      selectCoinbase();
+          // }else if ($('input[name=exchange_choice]:checked').val() == 'bitstamp') {
+          //      selectBitstamp();
+          // }else if ($('input[name=exchange_choice]:checked').val() == 'blockchain') {
+          //      selectBlockchain();
+          // }else if ($('input[name=exchange_choice]:checked').val() == 'selfmanaged') {
+          //      selectSelfManaged();
+          // }
       });
      </script>
 

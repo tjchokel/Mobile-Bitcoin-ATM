@@ -164,19 +164,24 @@ def register_bitcoin(request):
     initial = {
             'btc_markup': 2.0,
             'exchange_choice': 'coinbase',
+            'wallet_type_choice': 'new',
     }
     form = BitcoinRegistrationForm(initial=initial)
     if request.method == 'POST':
         form = BitcoinRegistrationForm(data=request.POST)
         if form.is_valid():
+            wallet_type_choice = form.cleaned_data['wallet_type_choice']
             exchange_choice = form.cleaned_data['exchange_choice']
             btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
             merchant.save()
-            if exchange_choice == 'selfmanaged':
-                merchant.set_destination_address(btc_address, credential_used=None)
-                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
+            if wallet_type_choice == 'new':
+                print 'TODO - Create blockchain wallet'
+            # if exchange_choice == 'selfmanaged':
+            #     merchant.set_destination_address(btc_address, credential_used=None)
+            #     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 if exchange_choice == 'coinbase':
                     credential = CBSCredential.objects.create(

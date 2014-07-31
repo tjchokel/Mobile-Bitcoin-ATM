@@ -106,8 +106,27 @@ class MerchantRegistrationForm(forms.Form):
 
 class BitcoinRegistrationForm(forms.Form):
 
+    wallet_type_choice = forms.ChoiceField(
+        label=_('Wallet Choice'),
+        required=True,
+        widget=forms.RadioSelect(attrs={'id': 'wallet_type_choice'}),
+        choices=(
+            ('new', _('Create a new blockchain.info wallet to use with CoinSafe')),
+            ('old', _('Link and existing wallet to CoinSafe')),
+            ),
+    )
+
+    new_blockchain_password = forms.CharField(
+        label=_('Blockchain Wallet Password'),
+        required=False,
+        min_length=10,
+        max_length=256,
+        widget=forms.PasswordInput(render_value=False),
+        help_text=_('Do not forget this password! Blockchain.info does not support password recovery.'),
+    )
+
     exchange_choice = forms.ChoiceField(
-        label=_('Who Manages Your Bitcoin Address'),
+        label=_('Who Manages Your Bitcoin Wallet'),
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
         choices=(

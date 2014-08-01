@@ -117,12 +117,20 @@ class BitcoinRegistrationForm(forms.Form):
     )
 
     new_blockchain_password = forms.CharField(
-        label=_('Blockchain Wallet Password'),
+        label=_('New Blockchain Wallet Password'),
         required=False,
         min_length=10,
         max_length=256,
-        widget=forms.PasswordInput(render_value=False),
+        widget=forms.PasswordInput(render_value=False, attrs={'id': 'pass1'}),
         help_text=_('Do not forget this password! Blockchain.info does not support password recovery.'),
+    )
+
+    new_blockchain_password_confirm = forms.CharField(
+        label=_('Confirm Password'),
+        required=False,
+        min_length=10,
+        max_length=256,
+        widget=forms.PasswordInput(render_value=False, attrs={'id': 'pass2'}),
     )
 
     exchange_choice = forms.ChoiceField(
@@ -272,12 +280,23 @@ class BitcoinRegistrationForm(forms.Form):
         address = self.cleaned_data.get('btc_address').strip()
         exchange_choice = self.cleaned_data.get('exchange_choice')
         if address and not is_valid_btc_address(address):
-            msg = "Sorry, that's not a valid bitcoin address"
+            msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         if exchange_choice == 'selfmanaged' and not is_valid_btc_address(address):
-            msg = "Please enter a valid bitcoin address"
+            msg = _("Please enter a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address
+
+    def clean(self):
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        if wallet_type_choice == 'new':
+            pw = self.cleaned_data.get('new_blockchain_password')
+            pwc = self.cleaned_data.get('new_blockchain_password_confirm')
+            if pw != pwc:
+                err_msg = _('Those passwords did not match. Please try again.')
+                raise forms.ValidationError(err_msg)
+
+        return self.cleaned_data
 
 
 class AccountRegistrationForm(forms.Form):

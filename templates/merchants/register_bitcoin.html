@@ -25,11 +25,25 @@
         {% with current_step=1 %}
              {% include "merchants/_registration_breadcrumb.html" %}
         {% endwith %}
-          <p class="lead">
+          <p>
             {% blocktrans %}
-              In order to sell bitcoin to customers, your must link a Bitcoin wallet <a href="#">(learn more)</a>.
+              In order to sell bitcoin to customers, your will need to link a Bitcoin wallet to your CoinSafe account <a href="#" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
             {% endblocktrans %}
           </p>
+
+          <div id="moreinfo" class="collapse">
+            <p>
+              This wallet will be used to automatically transfer funds to your customers whenever you sell them Bitcoin. If you already have a Blockchain, Coinbase, or Bitstamp wallet, you can link it to your account by adding your API credentials below. We also can automatically create a new Blockchain wallet for you (a good option if you are just giving us a try).
+            </p>
+            <p>
+              No funds will ever be moved from your wallet without your explicit permission (our app is and will continue to be free) and we take every precaution to secure this sensitive data. That being said, we recommend that all of our users create a separate wallet to use with CoinSafe that holds a smaller amount of funds that they can top off whenever the balance gets low.
+            </p>
+            <p>
+              If you have any questions, please don't hesitate to <a href="{% url "contact" %}" target="_blank">contact us</a>.
+            </p>
+          </div>
+
+
          <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
              {% load crispy_forms_tags %}
              {{ form|crispy }}
@@ -132,6 +146,7 @@
         $("#div_id_exchange_choice").addClass("hidden");
 
         $("#div_id_new_blockchain_password").removeClass("hidden");
+        $("#div_id_new_blockchain_password_confirm").removeClass("hidden");
 
         $("#api_instructions").remove();
       }
@@ -146,8 +161,9 @@
         }
         $("#div_id_exchange_choice").removeClass("hidden");
         $("#div_id_new_blockchain_password").addClass("hidden");
+        $("#div_id_new_blockchain_password_confirm").addClass("hidden");
 
-        $("#api_instructions").remove();
+        $("#api_instructions").add();
       }
 
       $("#id_wallet_type_choice_1, #id_wallet_type_choice_2").change(function(){
@@ -178,6 +194,36 @@
           }else {
             selectExistingWallet();
           }
+
+          $('#pass2').after('<span id="pw_message"></span>');
+          $('#pass2').keyup(function () {
+
+            // Store the password field objects into variables
+            var pass1 = document.getElementById('pass1');
+            var pass2 = document.getElementById('pass2');
+
+            // Store the Confimation Message Object ...
+            var message = document.getElementById('pw_message');
+
+            // Reset the message
+            message.innerHTML = '';
+
+            if (pass1.value.length > 9 && pass1.value && pass2.value) {
+
+              // Compare the values in the password field and confirmation fields
+              if(pass1.value == pass2.value){
+                message.innerHTML = '<i class="fa fa-check-circle-o"></i>Passwords Match'
+                message.style.color = "#66cc66";
+              }else{
+                if((pass1.value.length - pass2.value.length) < 4){
+                  // Only check password if it's "close"
+                  message.style.color = "#ff6666";
+                  message.innerHTML = '<i class="fa fa-exclamation-circle"></i>Passwords Do Not Match'
+                }
+              }
+            }
+          });
+
       });
      </script>
 

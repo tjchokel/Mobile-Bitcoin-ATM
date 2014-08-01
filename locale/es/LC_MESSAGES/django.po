@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-01 19:22+0000\n"
+"POT-Creation-Date: 2014-08-01 19:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -183,7 +183,8 @@ msgstr ""
 #, fuzzy
 msgid "Sorry, your email address must be less than 100 characters"
 msgstr ""
-"Lo sentimos, tu dirección de correo electrónico debe ser inferior a 100 caracteres"
+"Lo sentimos, tu dirección de correo electrónico debe ser inferior a 100 "
+"caracteres"
 
 #: merchants/forms.py:110
 msgid "Who Manages Your Bitcoin Address"
@@ -523,7 +524,7 @@ msgid "FAQ"
 msgstr "Preguntas frecuentes"
 
 #: templates/base.html:56 templates/fixed_pages/team.html:22
-#: templates/partials/_static_page_footer.html:17
+#: templates/partials/_static_page_footer.html:18
 msgid "Team"
 msgstr "Equipo"
 
@@ -539,7 +540,7 @@ msgstr "Escritorio"
 msgid "Sign out"
 msgstr "Cerrar Sesión"
 
-#: templates/base.html:77 templates/login.html:20 templates/login.html.py:31
+#: templates/base.html:77 templates/login.html:21 templates/login.html.py:32
 msgid "Sign In"
 msgstr "Ingresar"
 
@@ -583,7 +584,6 @@ msgstr ""
 "dinero y atraer nuevos clientes a su tienda."
 
 #: templates/index.html:43
-#, fuzzy
 msgid "Businesses"
 msgstr "Comercios"
 
@@ -665,7 +665,6 @@ msgid "List Your Business Today"
 msgstr "Incluya Su Negocio Hoy"
 
 #: templates/index.html:75
-#, fuzzy
 msgid "Consumers"
 msgstr "Clientes"
 
@@ -696,7 +695,6 @@ msgstr ""
 "mejor tarifa. Sin sorpresas al llegar a la tienda."
 
 #: templates/index.html:83
-#, fuzzy
 msgid "No Messaging With Strangers"
 msgstr "Sin Mensajes con Desconocidos"
 
@@ -723,17 +721,25 @@ msgstr ""
 "ofreciendo el mejor servicio."
 
 #: templates/index.html:92
-#, fuzzy
 msgid "Get Notified of Nearby Locations"
-msgstr "Informarte de Nuevos Negocios Cercanos"
+msgstr "Mandar Su Dinero a una Ubicación Más Segura"
 
-#: templates/login.html:38
+#: templates/login.html:4
+#, fuzzy
+msgid "Your Free Bitcoin ATM App | Login"
+msgstr "La App para tener un cajero de Bitcoins gratuito | CoinSafe"
+
+#: templates/login.html:39
 #, fuzzy, python-format
 msgid ""
 "To create a new account, please <a href=\"%(register_url)s\">click here</a>."
 msgstr ""
 "Para crear una nueva cuenta, por favor, <a href=\"%(register_url)s\">haga "
 "clic aquí</a>."
+
+#: templates/login.html:42
+msgid "Forgot password?"
+msgstr "Confirmar Contraseña"
 
 #: templates/register_customer.html:5 templates/merchants/register.html:5
 #: templates/merchants/register_bitcoin.html:4
@@ -742,22 +748,16 @@ msgstr ""
 "La App para tener un cajero de Bitcoins gratuito | Registrarse | CoinSafe"
 
 #: templates/register_customer.html:24
-#, fuzzy
 msgid "Get Notified"
 msgstr "Ser Notificado"
 
 #: templates/register_customer.html:32
-#, fuzzy
 msgid ""
 "\n"
 "        We are building a network of merchants in cities around the world.\n"
 "        Sign up to be notified when a merchant is available near you.\n"
 "      "
-msgstr ""
-"\n"
-" Estamos construyendo una red de comerciantes en ciudades de todo el mundo. "
-"Regístrese para ser notificado cuando un comerciante este disponible cerca "
-"de ti."
+msgstr "\n Estamos construyendo una red de comerciantes en ciudades de todo el mundo. Regístrese para ser notificado cuando un comerciante este disponible cerca de ti."
 
 #: templates/register_customer.html:43
 msgid "Submit"
@@ -772,8 +772,8 @@ msgid ""
 "      "
 msgstr ""
 "\n"
-" Para crear una nueva cuenta, por favor, <a href=\"%(register_url)s\">haga "
-"clic aquí</a>."
+" Para registrarse como un usuario individual (no un negocio), por favor <a "
+"href=\"%(rc_url)s\">haga clic aquí </a>."
 
 #: templates/customer_dash/_transaction_row.html:12
 msgid "Detected"
@@ -1106,7 +1106,9 @@ msgid ""
 "\n"
 "        Connecting your Bitstamp account to CoinSafe allows us to:\n"
 "      "
-msgstr "\n Conectar su cuenta Bitstamp con CoinSafe, nos permite:"
+msgstr ""
+"\n"
+" Conectar su cuenta Bitstamp con CoinSafe, nos permite:"
 
 #: templates/fixed_pages/bitstamp_instructions.html:25
 msgid ""
@@ -1114,7 +1116,10 @@ msgid ""
 "          Lookup your bitcoin address at Bitstamp so that shoppers can send "
 "funds there.\n"
 "        "
-msgstr "\n Encontrar su dirección Bitcoin en Bitstamp para que los compradores puedan enviar fondos ahi"
+msgstr ""
+"\n"
+" Encontrar su dirección Bitcoin en Bitstamp para que los compradores puedan "
+"enviar fondos ahi"
 
 #: templates/fixed_pages/bitstamp_instructions.html:30
 msgid ""
@@ -1122,7 +1127,10 @@ msgid ""
 "          Send Bitcoin from your Bitstamp account to shoppers (once you "
 "confirm they have paid you in cash for it).\n"
 "        "
-msgstr "\n Enviar Bitcoin desde su cuenta Bitstamp a los compradores (una vez que se confirme que le han pagado en efectivo por estos)."
+msgstr ""
+"\n"
+" Enviar Bitcoin desde su cuenta Bitstamp a los compradores (una vez que se "
+"confirme que le han pagado en efectivo por estos)."
 
 #: templates/fixed_pages/bitstamp_instructions.html:35
 msgid ""
@@ -1130,7 +1138,10 @@ msgid ""
 "          Automatically buy or sell bitcoin with Bitstamp using the bank "
 "account you already have linked up with them (coming soon).\n"
 "        "
-msgstr "\n Automáticamente comprar o vender bitcoin con Bitstamp usando la cuenta bancaria que ya ha vinculado con ellos (próximamente)"
+msgstr ""
+"\n"
+" Automáticamente comprar o vender bitcoin con Bitstamp usando la cuenta "
+"bancaria que ya ha vinculado con ellos (próximamente)"
 
 #: templates/fixed_pages/bitstamp_instructions.html:42
 msgid ""
@@ -1267,7 +1278,11 @@ msgid ""
 "can send funds there.\n"
 "          We can also generate new addresses for you.\n"
 "        "
-msgstr "\n Encontrar su dirección Bitcoin en Blockchain.info para que los compradores puedan enviar fondos ahi. También podemos generar nuevas direcciones para usted."
+msgstr ""
+"\n"
+" Encontrar su dirección Bitcoin en Blockchain.info para que los compradores "
+"puedan enviar fondos ahi. También podemos generar nuevas direcciones para "
+"usted."
 
 #: templates/fixed_pages/blockchain_instructions.html:31
 msgid ""
@@ -1275,7 +1290,10 @@ msgid ""
 "          Send Bitcoin from your Blockchain.info account to shoppers (once "
 "you confirm they have paid you in cash for it).\n"
 "        "
-msgstr "\nEnviar Bitcoin desde su cuenta Blockchain.info a los compradores (una vez que se confirme que le han pagado en efectivo por estos)."
+msgstr ""
+"\n"
+"Enviar Bitcoin desde su cuenta Blockchain.info a los compradores (una vez "
+"que se confirme que le han pagado en efectivo por estos)."
 
 #: templates/fixed_pages/blockchain_instructions.html:40
 msgid ""
@@ -1380,7 +1398,9 @@ msgid ""
 "\n"
 "        Connecting your Coinbase account to CoinSafe allows us to:\n"
 "      "
-msgstr "\n Conectar su cuenta Coinbase con CoinSafe, nos permite:"
+msgstr ""
+"\n"
+" Conectar su cuenta Coinbase con CoinSafe, nos permite:"
 
 #: templates/fixed_pages/coinbase_instructions.html:25
 msgid ""
@@ -1389,7 +1409,10 @@ msgid ""
 "funds there.\n"
 "          We can also generate new addresses for you.\n"
 "        "
-msgstr "\n Encontrar su dirección Bitcoin en Coinbase para que los compradores puedan enviar fondos ahi. También podemos generar nuevas direcciones para usted."
+msgstr ""
+"\n"
+" Encontrar su dirección Bitcoin en Coinbase para que los compradores puedan "
+"enviar fondos ahi. También podemos generar nuevas direcciones para usted."
 
 #: templates/fixed_pages/coinbase_instructions.html:31
 msgid ""
@@ -1397,7 +1420,10 @@ msgid ""
 "          Send Bitcoin from your Coinbase account to shoppers (once you "
 "confirm they have paid you in cash for it).\n"
 "        "
-msgstr "\n Enviar Bitcoin desde su cuenta Blockchain.info a los compradores (una vez que se confirme que le han pagado en efectivo por estos)."
+msgstr ""
+"\n"
+" Enviar Bitcoin desde su cuenta Blockchain.info a los compradores (una vez "
+"que se confirme que le han pagado en efectivo por estos)."
 
 #: templates/fixed_pages/coinbase_instructions.html:36
 msgid ""
@@ -1405,7 +1431,10 @@ msgid ""
 "          Automatically buy or sell bitcoin with Coinbase using the bank "
 "account you already have linked up with them (coming soon).\n"
 "        "
-msgstr "\n Automáticamente comprar o vender bitcoin con Bitstamp usando la cuenta bancaria que ya ha vinculado con ellos (próximamente)."
+msgstr ""
+"\n"
+" Automáticamente comprar o vender bitcoin con Bitstamp usando la cuenta "
+"bancaria que ya ha vinculado con ellos (próximamente)."
 
 #: templates/fixed_pages/coinbase_instructions.html:44
 msgid ""
@@ -1534,7 +1563,6 @@ msgstr ""
 "La App para tener un cajero de Bitcoins gratuito | Contáctenos | CoinSafe"
 
 #: templates/fixed_pages/contact.html:29
-#, fuzzy, python-format
 msgid ""
 "We are here to help! Please feel free to contact us any time at <a href="
 "\"mailto:support@coinsafe.com?Subject=CoinSafe%%20Support\" target=\"_top"
@@ -1549,7 +1577,6 @@ msgid "Send Message"
 msgstr "Enviar mensaje"
 
 #: templates/fixed_pages/contact.html:42
-#, fuzzy
 msgid "Our Address"
 msgstr "Nuestra Dirección"
 
@@ -1564,7 +1591,7 @@ msgstr ""
 "CoinSafe"
 
 #: templates/fixed_pages/promotional_material.html:13
-#: templates/partials/_static_page_footer.html:19
+#: templates/partials/_static_page_footer.html:20
 msgid "Promotional Posters for Merchants"
 msgstr "Afiches promocionales para comerciantes"
 
@@ -1948,34 +1975,32 @@ msgstr "Billetera"
 msgid "You have no transactions yet"
 msgstr "Aún no tiene transacciones"
 
-#: templates/partials/_static_page_footer.html:6
-#, fuzzy
+#: templates/partials/_static_page_footer.html:7
 msgid "Join The CoinSafe Network"
 msgstr "¡Únete a la red CoinSafe!"
 
-#: templates/partials/_static_page_footer.html:8
-#, fuzzy
+#: templates/partials/_static_page_footer.html:9
 msgid "Sign Up Today"
 msgstr "Registrarse"
 
-#: templates/partials/_static_page_footer.html:16
+#: templates/partials/_static_page_footer.html:17
 msgid "Help"
 msgstr "Ayuda"
 
-#: templates/partials/_static_page_footer.html:18
+#: templates/partials/_static_page_footer.html:19
 #, fuzzy
 msgid "Contact"
 msgstr "Contáctenos"
 
-#: templates/partials/_static_page_footer.html:20
+#: templates/partials/_static_page_footer.html:21
 msgid "Cold Storage Guide"
 msgstr "Guía de Almacenamiento en Frio"
 
-#: templates/partials/_static_page_footer.html:25
+#: templates/partials/_static_page_footer.html:26
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
 
-#: templates/partials/_static_page_footer.html:26
+#: templates/partials/_static_page_footer.html:27
 msgid "Terms of Service"
 msgstr "Términos de Servicio"
 
@@ -1993,8 +2018,15 @@ msgstr "Contraseña Principal"
 msgid "Which Service Interests You Most?"
 msgstr "¿Cuál es el servicio que más le interesa?"
 
+#: users/forms.py:27
+msgid "Spend Cash to Buy Bitcoin"
+msgstr "Obtener dinero en efectivo por tus Bitcoin Ahora"
+
+#: users/forms.py:28
+msgid "Sell Bitcoin to Receive Cash"
+msgstr "Vender sus Bitcoins por efectivo"
+
 #: users/forms.py:35
-#, fuzzy
 msgid "Your Email"
 msgstr "Su Correo electrónico"
 
@@ -2220,9 +2252,6 @@ msgstr "Su perfil ha sido actualizado"
 
 #~ msgid "markup"
 #~ msgstr "marcado"
-
-#~ msgid "Get Cash for Your Bitcoin Now"
-#~ msgstr "Obtener dinero en efectivo por tus Bitcoin Ahora"
 
 #~ msgid "Receive Cash"
 #~ msgstr "Recibir Efectivo"

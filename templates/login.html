@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Your Free Bitcoin ATM App | Login | CoinSafe{% endblock title %}
 {% load i18n %}
+
+{% block title %}{% trans "Your Free Bitcoin ATM App | Login" %} | CoinSafe{% endblock title %}
 
 {% block content %}
 <div class="section-header">
@@ -38,7 +39,7 @@
             {% blocktrans %}To create a new account, please <a href="{{ register_url }}">click here</a>.{% endblocktrans %}
         </p>
         <br />
-        <p><a href="/help#forgot_pw">Forgot password?<a/></p>
+        <p><a href="/help#forgot_pw">{% trans "Forgot password?" %}<a/></p>
     </div>
 
 </div>

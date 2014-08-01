@@ -16,7 +16,7 @@ from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
 
 from coinbase_wallets.models import CBSCredential
-from blockchain_wallets.models import BCICredential, create_wallet_credential
+from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistrationForm,
@@ -180,7 +180,7 @@ def register_bitcoin(request):
             DASHBOARD_URI = reverse_lazy('customer_dashboard')
 
             if wallet_type_choice == 'new':
-                new_btc_address = create_wallet_credential(
+                new_btc_address = BCICredential.create_wallet_credential(
                         user_password=form.cleaned_data['new_blockchain_password'],
                         merchant=merchant,
                         user_email=merchant.user.email)

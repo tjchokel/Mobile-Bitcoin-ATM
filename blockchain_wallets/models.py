@@ -19,7 +19,7 @@ def create_wallet_credential(user_password, merchant, user_email=None):
     """
     BASE_URL = 'https://blockchain.info/api/v2/create_wallet'
     label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d %H:%M:%S")
-
+    print label
     post_params = {
             'password': user_password,
             'api_code': BCI_SECRET_KEY,
@@ -28,7 +28,6 @@ def create_wallet_credential(user_password, merchant, user_email=None):
 
     if user_email:
         post_params['email'] = user_email
-
     r = requests.post(BASE_URL, data=post_params)
 
     # Log the API call

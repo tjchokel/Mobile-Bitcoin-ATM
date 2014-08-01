@@ -18,10 +18,12 @@ def create_wallet_credential(user_password, merchant, user_email=None):
     Create a wallet object and return its (newly created) bitcoin address
     """
     BASE_URL = 'https://blockchain.info/api/v2/create_wallet'
+    label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d")
 
     post_params = {
             'password': user_password,
-            'api_code': BCI_SECRET_KEY
+            'api_code': BCI_SECRET_KEY,
+            'label': label,
             }
 
     if user_email:

@@ -93,7 +93,7 @@ def coinbase_creds(request):
         'user': user,
         'merchant': merchant,
         'form': form,
-        'cb_credential': cb_credential,
+        'credential': cb_credential,
         'balance': format_satoshis_with_units_rounded(balance),
     }
 
@@ -216,5 +216,19 @@ def get_new_address(request, credential_id):
     assert credential.merchant == merchant, 'potential hacker alert!'
 
     dict_response = {'new_address': credential.get_best_receiving_address()}
+
+    return HttpResponse(json.dumps(dict_response), content_type='application/json')
+
+
+@login_required
+def get_credential_balance(request, credential_id):
+    credential = get_object_or_404(BaseCredential, id=credential_id)
+
+    user = request.user
+    merchant = user.get_merchant()
+
+    assert credential.merchant == merchant, 'potential hacker alert!'
+
+    dict_response = {'balance': credential.get_balance()}
 
     return HttpResponse(json.dumps(dict_response), content_type='application/json')

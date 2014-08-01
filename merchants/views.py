@@ -185,6 +185,7 @@ def register_bitcoin(request):
                         merchant=merchant,
                         user_email=merchant.user.email)
                 merchant.set_destination_address(new_btc_address)
+                SUCCESS_MSG = _('Your blockchain.info wallet has been created! Customers can use this page while at your store to trade bitcoin with you.')
                 messages.success(request, SUCCESS_MSG)
                 return HttpResponseRedirect(DASHBOARD_URI)
 

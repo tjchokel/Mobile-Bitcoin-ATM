@@ -27,19 +27,29 @@
         {% endwith %}
           <p>
             {% blocktrans %}
-              In order to sell bitcoin to customers, your will need to link a Bitcoin wallet to your CoinSafe account <a href="#" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
+              In order to sell bitcoin to customers, you need to link a Bitcoin wallet to your CoinSafe account <a href="#" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
             {% endblocktrans %}
           </p>
 
           <div id="moreinfo" class="collapse">
             <p>
-              This wallet will be used to automatically transfer funds to your customers whenever you sell them Bitcoin. If you already have a Blockchain, Coinbase, or Bitstamp wallet, you can link it to your account by adding your API credentials below. We also can automatically create a new Blockchain wallet for you (a good option if you are just giving us a try).
+              {% blocktrans %}
+                This wallet will be used to automatically transfer funds to your customers whenever you sell them Bitcoin. 
+                If you already have a Blockchain, Coinbase, or Bitstamp wallet, you can link it to your account by adding your API credentials below. 
+                We also can automatically create a new Blockchain wallet for you (a good option if you are just giving us a try).
+              {% endblocktrans %}
             </p>
             <p>
-              No funds will ever be moved from your wallet without your explicit permission (our app is and will continue to be free) and we take every precaution to secure this sensitive data. That being said, we recommend that all of our users create a separate wallet to use with CoinSafe that holds a smaller amount of funds that they can top off whenever the balance gets low.
+              {% blocktrans %}
+                No funds will ever be moved from your wallet without your explicit permission (our app is and will continue to be free) and we take every precaution to secure this sensitive data. 
+                That being said, we recommend that all of our users create a separate wallet to use with CoinSafe that holds a smaller amount of funds that they can top off whenever the balance gets low.
+              {% endblocktrans %}
             </p>
             <p>
-              If you have any questions, please don't hesitate to <a href="{% url "contact" %}" target="_blank">contact us</a>.
+              {% url 'contact' as contact_url %}
+              {% blocktrans %}
+                If you have any questions, please don't hesitate to <a href="{{contact_url}}" target="_blank">contact us</a>.
+              {% endblocktrans %}
             </p>
           </div>
 
@@ -194,7 +204,7 @@
           }else {
             selectExistingWallet();
           }
-
+          $("#pass1").focus();
           $('#pass2').after('<span id="pw_message"></span>');
           $('#pass2').keyup(function () {
 

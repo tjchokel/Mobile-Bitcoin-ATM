@@ -22,8 +22,9 @@
               <div id="qr_code_span" style="display:none;">
                   <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
               </div>
-              {% trans "Or visit" %}
-              <a href="{{ credential.get_login_link }}" target="_blank">{{ credential.get_credential_to_display }}</a>
+              {% blocktrans with login_url=credential.get_login_link credential_name=credential.get_credential_to_display %}
+                Or visit <a href="{{ login_url }}" target="_blank">{{ credential_name }}</a>
+              {% endblocktrans %}
             </p>
           </div>
         </div>

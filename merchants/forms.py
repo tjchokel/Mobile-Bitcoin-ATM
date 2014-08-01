@@ -106,6 +106,14 @@ class MerchantRegistrationForm(forms.Form):
 
 class BitcoinRegistrationForm(forms.Form):
 
+    btc_markup = forms.DecimalField(
+            label=_('Percent Markup'),
+            required=True,
+            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+            help_text=_('The percent you want to charge above the market rate'),
+            widget=forms.TextInput(),
+    )
+
     wallet_type_choice = forms.ChoiceField(
         label=_('Wallet Choice'),
         required=True,
@@ -206,14 +214,6 @@ class BitcoinRegistrationForm(forms.Form):
         min_length=5,
         max_length=256,
         widget=forms.PasswordInput(render_value=False),
-    )
-
-    btc_markup = forms.DecimalField(
-            label=_('Percent Markup'),
-            required=True,
-            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text=_('The percent you want to charge above the market rate'),
-            widget=forms.TextInput(),
     )
 
     def clean_cb_api_key(self):

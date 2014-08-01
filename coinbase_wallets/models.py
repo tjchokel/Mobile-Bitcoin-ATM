@@ -2,7 +2,7 @@ from django.db import models
 from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
-from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, BaseSellBTC
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, BaseSellBTC, BaseAddressFromCredential
 from services.models import APICall
 from bitcoins.models import BTCTransaction
 
@@ -330,6 +330,11 @@ class CBSCredential(BaseCredential):
 
         msg = '%s is not a valid bitcoin address' % address
         assert is_valid_btc_address(address), msg
+
+        BaseAddressFromCredential.objects.create(
+                credential=self,
+                b58_address=address,
+                retired_at=None)
 
         if set_as_merchant_address:
             self.merchant.set_destination_address(dest_address=address,

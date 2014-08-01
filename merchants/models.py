@@ -59,6 +59,11 @@ class Merchant(models.Model):
             # Should only have one, but still is a queryset
             return matching_address[0]
         else:
+            # Mark all current active destination addresses as retired
+            for dest_addr in DestinationAddress.objects.filter(merchant=self, retired_at=None):
+                dest_addr.retired_at = now()
+                dest_addr.save()
+
             # Create new address object
             return DestinationAddress.objects.create(
                     b58_address=dest_address,

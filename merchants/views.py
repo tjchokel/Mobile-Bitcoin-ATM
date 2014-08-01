@@ -164,19 +164,31 @@ def register_bitcoin(request):
     initial = {
             'btc_markup': 2.0,
             'exchange_choice': 'coinbase',
+            'wallet_type_choice': 'new',
     }
     form = BitcoinRegistrationForm(initial=initial)
     if request.method == 'POST':
         form = BitcoinRegistrationForm(data=request.POST)
         if form.is_valid():
+            wallet_type_choice = form.cleaned_data['wallet_type_choice']
             exchange_choice = form.cleaned_data['exchange_choice']
-            btc_address = form.cleaned_data['btc_address']
             basis_points_markup = form.cleaned_data['btc_markup']
             merchant.basis_points_markup = basis_points_markup * 100
             merchant.save()
-            if exchange_choice == 'selfmanaged':
-                merchant.set_destination_address(btc_address, credential_used=None)
-                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
+            SUCCESS_MSG = _('Your account has been configured! Customers can use this page while at your store to trade bitcoin with you.')
+            DASHBOARD_URI = reverse_lazy('customer_dashboard')
+
+            if wallet_type_choice == 'new':
+                new_btc_address = BCICredential.create_wallet_credential(
+                        user_password=form.cleaned_data['new_blockchain_password'],
+                        merchant=merchant,
+                        user_email=merchant.user.email)
+                merchant.set_destination_address(new_btc_address)
+                SUCCESS_MSG = _('Your blockchain.info wallet has been created! Customers can use this page while at your store to trade bitcoin with you.')
+                messages.success(request, SUCCESS_MSG)
+                return HttpResponseRedirect(DASHBOARD_URI)
+
             else:
                 if exchange_choice == 'coinbase':
                     credential = CBSCredential.objects.create(
@@ -201,10 +213,8 @@ def register_bitcoin(request):
                 try:
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)
-
-                    msg = _('Your account has been configured! Customers can use this page while at your store to trade bitcoin with you.')
-                    messages.success(request, msg)
-                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    messages.success(request, SUCCESS_MSG)
+                    return HttpResponseRedirect(DASHBOARD_URI)
                 except:
                     credential.mark_disabled()
                     messages.warning(request, _('Your API credentials are not valid. Please try again.'))

@@ -99,6 +99,31 @@ function timeUntil(date) {
     return mins_and_seconds;
 }
 
+function getTopOffAddress(credential_id) {
+    $("#fund-wallet-button").toggleClass("active");
+    $.ajax({
+      type: 'get',
+      url: '/get-new-address/'+credential_id,
+      success: function (data) {
+        $("#fund-wallet-button").toggleClass("active");
+        var address = data['new_address'];
+        console.log(data);
+        if (address){
+          $('#add-funds-modal').modal();
+          $("#current_address").html(address);
+          var src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=275x275";
+          $("#qr_code").attr("src", src);
+
+          $("#qr_code_span").slideDown(500);
+        }
+      },
+      error: function(data) {
+        $("#fund-wallet-button").toggleClass("active");
+        console.log('getTopOffAddress Failed');
+      }
+    });
+}
+
 $(document).ready(function(){
     // messages timeout for 10 sec 
     setTimeout(function() {

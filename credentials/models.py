@@ -2,6 +2,8 @@ from django.utils.translation import ugettext as _
 from django.db import models
 from django.utils.timezone import now
 
+from bitcoins.BCAddressField import is_valid_btc_address
+
 from polymorphic import PolymorphicModel
 
 from countries import BFH_CURRENCY_DROPDOWN
@@ -53,6 +55,9 @@ class BaseCredential(PolymorphicModel):
     def get_credential_to_display(self):
         raise Exception('Not Implemented')
 
+    def get_login_link(self):
+        raise Exception('Not Implemented')
+
     def get_status(self):
         if self.last_failed_at:
             return _('Invalid')
@@ -84,6 +89,24 @@ class BaseSentBTC(PolymorphicModel):
 
     def __str__(self):
         return '%s: %s' % (self.id, self.destination_btc_address or self.destination_email)
+
+
+class BaseAddressFromCredential(PolymorphicModel):
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    credential = models.ForeignKey(BaseCredential, blank=False, null=False)
+    b58_address = models.CharField(blank=False, null=False, max_length=34, db_index=True)
+    retired_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    def __str__(self):
+        return '%s: %s' % (self.id, self.b58_address)
+
+    def save(self, *args, **kwargs):
+        """
+        Be sure b58_address is valid before saving
+        """
+        assert is_valid_btc_address(self.b58_address), self.b58_address
+
+        super(BaseAddressFromCredential, self).save(*args, **kwargs)
 
 
 class BaseSellBTC(PolymorphicModel):

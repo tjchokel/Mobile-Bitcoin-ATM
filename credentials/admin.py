@@ -1,5 +1,6 @@
 from django.contrib import admin
-from credentials.models import BaseCredential, BaseSellBTC, BaseBalance, BaseSentBTC
+from credentials.models import (BaseCredential, BaseSellBTC, BaseBalance,
+        BaseAddressFromCredential, BaseSentBTC)
 
 from utils import format_satoshis_with_units
 
@@ -35,6 +36,22 @@ class BaseBalanceAdmin(admin.ModelAdmin):
         model = BaseBalance
 
 admin.site.register(BaseBalance, BaseBalanceAdmin)
+
+
+class BaseAddressFromCredentialAdmin(admin.ModelAdmin):
+    list_display = (
+            'id',
+            'created_at',
+            'credential',
+            'b58_address',
+            'retired_at',
+            )
+    raw_id_fields = ('credential', )
+
+    class Meta:
+        model = BaseAddressFromCredential
+
+admin.site.register(BaseAddressFromCredential, BaseAddressFromCredentialAdmin)
 
 
 class BaseSellBTCAdmin(admin.ModelAdmin):

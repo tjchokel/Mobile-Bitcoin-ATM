@@ -16,9 +16,8 @@
             <a style="color:#515151;" href="#">{% trans "Blockchain.info API" %}</a>
           </h4>
           {% if merchant.has_blockchain_credentials %}
-            {% with api='blockchain' %}
-              {% include "merchants/_delete_api_credentials_modal.html" %}
-            {% endwith %}
+            {% include "merchants/_delete_api_credentials_modal.html" %}
+            {% include "merchants/_add_funds_modal.html" %}
             <table class="table table-condensed" style="border-collapse:collapse;">
               <thead>
                 <tr>
@@ -34,7 +33,7 @@
                 <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
                   <td>{{credential.created_at|naturaltime}}</td>
                   <td>{{credential.get_status|format_status_string}}</td>
-                  <td>{{credential.username|obscure_except_ending}}</td>
+                  <td>{{credential.username}}</td>
                   <td>{{balance}}</td>
                   <td style="font-size: 22px;">
 
@@ -59,6 +58,10 @@
               </tbody>
             </table>
 
+            <a class="btn btn-primary btn-lg has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});" style="margin-left: auto; margin-right: auto; display: block;">
+              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+              {% trans "Add funds to this wallet" %}
+            </a>
 
           {% else %}
             <p>
@@ -118,6 +121,10 @@
       $('#delete-credentials-modal').modal();
     }
 
+    function fundWalletModal() {
+      $('#add-funds-modal').modal();
+    }
+
     function disableCredentials() {
       $('#disable-loader').removeClass("hidden");
       $('#disable-button').addClass("hidden");
@@ -140,6 +147,31 @@
           }
         });
     }
+
+    // function getTopOffAddress() {
+    //   $("#fund-wallet-button").toggleClass("active");
+    //   $.ajax({
+    //       type: 'get',
+    //       url: '/get-new-address/{{credential.id}}',
+    //       success: function (data) {
+    //         $("#fund-wallet-button").toggleClass("active");
+    //         var address = data['new_address'];
+    //         console.log(data);
+    //         if (address){
+    //           $('#add-funds-modal').modal();
+    //           $("#current_address").html(address);
+    //           var src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=275x275";
+    //           $("#qr_code").attr("src", src);
+
+    //           $("#qr_code_span").slideDown(500);
+    //         }
+    //       },
+    //       error: function(data) {
+    //         $("#fund-wallet-button").toggleClass("active");
+    //         console.log('getTopOffAddress Failed');
+    //       }
+    //     });
+    // }
 
   </script>
 {% endblock %}

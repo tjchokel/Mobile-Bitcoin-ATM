@@ -5,14 +5,19 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from django.views.decorators.debug import sensitive_post_parameters
+from django.shortcuts import get_object_or_404
+
 from annoying.decorators import render_to
 
+from credentials.models import BaseCredential
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from credentials.forms import BlockchainAPIForm, CoinbaseAPIForm, BitstampAPIForm
 from utils import format_satoshis_with_units_rounded
+
+import json
 
 
 @sensitive_post_parameters('username', 'main_password', 'second_password', )
@@ -88,7 +93,7 @@ def coinbase_creds(request):
         'user': user,
         'merchant': merchant,
         'form': form,
-        'cb_credential': cb_credential,
+        'credential': cb_credential,
         'balance': format_satoshis_with_units_rounded(balance),
     }
 
@@ -199,3 +204,31 @@ def disable_bs_credentials(request):
     credential.disabled_at = now()
     credential.save()
     return HttpResponse("*ok*")
+
+
+@login_required
+def get_new_address(request, credential_id):
+    credential = get_object_or_404(BaseCredential, id=credential_id)
+
+    user = request.user
+    merchant = user.get_merchant()
+
+    assert credential.merchant == merchant, 'potential hacker alert!'
+
+    dict_response = {'new_address': credential.get_best_receiving_address()}
+
+    return HttpResponse(json.dumps(dict_response), content_type='application/json')
+
+
+@login_required
+def get_credential_balance(request, credential_id):
+    credential = get_object_or_404(BaseCredential, id=credential_id)
+
+    user = request.user
+    merchant = user.get_merchant()
+
+    assert credential.merchant == merchant, 'potential hacker alert!'
+
+    dict_response = {'balance': credential.get_balance()}
+
+    return HttpResponse(json.dumps(dict_response), content_type='application/json')

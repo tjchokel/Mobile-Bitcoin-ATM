@@ -297,7 +297,7 @@ class CBSCredential(BaseCredential):
         """
         ADDRESS_URL = 'https://coinbase.com/api/v1/account/generate_receive_address'
 
-        label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d")
+        label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d %H:%M:%S")
         body = 'address[label]=%s' % label
 
         r = get_cb_request(

@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
     url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
     # API Partner AJAX Calls (TODO: DRY this out)
+    url(r'^get-new-address/(?P<credential_id>\w+)$', 'credentials.views.get_new_address', name='get_new_address'),
     url(r'^refresh-cb-credentials/$', 'credentials.views.refresh_cb_credentials', name='refresh_cb_credentials'),
     url(r'^disable-cb-credentials/$', 'credentials.views.disable_cb_credentials', name='disable_cb_credentials'),
     url(r'^refresh-bs-credentials/$', 'credentials.views.refresh_bs_credentials', name='refresh_bs_credentials'),

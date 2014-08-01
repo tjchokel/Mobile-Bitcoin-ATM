@@ -5,15 +5,9 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="credential_delete_modal">
-          {% if api == 'coinbase' %}
-            {% trans "Add Funds to Coinbase Wallet" %}
-          {% endif %}
-          {% if api == 'bitstamp' %}
-            {% trans "Add Funds to Bitstamp Wallet" %}
-          {% endif %}
-          {% if api == 'blockchain' %}
-            {% trans "Add Funds to Blockchain.info Wallet" %}
-          {% endif %}
+          {% blocktrans with credential_name=credential.get_credential_to_display %}
+            Add funds to {{ credential_name }} Wallet
+          {% endblocktrans %}
         </h4>
         <div class="clearfix"></div>
       </div>
@@ -29,15 +23,7 @@
                   <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{{merchant.get_destination_address.b58_address}}&choe=UTF-8&chs=275x275"/>
               </span>
               {% trans "Or visit" %}
-              {% if api == 'coinbase' %}
-                <a href="https://coinbase.com/signin" target="_blank">coinbase.com</a>
-              {% endif %}
-              {% if api == 'bitstamp' %}
-                <a href="https://www.bitstamp.net/account/login/" target="_blank">bitstamp.net</a>
-              {% endif %}
-              {% if api == 'blockchain' %}
-                <a href="https://blockchain.info/wallet/login" target="_blank">blockchain.info</a>
-              {% endif %}
+              <a href="{{ credential.get_login_link }}" target="_blank">{{ credential.get_credential_to_display }}</a>
             </p>
           </div>
         </div>

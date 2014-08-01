@@ -53,6 +53,9 @@ class BaseCredential(PolymorphicModel):
     def get_credential_to_display(self):
         raise Exception('Not Implemented')
 
+    def get_login_link(self):
+        raise Exception('Not Implemented')
+
     def get_status(self):
         if self.last_failed_at:
             return _('Invalid')

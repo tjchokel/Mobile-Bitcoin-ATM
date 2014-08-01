@@ -16,10 +16,8 @@
             <a style="color:#515151;" href="#">{% trans "Coinbase API" %}</a>
           </h4>
           {% if merchant.has_coinbase_credentials %}
-            {% with api='coinbase' %}
-              {% include "merchants/_delete_api_credentials_modal.html" %}
-              {% include "merchants/_add_funds_modal.html" %}
-            {% endwith %}
+            {% include "merchants/_delete_api_credentials_modal.html" %}
+            {% include "merchants/_add_funds_modal.html" %}
             <table class="table table-condensed" style="border-collapse:collapse;">
               <thead>
                 <tr>

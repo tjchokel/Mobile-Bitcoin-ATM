@@ -26,6 +26,9 @@ class BTSCredential(BaseCredential):
     def get_credential_to_display(self):
         return 'BitStamp'
 
+    def get_login_link(self):
+        return 'https://www.bitstamp.net/account/login/'
+
     def get_trading_obj(self):
         return Trading(username=self.customer_id, key=self.api_key, secret=self.api_secret)
 

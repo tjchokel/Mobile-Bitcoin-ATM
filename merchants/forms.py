@@ -111,8 +111,8 @@ class BitcoinRegistrationForm(forms.Form):
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'wallet_type_choice'}),
         choices=(
-            ('new', _('Create a new blockchain.info wallet to use with CoinSafe')),
-            ('old', _('Link and existing wallet to CoinSafe')),
+            ('new', _('Create New blockchain.info Wallet')),
+            ('old', _('Link Existing Hosted Wallet')),
             ),
     )
 
@@ -126,14 +126,13 @@ class BitcoinRegistrationForm(forms.Form):
     )
 
     exchange_choice = forms.ChoiceField(
-        label=_('Who Manages Your Bitcoin Wallet'),
+        label=_('Existing Bitcoin Wallet Provider'),
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
         choices=(
             ('coinbase', 'coinbase.com'),
             ('blockchain', 'blockchain.info'),
             ('bitstamp', 'bitstamp.net'),
-            ('selfmanaged', _('Me (can only receive bitcoin)'))
             ),
     )
 
@@ -201,15 +200,6 @@ class BitcoinRegistrationForm(forms.Form):
         widget=forms.PasswordInput(render_value=False),
     )
 
-    btc_address = forms.CharField(
-            label=_('Bitcoin Deposit Address'),
-            required=False,
-            min_length=27,
-            max_length=34,
-            help_text=_('The wallet address where you want your bitcoin sent'),
-            widget=forms.TextInput(),
-    )
-
     btc_markup = forms.DecimalField(
             label=_('Percent Markup'),
             required=True,
@@ -220,16 +210,18 @@ class BitcoinRegistrationForm(forms.Form):
 
     def clean_cb_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
         cb_api_key = self.cleaned_data.get('cb_api_key').strip()
-        if exchange_choice == 'coinbase' and not cb_api_key:
+        if exchange_choice == 'coinbase' and not cb_api_key and wallet_type_choice == 'old':
             msg = _('Please enter your Coinbase API key')
             raise forms.ValidationError(msg)
         return cb_api_key
 
     def clean_cb_secret_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
         cb_secret_key = self.cleaned_data.get('cb_secret_key').strip()
-        if exchange_choice == 'coinbase' and not cb_secret_key:
+        if exchange_choice == 'coinbase' and not cb_secret_key and wallet_type_choice == 'old':
             msg = _('Please enter your Coinbase secret key')
             raise forms.ValidationError(msg)
         return cb_secret_key

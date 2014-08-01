@@ -25,18 +25,18 @@
                 To top of your wallet, send funds to this address:
               {% endblocktrans %}
               <span class="text-green">
-                {{merchant.get_destination_address_b58}}
-                  <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{{merchant.get_destination_address_b58}}&choe=UTF-8&chs=275x275"/>
+                {{merchant.get_destination_address.b58_address}}
+                  <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A{{merchant.get_destination_address.b58_address}}&choe=UTF-8&chs=275x275"/>
               </span>
               {% trans "Or visit" %}
               {% if api == 'coinbase' %}
-                <a href="https://coinbase.com/signin" target="_blank">Coinbase.com</a>
+                <a href="https://coinbase.com/signin" target="_blank">coinbase.com</a>
               {% endif %}
               {% if api == 'bitstamp' %}
-                <a href="https://www.bitstamp.net/account/login/" target="_blank">Bitstamp.net</a>
+                <a href="https://www.bitstamp.net/account/login/" target="_blank">bitstamp.net</a>
               {% endif %}
               {% if api == 'blockchain' %}
-                <a href="https://blockchain.info/wallet/login" target="_blank">Blockchain.info</a>
+                <a href="https://blockchain.info/wallet/login" target="_blank">blockchain.info</a>
               {% endif %}
             </p>
           </div>

@@ -36,6 +36,7 @@ class APICall(models.Model):
     BLOCKCHAIN_WALLET_BALANCE = 'BWB'
     BLOCKCHAIN_WALLET_SEND_BTC = 'BWS'
     BLOCKCHAIN_WALLET_NEW_ADDRESS = 'BWN'
+    BLOCKCHAIN_CREATE_WALLET = 'BCC'
 
     API_NAME_CHOICES = (
             (BCI_RECEIVE_PAYMENTS, 'blockchain.info receive payments API'),
@@ -56,7 +57,8 @@ class APICall(models.Model):
             (BLOCKCHAIN_WALLET_BALANCE, 'Blockchain Wallet Balance'),
             (BLOCKCHAIN_WALLET_SEND_BTC, 'Blockchain Wallet Send BTC'),
             (BLOCKCHAIN_WALLET_NEW_ADDRESS, 'Blockchain Wallet New BTC Address'),
-            )
+            (BLOCKCHAIN_CREATE_WALLET, 'Blockchain Create New Wallet'),
+    )
 
     # Main fields
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)

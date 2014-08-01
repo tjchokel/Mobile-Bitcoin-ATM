@@ -7,8 +7,53 @@ from bitcoins.models import BTCTransaction
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
+from bitcash.settings import BCI_SECRET_KEY
+
 import requests
 import json
+
+
+def create_wallet_credential(user_password, merchant, user_email=None):
+    """
+    Create a wallet object and return its (newly created) bitcoin address
+    """
+    BASE_URL = 'https://blockchain.info/api/v2/create_wallet'
+
+    post_params = {
+            'password': user_password,
+            'api_code': BCI_SECRET_KEY
+            }
+
+    if user_email:
+        post_params['email'] = user_email
+
+    r = requests.post(BASE_URL, data=post_params)
+
+    # Log the API call
+    APICall.objects.create(
+        api_name=APICall.BLOCKCHAIN_CREATE_WALLET,
+        url_hit=BASE_URL,
+        response_code=r.status_code,
+        post_params=post_params,
+        api_results=r.content,
+        merchant=merchant,
+        )
+
+    resp_json = json.loads(r.content)
+
+    guid = resp_json['guid']
+    btc_address = resp_json['address']
+
+    msg = '%s is not a valid bitcoin address' % btc_address
+    assert is_valid_btc_address(btc_address), msg
+
+    BCICredential.objects.create(
+            merchant=merchant,
+            username=guid,
+            main_password=user_password,
+            second_password=None)
+
+    return btc_address
 
 
 class BCICredential(BaseCredential):

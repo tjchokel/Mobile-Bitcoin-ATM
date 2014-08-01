@@ -47,26 +47,6 @@ class Merchant(models.Model):
         else:
             return None
 
-    def get_destination_address_b58(self):
-        
-
-
-
-
-        # MIKE!!!! What address should I give the users so they can top off their API wallet?
-
-
-
-
-
-
-
-        destination_addresses = self.get_destination_addresses()
-        if destination_addresses:
-            return destination_addresses[0].b58_address
-        else:
-            return None
-
     def has_destination_address(self):
         return bool(self.get_destination_address())
 
@@ -79,6 +59,11 @@ class Merchant(models.Model):
             # Should only have one, but still is a queryset
             return matching_address[0]
         else:
+            # Mark all current active destination addresses as retired
+            for dest_addr in DestinationAddress.objects.filter(merchant=self, retired_at=None):
+                dest_addr.retired_at = now()
+                dest_addr.save()
+
             # Create new address object
             return DestinationAddress.objects.create(
                     b58_address=dest_address,

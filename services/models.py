@@ -113,7 +113,7 @@ class WebHook(models.Model):
         except Exception:
             # TODO: better edge case handling
             data_from_post = None
-        return WebHook.objects.create(
+        return cls.objects.create(
                 ip_address=get_client_ip(request),
                 user_agent=request.META.get('HTTP_USER_AGENT'),
                 api_name=api_name,

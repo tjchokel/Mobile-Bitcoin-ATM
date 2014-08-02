@@ -178,65 +178,90 @@ def process_blockcypher_webhook(request, random_id):
     # Log webhook
     WebHook.log_webhook(request, WebHook.BLOCKCYPHER_ADDR_MONITORING)
 
-    assert request.method == 'POST', 'Request has no post'
+    try:
+        assert request.method == 'POST', 'Request has no post'
 
-    payload = json.loads(request.body)
+        payload = json.loads(request.body)
 
-    confirmations = payload['confirmations']
-    txn_hash = payload['hash']
+        confirmations = payload['confirmations']
+        txn_hash = payload['hash']
 
-    for output in payload['outputs']:
-        # Make sure it has an address we care about:
-        forwarding_obj = get_forwarding_obj_from_address_list(output['addresses'])
-        if not forwarding_obj:
-            # skip this entry (it's the destination txn)
-            continue
+        for output in payload['outputs']:
+            # Make sure it has an address we care about:
+            forwarding_obj = get_forwarding_obj_from_address_list(output['addresses'])
+            if not forwarding_obj:
+                # skip this entry (it's the destination txn)
+                continue
 
-        fwd_btc_txn = get_object_or_None(BTCTransaction, txn_hash=txn_hash)
+            fwd_btc_txn = get_object_or_None(BTCTransaction, txn_hash=txn_hash)
 
-        if fwd_btc_txn:
-            # already had txn in database
+            if fwd_btc_txn:
+                # already had txn in database
 
-            # defensive check
-            msg = '%s != %s' % (fwd_btc_txn.satoshis, output['value'])
-            assert fwd_btc_txn.satoshis == output['value'], msg
+                # defensive check
+                msg = '%s != %s' % (fwd_btc_txn.satoshis, output['value'])
+                assert fwd_btc_txn.satoshis == output['value'], msg
 
-            # update # confirms
-            if confirmations < fwd_btc_txn.conf_num:
-                msg = 'Blockcypher reports %s confirms and previously reported %s confirms for txn %s'
-                msg = msg % (confirmations, fwd_btc_txn.conf_num, txn_hash)
-                raise Exception(msg)
+                # update # confirms
+                if confirmations < fwd_btc_txn.conf_num:
+                    msg = 'Blockcypher reports %s confirms and previously reported %s confirms for txn %s'
+                    msg = msg % (confirmations, fwd_btc_txn.conf_num, txn_hash)
+                    raise Exception(msg)
 
-            elif confirmations == fwd_btc_txn.conf_num:
-                # Same #, no need to update
-                pass
+                elif confirmations == fwd_btc_txn.conf_num:
+                    # Same #, no need to update
+                    pass
+
+                else:
+                    # Increase conf_num
+                    if confirmations >= 6 and not fwd_btc_txn.irreversible_by:
+                        fwd_btc_txn.irreversible_by = now()
+                    fwd_btc_txn.conf_num = confirmations
+                    fwd_btc_txn.save()
+
+                    if fwd_btc_txn.meets_minimum_confirmations() and not fwd_btc_txn.met_minimum_confirmation_at:
+                        # Mark it as such
+                        fwd_btc_txn.met_minimum_confirmation_at = now()
+                        fwd_btc_txn.save()
+
+                        # send out emails
+                        fwd_btc_txn.send_all_txconfirmed_notifications(force_resend=False)
 
             else:
-                # Increase conf_num
-                fwd_btc_txn.conf_num = confirmations
-                if confirmations >= 6 and not fwd_btc_txn.irreversible_by:
-                    fwd_btc_txn.irreversible_by = now()
-                fwd_btc_txn.save()
-        else:
-            # Didn't have TXN in DB
+                # Didn't have TXN in DB
 
-            # Confirmations logic
-            if confirmations >= 6:
-                # May want to make this variable and trigger email sending
-                irreversible_by = now()
-            else:
-                irreversible_by = None
+                satoshis = output['value']
+                fiat_amount = forwarding_obj.merchant.calculate_fiat_amount(satoshis=satoshis)
 
-            # Create TX
-            BTCTransaction.objects.create(
-                    txn_hash=txn_hash,
-                    satoshis=output['value'],
-                    conf_num=confirmations,
-                    irreversible_by=irreversible_by,
-                    forwarding_address=forwarding_obj,
-                    )
+                # Confirmations logic
+                if confirmations >= 6:
+                    # May want to make this variable and trigger email sending
+                    irreversible_by = now()
+                else:
+                    irreversible_by = None
 
-    return HttpResponse("*ok*")
+                # Create TX
+                fwd_txn = BTCTransaction.objects.create(
+                        txn_hash=txn_hash,
+                        satoshis=satoshis,
+                        conf_num=confirmations,
+                        irreversible_by=irreversible_by,
+                        forwarding_address=forwarding_obj,
+                        currency_code_when_created=forwarding_obj.merchant.currency_code,
+                        fiat_amount=fiat_amount,
+                        )
+
+                # Send out shopper/merchant emails
+                if fwd_txn.meets_minimum_confirmations():
+                    # This shouldn't be the case, but it's a protection from things falling behind
+                    fwd_txn.send_all_txconfirmed_notifications(force_resend=False)
+                else:
+                    # It's new *and* not yet confirmed, this is what we expect
+                    fwd_txn.send_all_newtx_notifications(force_resend=False)
+
+        return HttpResponse("*ok*")
+    except Exception as e:
+        import pdb; pdb.set_trace()
 
 
 @login_required

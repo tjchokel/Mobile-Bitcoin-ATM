@@ -291,7 +291,14 @@ class BTCTransaction(models.Model):
     def send_shopper_newtx_email(self, force_resend=False):
 
         BODY_TEMPLATE = 'shopper/cashout_newtx.html'
-        if get_object_or_None(SentEmail, btc_transaction=self, body_template=BODY_TEMPLATE):
+        existing_newtx_email = get_object_or_None(SentEmail,
+                btc_transaction=self, body_template=BODY_TEMPLATE)
+
+        existing_confirmedtx_email = get_object_or_None(SentEmail,
+                btc_transaction=self,
+                body_template='shopper/cashout_txconfirmed.html')
+
+        if existing_newtx_email or existing_confirmedtx_email:
             if not force_resend:
                 # Protection against double-sending
                 return
@@ -323,7 +330,10 @@ class BTCTransaction(models.Model):
 
     def send_shopper_newtx_sms(self, force_resend=False):
 
-        if get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_NEW_TX):
+        existing_newtx_sms = get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_NEW_TX)
+        existing_confirmedtx_sms = get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_TX_CONFIRMED)
+
+        if existing_newtx_sms or existing_confirmedtx_sms:
             if not force_resend:
                 # Protection against double-sending
                 return

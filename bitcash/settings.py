@@ -155,7 +155,7 @@ LANGUAGE_CODE = 'en-us'
 # LANGUAGE_CODE = 'es'
 LANGUAGES = (
     ('en-us', 'English'),
-    # ('es', 'Spanish'), # TODO: ADD BACK IN WHEN ADDING NEW LANGUAGES
+    ('es', 'Spanish'),
 )
 
 TIME_ZONE = 'UTC'
@@ -181,6 +181,8 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, 'templates'),)
 
 BCI_SECRET_KEY = os.getenv('BCI_SECRET_KEY')
+assert BCI_SECRET_KEY, 'Must have BCI_SECRET_KEY (to create BCI wallets)'
+
 BLOCKCYPHER_API_KEY = os.getenv('BLOCKCYPHER_API_KEY')
 
 SERVER_EMAIL = 'support@coinsafe.com'

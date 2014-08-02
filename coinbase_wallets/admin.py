@@ -5,7 +5,15 @@ from coinbase_wallets.models import CBSCredential, CBSSentBTC, CBSSellBTC
 
 class CBSCredentialAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'api_key', )
+    list_display = (
+            'id',
+            'merchant',
+            'disabled_at',
+            'last_succeded_at',
+            'last_failed_at',
+            'api_key',
+            )
+    raw_id_fields = ('merchant', )
 
     class Meta:
         model = CBSCredential
@@ -26,6 +34,7 @@ class CBSSentBTCAdmin(admin.ModelAdmin):
             'transaction_id',
             'notes',
             )
+    raw_id_fields = ('credential', )
 
     class Meta:
         model = CBSSentBTC
@@ -35,6 +44,7 @@ admin.site.register(CBSSentBTC, CBSSentBTCAdmin)
 
 class CBSSellBTCAdmin(admin.ModelAdmin):
     list_display = ('id', 'coinbase_code', )
+    raw_id_fields = ('credential', )
 
     class Meta:
         model = CBSSellBTC

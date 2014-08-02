@@ -2,10 +2,12 @@ from django_fields.fields import EncryptedCharField
 from django.utils.timezone import now
 
 from services.models import APICall
-from credentials.models import BaseCredential, BaseBalance, BaseSentBTC
+from credentials.models import BaseCredential, BaseBalance, BaseSentBTC, BaseAddressFromCredential
 from bitcoins.models import BTCTransaction
 
 from bitcoins.BCAddressField import is_valid_btc_address
+
+from bitcash.settings import BCI_SECRET_KEY
 
 import requests
 import json
@@ -22,6 +24,9 @@ class BCICredential(BaseCredential):
 
     def get_credential_to_display(self):
         return 'blockchain.info'
+
+    def get_login_link(self):
+        return 'https://blockchain.info/wallet/%s' % self.username
 
     def get_balance(self):
         """
@@ -114,10 +119,13 @@ class BCICredential(BaseCredential):
         """
         Generates a new receiving address
         """
-        label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d")
+        label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d %H:%M:%S")
 
         BASE_URL = 'https://blockchain.info/merchant/%s/new_address?password=%s&label=%s'
         ADDRESS_URL = BASE_URL % (self.username, self.main_password, label)
+
+        if self.second_password:
+            ADDRESS_URL += '&second_password=%s' % self.second_password
 
         r = requests.get(url=ADDRESS_URL)
 
@@ -140,6 +148,11 @@ class BCICredential(BaseCredential):
         msg = '%s is not a valid bitcoin address' % address
         assert is_valid_btc_address(address), msg
 
+        BaseAddressFromCredential.objects.create(
+                credential=self,
+                b58_address=address,
+                retired_at=None)
+
         if set_as_merchant_address:
             self.merchant.set_destination_address(dest_address=address,
                     credential_used=self)
@@ -149,6 +162,51 @@ class BCICredential(BaseCredential):
     def get_best_receiving_address(self, set_as_merchant_address=False):
         " Get a new receiving address "
         return self.get_new_receiving_address(set_as_merchant_address=set_as_merchant_address)
+
+    @classmethod
+    def create_wallet_credential(cls, user_password, merchant, user_email=None):
+        """
+        Create a wallet object and return its (newly created) bitcoin address
+        """
+        BASE_URL = 'https://blockchain.info/api/v2/create_wallet'
+        label = 'CoinSafe Address %s' % now().strftime("%Y%m%d %H%M%S")
+
+        post_params = {
+                'password': user_password,
+                'api_code': BCI_SECRET_KEY,
+                'label': label,
+                }
+
+        if user_email:
+            post_params['email'] = user_email
+
+        r = requests.post(BASE_URL, data=post_params)
+
+        # Log the API call
+        APICall.objects.create(
+            api_name=APICall.BLOCKCHAIN_CREATE_WALLET,
+            url_hit=BASE_URL,
+            response_code=r.status_code,
+            post_params=post_params,
+            api_results=r.content,
+            merchant=merchant,
+            )
+
+        resp_json = json.loads(r.content)
+
+        guid = resp_json['guid']
+        btc_address = resp_json['address']
+
+        msg = '%s is not a valid bitcoin address' % btc_address
+        assert is_valid_btc_address(btc_address), msg
+
+        cls.objects.create(
+                merchant=merchant,
+                username=guid,
+                main_password=user_password,
+                second_password=None)
+
+        return btc_address
 
 
 class BCISentBTC(BaseSentBTC):

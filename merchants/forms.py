@@ -1,5 +1,5 @@
 from django import forms
-from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
 
 from bitcoins.BCAddressField import is_valid_btc_address
@@ -11,9 +11,17 @@ from countries import COUNTRY_DROPDOWN, BFH_CURRENCY_DROPDOWN
 
 from utils import clean_phone_num
 
+from unidecode import unidecode
 
-ALPHANUMERIC_VALIDATOR = RegexValidator(r'^[0-9a-zA-Z -]*$',
-    _('Letters and numbers only please.'))
+
+def clean_full_name(self):
+    """ Helper function for transliterating full_name field """
+    return unidecode(self.cleaned_data['full_name'])
+
+
+def clean_business_name(self):
+    """ Helper function for transliterating business_name field """
+    return unidecode(self.cleaned_data['business_name'])
 
 
 class LoginForm(forms.Form):
@@ -50,7 +58,6 @@ class MerchantRegistrationForm(forms.Form):
         min_length=2,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
-        validators=[ALPHANUMERIC_VALIDATOR],
     )
     business_name = forms.CharField(
         label=_('Business Name'),
@@ -93,18 +100,55 @@ class MerchantRegistrationForm(forms.Form):
             raise forms.ValidationError(msg)
         return email
 
+    clean_full_name = clean_full_name
+    clean_business_name = clean_business_name
+
 
 class BitcoinRegistrationForm(forms.Form):
 
+    btc_markup = forms.DecimalField(
+            label=_('Percent Markup'),
+            required=True,
+            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+            help_text=_('The percent you want to charge above the market rate'),
+            widget=forms.TextInput(),
+    )
+
+    wallet_type_choice = forms.ChoiceField(
+        label=_('Wallet Choice'),
+        required=True,
+        widget=forms.RadioSelect(attrs={'id': 'wallet_type_choice'}),
+        choices=(
+            ('new', _('Create New blockchain.info Wallet')),
+            ('old', _('Link Existing Hosted Wallet')),
+            ),
+    )
+
+    new_blockchain_password = forms.CharField(
+        label=_('New Blockchain Wallet Password'),
+        required=False,
+        min_length=10,
+        max_length=256,
+        widget=forms.PasswordInput(render_value=False, attrs={'id': 'pass1'}),
+        help_text=_('Do not forget this password! Blockchain.info does not support password recovery.'),
+    )
+
+    new_blockchain_password_confirm = forms.CharField(
+        label=_('Confirm Password'),
+        required=False,
+        min_length=10,
+        max_length=256,
+        widget=forms.PasswordInput(render_value=False, attrs={'id': 'pass2'}),
+    )
+
     exchange_choice = forms.ChoiceField(
-        label=_('Who Manages Your Bitcoin Address'),
+        label=_('Existing Bitcoin Wallet Provider'),
         required=True,
         widget=forms.RadioSelect(attrs={'id': 'exchange_choice'}),
         choices=(
             ('coinbase', 'coinbase.com'),
             ('blockchain', 'blockchain.info'),
             ('bitstamp', 'bitstamp.net'),
-            ('selfmanaged', _('Me (can only receive bitcoin)'))
             ),
     )
 
@@ -172,35 +216,20 @@ class BitcoinRegistrationForm(forms.Form):
         widget=forms.PasswordInput(render_value=False),
     )
 
-    btc_address = forms.CharField(
-            label=_('Bitcoin Deposit Address'),
-            required=False,
-            min_length=27,
-            max_length=34,
-            help_text=_('The wallet address where you want your bitcoin sent'),
-            widget=forms.TextInput(),
-    )
-
-    btc_markup = forms.DecimalField(
-            label=_('Percent Markup'),
-            required=True,
-            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text=_('The percent you want to charge above the market rate'),
-            widget=forms.TextInput(),
-    )
-
     def clean_cb_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
         cb_api_key = self.cleaned_data.get('cb_api_key').strip()
-        if exchange_choice == 'coinbase' and not cb_api_key:
+        if exchange_choice == 'coinbase' and not cb_api_key and wallet_type_choice == 'old':
             msg = _('Please enter your Coinbase API key')
             raise forms.ValidationError(msg)
         return cb_api_key
 
     def clean_cb_secret_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
         cb_secret_key = self.cleaned_data.get('cb_secret_key').strip()
-        if exchange_choice == 'coinbase' and not cb_secret_key:
+        if exchange_choice == 'coinbase' and not cb_secret_key and wallet_type_choice == 'old':
             msg = _('Please enter your Coinbase secret key')
             raise forms.ValidationError(msg)
         return cb_secret_key
@@ -251,12 +280,23 @@ class BitcoinRegistrationForm(forms.Form):
         address = self.cleaned_data.get('btc_address').strip()
         exchange_choice = self.cleaned_data.get('exchange_choice')
         if address and not is_valid_btc_address(address):
-            msg = "Sorry, that's not a valid bitcoin address"
+            msg = _("Sorry, that's not a valid bitcoin address")
             raise forms.ValidationError(msg)
         if exchange_choice == 'selfmanaged' and not is_valid_btc_address(address):
-            msg = "Please enter a valid bitcoin address"
+            msg = _("Please enter a valid bitcoin address")
             raise forms.ValidationError(msg)
         return address
+
+    def clean(self):
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        if wallet_type_choice == 'new':
+            pw = self.cleaned_data.get('new_blockchain_password')
+            pwc = self.cleaned_data.get('new_blockchain_password_confirm')
+            if pw != pwc:
+                err_msg = _('Those passwords did not match. Please try again.')
+                raise forms.ValidationError(err_msg)
+
+        return self.cleaned_data
 
 
 class AccountRegistrationForm(forms.Form):
@@ -281,7 +321,6 @@ class OwnerInfoForm(forms.Form):
         min_length=2,
         max_length=256,
         widget=forms.TextInput(attrs={'placeholder': 'John Smith'}),
-        validators=[ALPHANUMERIC_VALIDATOR],
         # TODO: the way errors are handled in the views will not display this
         # correctly to users
     )
@@ -306,6 +345,7 @@ class OwnerInfoForm(forms.Form):
     )
 
     clean_phone_num = clean_phone_num
+    clean_full_name = clean_full_name
 
 
 class MerchantInfoForm(forms.Form):
@@ -372,6 +412,7 @@ class MerchantInfoForm(forms.Form):
             )
 
     clean_phone_num = clean_phone_num
+    clean_business_name = clean_business_name
 
 
 class BusinessHoursForm(forms.Form):

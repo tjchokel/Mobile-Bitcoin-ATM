@@ -7,7 +7,7 @@ from decimal import Decimal
 from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction
 
-from utils import clean_phone_num
+from utils import clean_phone_num, STANDARD_TX_FEE_IN_SATOSHIS
 
 from unidecode import unidecode
 
@@ -45,11 +45,45 @@ class ShopperInformationForm(forms.Form):
         return unidecode(self.cleaned_data['name'])
 
 
+def clean_amount(self):
+    """
+    Function used in both BuyBitcoinForm and NoEmailBuyBitcoinForm
+
+    DRY-ing it out here
+    """
+    amount = self.cleaned_data.get('amount')
+    merchant = self.user.get_merchant()
+
+    # Check if amount exceeds merhcant's buy limit
+    max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase
+    btc_price = Decimal(BTCTransaction.get_btc_price(merchant.currency_code))
+    amount_in_mbtc = (amount / btc_price) * 1000
+    if max_mbtc_shopper_purchase < amount_in_mbtc:
+        msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)
+        raise forms.ValidationError(msg)
+
+    # Check if amount exceeds available balance
+    credential = merchant.get_valid_api_credential()
+    if credential:
+        balance = credential.get_balance()
+        if balance is False:
+            # This will incorrecty display on the amount input and not the form as a whole
+            # That's worth it here for simplicity and not having to make 2 API calls
+            msg = _("Sorry, the business API credentials for %s are invalid." % credential.get_credential_to_display())
+            raise forms.ValidationError(msg)
+        elif balance < (amount*1.01 + 2*STANDARD_TX_FEE_IN_SATOSHIS):
+            # The 1% increase is hackey buffer for the fact that the price isn't locked in.
+            # The 2x standard fee is a hackey buffer for the fees
+            msg = _("Sorry, the amount you entered exceeds the available balance")
+            raise forms.ValidationError(msg)
+    return amount
+
+
 class BuyBitcoinForm(forms.Form):
     amount = forms.DecimalField(
         label=_('Amount of Cash to Pay'),
         required=True,
-        validators=[MinValueValidator(0.01), MaxValueValidator(1000.0)],
+        validators=[MinValueValidator(1.0), MaxValueValidator(1000.0)],
         help_text=_('This is what you will give to the cashier'),
         widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0.00', 'style': 'width:50%;'}),
     )
@@ -88,38 +122,14 @@ class BuyBitcoinForm(forms.Form):
                 raise forms.ValidationError(msg)
         return address
 
-    def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
-        merchant = self.user.get_merchant()
-
-        # Check if amount exceeds merhcant's buy limit
-        max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase
-        btc_price = Decimal(BTCTransaction.get_btc_price(merchant.currency_code))
-        amount_in_mbtc = (amount / btc_price) * 1000
-        if max_mbtc_shopper_purchase < amount_in_mbtc:
-            msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)
-            raise forms.ValidationError(msg)
-
-        # Check if amount exceeds available balance
-        credential = merchant.get_valid_api_credential()
-        if credential:
-            balance = credential.get_balance()
-            if balance is False:
-                # This will incorrecty display on the amount input and not the form as a whole
-                # That's worth it here for simplicity and not having to make 2 API calls
-                msg = _("Sorry, the business API credentials for %s are invalid." % credential.get_credential_to_display())
-                raise forms.ValidationError(msg)
-            elif balance < amount:
-                msg = _("Sorry, the amount you entered exceeds the available balance")
-                raise forms.ValidationError(msg)
-        return amount
+    clean_amount = clean_amount
 
 
 class NoEmailBuyBitcoinForm(forms.Form):
     amount = forms.DecimalField(
         label=_('Amount of Cash to Pay'),
         required=True,
-        validators=[MinValueValidator(0.01), MaxValueValidator(1000.0)],
+        validators=[MinValueValidator(1.0), MaxValueValidator(1000.0)],
         help_text=_('This is what you will give to the cashier'),
         widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0.00', 'style': 'width:50%;'}),
     )
@@ -150,31 +160,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
             raise forms.ValidationError(msg)
         return address
 
-    def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
-        merchant = self.user.get_merchant()
-
-        # Check if amount exceeds merhcant's buy limit
-        max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase
-        btc_price = Decimal(BTCTransaction.get_btc_price(merchant.currency_code))
-        amount_in_mbtc = (amount / btc_price) * 1000
-        if max_mbtc_shopper_purchase < amount_in_mbtc:
-            msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)
-            raise forms.ValidationError(msg)
-
-        # Check if amount exceeds available balance
-        credential = merchant.get_valid_api_credential()
-        if credential:
-            balance = credential.get_balance()
-            if balance is False:
-                # This will incorrecty display on the amount input and not the form as a whole
-                # That's worth it here for simplicity and not having to make 2 API calls
-                msg = _("Sorry, the business API credentials for %s are invalid." % credential.get_credential_to_display())
-                raise forms.ValidationError(msg)
-            elif balance < amount:
-                msg = _("Sorry, the amount you entered exceeds the available balance")
-                raise forms.ValidationError(msg)
-        return amount
+    clean_amount = clean_amount
 
 
 class ConfirmPasswordForm(forms.Form):

@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
+STANDARD_TX_FEE_IN_SATOSHIS = 10**4
 
 
 def satoshis_to_btc(satoshis):

@@ -345,6 +345,7 @@ class BTCTransaction(models.Model):
                     to_user=None,
                     to_merchant=None,
                     to_shopper=shopper,
+                    message_type=SentSMS.SHOPPER_NEW_TX,
                     btc_transaction=self,
                     )
 
@@ -401,6 +402,7 @@ class BTCTransaction(models.Model):
                     to_user=None,
                     to_merchant=None,
                     to_shopper=shopper,
+                    message_type=SentSMS.SHOPPER_TX_CONFIRMED,
                     btc_transaction=self,
                     )
 
@@ -463,6 +465,7 @@ class BTCTransaction(models.Model):
                     to_user=merchant.user,
                     to_merchant=merchant,
                     to_shopper=shopper,
+                    message_type=SentSMS.MERCHANT_TX_CONFIRMED,
                     btc_transaction=self,
                     )
 

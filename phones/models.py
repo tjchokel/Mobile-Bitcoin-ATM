@@ -34,7 +34,7 @@ class SentSMS(models.Model):
         return '%s: %s' % (self.id, self.phone_num)
 
     @classmethod
-    def send_and_log(cls, phone_num, message, to_user, to_merchant, to_shopper, btc_transaction):
+    def send_and_log(cls, phone_num, message, to_user, to_merchant, to_shopper, message_type, btc_transaction):
         ''' Send message and log it '''
 
         # Log the msg
@@ -44,6 +44,7 @@ class SentSMS(models.Model):
                 to_user=to_user,
                 to_merchant=to_merchant,
                 to_shopper=to_shopper,
+                message_type=message_type,
                 btc_transaction=btc_transaction,
                 )
 

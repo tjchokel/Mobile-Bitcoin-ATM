@@ -252,6 +252,11 @@ def process_blockcypher_webhook(request, random_id):
 
             # Send out shopper/merchant emails
             if fwd_txn.meets_minimum_confirmations():
+
+                # Mark it as such
+                fwd_btc_txn.met_minimum_confirmation_at = now()
+                fwd_btc_txn.save()
+
                 # This shouldn't be the case, but it's a protection from things falling behind
                 fwd_txn.send_all_txconfirmed_notifications(force_resend=False)
             else:

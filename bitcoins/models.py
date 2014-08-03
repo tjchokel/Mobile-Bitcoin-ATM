@@ -248,14 +248,15 @@ class BTCTransaction(models.Model):
 
     def get_status(self):
         if self.forwarding_address.paid_out_at:
-            return 'Cash Paid Out'
+            return _('Cash Paid Out')
         if self.met_minimum_confirmation_at:
-            return 'BTC Received'
+            return _('BTC Received')
         else:
-            return 'BTC Pending (%s of %s Confirms Needed)' % (
+            msg = 'BTC Pending (%s of %s Confirms Needed)' % (
                     self.conf_num,
                     self.get_confs_needed(),
                     )
+            return _(msg)
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:

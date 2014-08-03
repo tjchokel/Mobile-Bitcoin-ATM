@@ -145,7 +145,7 @@ msgstr "Su información referente a la API de Bitstamp no pudo ser validada"
 #: templates/customer_dash/cash_out/_deposit_confirm.html:50
 #: templates/merchants/profile.html:138 users/forms.py:8
 msgid "Email"
-msgstr "Correo electrónico"
+msgstr "Correo Electrónico"
 
 #: merchants/forms.py:33 merchants/forms.py:281
 msgid "Password"
@@ -329,16 +329,15 @@ msgstr "Porcentaje a cobrar por encima de la tasa de mercado"
 
 #: merchants/forms.py:460 templates/merchants/settings.html:34
 msgid "Max Shopper Purchase"
-msgstr "Máxima compra por cliente"
+msgstr "Máxima Compra por Cliente"
 
 #: merchants/forms.py:462
 msgid "The maximum amount of mBTC a shopper can purchase."
 msgstr "La cantidad máxima de mBTC que un comprador puede adquirir."
 
 #: merchants/forms.py:467 templates/merchants/settings.html:38
-#, fuzzy
 msgid "Max Shopper Sale"
-msgstr "Máxima venta por cliente"
+msgstr "Máxima Venta por cliente"
 
 #: merchants/forms.py:469
 msgid "The maximum amount of mBTC a shopper can sell."
@@ -444,12 +443,10 @@ msgid "Your bitcoin info was not updated"
 msgstr "Su información referente a Bitcoin no ha sido actualizada"
 
 #: shoppers/forms.py:18
-#, fuzzy
 msgid "Customer Name"
 msgstr "Nombre del Cliente"
 
 #: shoppers/forms.py:24 shoppers/forms.py:58 shoppers/forms.py:128
-#, fuzzy
 msgid "Customer Email"
 msgstr "E-mail del Cliente"
 
@@ -493,12 +490,10 @@ msgid "Sorry, the amount you entered exceeds the available balance"
 msgstr "Lo sentimos, la cantidad que ha introducido excede el saldo disponible"
 
 #: shoppers/forms.py:134
-#, fuzzy
 msgid "Customer Bitcoin Address"
 msgstr "Dirección Bitcoin de Depósito"
 
 #: shoppers/forms.py:138
-#, fuzzy
 msgid "The wallet address where you want to receive your bitcoin"
 msgstr "La dirección de la billetera donde quieres recibir los bitcoin"
 
@@ -521,7 +516,7 @@ msgstr "La App para tener un cajero de Bitcoins gratuito | CoinSafe"
 
 #: templates/base.html:55
 msgid "FAQ"
-msgstr "Preguntas frecuentes"
+msgstr "Preguntas Frecuentes"
 
 #: templates/base.html:56 templates/fixed_pages/team.html:22
 #: templates/partials/_static_page_footer.html:18
@@ -730,7 +725,7 @@ msgid "Your Free Bitcoin ATM App | Login"
 msgstr "La App para tener un cajero de Bitcoins gratuito | CoinSafe"
 
 #: templates/login.html:39
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "To create a new account, please <a href=\"%(register_url)s\">click here</a>."
 msgstr ""
@@ -875,7 +870,7 @@ msgstr ""
 
 #: templates/customer_dash/cash_out/_deposit_address_modal.html:29
 msgid "The Bitcoin Has Been Sent"
-msgstr "Los Bitcoins han sido enviados"
+msgstr "Los Bitcoins Han Sido Enviados"
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:6
 #, fuzzy
@@ -922,12 +917,10 @@ msgid "seconds ago"
 msgstr "hace unos segundos"
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:15
-#, fuzzy
 msgid "Waiting for customer's deposit to"
 msgstr "Esperando depósito a"
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:20
-#, fuzzy
 msgid "Transaction"
 msgstr "Transacciones"
 
@@ -941,7 +934,6 @@ msgstr ""
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:32
 #: templates/customer_dash/cash_out/_override_confirmations_modal.html:8
-#, fuzzy
 msgid "Override Required Confirmations?"
 msgstr "Forzar requiere confirmación?"
 
@@ -1006,12 +998,10 @@ msgstr ""
 " Compre Bitcoins de %(merchant_name)s"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:54
-#, fuzzy
 msgid "Enter Your Email or BTC Address"
 msgstr "Ingrese su E-mail o Dirección Bitcoin"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:56
-#, fuzzy
 msgid "Enter Your BTC Address"
 msgstr "Ingrese su Dirección Bitcoin"
 
@@ -1042,12 +1032,10 @@ msgstr ""
 " Vender Bitcoins a %(merchant_name)s"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:116
-#, fuzzy
 msgid "Get Business BTC Address"
 msgstr "Obtenga una Dirección Bitcoin para su Negocio"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:119
-#, fuzzy
 msgid "Send Bitcoin to Business BTC Address"
 msgstr "Enviar Bitcoins a la dirección BTC de un Negocio"
 
@@ -1057,7 +1045,7 @@ msgstr "Recibir Efectivo de un Negocio"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:129
 msgid "Sell Your Bitcoin for Cash"
-msgstr "Vender sus Bitcoins por efectivo"
+msgstr "Vender sus Bitcoins por Efectivo"
 
 #: templates/customer_dash/cash_out/_override_confirmations_modal.html:17
 msgid ""
@@ -1593,7 +1581,7 @@ msgstr ""
 #: templates/fixed_pages/promotional_material.html:13
 #: templates/partials/_static_page_footer.html:20
 msgid "Promotional Posters for Merchants"
-msgstr "Afiches promocionales para comerciantes"
+msgstr "Afiches Promocionales para Comerciantes"
 
 #: templates/fixed_pages/promotional_material.html:22
 msgid "Poster 1"
@@ -1662,7 +1650,7 @@ msgstr ""
 "AdWords. Salió de Google para fundar Semply, una empresa enfocada en la "
 "creación de herramientas de publicidad para las pequeñas empresas, que más "
 "tarde fue adquirida por <a href=\"https://www.adstage.io/\" target=\"_blank"
-"\">AdStage</ a>. Tom se graduó de la Universidad de Georgetown con un título "
+"\">AdStage</a>. Tom se graduó de la Universidad de Georgetown con un título "
 "en Ciencias de la Computación y Economía."
 
 #: templates/merchants/_delete_api_credentials_modal.html:9
@@ -1881,7 +1869,6 @@ msgstr ""
 "acerca de que ellos cambiar su configuración."
 
 #: templates/merchants/password_prompt.html:36
-#, fuzzy
 msgid "Confirm Password"
 msgstr "Confirmar Contraseña"
 
@@ -1998,7 +1985,7 @@ msgstr "Guía de Almacenamiento en Frio"
 
 #: templates/partials/_static_page_footer.html:26
 msgid "Privacy Policy"
-msgstr "Política de privacidad"
+msgstr "Política de Privacidad"
 
 #: templates/partials/_static_page_footer.html:27
 msgid "Terms of Service"
@@ -2024,7 +2011,7 @@ msgstr "Obtener dinero en efectivo por tus Bitcoin Ahora"
 
 #: users/forms.py:28
 msgid "Sell Bitcoin to Receive Cash"
-msgstr "Vender sus Bitcoins por efectivo"
+msgstr "Vender sus Bitcoins por Efectivo"
 
 #: users/forms.py:35
 msgid "Your Email"

@@ -443,12 +443,10 @@ msgid "Your bitcoin info was not updated"
 msgstr "Su información referente a Bitcoin no ha sido actualizada"
 
 #: shoppers/forms.py:18
-#, fuzzy
 msgid "Customer Name"
 msgstr "Nombre del Cliente"
 
 #: shoppers/forms.py:24 shoppers/forms.py:58 shoppers/forms.py:128
-#, fuzzy
 msgid "Customer Email"
 msgstr "E-mail del Cliente"
 
@@ -492,12 +490,10 @@ msgid "Sorry, the amount you entered exceeds the available balance"
 msgstr "Lo sentimos, la cantidad que ha introducido excede el saldo disponible"
 
 #: shoppers/forms.py:134
-#, fuzzy
 msgid "Customer Bitcoin Address"
 msgstr "Dirección Bitcoin de Depósito"
 
 #: shoppers/forms.py:138
-#, fuzzy
 msgid "The wallet address where you want to receive your bitcoin"
 msgstr "La dirección de la billetera donde quieres recibir los bitcoin"
 
@@ -874,7 +870,7 @@ msgstr ""
 
 #: templates/customer_dash/cash_out/_deposit_address_modal.html:29
 msgid "The Bitcoin Has Been Sent"
-msgstr "Los Bitcoins han sido enviados"
+msgstr "Los Bitcoins Han Sido Enviados"
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:6
 #, fuzzy
@@ -921,12 +917,10 @@ msgid "seconds ago"
 msgstr "hace unos segundos"
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:15
-#, fuzzy
 msgid "Waiting for customer's deposit to"
 msgstr "Esperando depósito a"
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:20
-#, fuzzy
 msgid "Transaction"
 msgstr "Transacciones"
 
@@ -940,7 +934,6 @@ msgstr ""
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:32
 #: templates/customer_dash/cash_out/_override_confirmations_modal.html:8
-#, fuzzy
 msgid "Override Required Confirmations?"
 msgstr "Forzar requiere confirmación?"
 
@@ -1052,7 +1045,7 @@ msgstr "Recibir Efectivo de un Negocio"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:129
 msgid "Sell Your Bitcoin for Cash"
-msgstr "Vender sus Bitcoins por efectivo"
+msgstr "Vender sus Bitcoins por Efectivo"
 
 #: templates/customer_dash/cash_out/_override_confirmations_modal.html:17
 msgid ""
@@ -2018,7 +2011,7 @@ msgstr "Obtener dinero en efectivo por tus Bitcoin Ahora"
 
 #: users/forms.py:28
 msgid "Sell Bitcoin to Receive Cash"
-msgstr "Vender sus Bitcoins por efectivo"
+msgstr "Vender sus Bitcoins por Efectivo"
 
 #: users/forms.py:35
 msgid "Your Email"

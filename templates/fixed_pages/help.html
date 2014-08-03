@@ -69,7 +69,15 @@
 
       <br/>
 
+      {# put all URLs here to avoid duplicates #}
       {% url 'contact' as contact_url %}
+      {% url 'register_merchant' as register_merchant_url %}
+      {% url 'register_customer' as register_customer_url %}
+      {% url 'promotional_material' as promotional_material_url %}
+      {% url 'coinbase_instructions' as coinbase_url %}
+      {% url 'blockchain_instructions' as blockchain_url %}
+      {% url 'bitstamp_instructions' as bitstamp_url %}
+
       <h4>
         {% blocktrans %}
           If you have other questions, please don't hesitate to <a href="{{ contact_url }}">contact us</a>.
@@ -184,7 +192,6 @@
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              {% url 'register_merchant' as register_merchant_url %}
               <p>
                 {% blocktrans %}
                   Here are the main advantages of CoinSafe over the physical bitcoin ATMs (or vending machine) that are on the market:
@@ -278,7 +285,6 @@
           <div class="panel-collapse">
             <div class="panel-body">
               <p>{% trans "Nope!" %}</p>
-              {% url 'register_merchant' as register_merchant_url %}
               <p>
                 {% blocktrans %}
                   We encourage you to share some basic business info (like your business address and phone number) so that we can list your in our directory,
@@ -300,7 +306,6 @@
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              {% url 'promotional_material' as promotional_material_url %}
               <p>
                 {% blocktrans %}
                   Absolutely!
@@ -452,9 +457,6 @@
                 {% endblocktrans %}
               </p>
               <p>
-                {% url 'coinbase_instructions' as coinbase_url %}
-                {% url 'blockchain_instructions' as blockchain_url %}
-                {% url 'bitstamp_instructions' as bitstamp_url %}
                 {% blocktrans %}
                   Here are links to our API access instructions for
                   <a href="{{ coinbase_url }}">Coinbase</a>,
@@ -697,7 +699,6 @@
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                {% url 'register_customer' as register_customer_url %}
                 {% blocktrans %}
                   Of course!
                   <a href="{{ register_customer_url }}">Click here to signup for email alerts</a>.

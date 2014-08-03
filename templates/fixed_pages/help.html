@@ -37,6 +37,7 @@
           <li><a href="#coinsafe_free">{% trans "Is CoinSafe Really Free?" %}</a></li>
           <li><a href="#easy_to_use">{% trans "Does My Cashier Need to Understand Bitcoin?" %}</a></li>
           <li><a href="#trading_apps">{% trans "How is CoinSafe Different from Using the Bitcoin Wallet on My Phone to Trade with Customers?" %}</a></li>
+          <li><a href="#physical_atm">{% trans "Why Should I Use CoinSafe Instead of a Physical ATM?" %}</a></li>
           <li><a href="#merchant_kyc">{% trans "Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?" %}</a></li>
           <li><a href="#merchant_posters">{% trans "Does CoinSafe Have Any Bitcoin Posters I Can Display in my Store?" %}</a></li>
           <li><a href="#btc_confirms">{% trans "When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before Releasing the Cash?" %}</a></li>
@@ -68,7 +69,15 @@
 
       <br/>
 
+      {# put all URLs here to avoid duplicates #}
       {% url 'contact' as contact_url %}
+      {% url 'register_merchant' as register_merchant_url %}
+      {% url 'register_customer' as register_customer_url %}
+      {% url 'promotional_material' as promotional_material_url %}
+      {% url 'coinbase_instructions' as coinbase_url %}
+      {% url 'blockchain_instructions' as blockchain_url %}
+      {% url 'bitstamp_instructions' as bitstamp_url %}
+
       <h4>
         {% blocktrans %}
           If you have other questions, please don't hesitate to <a href="{{ contact_url }}">contact us</a>.
@@ -93,9 +102,18 @@
                 {% blocktrans %}
                   We are currently 100% free to use, and we don't charge any fees of any kind.
                   With CoinSafe, there's no contract or commitment to continue using us.
-                  We hope you'll use CoinSafe because you love it,
-                  but you're always free to leave anytime.
+                  We hope you'll use CoinSafe because you love it, but you're always free to leave anytime.
                   Remember, <a href="#private_keys">we don't have access to your bitcoin private keys</a>.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  Right now, our focus is on spreading bitcoin to as many people throughout the world as possible.
+                  Just like any business, we'll probably need to charge a small fee at some point in the future to cover our costs.
+                  We're hoping we can keep the app completely free and do this through optional, premium features.
+                  If our pricing does change, you'll get lots of advanced notice.
+                  And of course, you're always free to leave at any time for any reason.
+                  Please don't go, we'd really miss you!
                 {% endblocktrans %}
               </p>
             </div>
@@ -160,7 +178,99 @@
                     Because it's so much more safe and convenient for the customer to go to a reputable business and not have to send messages back and forth, you can often command prices that are more favorable to you.
                   {% endblocktrans %}
                 </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a class="anchor" id="physical_atm">{% trans "Why Should I Use CoinSafe Instead of a Physical ATM?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans %}
+                  Here are the main advantages of CoinSafe over the physical bitcoin ATMs (or vending machine) that are on the market:
+                {% endblocktrans %}
+              </p>
               <ul>
+                <li>
+                  {% blocktrans %}
+                    <b>100% free</b>.
+                    We charge no fees of any kind.
+                    You shouldn't have to pay up to $10,000 USD up front for physical hardware.
+                    With CoinSafe, all you need is an internet connected device at the store.
+                    We recommend a cheap tablet, but any smartphone or laptop works great too.
+                    (You can read more about our how we're able to be free <a href="#coinsafe_free">here</a>).
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>Be up and running in minutes</b> (from this very moment).
+                    No pre-orders, no waiting weeks for shipping, 
+                    <a href="{{ register_merchant_url }}">Get your free ATM App now</a>.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>Get daily software updates automatically</b>.
+                    Being an HTML5 Web App means it happens automatically with nothing to download or install.
+                    We love adding features for our users, just tell us what would make you happier.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>Two-way with cash and bitcoin recycling</b>.
+                    Our app is both a bitcoin ATM and bitcoin vending machine.
+                    In other words, customers can come in and buy bitcoin from you with cash, or sell their bitcoin to you for cash (the latter is a great option for moving cash off the premises).
+                    You can use the cash from one transaction in another.
+                    You set your own prices and decide if you want to offer buying, selling, or both.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>Really simple to setup and use</b>.
+                    You don't need a "bitcoin technician" to set it up or perform any updates/maintenance.
+                    Your staff doesn't even have to know what bitcoin is.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>Save space</b>.
+                    You don't need to give up precious real estate for a big physical machine.
+                  {% endblocktrans %}
+                </li>
+                <li>
+                  {% blocktrans %}
+                    <b>No need to bolt a machine to the floor</b>.
+                    Your password is required to release any funds, so even if a customer stole your tablet all they'd get is the physical device and not your bitcoin.
+                  {% endblocktrans %}
+                </li>
+              </ul>
+
+              <p>
+                {% blocktrans %}
+                  So, what's the catch?
+                  The only drawback is that we require a cashier as an intermediary.
+                  When a customer buys bitcoin at your store, the app will ask the cashier to confirm that they have received the physical cash.
+                  The app will only send the customer your bitcoin after your staff enters their password.
+                  This human component is the same as all other purchases in your store, except that the chasier confirms everything with the CoinSafe app.
+                  Most stores find that having a human involved in transactions is a totally normal cost of doing businesses, and it doesn't become a nuisance until they're doing dozens of transactions per day.
+                  You can always adjust your minimums and pricing to be sure that each order is worth your cashier's time.
+                  However, if your store looks <a href="http://www.buzzfeed.com/arielknutson/vending-machines-you-wont-believe-exist">like this</a>, we might not be a good fit.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  You're also welcome to try out both us and a physical ATM, we don't require any exclusivity or contract at all.
+                  What are you waiting for?
+                  <a href="{{ register_merchant_url }}">Get your free ATM App now</a>!
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>
@@ -175,7 +285,6 @@
           <div class="panel-collapse">
             <div class="panel-body">
               <p>{% trans "Nope!" %}</p>
-              {% url 'register_merchant' as register_merchant_url %}
               <p>
                 {% blocktrans %}
                   We encourage you to share some basic business info (like your business address and phone number) so that we can list your in our directory,
@@ -197,7 +306,6 @@
           </div>
           <div class="panel-collapse">
             <div class="panel-body">
-              {% url 'promotional_material' as promotional_material_url %}
               <p>
                 {% blocktrans %}
                   Absolutely!
@@ -349,9 +457,6 @@
                 {% endblocktrans %}
               </p>
               <p>
-                {% url 'coinbase_instructions' as coinbase_url %}
-                {% url 'blockchain_instructions' as blockchain_url %}
-                {% url 'bitstamp_instructions' as bitstamp_url %}
                 {% blocktrans %}
                   Here are links to our API access instructions for
                   <a href="{{ coinbase_url }}">Coinbase</a>,
@@ -594,7 +699,6 @@
           <div class="panel-collapse">
             <div class="panel-body">
               <p>
-                {% url 'register_customer' as register_customer_url %}
                 {% blocktrans %}
                   Of course!
                   <a href="{{ register_customer_url }}">Click here to signup for email alerts</a>.

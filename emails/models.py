@@ -20,6 +20,8 @@ class SentEmail(models.Model):
     body_template = models.CharField(max_length=256, null=False, db_index=True)
     body_context = JSONField()
     subject = models.CharField(max_length=512, null=False, blank=False)
+    # optional FK:
+    btc_transaction = models.ForeignKey('bitcoins.BTCTransaction', null=True, blank=True)
 
     def __str__(self):
         return '%s to %s' % (self.id, self.to_email)

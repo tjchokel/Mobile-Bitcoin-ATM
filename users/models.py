@@ -37,8 +37,8 @@ class LoggedLogin(models.Model):
         return '%s: %s' % (self.id, self.ip_address)
 
     @classmethod
-    def record_login(self, request):
-        return self.objects.create(
+    def record_login(cls, request):
+        return cls.objects.create(
                 auth_user=request.user,
                 ip_address=get_client_ip(request),
                 user_agent=request.META.get('HTTP_USER_AGENT'),

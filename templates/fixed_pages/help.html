@@ -13,10 +13,26 @@
     </div>
   </div>
 
+  {# put all URLs here to avoid duplicates #}
+  {% url 'contact' as contact_url %}
+  {% url 'register_merchant' as register_merchant_url %}
+  {% url 'register_customer' as register_customer_url %}
+  {% url 'promotional_material' as promotional_material_url %}
+  {% url 'coinbase_instructions' as coinbase_url %}
+  {% url 'blockchain_instructions' as blockchain_url %}
+  {% url 'bitstamp_instructions' as bitstamp_url %}
+
   <div class="row">
     <!-- FAQs accordion -->
     <div class="row">
       <h3>Table of Contents</h3>
+      <br />
+
+      <h4>
+        {% blocktrans %}
+          If you have other questions, please don't hesitate to <a href="{{ contact_url }}">contact us</a>.
+        {% endblocktrans %}
+      </h4>
       <br />
 
       <h4>For Customers</h4>
@@ -68,15 +84,6 @@
       </h2>
 
       <br/>
-
-      {# put all URLs here to avoid duplicates #}
-      {% url 'contact' as contact_url %}
-      {% url 'register_merchant' as register_merchant_url %}
-      {% url 'register_customer' as register_customer_url %}
-      {% url 'promotional_material' as promotional_material_url %}
-      {% url 'coinbase_instructions' as coinbase_url %}
-      {% url 'blockchain_instructions' as blockchain_url %}
-      {% url 'bitstamp_instructions' as bitstamp_url %}
 
       <h4>
         {% blocktrans %}

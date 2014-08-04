@@ -21,39 +21,20 @@
           {% include "customer_dash/cash_out/_deposit_dash_table.html" %}
           <hr>
       </div>
-    </div>
-    <br/>
-    <br />
-    <p class="lead text-center text-red">
-      {% trans "Cashier: <b>do not pay out cash</b> until CoinSafe notifies you that the customer's transaction has been confirmed by the bitcoin network." %}
-    </p>
-    <div style="text-align:center;">
-      <a class="btn btn-primary btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
-        {% trans "Override Required Confirmations?" %}
-      </a>
-    </div>
-    {% include "customer_dash/cash_out/_override_confirmations_modal.html" %}
-      <!-- <div class="row">
-        <div class="col-sm-12">
-          <h4 class="hl">{% trans "Shopper Information" %}</h4>
-          <table class="table">
-            <tbody>
-              <tr>
-                <td class="text-muted">{% trans "Name" %}</td>
-                <td align="right">{{shopper.name}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Phone" %}</td>
-                <td align="right">{{shopper.phone_num.as_international}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Email" %}</td>
-                <td align="right">{{shopper.email}}</td>
-              </tr>
-            </tbody>
-          </table>
+      </div>
+      <br/>
+      <br />
+      <p class="lead text-center text-red">
+        {% trans "Cashier: <b>do not pay out cash</b> until CoinSafe notifies you that the customer's transaction has been confirmed by the bitcoin network." %}
+      </p>
+      {% if transactions %}
+        <div style="text-align:center;">
+          <a class="btn btn-info btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
+            {% trans "Override Required Confirmations?" %}
+          </a>
         </div>
-      </div> -->
+        {% include "customer_dash/cash_out/_override_confirmations_modal.html" %}
+      {% endif %}
 
     {% else %}
       <p class="lead text-center">

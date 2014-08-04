@@ -1525,6 +1525,11 @@ table {
     border-color:#49c3ab;
 }
 
+.btn-info {
+    background-color:#428bca;
+    border-color:#428bca;
+}
+
 /* http://stackoverflow.com/a/21663096/1754586 */
 .btn-xl {
     padding: 18px 28px;

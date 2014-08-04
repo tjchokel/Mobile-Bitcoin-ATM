@@ -108,8 +108,8 @@ class BuyBitcoinForm(forms.Form):
         widget=forms.TextInput(attrs={'style': 'width:55%; display:inline;'}),
     )
 
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
+    def __init__(self, merchant, *args, **kwargs):
+        self.merchant = merchant
         super(BuyBitcoinForm, self).__init__(*args, **kwargs)
 
     def clean_btc_address(self):
@@ -149,8 +149,8 @@ class NoEmailBuyBitcoinForm(forms.Form):
         widget=forms.TextInput(attrs={'style': 'width:55%; display:inline;'}),
     )
 
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
+    def __init__(self, merchant, *args, **kwargs):
+        self.merchant = merchant
         super(NoEmailBuyBitcoinForm, self).__init__(*args, **kwargs)
 
     def clean_btc_address(self):

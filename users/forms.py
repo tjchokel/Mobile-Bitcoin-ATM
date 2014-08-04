@@ -24,8 +24,8 @@ class CustomerRegistrationForm(forms.Form):
         required=False,
         widget=forms.RadioSelect(),
         choices=(
-            ('buy_btc', 'Spend Cash to Buy Bitcoin'),
-            ('sell_btc', 'Sell Bitcoin to Receive Cash'),
+            ('buy_btc', _('Spend Cash to Buy Bitcoin')),
+            ('sell_btc', _('Sell Bitcoin to Receive Cash')),
         ),
     )
 

@@ -2,7 +2,8 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
-import datetime
+
+from annoying.functions import get_object_or_None
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.blockcypher import set_blockcypher_webhook
@@ -10,6 +11,7 @@ from bitcoins.blockcypher import set_blockcypher_webhook
 from emails.trigger import send_and_log
 
 from phones.models import SentSMS
+from emails.models import SentEmail
 
 from countries import BFHCurrenciesList
 
@@ -19,9 +21,10 @@ from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
         format_num_for_printing, btc_to_satoshis)
 
+import datetime
 import json
 import requests
-import math
+
 from decimal import Decimal
 
 
@@ -233,44 +236,6 @@ class BTCTransaction(models.Model):
                 forwarding_address=self.forwarding_address,
                 destination_address__isnull=False)
 
-    def save(self, *args, **kwargs):
-        """
-        Set fiat_amount when this object is first created
-        http://stackoverflow.com/a/2311499/1754586
-        """
-        if self.forwarding_address and not self.destination_address:
-            # Forwarding TXN only
-            if not self.pk:
-                # This only happens if the objects isn't in the database yet.
-                self.currency_code_when_created = self.get_merchant().currency_code
-                self.fiat_amount = self.calculate_fiat_amount()
-
-            if self.meets_minimum_confirmations() and not self.met_minimum_confirmation_at:
-                # Mark it as such
-                self.met_minimum_confirmation_at = now()
-
-                # Send out emails
-                self.send_merchant_txconfirmed_email()
-                self.send_merchant_txconfirmed_sms()
-                self.send_shopper_txconfirmed_email()
-                self.send_shopper_txconfirmed_sms()
-            elif not self.pk:
-                # New (not in DB) and doesn't meet threshold
-                self.send_shopper_newtx_email()
-                self.send_shopper_newtx_sms()
-
-        super(BTCTransaction, self).save(*args, **kwargs)
-
-    def calculate_fiat_amount(self):
-        merchant = self.get_merchant()
-        currency_code = merchant.currency_code
-        fiat_btc = BTCTransaction.get_btc_price(currency_code)
-        basis_points_markup = merchant.basis_points_markup
-        markup_fee = fiat_btc * basis_points_markup / 10000.00
-        fiat_btc = fiat_btc - markup_fee
-        fiat_total = fiat_btc * satoshis_to_btc(self.satoshis)
-        return math.floor(fiat_total*100)/100
-
     def calculate_exchange_rate(self):
         return format_num_for_printing(float(self.fiat_amount) / satoshis_to_btc(self.satoshis), 2)
 
@@ -283,14 +248,15 @@ class BTCTransaction(models.Model):
 
     def get_status(self):
         if self.forwarding_address.paid_out_at:
-            return 'Cash Paid Out'
+            return _('Cash Paid Out')
         if self.met_minimum_confirmation_at:
-            return 'BTC Received'
+            return _('BTC Received')
         else:
-            return 'BTC Pending (%s of %s Confirms Needed)' % (
+            msg = 'BTC Pending (%s of %s Confirms Needed)' % (
                     self.conf_num,
                     self.get_confs_needed(),
                     )
+            return _(msg)
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
@@ -323,7 +289,21 @@ class BTCTransaction(models.Model):
     def get_total_confirmations_required(self):
         return self.get_merchant().minimum_confirmations
 
-    def send_shopper_newtx_email(self):
+    def send_shopper_newtx_email(self, force_resend=False):
+
+        BODY_TEMPLATE = 'shopper/cashout_newtx.html'
+        existing_newtx_email = get_object_or_None(SentEmail,
+                btc_transaction=self, body_template=BODY_TEMPLATE)
+
+        existing_confirmedtx_email = get_object_or_None(SentEmail,
+                btc_transaction=self,
+                body_template='shopper/cashout_txconfirmed.html')
+
+        if existing_newtx_email or existing_confirmedtx_email:
+            if not force_resend:
+                # Protection against double-sending
+                return
+
         shopper = self.get_shopper()
         if shopper and shopper.email:
             merchant = self.get_merchant()
@@ -341,14 +321,24 @@ class BTCTransaction(models.Model):
                     }
             return send_and_log(
                     subject='%s Sent' % satoshis_formatted,
-                    body_template='shopper/cashout_newtx.html',
+                    body_template=BODY_TEMPLATE,
                     to_merchant=None,
                     to_email=shopper.email,
                     to_name=shopper.name,
                     body_context=body_context,
+                    btc_transaction=self,
                     )
 
-    def send_shopper_newtx_sms(self):
+    def send_shopper_newtx_sms(self, force_resend=False):
+
+        existing_newtx_sms = get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_NEW_TX)
+        existing_confirmedtx_sms = get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_TX_CONFIRMED)
+
+        if existing_newtx_sms or existing_confirmedtx_sms:
+            if not force_resend:
+                # Protection against double-sending
+                return
+
         shopper = self.get_shopper()
         if shopper and shopper.phone_num:
             msg = 'You just sent %s to %s. '
@@ -359,14 +349,25 @@ class BTCTransaction(models.Model):
                     self.get_fiat_amount_formatted(),
                     self.get_time_range_in_minutes()
                     )
+            msg = _(msg)
             return SentSMS.send_and_log(
                     phone_num=shopper.phone_num,
                     message=msg,
                     to_user=None,
                     to_merchant=None,
-                    to_shopper=shopper)
+                    to_shopper=shopper,
+                    message_type=SentSMS.SHOPPER_NEW_TX,
+                    btc_transaction=self,
+                    )
 
-    def send_shopper_txconfirmed_email(self):
+    def send_shopper_txconfirmed_email(self, force_resend=False):
+
+        BODY_TEMPLATE = 'shopper/cashout_txconfirmed.html'
+        if get_object_or_None(SentEmail, btc_transaction=self, body_template=BODY_TEMPLATE):
+            if not force_resend:
+                # Protection against double-sending
+                return
+
         shopper = self.get_shopper()
         if shopper and shopper.email:
             merchant = self.get_merchant()
@@ -382,14 +383,21 @@ class BTCTransaction(models.Model):
                     }
             return send_and_log(
                     subject='%s Confirmed' % satoshis_formatted,
-                    body_template='shopper/cashout_txconfirmed.html',
+                    body_template=BODY_TEMPLATE,
                     to_merchant=None,
                     to_email=shopper.email,
                     to_name=shopper.name,
                     body_context=body_context,
+                    btc_transaction=self,
                     )
 
-    def send_shopper_txconfirmed_sms(self):
+    def send_shopper_txconfirmed_sms(self, force_resend=False):
+
+        if get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_TX_CONFIRMED):
+            if not force_resend:
+                # Protection against double-sending
+                return
+
         shopper = self.get_shopper()
         if shopper and shopper.phone_num:
             msg = 'The %s you sent to %s has been confirmed. They now owe you %s.'
@@ -398,15 +406,26 @@ class BTCTransaction(models.Model):
                     self.get_merchant().business_name,
                     self.get_fiat_amount_formatted(),
                     )
+            msg = _(msg)
             return SentSMS.send_and_log(
                     phone_num=shopper.phone_num,
                     message=msg,
                     to_user=None,
                     to_merchant=None,
-                    to_shopper=shopper)
+                    to_shopper=shopper,
+                    message_type=SentSMS.SHOPPER_TX_CONFIRMED,
+                    btc_transaction=self,
+                    )
 
-    def send_merchant_txconfirmed_email(self):
+    def send_merchant_txconfirmed_email(self, force_resend=False):
         # TODO: allow for notification settings
+
+        BODY_TEMPLATE = 'merchant/shopper_cashout.html'
+        if get_object_or_None(SentEmail, btc_transaction=self, body_template=BODY_TEMPLATE):
+            if not force_resend:
+                # Protection against double-sending
+                return
+
         merchant = self.get_merchant()
         shopper = self.get_shopper()
         satoshis_formatted = self.format_satoshis_amount()
@@ -422,14 +441,21 @@ class BTCTransaction(models.Model):
             subject += 'from %s' % shopper.name
             body_context['shopper_name'] = shopper.name
         return send_and_log(
-                body_template='merchant/shopper_cashout.html',
+                body_template=BODY_TEMPLATE,
                 subject='%s Received' % satoshis_formatted,
                 to_merchant=merchant,
                 body_context=body_context,
+                btc_transaction=self,
                 )
 
-    def send_merchant_txconfirmed_sms(self):
+    def send_merchant_txconfirmed_sms(self, force_resend=False):
         # TODO: allow for notification settings
+
+        if get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.MERCHANT_TX_CONFIRMED):
+            if not force_resend:
+                # Protection against double-sending
+                return
+
         merchant = self.get_merchant()
         if merchant.phone_num:
             msg = 'The %s you received from %s has been confirmed. Please pay them %s immediately.'
@@ -443,12 +469,56 @@ class BTCTransaction(models.Model):
                     customer_string,
                     self.get_fiat_amount_formatted(),
                     )
+            msg = _(msg)
             return SentSMS.send_and_log(
                     phone_num=merchant.phone_num,
                     message=msg,
                     to_user=merchant.user,
                     to_merchant=merchant,
-                    to_shopper=shopper)
+                    to_shopper=shopper,
+                    message_type=SentSMS.MERCHANT_TX_CONFIRMED,
+                    btc_transaction=self,
+                    )
+
+    def send_all_txconfirmed_notifications(self, force_resend=False):
+        """
+        Send out all notifications, and continue to the next one in the event of an error.
+
+        TODO: better logging for these edge cases
+
+        """
+        try:
+            self.send_merchant_txconfirmed_email(force_resend=False)
+        except Exception as e:
+            print 'Error was: %s' % e
+        try:
+            self.send_merchant_txconfirmed_sms(force_resend=False)
+        except Exception as e:
+            print 'Error was: %s' % e
+        try:
+            self.send_shopper_txconfirmed_email(force_resend=False)
+        except Exception as e:
+            print 'Error was: %s' % e
+        try:
+            self.send_shopper_txconfirmed_sms(force_resend=False)
+        except Exception as e:
+            print 'Error was: %s' % e
+
+    def send_all_newtx_notifications(self, force_resend=False):
+        """
+        Send out all notifications, and continue to the next one in the event of an error.
+
+        TODO: better logging for these edge cases
+
+        """
+        try:
+            self.send_shopper_newtx_email(force_resend=False)
+        except Exception as e:
+            print 'Error was: %s' % e
+        try:
+            self.send_shopper_newtx_sms(force_resend=False)
+        except Exception as e:
+            print 'Error was: %s' % e
 
     def get_type(self):
         return _('Bought BTC')

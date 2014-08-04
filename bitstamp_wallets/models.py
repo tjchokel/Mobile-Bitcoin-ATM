@@ -202,6 +202,12 @@ class BTSCredential(BaseCredential):
 
             self.mark_success()
 
+            if set_as_merchant_address:
+                self.merchant.set_destination_address(dest_address=address,
+                        credential_used=self)
+
+            return address
+
         except Exception as e:
             # Log the API call
             APICall.objects.create(
@@ -217,11 +223,7 @@ class BTSCredential(BaseCredential):
 
             print 'Error was: %s' % e
 
-        if set_as_merchant_address:
-            self.merchant.set_destination_address(dest_address=address,
-                    credential_used=self)
-
-        return address
+            return None
 
     def get_best_receiving_address(self, set_as_merchant_address=False):
         " Get existing receiving address (no way to get a new one with BTS) "

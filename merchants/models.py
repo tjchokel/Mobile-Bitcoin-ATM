@@ -8,13 +8,15 @@ from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from phonenumber_field.modelfields import PhoneNumberField
-from bitcoins.models import DestinationAddress, ShopperBTCPurchase
+from bitcoins.models import DestinationAddress, ShopperBTCPurchase, BTCTransaction
 
 from emails.trigger import send_and_log
 
-from utils import format_satoshis_with_units, mbtc_to_satoshis
+from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
+
+import math
 
 
 class Merchant(models.Model):
@@ -266,6 +268,16 @@ class Merchant(models.Model):
                 to_merchant=self,
                 body_context=body_context,
                 )
+
+    def calculate_fiat_amount(self, satoshis):
+        """
+        Calculates the fiat amount that X satoshis gets you right now.
+        """
+        fiat_btc = BTCTransaction.get_btc_price(self.currency_code)
+        markup_fee = fiat_btc * self.basis_points_markup / 10000.00
+        fiat_btc = fiat_btc - markup_fee
+        fiat_total = fiat_btc * satoshis_to_btc(satoshis)
+        return math.floor(fiat_total*100)/100
 
 
 class OpenTime(models.Model):

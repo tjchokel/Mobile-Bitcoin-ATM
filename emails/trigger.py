@@ -63,7 +63,8 @@ def append_qs(html, qs_dict, link_text):
 # TODO: create non-blocking queue system and move email sending to queue
 def send_and_log(subject, body_template, to_merchant=None, to_email=None,
         to_name=None, body_context={}, from_name=None, from_email=None,
-        cc_name=None, cc_email=None, replyto_name=None, replyto_email=None):
+        cc_name=None, cc_email=None, replyto_name=None, replyto_email=None,
+        btc_transaction=None):
     """
     Send and log an email
     """
@@ -129,7 +130,9 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
             cc_email=cc_email,
             body_template=body_template,
             body_context=body_context,
-            subject=subject)
+            subject=subject,
+            btc_transaction=btc_transaction
+            )
 
     # Send email object
     pm.send()

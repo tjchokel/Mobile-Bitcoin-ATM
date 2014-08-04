@@ -12,7 +12,7 @@
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Business Info" %}</a>
+            <a style="color:#515151;" href="#">{% trans "Public Business Info" %}</a>
             <a href="#" onclick="editMerchantInfo();" id="merchant-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="merchant-info-list" class="table">
@@ -124,7 +124,7 @@
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Owner Info"%} <small>({% trans "Private - for Transaction Notifications"%})</small></a>
+            <a style="color:#515151;" href="#">{% trans "Private Owner Info"%} <small>{% trans "(for Transaction Notifications)"%}</small></a>
             <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="personal-info-list" class="table">
@@ -157,7 +157,9 @@
       </div>
 
     <div>
-      <a href="{% url 'promotional_material' %}">Download Bitcoin Posters for Your Business</a>
+      <a href="{% url 'promotional_material' %}">
+        {% trans "Download Bitcoin Posters for Your Business" %}
+      </a>
     </div>
 
     </div>

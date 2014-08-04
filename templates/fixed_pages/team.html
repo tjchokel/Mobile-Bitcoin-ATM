@@ -56,7 +56,17 @@
       </div>
     </div>
   </div>
+  <div class="col-sm-10 col-sm-offset-1">
+    <p class="lead text-center">
+      {% url 'jobs' as jobs_url %}
+      {% blocktrans %}
+        Interested in joining a scrappy, funded startup in the Bitcoin space?
+        Check out <a href="{{jobs_url}}">our jobs page</a> to find out more.
+      {% endblocktrans %}
+    </p>
+  </div>
 </div>
+
 {% endblock content %}
 {% block static_page_footer %}
   <br/><br/><br/><br/>

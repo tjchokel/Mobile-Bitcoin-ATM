@@ -213,12 +213,24 @@ def process_blockcypher_webhook(request, random_id):
 
             else:
                 # Increase conf_num
-                fwd_btc_txn.conf_num = confirmations
                 if confirmations >= 6 and not fwd_btc_txn.irreversible_by:
                     fwd_btc_txn.irreversible_by = now()
+                fwd_btc_txn.conf_num = confirmations
                 fwd_btc_txn.save()
+
+                if fwd_btc_txn.meets_minimum_confirmations() and not fwd_btc_txn.met_minimum_confirmation_at:
+                    # Mark it as such
+                    fwd_btc_txn.met_minimum_confirmation_at = now()
+                    fwd_btc_txn.save()
+
+                    # send out emails
+                    fwd_btc_txn.send_all_txconfirmed_notifications(force_resend=False)
+
         else:
             # Didn't have TXN in DB
+
+            satoshis = output['value']
+            fiat_amount = forwarding_obj.merchant.calculate_fiat_amount(satoshis=satoshis)
 
             # Confirmations logic
             if confirmations >= 6:
@@ -228,13 +240,29 @@ def process_blockcypher_webhook(request, random_id):
                 irreversible_by = None
 
             # Create TX
-            BTCTransaction.objects.create(
+            fwd_txn = BTCTransaction.objects.create(
                     txn_hash=txn_hash,
-                    satoshis=output['value'],
+                    satoshis=satoshis,
                     conf_num=confirmations,
                     irreversible_by=irreversible_by,
                     forwarding_address=forwarding_obj,
+                    currency_code_when_created=forwarding_obj.merchant.currency_code,
+                    fiat_amount=fiat_amount,
                     )
+
+            # Send out shopper/merchant emails
+            if fwd_txn.meets_minimum_confirmations():
+                # This shouldn't be the case, but it's a protection from things falling behind
+
+                # Mark it as such
+                fwd_btc_txn.met_minimum_confirmation_at = now()
+                fwd_btc_txn.save()
+
+                # Send confirmed notifications only (no need to send newtx notifications)
+                fwd_txn.send_all_txconfirmed_notifications(force_resend=False)
+            else:
+                # It's new *and* not yet confirmed, this is what we expect
+                fwd_txn.send_all_newtx_notifications(force_resend=False)
 
     return HttpResponse("*ok*")
 

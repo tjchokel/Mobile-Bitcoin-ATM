@@ -4,6 +4,8 @@ from annoying.functions import get_object_or_None
 from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.translation import ugettext as _
+from django.contrib import messages
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
@@ -320,6 +322,8 @@ def merchant_complete_deposit(request):
         address.save()
         del request.session['forwarding_address']
 
+        msg = _("Transaction complete. You can always see your transaction history by clicking the Admin button below.")
+        messages.success(request, msg)
     return HttpResponse(json.dumps({}), content_type='application/json')
 
 
@@ -340,6 +344,9 @@ def cancel_address(request):
     address.save()
     del request.session['forwarding_address']
 
+    msg = _("Your request has been cancelled")
+    messages.success(request, msg)
+
     return HttpResponse(json.dumps({}), content_type='application/json')
 
 
@@ -352,4 +359,7 @@ def cancel_buy(request):
     assert buy_request, 'No buy request to cancel'
     buy_request.cancelled_at = now()
     buy_request.save()
+
+    msg = _("Your buy request has been cancelled")
+    messages.success(request, msg)
     return HttpResponse(json.dumps({}), content_type='application/json')

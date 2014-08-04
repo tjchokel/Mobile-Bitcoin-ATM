@@ -188,13 +188,21 @@
           $("#fiat-amt").text(data['no_markup_price']);
           $(".currency-code").text(data['currency_code']);
           $(".percent-markup").text(data['markup']);
-          $("#buy-price").text(data['buy_price_no_format']);
-          $("#sell-price").text(data['sell_price_no_format']);
-          $(".currency_symbol").text(data['currency_symbol']);
+          $("#buy-price").data('price-data', data['buy_price_no_format']);
+          $("#sell-price").data('price-data', data['sell_price_no_format']);
+          
 
+          $("#buy-price").text(data['buy_price']);
+          $("#sell-price").text(data['sell_price']);
+          // $("#buy-price").text(data['buy_price_no_format']);
+          // $("#sell-price").text(data['sell_price_no_format']);
+          
+          // $(".currency_symbol").text(data['currency_symbol']);
+
+          console.log(data);
           var entered_amount = $('#id_amount').val();
           if (entered_amount){
-            var buy_price_no_format = parseFloat($('#buy-price').text());
+            var buy_price_no_format = parseFloat($('#buy-price').data('price-data'));
             var final_btc = parseFloat(entered_amount) / buy_price_no_format;
             var final_mbtc = final_btc * 1000;
 
@@ -277,7 +285,7 @@
           $("#div_id_btc_address").removeClass("hidden");
         }
         var entered_amount = $('#id_amount').val();
-        var buy_price_no_format = parseFloat($('#buy-price').text());
+        var buy_price_no_format = parseFloat($('#buy-price').data('price-data'));
         var final_btc = parseFloat(entered_amount) / buy_price_no_format;
         var final_mbtc = final_btc * 1000;
         

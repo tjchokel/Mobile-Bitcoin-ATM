@@ -31,6 +31,8 @@ class Merchant(models.Model):
     phone_num = PhoneNumberField(blank=True, null=True, db_index=True)
     currency_code = models.CharField(max_length=5, blank=False, null=False, db_index=True, choices=BFH_CURRENCY_DROPDOWN)
     basis_points_markup = models.IntegerField(blank=True, null=True, db_index=True, default=100)
+    sell_btc_markup = models.IntegerField(blank=True, null=True, db_index=True)
+    buy_btc_markup = models.IntegerField(blank=True, null=True, db_index=True)
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
     max_mbtc_shopper_purchase = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
     max_mbtc_shopper_sale = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
@@ -105,6 +107,18 @@ class Merchant(models.Model):
 
     def get_percent_markup(self):
         return self.basis_points_markup / 100.00
+
+    def get_buy_btc_percent_markup(self):
+        if self.buy_btc_markup:
+            return self.buy_btc_markup / 100.00
+        else:
+            return self.basis_points_markup / 100.00
+
+    def get_sell_btc_percent_markup(self):
+        if self.sell_btc_markup:
+            return self.sell_btc_markup / 100.00
+        else:
+            return self.basis_points_markup / 100.00
 
     def get_currency_symbol(self):
         if self.currency_code:
@@ -274,7 +288,7 @@ class Merchant(models.Model):
         Calculates the fiat amount that X satoshis gets you right now.
         """
         fiat_btc = BTCTransaction.get_btc_price(self.currency_code)
-        markup_fee = fiat_btc * self.basis_points_markup / 10000.00
+        markup_fee = fiat_btc * self.get_sell_btc_percent_markup() / 100.00
         fiat_btc = fiat_btc - markup_fee
         fiat_total = fiat_btc * satoshis_to_btc(satoshis)
         return math.floor(fiat_total*100)/100

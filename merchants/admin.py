@@ -24,6 +24,8 @@ class MerchantAdmin(admin.ModelAdmin):
         'zip_code',
         'phone_num',
         'basis_points_markup',
+        'sell_btc_markup',
+        'buy_btc_markup',
         'website',
     )
     raw_id_fields = ('user', )

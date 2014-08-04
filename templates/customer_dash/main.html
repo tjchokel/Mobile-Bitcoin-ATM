@@ -187,7 +187,8 @@
 
           $("#fiat-amt").text(data['no_markup_price']);
           $(".currency-code").text(data['currency_code']);
-          $(".percent-markup").text(data['markup']);
+          $(".buy-percent-markup").text(data['buy_markup_percent']);
+          $(".sell-percent-markup").text(data['sell_markup_percent']);
           $("#buy-price").text(data['buy_price_no_format']);
           $("#sell-price").text(data['sell_price_no_format']);
           $(".currency_symbol").text(data['currency_symbol']);

@@ -23,12 +23,16 @@
                 <td align="right">{{merchant.get_currency_code_display}}</td>
               </tr>
               <tr>
-                <td class="text-muted">{% trans "Percent Markup" %}</td>
-                <td align="right">{{merchant.get_percent_markup}}%</td>
-              </tr>
-              <tr>
                 <td class="text-muted">{% trans "Your BTC Address" %}</td>
                 <td align="right">{{dest_address.b58_address}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Percent Markup (Selling Bitcoin)" %}</td>
+                <td align="right">{{merchant.get_sell_btc_percent_markup}}%</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Percent Markup (Buying Bitcoin)" %}</td>
+                <td align="right">{{merchant.get_buy_btc_percent_markup}}%</td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Max Shopper Purchase" %}</td>

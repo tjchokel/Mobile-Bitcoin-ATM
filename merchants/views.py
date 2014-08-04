@@ -234,7 +234,8 @@ def merchant_settings(request):
 
     initial['currency_code'] = merchant.currency_code
     initial['btc_address'] = dest_address.b58_address
-    initial['btc_markup'] = merchant.basis_points_markup / 100.0
+    initial['buy_btc_markup'] = merchant.get_buy_btc_percent_markup()
+    initial['sell_btc_markup'] = merchant.get_sell_btc_percent_markup()
     initial['max_mbtc_shopper_purchase'] = merchant.max_mbtc_shopper_purchase
     initial['max_mbtc_shopper_sale'] = merchant.max_mbtc_shopper_sale
     bitcoin_form = BitcoinInfoForm(initial=initial)
@@ -436,7 +437,9 @@ def edit_bitcoin_info(request):
             merchant.currency_code = form.cleaned_data['currency_code']
             merchant.max_mbtc_shopper_sale = form.cleaned_data['max_mbtc_shopper_sale']
             merchant.max_mbtc_shopper_purchase = form.cleaned_data['max_mbtc_shopper_purchase']
-            merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
+            # merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
+            merchant.sell_btc_markup = form.cleaned_data['sell_btc_markup'] * 100
+            merchant.buy_btc_markup = form.cleaned_data['buy_btc_markup'] * 100
             merchant.save()
             merchant.set_destination_address(
                     dest_address=form.cleaned_data['btc_address'],

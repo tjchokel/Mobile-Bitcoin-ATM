@@ -190,7 +190,6 @@
           $(".percent-markup").text(data['markup']);
           $("#buy-price").data('price-data', data['buy_price_no_format']);
           $("#sell-price").data('price-data', data['sell_price_no_format']);
-          
 
           $("#buy-price").text(data['buy_price']);
           $("#sell-price").text(data['sell_price']);
@@ -283,7 +282,7 @@
         var buy_price_no_format = parseFloat($('#buy-price').data('price-data'));
         var final_btc = parseFloat(entered_amount) / buy_price_no_format;
         var final_mbtc = final_btc * 1000;
-        
+
         $("#btc-amount").html(' ≈ '+final_mbtc.toFixed(1) +' mBTC');
         $("#submit-button").prop('disabled', false);
       }
@@ -368,10 +367,27 @@
         {% endif %}
 
       {% endif %}
-
       {% if buy_request %}
         set_expires_at_time();
       {% endif %}
+
+
+      function approximate_rounding(quantity) {
+        {# Function used to pre-seed the local currency entry field #}
+        quantity_string = Math.round(quantity).toString()
+        var digits = quantity_string.length;
+        return quantity_string[0] + Array(digits).join("0");
+      }
+
+      $('#buy-bitcoin-modal').on('shown.bs.modal', function () {
+        $('#id_amount').focus();
+        if(!$('#id_amount').val()){
+          {# Pre-seed to 100 mBTC (may be a little less due to rounding) #}
+          $('#id_amount').val(approximate_rounding($('#buy-price').data().priceData/10));
+          $('#id_amount').trigger('keyup');
+        }
+      })
+
     });
   </script>
 

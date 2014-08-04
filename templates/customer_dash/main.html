@@ -380,12 +380,12 @@
       }
 
       $('#buy-bitcoin-modal').on('shown.bs.modal', function () {
-        $('#id_amount').focus();
         if(!$('#id_amount').val()){
           {# Pre-seed to 100 mBTC (may be a little less due to rounding) #}
           $('#id_amount').val(approximate_rounding($('#buy-price').data().priceData/10));
           $('#id_amount').trigger('keyup');
         }
+        $('#id_amount').focus();
       })
 
     });

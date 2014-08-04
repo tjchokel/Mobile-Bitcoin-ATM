@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator
 from countries import COUNTRY_DROPDOWN
 from decimal import Decimal
 
@@ -83,7 +83,7 @@ class BuyBitcoinForm(forms.Form):
     amount = forms.DecimalField(
         label=_('Amount of Cash to Pay'),
         required=True,
-        validators=[MinValueValidator(1.0), MaxValueValidator(1000.0)],
+        validators=[MinValueValidator(1.0), ],
         help_text=_('This is what you will give to the cashier'),
         widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0.00', 'style': 'width:50%;'}),
     )
@@ -129,7 +129,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
     amount = forms.DecimalField(
         label=_('Amount of Cash to Pay'),
         required=True,
-        validators=[MinValueValidator(1.0), MaxValueValidator(1000.0)],
+        validators=[MinValueValidator(1.0), ],
         help_text=_('This is what you will give to the cashier'),
         widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0.00', 'style': 'width:50%;'}),
     )

@@ -598,6 +598,12 @@ class ShopperBTCPurchase(models.Model):
         satoshis = btc_to_satoshis(total_btc)
         return satoshis
 
+    def get_b58_address_or_email(self):
+        " Get the base 58 email address if it exists, otherwise the email "
+        if self.b58_address:
+            return self.b58_address
+        return self.shopper.email
+
     def format_mbtc_amount(self):
         return format_mbtc(satoshis_to_mbtc(self.satoshis))
 

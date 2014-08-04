@@ -52,7 +52,7 @@ def clean_amount(self):
     DRY-ing it out here
     """
     amount = self.cleaned_data.get('amount')
-    merchant = self.user.get_merchant()
+    merchant = self.merchant
 
     # Check if amount exceeds merhcant's buy limit
     max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase

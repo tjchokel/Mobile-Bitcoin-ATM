@@ -56,7 +56,7 @@ def clean_amount(self):
 
     # Check if amount exceeds merhcant's buy limit
     max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase
-    btc_price = Decimal(BTCTransaction.get_btc_price(merchant.currency_code))
+    btc_price = Decimal(BTCTransaction.get_btc_market_price(merchant.currency_code))
     amount_in_mbtc = (amount / btc_price) * 1000
     if max_mbtc_shopper_purchase < amount_in_mbtc:
         msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)

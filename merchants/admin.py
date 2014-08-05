@@ -24,6 +24,8 @@ class MerchantAdmin(admin.ModelAdmin):
         'zip_code',
         'phone_num',
         'basis_points_markup',
+        'cashin_markup_in_bps',
+        'cashout_markup_in_bps',
         'website',
     )
     raw_id_fields = ('user', )

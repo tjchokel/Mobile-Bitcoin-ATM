@@ -591,7 +591,7 @@ class ShopperBTCPurchase(models.Model):
         merchant = self.merchant
         currency_code = self.currency_code_when_created
         fiat_btc = BTCTransaction.get_btc_market_price(currency_code)
-        basis_points_markup = merchant.basis_points_markup
+        basis_points_markup = merchant.get_cashin_percent_markup() * 100.00
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc + markup_fee
         total_btc = self.fiat_amount / Decimal(fiat_btc)

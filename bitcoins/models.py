@@ -626,7 +626,7 @@ class ShopperBTCPurchase(models.Model):
         self.funds_sent_at = now()
         self.save()
 
-        if send_receipt:
+        if send_receipt and not error_string:
             self.send_shopper_receipt()
             self.send_merchant_receipt()
 
@@ -696,7 +696,6 @@ class ShopperBTCPurchase(models.Model):
         self.save()
 
         return email
-        pass
 
     def expires_at_unix_time(self):
         return int(self.expires_at.strftime('%s'))

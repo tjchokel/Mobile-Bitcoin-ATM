@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
+STANDARD_TX_FEE_IN_SATOSHIS = 10**4
 
 
 def satoshis_to_btc(satoshis):
@@ -59,10 +60,19 @@ def format_mbtc_rounded(mbtc):
 
 
 def format_fiat_amount(amount, currency_symbol, currency_code=None):
-    if currency_code:
-        return "%s%s %s" % (currency_symbol, '{:,.2f}'.format(amount), currency_code)
+    """
+    Utility function for printing
+    """
+    if amount > 10000:
+        # No decimal places for large numbers
+        amount_formatted = '%s' % '{:,.0f}'.format(round(amount, 0))
     else:
-        return "%s%s" % (currency_symbol, '{:,.2f}'.format(amount))
+        amount_formatted = '%s' % '{:,.2f}'.format(amount)
+
+    if currency_code:
+        return "%s%s %s" % (currency_symbol, amount_formatted, currency_code)
+    else:
+        return "%s%s" % (currency_symbol, amount_formatted)
 
 
 def format_satoshis_with_units(satoshis):

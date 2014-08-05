@@ -45,7 +45,7 @@ def get_bitcoin_price(request):
     merchant = user.get_merchant()
     currency_code = merchant.currency_code
     currency_symbol = merchant.get_currency_symbol()
-    fiat_btc = BTCTransaction.get_btc_price(currency_code)
+    fiat_btc = BTCTransaction.get_btc_market_price(currency_code)
     basis_points_markup = merchant.basis_points_markup
     markup_fee = fiat_btc * basis_points_markup / 10000.00
     buy_price = fiat_btc + markup_fee

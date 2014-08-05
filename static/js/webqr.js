@@ -201,7 +201,7 @@ function sourceSelected(audioSource, videoSource) {
 
 function setwebcam()
 {
-    document.getElementById("result").innerHTML='<span style="color:green;">Please allow access to your device camera</span>';
+    document.getElementById("result").innerHTML='<span style="color:green;">Please click above to activate your camera.</span>';
     if(stype==1)
     {
         setTimeout(captureToCanvas, 300);    

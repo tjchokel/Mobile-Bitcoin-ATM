@@ -273,7 +273,7 @@ class Merchant(models.Model):
         """
         Calculates the fiat amount that X satoshis gets you right now.
         """
-        fiat_btc = BTCTransaction.get_btc_price(self.currency_code)
+        fiat_btc = BTCTransaction.get_btc_market_price(self.currency_code)
         markup_fee = fiat_btc * self.basis_points_markup / 10000.00
         fiat_btc = fiat_btc - markup_fee
         fiat_total = fiat_btc * satoshis_to_btc(satoshis)

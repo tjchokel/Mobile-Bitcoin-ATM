@@ -46,9 +46,9 @@ def customer_dashboard(request):
     buy_request = merchant.get_bitcoin_purchase_request()
 
     if merchant.has_valid_coinbase_credentials():
-        buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, user=user)
+        buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, merchant=merchant)
     else:
-        buy_form = NoEmailBuyBitcoinForm(user=user)
+        buy_form = NoEmailBuyBitcoinForm(merchant=merchant)
     password_form = ConfirmPasswordForm(user=user)
     shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
     override_confirmation_form = ConfirmPasswordForm(user=user)
@@ -62,9 +62,9 @@ def customer_dashboard(request):
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
             if merchant.has_valid_coinbase_credentials():
-                buy_form = BuyBitcoinForm(data=request.POST, user=user)
+                buy_form = BuyBitcoinForm(data=request.POST, merchant=merchant)
             else:
-                buy_form = NoEmailBuyBitcoinForm(data=request.POST, user=user)
+                buy_form = NoEmailBuyBitcoinForm(data=request.POST, merchant=merchant)
             if buy_form.is_valid():
                 if merchant.has_valid_coinbase_credentials():
                     email_or_btc_address = buy_form.cleaned_data['email_or_btc_address']

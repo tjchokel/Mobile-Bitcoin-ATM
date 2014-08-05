@@ -552,18 +552,14 @@
               </p>
               <p>
                 {% blocktrans %}
-                  We're working on two beta features to address this, please
-                  <a href="{{ contact_url }}">contact us</a>
-                  if you'd like to pilot them:
+                  We're working on two beta features to address this:
                 {% endblocktrans %}
               </p>
               <ul>
                 <li>
-                  {% blocktrans with cb_instant_url='http://blog.coinbase.com/post/55203204550/instant-bitcoin-purchases-at-coinbase' %}
-                    <b>Instant buy with Coinbase</b>.
-                    If you have a verified account with Coinbase
-                    (<a href="{{ cb_instant_url }}">more info</a>),
-                    you can keep 0 BTC in stock and instant buy it as needed to send to customers in your store.
+                  {% blocktrans %}
+                    <b>BTC Price Locking</b>.
+                    We're working with a third party service to lock bitcoin value (in USD, EUR or gold) so you don't have to worry about day-to-day flucations in the value of your bitcoin.
                   {% endblocktrans %}
                 </li>
                 <li>
@@ -573,7 +569,13 @@
                     More exchanges coming soon.
                   {% endblocktrans %}
                 </li>
-              </ul>
+              <ul>
+              <p>
+                {% blocktrans %}
+                  Please <a href="{{ contact_url }}">contact us</a>
+                  if you'd like to pilot either of these new features.
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>

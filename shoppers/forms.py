@@ -7,7 +7,7 @@ from decimal import Decimal
 from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction
 
-from utils import clean_phone_num, STANDARD_TX_FEE_IN_SATOSHIS
+from utils import clean_phone_num, STANDARD_TX_FEE_IN_SATOSHIS, mbtc_to_satoshis
 
 from unidecode import unidecode
 
@@ -71,7 +71,7 @@ def clean_amount(self):
             # That's worth it here for simplicity and not having to make 2 API calls
             msg = _("Sorry, the business API credentials for %s are invalid." % credential.get_credential_to_display())
             raise forms.ValidationError(msg)
-        elif balance < (float(amount)*1.01 + 2*STANDARD_TX_FEE_IN_SATOSHIS):
+        elif balance < (mbtc_to_satoshis(float(amount))*1.01 + 2*STANDARD_TX_FEE_IN_SATOSHIS):
             # The 1% increase is hackey buffer for the fact that the price isn't locked in.
             # The 2x standard fee is a hackey buffer for the fees
             msg = _("Sorry, the amount you entered exceeds the available balance")

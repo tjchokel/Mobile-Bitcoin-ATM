@@ -524,7 +524,7 @@ class BTCTransaction(models.Model):
         return _('Bought BTC')
 
     @staticmethod
-    def get_btc_price(currency_code):
+    def get_btc_market_price(currency_code):
         if currency_code in CAPITAL_CONTROL_COUNTRIES:
             url = 'https://conectabitcoin.com/en/market_prices.json'
             r = requests.get(url)
@@ -590,13 +590,19 @@ class ShopperBTCPurchase(models.Model):
     def get_satoshis_from_fiat(self):
         merchant = self.merchant
         currency_code = self.currency_code_when_created
-        fiat_btc = BTCTransaction.get_btc_price(currency_code)
+        fiat_btc = BTCTransaction.get_btc_market_price(currency_code)
         basis_points_markup = merchant.get_buy_btc_percent_markup() * 100.00
         markup_fee = fiat_btc * basis_points_markup / 10000.00
         fiat_btc = fiat_btc + markup_fee
         total_btc = self.fiat_amount / Decimal(fiat_btc)
         satoshis = btc_to_satoshis(total_btc)
         return satoshis
+
+    def get_b58_address_or_email(self):
+        " Get the base 58 email address if it exists, otherwise the email "
+        if self.b58_address:
+            return self.b58_address
+        return self.shopper.email
 
     def format_mbtc_amount(self):
         return format_mbtc(satoshis_to_mbtc(self.satoshis))

@@ -76,8 +76,8 @@
       <h4>For Both Customers & Businesses</h4>
         <ul>
           <li><a href="#coinsafe_overview">{% trans "What Does CoinSafe Do?" %}</a></li>
-          <li><a href="#transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a></li>
           <li><a href="#language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a></li>
+          <li><a href="#transaction_fee">{% trans "Who Pays the Bitcoin Network Transaction Fee?" %}</a></li>
           <li><a href="#responsible_disclosure">{% trans "Does CoinSafe Have a Responsible Disclosure Policy?" %}</a></li>
           <li><a href="#altcoin_support">{% trans "Does CoinSafe Support Any Altcoins?" %}</a></li>
         </ul>
@@ -552,18 +552,14 @@
               </p>
               <p>
                 {% blocktrans %}
-                  We're working on two beta features to address this, please
-                  <a href="{{ contact_url }}">contact us</a>
-                  if you'd like to pilot them:
+                  We're working on two beta features to address this:
                 {% endblocktrans %}
               </p>
               <ul>
                 <li>
-                  {% blocktrans with cb_instant_url='http://blog.coinbase.com/post/55203204550/instant-bitcoin-purchases-at-coinbase' %}
-                    <b>Instant buy with Coinbase</b>.
-                    If you have a verified account with Coinbase
-                    (<a href="{{ cb_instant_url }}">more info</a>),
-                    you can keep 0 BTC in stock and instant buy it as needed to send to customers in your store.
+                  {% blocktrans %}
+                    <b>BTC Price Locking</b>.
+                    We're working with a third party service to lock bitcoin value (in USD, EUR or gold) so you don't have to worry about day-to-day flucations in the value of your bitcoin.
                   {% endblocktrans %}
                 </li>
                 <li>
@@ -573,7 +569,13 @@
                     More exchanges coming soon.
                   {% endblocktrans %}
                 </li>
-              </ul>
+              <ul>
+              <p>
+                {% blocktrans %}
+                  Please <a href="{{ contact_url }}">contact us</a>
+                  if you'd like to pilot either of these new features.
+                {% endblocktrans %}
+              </p>
             </div>
           </div>
         </div>
@@ -830,6 +832,33 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
+              <a class="anchor" id="language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a>
+            </h4>
+          </div>
+          <div class="panel-collapse">
+            <div class="panel-body">
+              <p>
+                {% blocktrans with translation_url='https://poeditor.com/join/project?hash=cf5d94bbb78d8606144ae977109a4398' %}
+                  We're working on it! You can see the list of languages we are trying to translate and submit your own translations
+                  <a href="{{ translation_url }}">here</a>.
+                  We'd love your help in bringing bitcoin to the masses!
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans with translation_url='https://poeditor.com/join/project?hash=cf5d94bbb78d8606144ae977109a4398' %}
+                  Currently we're live in Spanish (you can change the language in the upper right of your screen) and we're working to add support for
+                  <a href="{{ translation_url }}">many more languages</a>.
+                  If there's a language you'd like us to support, please <a href="{{ contact_url }}">let us know</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
               <a class="anchor" id="responsible_disclosure">{% trans "Does CoinSafe Have a Responsible Disclosure Policy?" %}</a>
             </h4>
           </div>
@@ -846,30 +875,6 @@
           </div>
         </div>
         <p style="text-align:right"><a href="#">Back to Top</a></p>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a class="anchor" id="language_translation">{% trans "Is CoinSafe Available in My Native Language?" %}</a>
-            </h4>
-          </div>
-          <div class="panel-collapse">
-            <div class="panel-body">
-              <p>
-                {% blocktrans %}
-                  We're working on it!
-                {% endblocktrans %}
-              </p>
-              <p>
-                {% blocktrans %}
-                  Currently we're testing Spanish with some customers in our beta program, and we're going to add support for more languages soon.
-                  If there's a language you'd like us to support, please <a href="{{ contact_url }}">let us know</a>.
-                {% endblocktrans %}
-              </p>
-            </div>
-          </div>
-        </div>
-        <p style="text-align:right"><a href="#">{% trans "Back to Top" %}</a></p>
 
         <div class="panel panel-default">
           <div class="panel-heading">

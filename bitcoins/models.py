@@ -570,7 +570,7 @@ class ShopperBTCPurchase(models.Model):
     objects = ShopperBTCPurchaseManager()
 
     def __str__(self):
-        return '%s: %s' % (self.id, self.added_at)
+        return '%s: %s with %s' % (self.id, self.added_at[:16], self.merchant)
 
     def save(self, *args, **kwargs):
         """

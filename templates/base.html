@@ -99,14 +99,17 @@
                       {% endfor %}
                     </select>
                     <br/>
+                    <div class="button-wrapper">
+                      <button type="submit" class="btn btn-primary">{% trans "Set Language" %}</button>
+                    </div>
+                    <br />
                     <p>
+                      {% trans "Translations are currently in Beta."%}
+                      <br />
                       <a href="{% url 'help' %}#language_translation">
                         {% trans 'More languages?' %}
                       </a>
                     </p>
-                    <div class="button-wrapper">
-                      <button type="submit" class="btn btn-primary">{% trans "Set Language" %}</button>
-                    </div>
                   </form>
                   <div class="clearfix"></div>
                 </li>

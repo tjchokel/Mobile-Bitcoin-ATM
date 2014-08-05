@@ -621,9 +621,11 @@ class ShopperBTCPurchase(models.Model):
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
+
         self.btc_transaction = btc_txn
-        self.confirmed_by_merchant_at = now()
-        self.funds_sent_at = now()
+        if not error_string:
+            self.confirmed_by_merchant_at = now()
+            self.funds_sent_at = now()
         self.save()
 
         if send_receipt and not error_string:

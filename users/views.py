@@ -140,11 +140,18 @@ def customer_dashboard(request):
             if buy_request:
                 password_form = ConfirmPasswordForm(user=user, data=request.POST)
                 if password_form.is_valid():
-                    buy_request.pay_out_bitcoin(send_receipt=True)
-                    show_confirm_purchase_modal = 'false'
-                    msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.shopper.email)
-                    messages.success(request, msg, extra_tags='safe')
-                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    _, err_str = buy_request.pay_out_bitcoin(send_receipt=True)
+                    if err_str:
+                        show_confirm_purchase_modal = 'true'
+                        msg = _('%s returned the following error: %s' % (
+                            buy_request.credential.get_credential_to_display(),
+                            err_str))
+                        messages.warning(request, msg)
+                    else:
+                        show_confirm_purchase_modal = 'false'
+                        msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.shopper.email)
+                        messages.success(request, msg, extra_tags='safe')
+                        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_confirm_purchase_modal = 'true'
             # cash out scenario, overriding required confirmations

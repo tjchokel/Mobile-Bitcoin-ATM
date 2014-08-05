@@ -613,11 +613,11 @@ class ShopperBTCPurchase(models.Model):
             self.credential = self.merchant.get_valid_api_credential()
             self.save()
         if self.b58_address:
-            btc_txn = self.credential.send_btc(
+            btc_txn, error_string = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn = self.credential.send_btc(
+            btc_txn, error_string = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
@@ -629,6 +629,8 @@ class ShopperBTCPurchase(models.Model):
         if send_receipt:
             self.send_shopper_receipt()
             self.send_merchant_receipt()
+
+        return btc_txn, error_string
 
     def send_merchant_receipt(self):
         assert self.credential

@@ -119,6 +119,10 @@ class BTSCredential(BaseCredential):
         raise Exception('Not Implemented Yet')
 
     def send_btc(self, satoshis_to_send, destination_btc_address):
+        """
+        Returns a tuple of the form:
+            BTCTransaction, error_string
+        """
 
         msg = '%s is not a valid bitcoin address' % destination_btc_address
         assert is_valid_btc_address(destination_btc_address), msg
@@ -162,6 +166,8 @@ class BTSCredential(BaseCredential):
 
             self.mark_failure()
             print 'Error was: %s' % e
+            # TODO: this assumes all error messages here are safe to display to the user
+            return None, str(e)
 
         BTSSentBTC.objects.create(
                 credential=self,
@@ -169,7 +175,7 @@ class BTSCredential(BaseCredential):
                 destination_btc_address=destination_btc_address,
                 withdrawal_id=withdrawal_id,
                 status='0',
-                )
+                ), None
 
     def get_receiving_address(self, set_as_merchant_address=False):
         """

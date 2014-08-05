@@ -195,11 +195,14 @@ class CBSCredential(BaseCredential):
             destination_email_address=None, notes=None):
         """
         Send satoshis to a destination address or email address.
-        CB requires a fee for txns < .01 BTC, so this method will
+        CB requires a fee for txns < .001 BTC, so this method will
         automatically include txn fees for those.
+
+        Returns a tuple of the form:
+            BTCTransaction, error_string
         """
 
-        msg = "Can't have botha  destination email and BTC address. %s | %s" % (
+        msg = "Can't have both a destination email and BTC address. %s | %s" % (
                 destination_email_address, destination_btc_address)
         assert not (destination_email_address and destination_btc_address), msg
 
@@ -263,8 +266,9 @@ class CBSCredential(BaseCredential):
 
         resp_json = json.loads(r.content)
 
-        success = resp_json['success']
-        assert success is True, '%s: %s' % (success, resp_json.get('errors'))
+        if resp_json['success'] is not True:
+            # TODO: this assumes all error messages here are safe to display to the user
+            return None, resp_json.get('errors')
 
         transaction = resp_json['transaction']
 
@@ -293,7 +297,7 @@ class CBSCredential(BaseCredential):
             return BTCTransaction.objects.create(
                     txn_hash=txn_hash,
                     satoshis=satoshis,
-                    conf_num=0)
+                    conf_num=0), None
 
     def get_new_receiving_address(self, set_as_merchant_address=False):
         """

@@ -230,9 +230,9 @@ class CBSCredential(BaseCredential):
                 dest_addr_to_use, btc_to_send)
         post_params = {'to': dest_addr_to_use, 'amount': btc_to_send}
 
-        if satoshis_to_send <= btc_to_satoshis(.01) and not destination_email_address:
+        if satoshis_to_send <= btc_to_satoshis(.001) and not destination_email_address:
             # https://coinbase.com/api/doc/1.0/transactions/send_money.html
-            # Coinbase pays transaction fees on payments greater than or equal to 0.01 BTC.
+            # Coinbase pays transaction fees on payments greater than or equal to 0.001 BTC.
             # But for smaller amounts you have to add your own
             # For some reason, coinbase requires 2x fees of .2 mBTC vs (.1 mBTC)
             body += '&transaction[user_fee]=0.0002'

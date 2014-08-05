@@ -298,6 +298,9 @@ class CBSCredential(BaseCredential):
                     txn_hash=txn_hash,
                     satoshis=satoshis,
                     conf_num=0), None
+        else:
+            # Coinbase seems finicky about transaction hashes
+            return None, None
 
     def get_new_receiving_address(self, set_as_merchant_address=False):
         """

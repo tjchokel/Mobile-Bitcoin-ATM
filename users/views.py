@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy, string_concat
 from django.contrib import messages
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
@@ -140,11 +140,16 @@ def customer_dashboard(request):
             if buy_request:
                 password_form = ConfirmPasswordForm(user=user, data=request.POST)
                 if password_form.is_valid():
-                    buy_request.pay_out_bitcoin(send_receipt=True)
-                    show_confirm_purchase_modal = 'false'
-                    msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.shopper.email)
-                    messages.success(request, msg, extra_tags='safe')
-                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    _, err_str = buy_request.pay_out_bitcoin(send_receipt=True)
+                    if err_str:
+                        show_confirm_purchase_modal = 'false'
+                        msg = ugettext_lazy('The API returned the following error: %s' % err_str)
+                        messages.warning(request, msg)
+                        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    else:
+                        msg = ugettext_lazy('Success! Your bitcoin is being sent. A receipt will be emailed to %s' % buy_request.shopper.email)
+                        messages.success(request, msg)
+                        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_confirm_purchase_modal = 'true'
             # cash out scenario, overriding required confirmations

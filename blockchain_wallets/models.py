@@ -71,6 +71,10 @@ class BCICredential(BaseCredential):
         raise Exception('Not Possible')
 
     def send_btc(self, satoshis_to_send, destination_btc_address):
+        """
+        Returns a tuple of the form:
+            BTCTransaction, error_string
+        """
 
         msg = '%s is not a valid bitcoin address' % destination_btc_address
         assert is_valid_btc_address(destination_btc_address), msg
@@ -98,9 +102,15 @@ class BCICredential(BaseCredential):
 
         resp_json = json.loads(r.content)
 
-        tx_hash = resp_json['tx_hash']
+        if 'error' in resp_json:
+            # TODO: this assumes all error messages here are safe to display to the user
+            return None, resp_json['error']
 
-        assert 'error' not in resp_json, resp_json
+        if 'tx_hash' not in resp_json:
+            # TODO: this assumes all error messages here are safe to display to the user
+            return None, 'No Transaction Hash Received from Blockchain.Info'
+
+        tx_hash = resp_json['tx_hash']
 
         # Record the Send
         BCISentBTC.objects.create(
@@ -113,7 +123,7 @@ class BCICredential(BaseCredential):
         return BTCTransaction.objects.create(
             txn_hash=tx_hash,
             satoshis=satoshis_to_send,
-            conf_num=0)
+            conf_num=0), None
 
     def get_new_receiving_address(self, set_as_merchant_address=False):
         """

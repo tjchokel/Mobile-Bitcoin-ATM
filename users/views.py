@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext as _, ugettext_lazy, string_concat
+from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib import messages
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
@@ -37,6 +37,9 @@ def home(request):
 @render_to('customer_dash/main.html')
 def customer_dashboard(request):
     user = request.user
+    if user.is_superuser:
+        return HttpResponseRedirect(reverse_lazy('admin:index'))
+
     merchant = user.get_merchant()
     if not merchant or not merchant.has_destination_address():
         return HttpResponseRedirect(reverse_lazy('register_router'))

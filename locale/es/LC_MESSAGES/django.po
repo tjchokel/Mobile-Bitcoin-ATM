@@ -31,7 +31,6 @@ msgid "Bought BTC"
 msgstr "BTC Comprado"
 
 #: bitcoins/models.py:654
-#, fuzzy
 msgid "Cancelled"
 msgstr "Cancelar"
 
@@ -53,12 +52,10 @@ msgid "Username (Wallet Identifier)"
 msgstr "Nombre de usuario (identificador de la Billetera)"
 
 #: credentials/forms.py:16
-#, fuzzy
 msgid "Main Password"
 msgstr "Contraseña Principal"
 
 #: credentials/forms.py:24
-#, fuzzy
 msgid "Second Password"
 msgstr "Contraseña Secundaria"
 
@@ -72,7 +69,6 @@ msgid "API Secret"
 msgstr "Llave de la API"
 
 #: credentials/forms.py:60
-#, fuzzy
 msgid "Customer ID"
 msgstr "Identificador de Cliente"
 
@@ -85,7 +81,6 @@ msgid "Valid"
 msgstr "Válido"
 
 #: credentials/views.py:42
-#, fuzzy
 msgid "Your Blockchain API info has been updated"
 msgstr "Su información referente a la API de Blockchain ha sido actualizada"
 
@@ -94,7 +89,6 @@ msgid "Your Blockchain API credentials are not valid"
 msgstr "Sus credenciales para la API de Blockchain no son válidas"
 
 #: credentials/views.py:80
-#, fuzzy
 msgid "Your Coinbase API info has been updated"
 msgstr "Su información referente a la API de Coinbase ha sido actualizada"
 
@@ -103,7 +97,6 @@ msgid "Your Coinbase API credentials are not valid"
 msgstr "Sus credenciales para la API de Coinbase no son válidas"
 
 #: credentials/views.py:119
-#, fuzzy
 msgid "Your Bitstamp API info has been updated"
 msgstr "Su información referente a la API de Bitstamp ha sido actualizada"
 
@@ -112,27 +105,22 @@ msgid "Your Bitstamp API credentials are not valid"
 msgstr "Sus credenciales para la API de Bitstamp no son válidas"
 
 #: credentials/views.py:142
-#, fuzzy
 msgid "Your Blockchain API info has been refreshed"
 msgstr "Su información referente a la API de Blockchain ha sido actualizada"
 
 #: credentials/views.py:144
-#, fuzzy
 msgid "Your Blockchain API info could not be validated"
 msgstr "Su información referente a la API de Blockchain no pudo ser validada"
 
 #: credentials/views.py:155
-#, fuzzy
 msgid "Your Coinbase API info has been refreshed"
 msgstr "Su información referente a la API de Coinbase ha sido actualizada"
 
 #: credentials/views.py:157
-#, fuzzy
 msgid "Your Coinbase API info could not be validated"
 msgstr "Su información referente a la API de Coinbase no pudo ser validada"
 
 #: credentials/views.py:168
-#, fuzzy
 msgid "Your Bistamp API info has been refreshed"
 msgstr "Su información referente a la API de Bitstamp ha sido actualizada"
 
@@ -180,7 +168,6 @@ msgstr ""
 "Este correo ya esta en uso, ¿quieres <a href=\"%s\">Iniciar Sesión</a>?>"
 
 #: merchants/forms.py:99
-#, fuzzy
 msgid "Sorry, your email address must be less than 100 characters"
 msgstr ""
 "Lo sentimos, tu dirección de correo electrónico debe ser inferior a 100 "
@@ -248,7 +235,6 @@ msgid "Please enter your Coinbase API key"
 msgstr "Introduzca su clave de API Coinbase"
 
 #: merchants/forms.py:214
-#, fuzzy
 msgid "Please enter your Coinbase secret key"
 msgstr "Por favor, introduzca un nombre para el recibo"
 
@@ -261,7 +247,6 @@ msgid "Please enter your Bitstamp API key"
 msgstr "Introduzca su llave de API para Bitstamp"
 
 #: merchants/forms.py:238
-#, fuzzy
 msgid "Please enter your Bitstamp Secret Key"
 msgstr "Por favor, introduzca un nombre para el recibo"
 
@@ -348,7 +333,6 @@ msgid "Sorry, that's not a valid bitcoin address"
 msgstr "Lo sentimos, pero esa no es una dirección válida de bitcoin"
 
 #: merchants/forms.py:493
-#, fuzzy
 msgid "CoinSafe Password"
 msgstr "Contraseña en CoinSafe"
 
@@ -381,12 +365,10 @@ msgid "Sunday"
 msgstr "Domingo"
 
 #: merchants/views.py:52
-#, fuzzy, python-format
 msgid "Sorry, that's not the right password for <b>%s</b>."
 msgstr "Lo sentimos, pero esa no es la contraseña correcta para <b>%s</b>"
 
 #: merchants/views.py:55
-#, fuzzy, python-format
 msgid "No account found for <b>%s</b>."
 msgstr "No se encontró la cuenta <b>%s</b>."
 
@@ -395,7 +377,6 @@ msgid "You Are Now Logged Out"
 msgstr "Usted ha terminado la sesión"
 
 #: merchants/views.py:205
-#, fuzzy
 msgid ""
 "Your account has been configured! Customers can use this page while at your "
 "store to trade bitcoin with you."
@@ -417,12 +398,10 @@ msgid "Your profile was not updated"
 msgstr "Su perfil no fue actualizado"
 
 #: merchants/views.py:381
-#, fuzzy
 msgid "Your business hours have been updated"
 msgstr "El horario de su negocio ha sido actualizado"
 
 #: merchants/views.py:385
-#, fuzzy
 msgid "Your business hours have not been updated"
 msgstr "El horario de su negocio no ha sido actualizado"
 
@@ -463,12 +442,10 @@ msgid "This is what you will give to the cashier"
 msgstr "Esto es lo que le dará al cajero"
 
 #: shoppers/forms.py:64
-#, fuzzy
 msgid "Send Bitcoin to Email or BTC Address"
 msgstr "Enviar Bitcoins a un E-mail o dirección BTC"
 
 #: shoppers/forms.py:87
-#, fuzzy
 msgid "Please enter a valid bitcoin address"
 msgstr "Por favor, ingresar una dirección Bitcoin válida"
 
@@ -498,7 +475,6 @@ msgid "The wallet address where you want to receive your bitcoin"
 msgstr "La dirección de la billetera donde quieres recibir los bitcoin"
 
 #: shoppers/forms.py:183
-#, fuzzy
 msgid "Verify Merchant Password"
 msgstr "Verificar Contraseña de Comercio"
 
@@ -661,7 +637,6 @@ msgid "Consumers"
 msgstr "Clientes"
 
 #: templates/index.html:77
-#, fuzzy
 msgid "Bitcoin <-> Cash"
 msgstr "Bitcoin <-> Efectivo"
 
@@ -753,7 +728,6 @@ msgid "Submit"
 msgstr "Enviar"
 
 #: templates/register_customer.html:50
-#, fuzzy, python-format
 msgid ""
 "\n"
 "        To register as a business (not an individual) please\n"
@@ -777,7 +751,6 @@ msgid "Confirm Cash Received"
 msgstr "Confirmar Efectivo Recibido"
 
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:21
-#, fuzzy, python-format
 msgid ""
 "\n"
 "                  Cashier: please enter your CoinSafe password to confirm "
@@ -867,12 +840,10 @@ msgid "The Bitcoin Has Been Sent"
 msgstr "Los Bitcoins Han Sido Enviados"
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:6
-#, fuzzy
 msgid "Bitcoin Received"
 msgstr "Bitcoins Recibidos"
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:15
-#, fuzzy, python-format
 msgid ""
 "\n"
 "              The deposit of <b>%(mbtc)s</b> made by %(shopper_name)s has "
@@ -977,7 +948,6 @@ msgid "Transaction not yet detected"
 msgstr "Transacción no ha sido detectada"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:7
-#, fuzzy
 msgid "Market BTC Price"
 msgstr "Precio BTC de Mercado"
 
@@ -1246,12 +1216,11 @@ msgid "Blockchain.info API Instructions"
 msgstr "Instrucciones para la API de Blockchain.info"
 
 #: templates/fixed_pages/blockchain_instructions.html:19
-#, fuzzy
 msgid ""
 "\n"
 "        Connecting your Blockchain.info account to CoinSafe allows us to:\n"
 "      "
-msgstr "Conectar su cuenta Blockchain.info con CoinSafe, nos permite:"
+msgstr "\nConectar su cuenta Blockchain.info con CoinSafe, nos permite:"
 
 #: templates/fixed_pages/blockchain_instructions.html:25
 msgid ""
@@ -1458,7 +1427,6 @@ msgstr ""
 "configuró esa opción para su cuenta:"
 
 #: templates/fixed_pages/coinbase_instructions.html:64
-#, fuzzy, python-format
 msgid ""
 "\n"
 "        Check the box for <b>%(select_all_text)s</b> under <b>"
@@ -1716,7 +1684,6 @@ msgstr ""
 "su empresa</a>"
 
 #: templates/merchants/_registration_status_bar.html:26
-#, fuzzy, python-format
 msgid ""
 "Next step: <a href=\"%(coinbase_url)s\">Check Your Coinbase Credentials</a>"
 msgstr ""
@@ -1724,7 +1691,6 @@ msgstr ""
 "Coinbase</a>"
 
 #: templates/merchants/_registration_status_bar.html:28
-#, fuzzy, python-format
 msgid ""
 "Next step: <a href=\"%(bitstamp_url)s\">Check Your Bitstamp Credentials</a>"
 msgstr ""
@@ -1732,7 +1698,6 @@ msgstr ""
 "Bitstamp</a>"
 
 #: templates/merchants/_registration_status_bar.html:30
-#, fuzzy, python-format
 msgid "Next step: <a href=\"%(coinbase_url)s\">Attach An Exchange Account</a>"
 msgstr ""
 "Siguiente paso: <a href=\"%(coinbase_url)s\">Agregue una cuenta de "
@@ -1749,7 +1714,6 @@ msgstr "Añadido a las"
 
 #: templates/merchants/bitstamp.html:28 templates/merchants/blockchain.html:28
 #: templates/merchants/coinbase.html:28
-#, fuzzy
 msgid "Balance"
 msgstr "Cancelar"
 
@@ -1813,7 +1777,6 @@ msgid "Settings"
 msgstr "Configuración"
 
 #: templates/merchants/breadcrumb.html:70
-#, fuzzy
 msgid "API Partners"
 msgstr "API Partners (Nuevo)"
 
@@ -1892,17 +1855,14 @@ msgid "Owner Info"
 msgstr "Información del Dueño"
 
 #: templates/merchants/profile.html:128
-#, fuzzy
 msgid "Private - for Transaction Notifications"
 msgstr "Privado - Para Notificaciones de Transacciones"
 
 #: templates/merchants/register.html:24
-#, fuzzy
 msgid "Register Business"
 msgstr "Registrar Comercio"
 
 #: templates/merchants/register.html:38
-#, fuzzy
 msgid "Create Account"
 msgstr "Crear una Cuenta"
 
@@ -1919,7 +1879,6 @@ msgstr ""
 "href=\"%(rc_url)s\">haga clic aquí</a>."
 
 #: templates/merchants/register_bitcoin.html:33
-#, fuzzy
 msgid "Complete Registration"
 msgstr "Completar Registro"
 
@@ -1940,7 +1899,6 @@ msgid "Type"
 msgstr "Tipo"
 
 #: templates/merchants/transactions.html:21
-#, fuzzy
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -1969,7 +1927,6 @@ msgid "Help"
 msgstr "Ayuda"
 
 #: templates/partials/_static_page_footer.html:19
-#, fuzzy
 msgid "Contact"
 msgstr "Contáctenos"
 
@@ -1991,7 +1948,6 @@ msgid "Customers"
 msgstr "Clientes"
 
 #: templates/users/change_pw.html:17 templates/users/change_pw.html.py:25
-#, fuzzy
 msgid "Change Password"
 msgstr "Contraseña Principal"
 
@@ -2012,12 +1968,10 @@ msgid "Your Email"
 msgstr "Su Correo electrónico"
 
 #: users/forms.py:44
-#, fuzzy
 msgid "Message"
 msgstr "Mensaje"
 
 #: users/forms.py:54
-#, fuzzy
 msgid "Current Password"
 msgstr "Contraseña Segura"
 
@@ -2026,7 +1980,6 @@ msgid "Your existing password that you no longer want to use"
 msgstr ""
 
 #: users/forms.py:61
-#, fuzzy
 msgid "New Password"
 msgstr "Contraseña"
 
@@ -2035,7 +1988,6 @@ msgid "Please choose a new secure password"
 msgstr ""
 
 #: users/forms.py:69
-#, fuzzy
 msgid "Confirm New Password"
 msgstr "Confirmar Contraseña"
 
@@ -2044,7 +1996,6 @@ msgid "Sorry, that password is not correct"
 msgstr ""
 
 #: users/forms.py:85
-#, fuzzy
 msgid "Your new passwords did not match.  Please try again."
 msgstr ""
 "Sus credenciales de la API no son válidas. Por favor, inténtelo de nuevo."
@@ -2068,11 +2019,9 @@ msgstr ""
 "negocios cercanos."
 
 #: users/views.py:229
-#, fuzzy
 msgid "Message Received! We'll get back to you soon."
 msgstr "Gracias! Nos pondremos en contacto con usted pronto."
 
 #: users/views.py:248
-#, fuzzy
 msgid "Your password has been changed."
 msgstr "Su perfil ha sido actualizado"

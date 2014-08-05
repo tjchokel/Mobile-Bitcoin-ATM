@@ -102,11 +102,15 @@ class BCICredential(BaseCredential):
 
         resp_json = json.loads(r.content)
 
-        tx_hash = resp_json['tx_hash']
-
         if 'error' in resp_json:
             # TODO: this assumes all error messages here are safe to display to the user
             return None, resp_json['error']
+
+        if 'tx_hash' not in resp_json:
+            # TODO: this assumes all error messages here are safe to display to the user
+            return None, 'No Transaction Hash Received from Blockchain.Info'
+
+        tx_hash = resp_json['tx_hash']
 
         # Record the Send
         BCISentBTC.objects.create(

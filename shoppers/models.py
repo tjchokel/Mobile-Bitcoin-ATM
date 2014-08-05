@@ -11,7 +11,7 @@ class Shopper(models.Model):
     phone_num = PhoneNumberField(blank=True, null=True, db_index=True)
 
     def __str__(self):
-        return '%s: %s' % (self.id, self.name)
+        return '%s: %s' % (self.id, self.email)
 
     def get_notification_methods_formatted(self):
         if self.email and self.phone_num:

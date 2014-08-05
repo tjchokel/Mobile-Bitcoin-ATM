@@ -478,19 +478,19 @@ class BitcoinInfoForm(forms.Form):
             widget=forms.TextInput(),
     )
 
-    sell_btc_markup = forms.DecimalField(
+    cashin_markup_in_bps = forms.DecimalField(
             label=_('Percent Markup When Selling Bitcoin'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text=_('The amount you charge above the market price when selling bitcoin'),
+            help_text=_('The percentage you charge above the market price when selling bitcoin'),
             widget=forms.TextInput(),
     )
 
-    buy_btc_markup = forms.DecimalField(
+    cashout_markup_in_bps = forms.DecimalField(
             label=_('Percent Markup When Buying Bitcoin'),
             required=True,
             validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text=_('The amount you pay below the market price when buying bitcoin.'),
+            help_text=_('The percentage you pay below the market price when buying bitcoin.'),
             widget=forms.TextInput(),
     )
 

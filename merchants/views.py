@@ -173,7 +173,8 @@ def register_bitcoin(request):
             wallet_type_choice = form.cleaned_data['wallet_type_choice']
             exchange_choice = form.cleaned_data['exchange_choice']
             basis_points_markup = form.cleaned_data['btc_markup']
-            merchant.basis_points_markup = basis_points_markup * 100
+            merchant.cashin_markup_in_bps = basis_points_markup * 100
+            merchant.cashout_markup_in_bps = basis_points_markup * 100
             merchant.save()
 
             SUCCESS_MSG = _('Your account has been configured! Customers can use this page while at your store to trade bitcoin with you.')
@@ -234,8 +235,8 @@ def merchant_settings(request):
 
     initial['currency_code'] = merchant.currency_code
     initial['btc_address'] = dest_address.b58_address
-    initial['buy_btc_markup'] = merchant.get_buy_btc_percent_markup()
-    initial['sell_btc_markup'] = merchant.get_sell_btc_percent_markup()
+    initial['cashout_markup_in_bps'] = merchant.get_cashout_percent_markup()
+    initial['cashin_markup_in_bps'] = merchant.get_cashin_percent_markup()
     initial['max_mbtc_shopper_purchase'] = merchant.max_mbtc_shopper_purchase
     initial['max_mbtc_shopper_sale'] = merchant.max_mbtc_shopper_sale
     bitcoin_form = BitcoinInfoForm(initial=initial)
@@ -438,8 +439,8 @@ def edit_bitcoin_info(request):
             merchant.max_mbtc_shopper_sale = form.cleaned_data['max_mbtc_shopper_sale']
             merchant.max_mbtc_shopper_purchase = form.cleaned_data['max_mbtc_shopper_purchase']
             # merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
-            merchant.sell_btc_markup = form.cleaned_data['sell_btc_markup'] * 100
-            merchant.buy_btc_markup = form.cleaned_data['buy_btc_markup'] * 100
+            merchant.cashin_markup_in_bps = form.cleaned_data['cashin_markup_in_bps'] * 100
+            merchant.cashout_markup_in_bps = form.cleaned_data['cashout_markup_in_bps'] * 100
             merchant.save()
             merchant.set_destination_address(
                     dest_address=form.cleaned_data['btc_address'],

@@ -64,7 +64,7 @@ class APICall(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     api_name = models.CharField(choices=API_NAME_CHOICES, max_length=3,
             null=False, blank=False, db_index=True)
-    url_hit = models.URLField(blank=False, null=False, db_index=True)
+    url_hit = models.URLField(max_length=1024, blank=False, null=False, db_index=True)
     response_code = models.PositiveSmallIntegerField(blank=False, null=False,
             db_index=True)
     post_params = JSONField(blank=True, null=True)

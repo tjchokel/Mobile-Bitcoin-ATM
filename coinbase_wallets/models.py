@@ -266,9 +266,9 @@ class CBSCredential(BaseCredential):
 
         resp_json = json.loads(r.content)
 
-        if resp_json['success'] is not True:
+        if 'success' not in resp_json:
             # TODO: this assumes all error messages here are safe to display to the user
-            return None, resp_json.get('errors')
+            return None, resp_json.get('error')
 
         transaction = resp_json['transaction']
 

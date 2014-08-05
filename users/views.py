@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy, string_concat
 from django.contrib import messages
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
@@ -142,15 +142,13 @@ def customer_dashboard(request):
                 if password_form.is_valid():
                     _, err_str = buy_request.pay_out_bitcoin(send_receipt=True)
                     if err_str:
-                        show_confirm_purchase_modal = 'true'
-                        msg = _('%s returned the following error: %s' % (
-                            buy_request.credential.get_credential_to_display(),
-                            err_str))
-                        messages.warning(request, msg)
-                    else:
                         show_confirm_purchase_modal = 'false'
-                        msg = _('Success! Your bitcoin is now being sent. A receipt will be emailed to %s.' % buy_request.shopper.email)
-                        messages.success(request, msg, extra_tags='safe')
+                        msg = ugettext_lazy('The API returned the following error: %s' % err_str)
+                        messages.warning(request, msg)
+                        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    else:
+                        msg = ugettext_lazy('Success! Your bitcoin is being sent. A receipt will be emailed to %s' % buy_request.shopper.email)
+                        messages.success(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_confirm_purchase_modal = 'true'

@@ -13,8 +13,11 @@
   <div class="row">
     {% if not transactions %}
       <form class="form-horizontal" method="post" action="{% url "cancel_address" %}" >
-        <p class="lead text-center">{% trans "Waiting for customer's deposit to" %} 
-          <span style="color: #72a53b;">{{current_address.b58_address}} </span> 
+        <p class="lead text-center">
+          {% blocktrans with customer_address=current_address.b58_address %}
+            Waiting for customer's deposit to
+            <span style="color: #72a53b;">{{customer_address}} </span>
+          {% endblocktrans %}
           {% csrf_token %}
           <button type="submit" class="btn btn-warning btn-md" style="display: inline; margin-left: 5px;">{% trans "Cancel" %}</button>
         </p>

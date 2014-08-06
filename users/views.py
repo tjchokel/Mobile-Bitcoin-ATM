@@ -167,7 +167,7 @@ def customer_dashboard(request):
                             # Having a transactions array is confusing, but it's
                             # possible a person would send BTC in multiple transactions
                             transaction.set_merchant_confirmation_override()
-                        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_override_confirmations_modal = 'true'
 

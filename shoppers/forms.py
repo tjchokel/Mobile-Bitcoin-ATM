@@ -85,7 +85,7 @@ class BuyBitcoinForm(forms.Form):
         required=True,
         validators=[MinValueValidator(1.0), ],
         help_text=_('This is what you will give to the cashier'),
-        widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0', 'style': 'width:50%;', 'type': 'number'}),
+        widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0', 'style': 'width:50%;'}),
     )
 
     email = forms.EmailField(
@@ -131,7 +131,7 @@ class NoEmailBuyBitcoinForm(forms.Form):
         required=True,
         validators=[MinValueValidator(1.0), ],
         help_text=_('This is what you will give to the cashier'),
-        widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0', 'style': 'width:50%;', 'type': 'number'}),
+        widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0', 'style': 'width:50%;'}),
     )
 
     email = forms.EmailField(

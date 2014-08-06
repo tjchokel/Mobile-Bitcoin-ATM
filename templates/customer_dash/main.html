@@ -254,6 +254,7 @@
     $(document).ready(function(){
       if( isMobileDevice() ){
         $('#id_amount').attr('type', 'number');
+        olark('api.box.hide');
       }else{
         $('#id_amount').autoNumeric('init', {pSign:'p', mDec: '2' });
       }

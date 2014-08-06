@@ -159,9 +159,14 @@ def customer_dashboard(request):
             else:
                 override_confirmation_form = ConfirmPasswordForm(user=user, data=request.POST)
                 if override_confirmation_form.is_valid():
-                    # TODO: Having transactions an array is pretty confusing here
-                    for transaction in transactions:
-                        transaction.set_merchant_confirmation_override()
+                    if transactions:
+                        # Possible corner case where a person could have two
+                        # tabs open and override the transaction in the other tab.
+                        # Then they wouldn't have any transactions in this tab
+                        for transaction in transactions:
+                            # Having a transactions array is confusing, but it's
+                            # possible a person would send BTC in multiple transactions
+                            transaction.set_merchant_confirmation_override()
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_override_confirmations_modal = 'true'

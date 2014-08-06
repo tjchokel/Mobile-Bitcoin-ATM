@@ -31,9 +31,19 @@
             <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
             {% trans "I Have Paid The Customer" %}
           </a> -->
-          <a class="btn btn-primary btn-lg has-spinner" id="complete-transaction-button" href="{% url 'merchant_complete_deposit' %}">
+
+          <form class="form-horizontal" method="post" action="{% url "merchant_complete_deposit" %}" >
+            {% csrf_token %}
+            <div class="button-wrapper">
+              <button type="submit" class="btn btn-primary btn-lg">{% trans "I Have Paid The Customer" %}</button>
+            </div>
+          </form>
+
+          <!-- <a class="btn btn-primary btn-lg has-spinner" id="complete-transaction-button" href="{% url 'merchant_complete_deposit' %}">
             {% trans "I Have Paid The Customer" %}
           </a>
+ -->
+          
         </span>
       </div>
       

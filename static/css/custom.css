@@ -1530,6 +1530,11 @@ table {
     border-color:#428bca;
 }
 
+.btn-warning {
+    background-color:#d9534f;
+    border-color:#d9534f;
+}
+
 /* http://stackoverflow.com/a/21663096/1754586 */
 .btn-xl {
     padding: 18px 28px;

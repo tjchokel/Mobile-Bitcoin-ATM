@@ -36,7 +36,6 @@ def home(request):
 @login_required
 @render_to('customer_dash/main.html')
 def customer_dashboard(request):
-    # request.session['forwarding_address'] = '14pJrDJmRzn5YryTGDifdAaGEnSx5wtSc2'
     user = request.user
     if user.is_superuser:
         return HttpResponseRedirect(reverse_lazy('admin:index'))

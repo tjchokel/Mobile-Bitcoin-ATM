@@ -296,79 +296,83 @@ def get_next_deposit_address(request):
 
 @login_required
 def customer_confirm_deposit(request):
-    user = request.user
-    merchant = user.get_merchant()
+    if request.method == 'POST':
+        user = request.user
+        merchant = user.get_merchant()
 
-    forwarding_address = request.session.get('forwarding_address')
-    assert forwarding_address, 'No forwarding address'
-    address = ForwardingAddress.objects.get(b58_address=forwarding_address)
+        forwarding_address = request.session.get('forwarding_address')
+        assert forwarding_address, 'No forwarding address'
+        address = ForwardingAddress.objects.get(b58_address=forwarding_address)
 
-    msg = '%s != %s' % (merchant.id, address.merchant.id)
-    assert merchant.id == address.merchant.id, msg
+        msg = '%s != %s' % (merchant.id, address.merchant.id)
+        assert merchant.id == address.merchant.id, msg
 
-    address.customer_confirmed_deposit_at = now()
-    address.save()
+        address.customer_confirmed_deposit_at = now()
+        address.save()
 
-    return HttpResponse(json.dumps({}), content_type='application/json')
+    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
 
 @login_required
 def merchant_complete_deposit(request):
-    user = request.user
-    merchant = user.get_merchant()
+    if request.method == 'POST':
+        user = request.user
+        merchant = user.get_merchant()
 
-    forwarding_address = request.session.get('forwarding_address')
-    assert forwarding_address, 'No forwarding address'
+        forwarding_address = request.session.get('forwarding_address')
+        assert forwarding_address, 'No forwarding address'
 
-    address = ForwardingAddress.objects.get(b58_address=forwarding_address)
+        address = ForwardingAddress.objects.get(b58_address=forwarding_address)
 
-    msg = '%s != %s' % (merchant.id, address.merchant.id)
-    assert merchant.id == address.merchant.id, msg
+        msg = '%s != %s' % (merchant.id, address.merchant.id)
+        assert merchant.id == address.merchant.id, msg
 
-    if address.all_transactions_complete():
-        address.paid_out_at = now()
-        address.save()
-        del request.session['forwarding_address']
+        if address.all_transactions_complete():
+            address.paid_out_at = now()
+            address.save()
+            del request.session['forwarding_address']
 
-        msg = _("Transaction complete. You can always see your transaction history by clicking the Admin button below.")
-        messages.success(request, msg)
+            msg = _("Transaction complete. You can always see your transaction history by clicking the Admin button below.")
+            messages.success(request, msg)
 
     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
 
 @login_required
 def cancel_address(request):
-    user = request.user
-    merchant = user.get_merchant()
+    if request.method == 'POST':
+        user = request.user
+        merchant = user.get_merchant()
 
-    forwarding_address = request.session.get('forwarding_address')
-    assert forwarding_address, 'No forwarding address'
+        forwarding_address = request.session.get('forwarding_address')
+        assert forwarding_address, 'No forwarding address'
 
-    address = ForwardingAddress.objects.get(b58_address=forwarding_address)
+        address = ForwardingAddress.objects.get(b58_address=forwarding_address)
 
-    msg = '%s != %s' % (merchant.id, address.merchant.id)
-    assert merchant.id == address.merchant.id, msg
+        msg = '%s != %s' % (merchant.id, address.merchant.id)
+        assert merchant.id == address.merchant.id, msg
 
-    address.paid_out_at = now()
-    address.save()
-    del request.session['forwarding_address']
+        address.paid_out_at = now()
+        address.save()
+        del request.session['forwarding_address']
 
-    msg = _("Your request has been cancelled")
-    messages.success(request, msg)
+        msg = _("Your request has been cancelled")
+        messages.success(request, msg)
 
-    return HttpResponse(json.dumps({}), content_type='application/json')
+    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
 
 @login_required
 def cancel_buy(request):
-    user = request.user
-    merchant = user.get_merchant()
+    if request.method == 'POST':
+        user = request.user
+        merchant = user.get_merchant()
 
-    buy_request = merchant.get_bitcoin_purchase_request()
-    assert buy_request, 'No buy request to cancel'
-    buy_request.cancelled_at = now()
-    buy_request.save()
+        buy_request = merchant.get_bitcoin_purchase_request()
+        assert buy_request, 'No buy request to cancel'
+        buy_request.cancelled_at = now()
+        buy_request.save()
 
-    msg = _("Your buy request has been cancelled")
-    messages.success(request, msg)
-    return HttpResponse(json.dumps({}), content_type='application/json')
+        msg = _("Your buy request has been cancelled")
+        messages.success(request, msg)
+    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))

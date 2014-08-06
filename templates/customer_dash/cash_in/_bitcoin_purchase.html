@@ -44,11 +44,15 @@
   <div class="row">
     <div class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
 
-      <p class="lead text-center text-red">
-        {% trans "Price expires in" %}: <b id="expires-in"></b>
-        (<a style="cursor: pointer;" onclick="cancelBuy();">{% trans "Cancel" %}</a>)
-      </p>
+      <form class="form-horizontal" method="post" action="{% url "cancel_buy" %}" >
+        <p class="lead text-center text-red">
+          {% trans "Price expires in" %}: <b id="expires-in"></b>
+          {% csrf_token %}
 
+          <button type="submit" class="btn btn-warning btn-md" style="display: inline; margin-left: 5px;">{% trans "Cancel" %}</button>
+          <!-- (<a style="cursor: pointer;" onclick="cancelBuy();">{% trans "Cancel" %}</a>) -->
+        </p>
+      </form>
 
       <p class="lead text-center text-green">
         {% blocktrans with currency_symbol=merchant.get_currency_symbol fiat_amount=buy_request.fiat_amount format_mbtc_amount=buy_request.format_mbtc_amount b58_address_or_email=buy_request.get_b58_address_or_email business_name=merchant.business_name currency_code=buy_request.currency_code_when_created %}

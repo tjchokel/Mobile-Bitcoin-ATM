@@ -161,11 +161,11 @@ def customer_dashboard(request):
                 if override_confirmation_form.is_valid():
                     if transactions:
                         # Possible corner case where a person could have two
-                        # tabs open and override the transaction in the other tab
-                        # Then they wouldn't have any transactions
+                        # tabs open and override the transaction in the other tab.
+                        # Then they wouldn't have any transactions in this tab
                         for transaction in transactions:
-                            # Having transactions an array is pretty confusing here
-                            # But it is possible a person would send in BTC in multiple transactions
+                            # Having a transactions array is confusing, but it's
+                            # possible a person would send BTC in multiple transactions
                             transaction.set_merchant_confirmation_override()
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:

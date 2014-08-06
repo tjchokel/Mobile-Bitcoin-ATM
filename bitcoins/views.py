@@ -331,7 +331,6 @@ def merchant_complete_deposit(request):
         del request.session['forwarding_address']
 
         msg = _("Transaction complete. You can always see your transaction history by clicking the Admin button below.")
-        request.session['message'] = msg
         messages.success(request, msg)
 
     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))

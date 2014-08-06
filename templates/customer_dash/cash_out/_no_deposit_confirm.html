@@ -49,25 +49,25 @@
             </span>
           </a>
           {% with merchant_credential_abbrev=merchant.get_valid_api_credential.get_credential_abbrev %}
-            <table class="table">
+            <table class="table dashboard-instructions-table">
               <tbody>
                 <tr>
-                  <td align="left" style="padding-left: 25%;">
+                  <td align="left">
                     1.
-                    {% ifequal merchant_credential_abbrev 'CBS' %}
-                      {% trans "Enter Your Email or BTC Address" %}
-                    {% else %}
-                      {% trans "Enter Your BTC Address" %}
-                    {% endifequal %}
+                      {% ifequal merchant_credential_abbrev 'CBS' %}
+                        {% trans "Enter Your Email or BTC Address" %}
+                      {% else %}
+                        {% trans "Enter Your BTC Address" %}
+                      {% endifequal %}
                   </td>
                 </tr>
                 <tr>
-                  <td align="left" style="padding-left: 25%;">
+                  <td align="left">
                     2. {% trans "Pay Physical Cash to Business" %}
                   </td>
                 </tr>
                 <tr>
-                  <td align="left" style="padding-left: 25%;">
+                  <td align="left">
                     3.
                     {% ifequal merchant_credential_abbrev 'CBS' %}
                       {% trans "Receive BTC by Email or BTC Address" %}
@@ -114,16 +114,16 @@
         </span>
       </a>
 
-      <table class="table">
+      <table class="table dashboard-instructions-table">
         <tbody>
           <tr>
-            <td align="left" style="padding-left: 25%;">1. {% trans "Get Business BTC Address" %}</td>
+            <td align="left">1. {% trans "Get Business BTC Address" %}</td>
           </tr>
           <tr>
-            <td align="left" style="padding-left: 25%;">2. {% trans "Send Bitcoin to Business BTC Address" %}</td>
+            <td align="left">2. {% trans "Send Bitcoin to Business BTC Address" %}</td>
           </tr>
           <tr>
-            <td align="left" style="padding-left: 25%;">3. {% trans "Receive Physical Cash from Business" %}</td>
+            <td align="left">3. {% trans "Receive Physical Cash from Business" %}</td>
           </tr>
         </tbody>
       </table>

@@ -212,7 +212,9 @@
     })();
 
     $("#id_amount").keyup(function(){
-      var entered_amount = $('#id_amount').val();
+      // var unformatted_amount = $('#id_amount')
+      var entered_amount = $('#id_amount').val().replace(/,/g, '');
+      console.log(entered_amount);
       if (entered_amount=="" || isNaN(entered_amount)){
         $('#id_amount').val("");
         $("#btc-amount").html('≈ '+0.00.toFixed(1) + ' mBTC');
@@ -223,12 +225,17 @@
         if (!$('#div_id_email_or_btc_address').length){
           $("#div_id_btc_address").removeClass("hidden");
         }
-        var entered_amount = $('#id_amount').val();
         var buy_price_no_format = parseFloat($('#buy-price').data('price-data'));
         var final_btc = parseFloat(entered_amount) / buy_price_no_format;
-        var final_mbtc = final_btc * 1000;
-
-        $("#btc-amount").html(' ≈ '+final_mbtc.toFixed(1) +' mBTC');
+        
+        if (final_btc > 0.5){
+          var final_string = final_btc.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          $("#btc-amount").html(' ≈ '+final_string +' BTC');
+        }else{
+          var final_mbtc = final_btc * 1000;
+          var final_string = final_mbtc.toFixed(1).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          $("#btc-amount").html(' ≈ '+final_string +' mBTC');
+        }
         $("#submit-button").prop('disabled', false);
       }
 
@@ -245,6 +252,11 @@
 
 
     $(document).ready(function(){
+      if( isMobileDevice() ){
+        $('#id_amount').attr('type', 'number');
+      }else{
+        $('#id_amount').autoNumeric('init', {pSign:'p', mDec: '2' });
+      }
       if( {{ show_buy_modal }} === true){
         $('#buy-bitcoin-modal').modal('show');
         $("#submit-button").prop('disabled', false);

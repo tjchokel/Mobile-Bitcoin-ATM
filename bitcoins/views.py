@@ -17,6 +17,9 @@ from utils import format_fiat_amount
 import json
 
 
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse_lazy
+
 def poll_deposits(request):
     txns_grouped = []
 
@@ -328,8 +331,10 @@ def merchant_complete_deposit(request):
         del request.session['forwarding_address']
 
         msg = _("Transaction complete. You can always see your transaction history by clicking the Admin button below.")
+        request.session['message'] = msg
         messages.success(request, msg)
-    return HttpResponse(json.dumps({}), content_type='application/json')
+
+    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
 
 @login_required

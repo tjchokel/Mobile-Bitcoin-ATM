@@ -216,21 +216,23 @@
 
     }
 
-    function completeTransaction() {
-      $("#complete-transaction-button").toggleClass("active");
-      $.ajax({
-          type: 'get',
-          url: '/merchant-complete-deposit/',
-          success: function (data) {
-            $("#complete-transaction-button").toggleClass("active");
-            location.reload(true);
-          },
-          error: function(data) {
-            $("#complete-transaction-button").toggleClass("active");
-            console.log('completeTransaction Failed');
-          }
-        });
-    }
+    // function completeTransaction() {
+    //   $("#complete-transaction-button").toggleClass("active");
+    //   $.ajax({
+    //       type: 'get',
+    //       url: '/merchant-complete-deposit/',
+    //       success: function (data) {
+    //         $("#complete-transaction-button").toggleClass("active");
+    //         console.log('success');
+    //         location.reload(true);
+
+    //       },
+    //       error: function(data) {
+    //         $("#complete-transaction-button").toggleClass("active");
+    //         console.log('completeTransaction Failed');
+    //       }
+    //     });
+    // }
 
     function cancelAddress() {
       $.ajax({

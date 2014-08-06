@@ -5,7 +5,6 @@ $(document).ajaxComplete(function(e, xhr, settings) {
         var json = $.parseJSON(xhr.responseText);
 
         $.each(json.django_messages, function (i, item) {
-            console.log('ADDMESSAGE1');
             addMessage(item.message, item.extra_tags);
         });
     }

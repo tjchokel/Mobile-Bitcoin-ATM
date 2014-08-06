@@ -184,7 +184,7 @@ def customer_dashboard(request):
         'override_confirmation_form': override_confirmation_form,
         'show_buy_modal': show_buy_modal,
         'show_confirm_purchase_modal': show_confirm_purchase_modal,
-        'show_override_confirmations_modal': show_override_confirmations_modal
+        'show_override_confirmations_modal': show_override_confirmations_modal,
     }
 
 

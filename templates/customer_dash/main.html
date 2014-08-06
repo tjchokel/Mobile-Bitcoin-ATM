@@ -160,19 +160,6 @@
       $('#override-confirmations-modal').modal();
     }
 
-    function confirmAddressDeposit() {
-      $.ajax({
-          type: 'get',
-          url: '/customer-confirm-deposit/',
-          success: function (data) {
-            location.reload(true);
-          },
-          error: function(data) {
-            console.log('confirmAddressDeposit Failed');
-          }
-        });
-    }
-
     var BTC_PRICE_TIMEOUT_MS = 30000;
     function getBtcPrice() {
       $.ajax({
@@ -214,50 +201,6 @@
         }
       });
 
-    }
-
-    function completeTransaction() {
-      $("#complete-transaction-button").toggleClass("active");
-      $.ajax({
-          type: 'get',
-          url: '/merchant-complete-deposit/',
-          success: function (data) {
-            $("#complete-transaction-button").toggleClass("active");
-            location.reload(true);
-          },
-          error: function(data) {
-            $("#complete-transaction-button").toggleClass("active");
-            console.log('completeTransaction Failed');
-          }
-        });
-    }
-
-    function cancelAddress() {
-      $.ajax({
-          type: 'get',
-          url: '/cancel-address/',
-          success: function (data) {
-            location.reload(true);
-          },
-          error: function(data) {
-            console.log('cancelAddress Failed');
-            // location.reload(true);
-          }
-        });
-    }
-
-    function cancelBuy() {
-      $.ajax({
-          type: 'get',
-          url: '/cancel-buy/',
-          success: function (data) {
-            location.reload(true);
-          },
-          error: function(data) {
-            console.log('cancel buy Failed');
-            // location.reload(true);
-          }
-        });
     }
 
     var delay = (function(){

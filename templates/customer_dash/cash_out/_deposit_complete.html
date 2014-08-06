@@ -27,11 +27,6 @@
 
       <div class="row">
         <span style="margin-left: auto; margin-right: auto; display: block;">
-          <!-- <a class="btn btn-primary btn-lg has-spinner" id="complete-transaction-button" onclick="completeTransaction();">
-            <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-            {% trans "I Have Paid The Customer" %}
-          </a> -->
-
           <form class="form-horizontal" method="post" action="{% url "merchant_complete_deposit" %}" >
             {% csrf_token %}
             <div class="button-wrapper">
@@ -39,11 +34,6 @@
             </div>
           </form>
 
-          <!-- <a class="btn btn-primary btn-lg has-spinner" id="complete-transaction-button" href="{% url 'merchant_complete_deposit' %}">
-            {% trans "I Have Paid The Customer" %}
-          </a>
- -->
-          
         </span>
       </div>
       

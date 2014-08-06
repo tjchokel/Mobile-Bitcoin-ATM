@@ -75,18 +75,18 @@
             <a href="#" class="active">
               <img src="{% static "img/coinbase-logo-full.png" %}" />
               {% if merchant.has_valid_coinbase_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-red" sstyle="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% endif %}
             </a>
           {% else %}
             <a href="{% url "credentials.views.coinbase_creds" %}">
               <img src="{% static "img/coinbase-logo-full.png" %}" />
               {% if merchant.has_valid_coinbase_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% endif %}
             </a>
           {% endif %}
@@ -97,18 +97,18 @@
             <a href="#" class="active">
               <img src="{% static "img/blockchain-logo-full.png" %}" />
               {% if merchant.has_valid_blockchain_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% endif %}
             </a>
           {% else %}
             <a href="{% url "credentials.views.blockchain_creds" %}">
               <img src="{% static "img/blockchain-logo-full.png" %}" />
               {% if merchant.has_valid_blockchain_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% endif %}
             </a>
           {% endif %}
@@ -119,18 +119,18 @@
             <a href="#" class="active">
               <img src="{% static "img/bitstamp-logo-full.png" %}" />
               {% if merchant.has_valid_bitstamp_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% endif %}
             </a>
           {% else %}
             <a href="{% url "credentials.views.bitstamp_creds" %}">
               <img src="{% static "img/bitstamp-logo-full.png" %}" />
               {% if merchant.has_valid_bitstamp_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px;"></i>
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% endif %}
             </a>
           {% endif %}

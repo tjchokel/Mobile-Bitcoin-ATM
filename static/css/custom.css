@@ -833,9 +833,19 @@ img.img-about {
     overflow: hidden;
     display: block;
 }
+
+@media (min-width: 1200px) { /* for lg devices */
+    table.dashboard-instructions-table td {
+        padding-left: 25% !important;
+    }
+}
+
 @media (min-width: 992px) and (max-width: 1199px) { /* for md devices */
     .gallery-list > li .gallery-thumbnail {
         max-height: 155px;
+    }
+    table.dashboard-instructions-table td {
+        padding-left: 15% !important;
     }
 }
 @media (min-width: 768px) and (max-width: 991px) { /* for sm devices */
@@ -843,11 +853,23 @@ img.img-about {
         max-height: 160px;
     }
 }
-@media (max-width: 767px) { /* for xs devices */
+@media (max-width: 767px) {
     .gallery-list > li .gallery-thumbnail {
         max-height: 220px;
     }
+    table.dashboard-instructions-table td {
+        padding-left: 25% !important;
+    }
 }
+@media (max-width: 499px) { /* for xs devices */
+    .gallery-list > li .gallery-thumbnail {
+        max-height: 220px;
+    }
+    table.dashboard-instructions-table td {
+        padding-left: 0% !important;
+    }
+}
+
 .gallery-list > li  > a {
     color: #333;
 }

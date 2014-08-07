@@ -169,13 +169,16 @@ class BTSCredential(BaseCredential):
             # TODO: this assumes all error messages here are safe to display to the user
             return None, str(e)
 
-        return BTSSentBTC.objects.create(
+        BTSSentBTC.objects.create(
                 credential=self,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
                 withdrawal_id=withdrawal_id,
                 status='0',
-                ), None
+                )
+
+        # This API doesn't return a TX hash on sending bitcoin :(
+        return None, None
 
     def get_receiving_address(self, set_as_merchant_address=False):
         """
@@ -245,6 +248,8 @@ class BTSSentBTC(BaseSentBTC):
         ('3', 'Canceled'),
         ('4', 'Failed'),
         )
+
+    # warning, these may not correspond to the ids that `list_recent_transactions` returns
 
     withdrawal_id = models.CharField(max_length=64, blank=False, null=False, db_index=True)
     status = models.CharField(choices=STATUS_CHOICES, max_length=1,

@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.translation import ugettext_lazy
+from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
@@ -11,11 +12,13 @@ from annoying.functions import get_object_or_None
 from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
 from shoppers.models import Shopper
 from users.models import FutureShopper
+from services.models import APICall
 
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 from users.forms import CustomerRegistrationForm, ContactForm, ChangePWForm
 
 from emails.trigger import send_and_log
+from emails.internal_msg import send_admin_email
 
 
 @render_to('index.html')
@@ -47,6 +50,11 @@ def customer_dashboard(request):
     forwarding_address_obj = get_object_or_None(ForwardingAddress,
             b58_address=request.session.get('forwarding_address'))
     buy_request = merchant.get_bitcoin_purchase_request()
+
+    if buy_request and buy_request.is_cancelled():
+        # Defensive check on cash-in, can't think of when this *should* happen
+        msg = 'Sorry, that request was cancelled. Please contact us if that was not intentional.'
+        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     if merchant.has_valid_coinbase_credentials():
         buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, merchant=merchant)
@@ -139,13 +147,25 @@ def customer_dashboard(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
         # if submitting password confirmation form
         elif 'password' in request.POST:
-            # cash in scenario, sending bitcoin to shopper
             if buy_request:
+                # cash in scenario, sending bitcoin to shopper
                 password_form = ConfirmPasswordForm(user=user, data=request.POST)
                 if password_form.is_valid():
-                    _, err_str = buy_request.pay_out_bitcoin(send_receipt=True)
+                    buy_request_updated, err_str = buy_request.pay_out_bitcoin(send_receipt=True)
                     if err_str:
                         show_confirm_purchase_modal = 'false'
+                        likely_apicall = APICall.objects.filter(credential=buy_request_updated.credential).last()
+                        if likely_apicall:
+                            admin_url = likely_apicall.id
+                            message = 'Likely API Call: <a href="%s>%s</a>'
+                            message = message % (admin_url, admin_url)
+                        else:
+                            admin_url = reverse_lazy('admin:index')
+                            message = 'API Call Unknown: %s' % admin_url
+                        send_admin_email(
+                                subject='API Error for Buy Request %s' % buy_request.id,
+                                message=message,
+                                )
                         msg = ugettext_lazy('The API returned the following error: %s' % err_str)
                         messages.warning(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
@@ -155,8 +175,8 @@ def customer_dashboard(request):
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_confirm_purchase_modal = 'true'
-            # cash out scenario, overriding required confirmations
             else:
+                # cash out scenario, overriding required confirmations
                 override_confirmation_form = ConfirmPasswordForm(user=user, data=request.POST)
                 if override_confirmation_form.is_valid():
                     if transactions:

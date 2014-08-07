@@ -567,6 +567,8 @@ class ShopperBTCPurchase(models.Model):
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    # allowing null for backwards compatibility:
+    base_sent_btc = models.ForeignKey('credentials.BaseSentBTC', blank=True, null=True)
     objects = ShopperBTCPurchaseManager()
 
     def __str__(self):
@@ -598,6 +600,14 @@ class ShopperBTCPurchase(models.Model):
         satoshis = btc_to_satoshis(total_btc)
         return satoshis
 
+    def mark_cancelled(self):
+        self.cancelled_at = now()
+        self.save()
+        return self
+
+    def is_cancelled(self):
+        return bool(self.cancelled_at)
+
     def get_b58_address_or_email(self):
         " Get the base 58 email address if it exists, otherwise the email "
         if self.b58_address:
@@ -607,26 +617,35 @@ class ShopperBTCPurchase(models.Model):
     def format_mbtc_amount(self):
         return format_mbtc(satoshis_to_mbtc(self.satoshis))
 
-    def pay_out_bitcoin(self, send_receipt=True):
+    def pay_out_bitcoin(self, send_receipt=True, force_resend=False):
+
+        if self.base_sent_btc and not force_resend:
+            msg = _('A previous send was attempted on this purchase and failed. The transaction was cancelled, please refund any cash you received.')
+            if not self.is_cancelled():
+                self.mark_cancelled()
+            return None, msg
 
         if not self.credential:
             self.credential = self.merchant.get_valid_api_credential()
             self.save()
         if self.b58_address:
-            btc_txn, error_string = self.credential.send_btc(
+            btc_txn, sent_btc_obj, error_string = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn, error_string = self.credential.send_btc(
+            btc_txn, sent_btc_obj, error_string = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
 
         self.btc_transaction = btc_txn
+        self.base_sent_btc = sent_btc_obj
+        self.save()
+
         if not error_string:
             self.confirmed_by_merchant_at = now()
             self.funds_sent_at = now()
-        self.save()
+            self.save()
 
         if send_receipt and not error_string:
             self.send_shopper_receipt()

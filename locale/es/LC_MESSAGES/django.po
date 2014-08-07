@@ -2475,7 +2475,7 @@ msgstr ""
 "mucho.\n"
 "A largo plazo, la volatilidad ha tendido a subir, más que a bajar, pero no "
 "hay garantías de que continuará de esa forma, y un hecho es de poco consuelo "
-"cuando el precio del bitcoin cae un 10% en un sólo día. (lo que ha pasado "
+"cuando el precio del bitcoin cae un 10%% en un sólo día. (lo que ha pasado "
 "varias veces)"
 
 #: templates/fixed_pages/help.html:554

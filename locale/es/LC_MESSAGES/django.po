@@ -805,7 +805,6 @@ msgid "Submit"
 msgstr "Enviar"
 
 #: templates/register_customer.html:50
-#, fuzzy, python-format
 msgid ""
 "\n"
 "        To register as a business (not an individual) please\n"
@@ -858,7 +857,6 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:58
-#, fuzzy, python-format
 msgid ""
 "\n"
 "          Customer: please pay %(business_name)s <b>%(currency_symbol)s"
@@ -906,7 +904,6 @@ msgstr ""
 " Vender sus Bitcoins a %(merchant_name)s por Efectivo"
 
 #: templates/customer_dash/cash_out/_deposit_address_modal.html:18
-#, fuzzy, python-format
 msgid ""
 "\n"
 "                Customer: send 1 mBTC - %(max_btc_formatted)s to this "
@@ -1022,7 +1019,6 @@ msgid "Transaction not yet detected"
 msgstr "Transacción no ha sido detectada"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:5
-#, fuzzy, python-format
 msgid ""
 "\n"
 "        Welcome to <b>%(business_name)s</b>\n"
@@ -1513,7 +1509,6 @@ msgstr ""
 "configuró esa opción para su cuenta:"
 
 #: templates/fixed_pages/coinbase_instructions.html:63
-#, fuzzy, python-format
 msgid ""
 "\n"
 "        Check the box for <b>%(select_all_text)s</b> under <b>"
@@ -1628,7 +1623,6 @@ msgstr "Preguntas Frecuentes"
 
 #: templates/fixed_pages/help.html:32 templates/fixed_pages/help.html.py:89
 #: templates/fixed_pages/help.html:912
-#, fuzzy, python-format
 msgid ""
 "\n"
 "          If you have other questions, please don't hesitate to <a href="
@@ -1785,7 +1779,7 @@ msgid ""
 "                "
 msgstr ""
 "\n"
-"Actualmente proveemos un servicio 100%% gratuito, sin cobros de "
+"Actualmente proveemos un servicio 100 per ciento gratuito, sin cobros de "
 "ninguna naturaleza.\n"
 "Con CoinSafe, no existe ningún contrato o compromiso para seguir "
 "utilizándonos. \n"
@@ -2460,7 +2454,6 @@ msgstr ""
 "\"%(contact_url)s\">avísanos</a> para añadirla."
 
 #: templates/fixed_pages/help.html:546
-#, fuzzy, python-format
 msgid ""
 "\n"
 "                  Selling bitcoin is similar to selling any other product in "
@@ -2525,7 +2518,6 @@ msgstr ""
 " Más plataformas de cambio próximamente."
 
 #: templates/fixed_pages/help.html:574
-#, fuzzy, python-format
 msgid ""
 "\n"
 "                  Please <a href=\"%(contact_url)s\">contact us</a>\n"
@@ -2891,7 +2883,6 @@ msgstr ""
 "si no estás de acuerdo!"
 
 #: templates/fixed_pages/help.html:841
-#, fuzzy, python-format
 msgid ""
 "\n"
 "                  We're working on it! You can see the list of languages we "
@@ -2907,7 +2898,6 @@ msgstr ""
 "                  si deseas hacer un piloto con ellas."
 
 #: templates/fixed_pages/help.html:848
-#, fuzzy, python-format
 msgid ""
 "\n"
 "                  Currently we're live in Spanish (you can change the "
@@ -3211,7 +3201,6 @@ msgstr ""
 "más."
 
 #: templates/merchants/_add_funds_modal.html:8
-#, fuzzy, python-format
 msgid ""
 "\n"
 "            Add funds to %(credential_name)s Wallet\n"
@@ -3242,7 +3231,6 @@ msgstr ""
 "\">Ingresar a %(credential_name)s</a>"
 
 #: templates/merchants/_delete_api_credentials_modal.html:8
-#, fuzzy, python-format
 msgid ""
 "\n"
 "            Delete %(credential_display)s Credentials\n"
@@ -3252,7 +3240,6 @@ msgstr ""
 " Activar las credenciales de la API pegándolas en Coinbase."
 
 #: templates/merchants/_delete_api_credentials_modal.html:18
-#, fuzzy, python-format
 msgid ""
 "\n"
 "                Are you sure you want to remove your %(credential_display)s "
@@ -3716,7 +3703,6 @@ msgid "The API returned the following error: %s"
 msgstr ""
 
 #: users/views.py:153
-#, fuzzy, python-format
 msgid "Success! Your bitcoin is being sent. A receipt will be emailed to %s"
 msgstr ""
 "¡Éxito! Ahora se está enviando sus Bitcoins. Un recibo será enviado a %s."

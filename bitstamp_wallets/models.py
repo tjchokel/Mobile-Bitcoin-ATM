@@ -169,7 +169,7 @@ class BTSCredential(BaseCredential):
             # TODO: this assumes all error messages here are safe to display to the user
             return None, str(e)
 
-        BTSSentBTC.objects.create(
+        return BTSSentBTC.objects.create(
                 credential=self,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,

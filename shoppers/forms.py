@@ -51,13 +51,17 @@ def clean_amount(self):
 
     DRY-ing it out here
     """
-    amount = self.cleaned_data.get('amount')
+    amount = self.cleaned_data.get('amount').replace(',', '')
+    amount = Decimal(amount)
     merchant = self.merchant
 
     # Check if amount exceeds merhcant's buy limit
     max_mbtc_shopper_purchase = merchant.max_mbtc_shopper_purchase
     btc_price = Decimal(BTCTransaction.get_btc_market_price(merchant.currency_code))
     amount_in_mbtc = (amount / btc_price) * 1000
+    if amount_in_mbtc < 1:
+        msg = _("Sorry, you must buy at least 1 mBTC")
+        raise forms.ValidationError(msg)
     if max_mbtc_shopper_purchase < amount_in_mbtc:
         msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)
         raise forms.ValidationError(msg)
@@ -80,10 +84,9 @@ def clean_amount(self):
 
 
 class BuyBitcoinForm(forms.Form):
-    amount = forms.DecimalField(
+    amount = forms.CharField(
         label=_('Amount of Cash to Pay'),
         required=True,
-        validators=[MinValueValidator(1.0), ],
         help_text=_('This is what you will give to the cashier'),
         widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0', 'style': 'width:50%;'}),
     )
@@ -126,10 +129,9 @@ class BuyBitcoinForm(forms.Form):
 
 
 class NoEmailBuyBitcoinForm(forms.Form):
-    amount = forms.DecimalField(
+    amount = forms.CharField(
         label=_('Amount of Cash to Pay'),
         required=True,
-        validators=[MinValueValidator(1.0), ],
         help_text=_('This is what you will give to the cashier'),
         widget=forms.TextInput(attrs={'class': 'needs-input-group', 'placeholder': '0', 'style': 'width:50%;'}),
     )

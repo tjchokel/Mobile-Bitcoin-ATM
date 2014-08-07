@@ -256,7 +256,7 @@
         $('#id_amount').attr('type', 'number');
         olark('api.box.hide');
       }else{
-        $('#id_amount').autoNumeric('init', {pSign:'p', mDec: '2' });
+        $('#id_amount').autoNumeric('init', {pSign:'p', mDec: '0' });
       }
       if( {{ show_buy_modal }} === true){
         $('#buy-bitcoin-modal').modal('show');

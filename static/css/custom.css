@@ -696,6 +696,21 @@ img.img-about {
     overflow: hidden;
 }
 
+.press .member-left img{
+    float: left;
+    margin-right: 50px;
+}
+.press .member-right img{
+    float: right;
+    margin-left: 50px;
+}
+.press .position {
+    color: #ccc;
+}
+.press p {
+    overflow: hidden;
+}
+
 /* ===== 404 error page ===== */
 
 .not-found {

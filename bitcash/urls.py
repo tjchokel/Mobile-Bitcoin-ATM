@@ -68,6 +68,7 @@ urlpatterns = patterns('',
     url(r'^blockchain-instructions/', TemplateView.as_view(template_name='fixed_pages/blockchain_instructions.html'), name='blockchain_instructions'),
     url(r'^promotional-material/', TemplateView.as_view(template_name='fixed_pages/promotional_material.html'), name='promotional_material'),
     url(r'^jobs/', TemplateView.as_view(template_name='fixed_pages/jobs.html'), name='jobs'),
+    url(r'^press/', TemplateView.as_view(template_name='fixed_pages/press.html'), name='press'),
 
     url(r'^admin/', include(admin.site.urls)),
     (r'^i18n/', include('django.conf.urls.i18n')),

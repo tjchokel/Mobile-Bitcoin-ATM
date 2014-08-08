@@ -2,10 +2,14 @@
 <p>Here are the relevant links:</p>
 <ul>
   <li>
-  API Call: <a href="{{ api_url }}">{{ api_url }}</a>
+  API Call: <a href="{{ BASE_URL }}{{ api_url }}">{{ BASE_URL }}{{ api_url }}</a>
   </li>
   <li>
-  Shopper BTC Purchase: <a href="{{ shopper_request_url }}">{{ shopper_request_url }}</a>
+  Shopper BTC Purchase: <a href="{{ BASE_URL }}{{ shopper_request_url }}">{{ BASE_URL }}{{ shopper_request_url }}</a>
   </li>
 </ul>
+<p>
+  The error has been displayed to the user and is not being captured by Sentry.
+  Please investiage this ASAP.
+</p>
 </body></html>

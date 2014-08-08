@@ -90,6 +90,7 @@ class APICall(models.Model):
                 'shopper_request_url': shopper_request_url,
                 }
         return send_admin_email(
+                body_template='btc_purchase_error_notification.html',
                 subject='API Error for Shopper BTC Purchase Request %s' % btc_purchase_request.id,
                 body_context=body_context,
                 )

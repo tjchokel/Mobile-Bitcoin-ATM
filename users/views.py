@@ -153,7 +153,11 @@ def customer_dashboard(request):
                     if err_str:
                         api_call.send_admin_btcpurchase_error_email(btc_purchase_request_updated)
                         show_confirm_purchase_modal = 'false'
-                        msg = ugettext_lazy('Bitcoin sending failed. The API returned the following error: %s' % err_str)
+                        if btc_purchase_request_updated.credential:
+                            credential_display = btc_purchase_request_updated.credential.get_credential_to_display()
+                        else:
+                            credential_display = ''
+                        msg = ugettext_lazy('Bitcoin sending failed. The %s API returned the following error: %s' % (credential_display, err_str))
                         messages.warning(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                     else:

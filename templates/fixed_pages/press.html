@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+  {% trans "Your Free Bitcoin ATM App | Press | CoinSafe" %}
+{% endblock title %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="hl top-50">{% trans "Press" %}</h2>
+        <hr>
+      </div>
+    </div>
+    <!-- <div class="col-sm-10 col-sm-offset-1">
+      <p class="lead">
+      </p>
+    </div> -->
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="press">
+        <div class="member-left">
+          <img src="{%static "img/press_logos/wsj.png" %}" alt="Wall Street Journal" class="left" />
+          <h4><a href="http://blogs.wsj.com/moneybeat/2014/08/07/bitbeat-phone-based-atm-app-foresees-multiple-mini-bitcoin-exchanges/" target="_blank">Phone-Based ATM App Foresees Multiple Mini Bitcoin Exchanges</a></h4>
+          <p>
+            "Coinsafe, which has secured seed funding led by venture-capital-firm Vaizra Investments in New York, has attracted interest from high-turnover businesses such as pharmacies and gas stations, says Michael Flaxman, the firm’s co-founder."
+          </p>
+        </div>
+        <div class="member-left">
+          <img src="{%static "img/press_logos/coindesk.png" %}" alt="Coindesk" class="left" />
+          <h4><a href="http://www.coindesk.com/coinsafe-releases-virtual-bitcoin-atm-apps-merchants/" target="_blank">CoinSafe Releases ‘Virtual Bitcoin ATM’ Apps for Merchants</a></h4>
+          <p>
+            "Seattle-based company CoinSafe says its new mobile and desktop apps can turn any local business into a ‘bitcoin ATM’, or face-to-face bitcoin exchange."
+          </p>
+        </div>
+        <div class="member-left">
+          <img src="{%static "img/press_logos/cointelegraph.png" %}" alt="CoinTelegraph" class="left" />
+          <h4><a href="http://cointelegraph.com/news/112174/coinsafe-promises-its-app-can-turn-your-phone-into-a-bitcoin-atm" target="_blank">CoinSafe Promises It’s App Can ‘Turn Your Phone Into a Bitcoin ATM’</a></h4>
+          <p>
+            "Startup CoinSafe has launched a free app and service intended for brick-and-mortar business owners who want to trade Bitcoin as part of their revenue streams without actually buying a Bitcoin ATM."
+          </p>
+        </div>
+        <div class="member-left">
+          <img src="{%static "img/press_logos/newsbtc.png" %}" alt="NewsBTC" class="left" style="padding-top: 20px;"/>
+          <h4><a href="http://newsbtc.com/2014/07/29/turning-phone-bitcoin-atm-coinsafe-says-theyve-got-solution/" target="_blank">Turning a Phone into a Bitcoin ATM? CoinSafe Says They’ve Got the Solution</a></h4>
+          <p>
+            "One of the well-recognized downfalls of acquiring bitcoin is, well, it can be difficult. First you must decide how you’ll get your hands on it. Bitcoin ATM? Exchange? Brokerage service? In-person? But a new start-up based in Seattle is hoping to change things by allowing business owners to utilize their mobile devices to act as bitcoin ATMs of sorts."
+          </p>
+        </div>
+        <div class="member-left">
+          <img src="{%static "img/press_logos/peace_and_markets.png" %}" alt="Peace And Markets" class="left" />
+          <h4><a href="http://peaceandmarkets.com/2014/07/30/the-incredible-pace-of-bitcoin-innovation/" target="_blank">The Incredible Pace Of Bitcoin Innovation</a></h4>
+          <p>
+            "Let’s put this in perspective, it really wasn’t that long ago that the bitcoin community was crying out for easy ‘on-ramps’ to the bitcoin ecosystem, and most bitcoin enthusiasts were quite excited about the possibility of a bitcoin ATM. The world’s first Bitcoin ATM was opened in October 2013, and now – not even a year later, there are software solutions that are in some ways, superior."
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-10 col-sm-offset-1">
+    <p class="lead text-center">
+      {% trans "Press Contact: Press@CoinSafe.com" %}
+    </p>
+  </div>
+</div>
+
+{% endblock content %}
+{% block static_page_footer %}
+  <br/><br/><br/><br/>
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}

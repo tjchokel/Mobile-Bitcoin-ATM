@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block extra_head %}
+  <link rel="canonical" href="https://www.coinsafe.com/login/" />
+{% endblock extra_head %}
 {% block title %}{% trans "Your Free Bitcoin ATM App | Login" %} | CoinSafe{% endblock title %}
 
 {% block content %}

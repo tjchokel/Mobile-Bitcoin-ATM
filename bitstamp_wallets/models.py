@@ -120,8 +120,8 @@ class BTSCredential(BaseCredential):
 
     def send_btc(self, satoshis_to_send, destination_btc_address):
         """
-        Returns a tuple of the form:
-            BTCTransaction, error_string
+        Returns a tuple of the form (some or all may be none):
+            btc_txn, sent_btc_obj, api_call, err_str
         """
 
         msg = '%s is not a valid bitcoin address' % destination_btc_address
@@ -142,7 +142,7 @@ class BTSCredential(BaseCredential):
             assert type(withdrawal_id) is int, msg
 
             # Log the API call
-            APICall.objects.create(
+            api_call = APICall.objects.create(
                 api_name=APICall.BITSTAMP_SEND_BTC,
                 url_hit=SEND_URL,
                 response_code=200,
@@ -155,7 +155,7 @@ class BTSCredential(BaseCredential):
 
         except Exception as e:
             # Log the API Call
-            APICall.objects.create(
+            api_call = APICall.objects.create(
                 api_name=APICall.BITSTAMP_SEND_BTC,
                 url_hit=SEND_URL,
                 response_code=0,  # not accurate
@@ -167,9 +167,9 @@ class BTSCredential(BaseCredential):
             self.mark_failure()
             print 'Error was: %s' % e
             # TODO: this assumes all error messages here are safe to display to the user
-            return None, str(e)
+            return None, None, api_call, str(e)
 
-        BTSSentBTC.objects.create(
+        sent_btc_obj = BTSSentBTC.objects.create(
                 credential=self,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
@@ -178,7 +178,7 @@ class BTSCredential(BaseCredential):
                 )
 
         # This API doesn't return a TX hash on sending bitcoin :(
-        return None, None
+        return None, sent_btc_obj, api_call, None
 
     def get_receiving_address(self, set_as_merchant_address=False):
         """

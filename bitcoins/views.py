@@ -12,13 +12,14 @@ from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction, ForwardingAddress
 from services.models import WebHook
 
-from emails.internal_msg import send_admin_email
+from emails.internal_msg import send_internal_email
 from utils import format_fiat_amount
 import json
 
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
+
 
 def poll_deposits(request):
     txns_grouped = []
@@ -133,14 +134,14 @@ def process_bci_webhook(request, random_id):
         # Run some safety checks and email us of discrepencies (but don't break)
         if fwd_btc_txn:
             if fwd_btc_txn.satoshis != satoshis:
-                send_admin_email(
+                send_internal_email(
                         subject='BTC Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s satoshis and BCI says %s' % (
                             fwd_btc_txn.satoshis, satoshis),
                         recipient_list=['monitoring@coinsafe.com', ],
                         )
             if fwd_btc_txn.conf_num < num_confirmations and num_confirmations <= 6:
-                send_admin_email(
+                send_internal_email(
                         subject='Confirmations Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s confs and BCI says %s' % (
                             fwd_btc_txn.conf_num, num_confirmations),

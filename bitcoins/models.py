@@ -572,7 +572,7 @@ class ShopperBTCPurchase(models.Model):
     objects = ShopperBTCPurchaseManager()
 
     def __str__(self):
-        return '%s: %s with %s' % (self.id, self.added_at[:16], self.merchant)
+        return '%s: with %s' % (self.id, self.merchant)
 
     def save(self, *args, **kwargs):
         """
@@ -618,22 +618,28 @@ class ShopperBTCPurchase(models.Model):
         return format_mbtc(satoshis_to_mbtc(self.satoshis))
 
     def pay_out_bitcoin(self, send_receipt=True, force_resend=False):
+        """
+        Returns:
+            btc_purchase_request*, api_call, err_str
+
+        *the updated version
+        """
 
         if self.base_sent_btc and not force_resend:
             msg = _('A previous send was attempted on this purchase and failed. The transaction was cancelled, please refund any cash you received.')
             if not self.is_cancelled():
                 self.mark_cancelled()
-            return None, msg
+            return self, None, msg
 
         if not self.credential:
             self.credential = self.merchant.get_valid_api_credential()
             self.save()
         if self.b58_address:
-            btc_txn, sent_btc_obj, error_string = self.credential.send_btc(
+            btc_txn, sent_btc_obj, api_call, err_str = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn, sent_btc_obj, error_string = self.credential.send_btc(
+            btc_txn, sent_btc_obj, api_call, err_str = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
@@ -642,16 +648,16 @@ class ShopperBTCPurchase(models.Model):
         self.base_sent_btc = sent_btc_obj
         self.save()
 
-        if not error_string:
+        if not err_str:
             self.confirmed_by_merchant_at = now()
             self.funds_sent_at = now()
             self.save()
 
-        if send_receipt and not error_string:
+        if send_receipt and not err_str:
             self.send_shopper_receipt()
             self.send_merchant_receipt()
 
-        return btc_txn, error_string
+        return self, api_call, err_str
 
     def send_merchant_receipt(self):
         assert self.credential

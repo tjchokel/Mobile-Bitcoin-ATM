@@ -102,8 +102,25 @@ class Merchant(models.Model):
         return combined_transactions
 
     def get_bitcoin_purchase_request(self):
-        return self.shopperbtcpurchase_set.filter(cancelled_at__isnull=True,
-            confirmed_by_merchant_at__isnull=True).last()
+        """
+        Return the latest shopper_btc_purchase and confirm it's active
+
+        Could do this with a Q filter, but we should always be using the latest
+        request.
+
+        TODO: there could be some potential nasty race conditions if the app
+        were run on two different devices on the same account at the same time.
+        """
+        shopper_btc_purchase = self.shopperbtcpurchase_set.last()
+        if not shopper_btc_purchase:
+            return None
+        if shopper_btc_purchase.cancelled_at:
+            return None
+        if shopper_btc_purchase.confirmed_by_merchant_at:
+            return None
+        if shopper_btc_purchase.expires_at and shopper_btc_purchase.expires_at < now():
+            return None
+        return shopper_btc_purchase
 
     def get_percent_markup(self):
         return self.basis_points_markup / 100.00

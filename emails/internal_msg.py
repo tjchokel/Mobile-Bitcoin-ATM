@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from bitcash.settings import ADMINS, SERVER_EMAIL, EMAIL_DEV_PREFIX
 
 
-def send_admin_email(subject, message, recipient_list=None):
+def send_internal_email(subject, message, recipient_list=None):
     " Send an admin email "
 
     if not recipient_list:

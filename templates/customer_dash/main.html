@@ -100,10 +100,9 @@
         var expires_at_unix_time = "{{buy_request.expires_at_unix_time}}"
         var expires_at = new Date(expires_at_unix_time * 1000);
         var time_until = timeUntil(expires_at);
-        console.log(time_until);
         $("#expires-in").html(time_until)
         if (time_until == 0){
-          cancelBuy();
+          $( "#cancel-buy-form" ).submit();
         }else{
           setTimeout(set_expires_at_time, 1000);
         }

@@ -21,10 +21,3 @@ from their account directly to <b>{% firstof shopper_btc_address shopper_email %
   Please check your spam folder if you haven't received this email.
 {% endif %}
 {% endblock content %}
-
-{% if shopper_btc_address %}
-  {% block ps %}
-  P.S. If you'd like to know more about how bitcoin transactions work, please check out
-  <a href="http://www.coindesk.com/information/how-do-bitcoin-transactions-work/">CoinDesk's Article on Bitcoin Transactions</a>.
-  {% endblock ps %}
-{% endif %}

@@ -20,6 +20,7 @@ import json
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 
+
 def poll_deposits(request):
     txns_grouped = []
 

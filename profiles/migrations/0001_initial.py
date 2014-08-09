@@ -12,7 +12,8 @@ class Migration(SchemaMigration):
         db.create_table(u'profiles_shorturl', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, db_index=True, blank=True)),
-            ('uri', self.gf('django.db.models.fields.CharField')(unique=True, max_length=256, db_index=True)),
+            ('uri_display', self.gf('django.db.models.fields.CharField')(max_length=256, db_index=True)),
+            ('uri_lowercase', self.gf('django.db.models.fields.CharField')(unique=True, max_length=256, db_index=True)),
             ('merchant', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['merchants.Merchant'])),
             ('deleted_at', self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True)),
         ))
@@ -71,7 +72,8 @@ class Migration(SchemaMigration):
             'deleted_at': ('django.db.models.fields.DateTimeField', [], {'db_index': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'merchant': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['merchants.Merchant']"}),
-            'uri': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '256', 'db_index': 'True'})
+            'uri_display': ('django.db.models.fields.CharField', [], {'max_length': '256', 'db_index': 'True'}),
+            'uri_lowercase': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '256', 'db_index': 'True'})
         },
         u'users.authuser': {
             'Meta': {'object_name': 'AuthUser'},

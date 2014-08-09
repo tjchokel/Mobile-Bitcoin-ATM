@@ -7,5 +7,5 @@ from profiles.models import ShortURL
 
 @render_to('profiles/main.html')
 def merchant_site(request, uri):
-    short_url_obj = get_object_or_404(ShortURL, uri=uri, deleted_at=None)
+    short_url_obj = get_object_or_404(ShortURL, uri_lowercase=uri.lower(), deleted_at=None)
     return {'merchant': short_url_obj.merchant}

@@ -1,4 +1,4 @@
-var ALERT_FADEOUT_TIME = 60000;
+var ALERT_FADEOUT_TIME = 25000;
 $(document).ajaxComplete(function(e, xhr, settings) {
     var contentType = xhr.getResponseHeader("Content-Type");
     if (contentType == "application/javascript" || contentType == "application/json") {

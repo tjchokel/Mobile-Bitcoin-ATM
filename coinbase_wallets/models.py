@@ -24,7 +24,7 @@ class CBSCredential(BaseCredential):
         return 'CBS'
 
     def get_credential_to_display(self):
-        return 'CoinBase'
+        return 'Coinbase'
 
     def get_login_link(self):
         return 'https://coinbase.com/signin'

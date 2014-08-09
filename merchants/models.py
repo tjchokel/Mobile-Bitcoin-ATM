@@ -301,10 +301,10 @@ class Merchant(models.Model):
                 location_strings.append(self.state)
 
             if self.state and self.city:
+                if self.address_2:
+                    location_strings.append(self.address_2)
                 if self.address_1:
                     location_strings.append(self.address_1)
-                    if self.address_2:
-                        location_strings.append(self.address_2)
         location_strings.reverse()
         return location_strings
 

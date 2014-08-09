@@ -601,8 +601,9 @@ class ShopperBTCPurchase(models.Model):
         return satoshis
 
     def mark_cancelled(self):
-        self.cancelled_at = now()
-        self.save()
+        if not self.cancelled_at:
+            self.cancelled_at = now()
+            self.save()
         return self
 
     def is_cancelled(self):
@@ -625,10 +626,19 @@ class ShopperBTCPurchase(models.Model):
         *the updated version
         """
 
-        if self.base_sent_btc and not force_resend:
-            msg = _('A previous send was attempted on this purchase and failed. The transaction was cancelled, please refund any cash you received.')
-            if not self.is_cancelled():
-                self.mark_cancelled()
+        if self.cancelled_at and not force_resend:
+            msg = _('Rejected: this price quote was previously cancelled. Please start over and create a new request. Sorry for the inconvenience.')
+            return self, None, msg
+
+        if self.expires_at > now() and not force_resend:
+            msg = _('Rejected: the price quote in this transaction has expired. Please start over and create a new request. Sorry for the inconvenience.')
+            self.mark_cancelled()
+            return self, None, msg
+
+        if (self.base_sent_btc or self.funds_sent_at) and not force_resend:
+            # defensive check to prevent double-sending
+            msg = _('The bitcoin for this transaction was already sent. Please see the transactions log in the admin section for details.')
+            self.mark_cancelled()
             return self, None, msg
 
         if not self.credential:

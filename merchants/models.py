@@ -118,6 +118,8 @@ class Merchant(models.Model):
             return None
         if shopper_btc_purchase.confirmed_by_merchant_at:
             return None
+        if shopper_btc_purchase.funds_sent_at:
+            return None
         if shopper_btc_purchase.expires_at and shopper_btc_purchase.expires_at < now():
             return None
         return shopper_btc_purchase

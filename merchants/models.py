@@ -17,6 +17,7 @@ from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
 import math
+import urllib
 
 
 class Merchant(models.Model):
@@ -237,14 +238,14 @@ class Merchant(models.Model):
         for weekday, from_time, to_time in hours:
             OpenTime.objects.create(merchant=self, weekday=weekday, from_time=from_time, to_time=to_time)
 
-    def get_website(self):
+    def get_website_obj(self):
         websites = self.merchantwebsite_set.filter(deleted_at=None)
         if websites:
             return websites[0]
         return None
 
     def set_website(self, website_to_set):
-        current_website_obj = self.get_website()
+        current_website_obj = self.get_website_obj()
         if current_website_obj:
             if current_website_obj.url != website_to_set:
                 # Mark current websites as deleted
@@ -282,6 +283,36 @@ class Merchant(models.Model):
                 to_merchant=self,
                 body_context=body_context,
                 )
+
+    def get_physical_address_list(self):
+        """
+        Returns a list of address strings that can be manipulated (for display, a mapping API, etc):
+
+            ['123 Fake St', 'Apt #1', 'City, State, Country', 'USA']
+        """
+        location_strings = []
+        if self.country:
+            location_strings.append(self.country)
+            if self.state and self.city and self.zip_code:
+                location_strings.append('%s %s %s' % (self.city, self.state, self.zip_code))
+            elif self.state and self.city:
+                location_strings.append('%s %s' % (self.city, self.state))
+            elif self.state:
+                location_strings.append(self.state)
+
+            if self.state and self.city:
+                if self.address_1:
+                    location_strings.append(self.address_1)
+                    if self.address_2:
+                        location_strings.append(self.address_2)
+        location_strings.reverse()
+        return location_strings
+
+    def get_physical_address_html(self):
+        return '<br />'.join(self.get_physical_address_list())
+
+    def get_physical_address_qs(self):
+        return urllib.quote(' '.join(self.get_physical_address_list()))
 
     def calculate_fiat_amount(self, satoshis):
         """

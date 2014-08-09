@@ -9,7 +9,7 @@ class MerchantAdmin(admin.ModelAdmin):
     btc_address.allow_tags = True
 
     def website(self, instance):
-        return instance.get_website()
+        return instance.get_website_obj()
     website.allow_tags = True
 
     list_display = (

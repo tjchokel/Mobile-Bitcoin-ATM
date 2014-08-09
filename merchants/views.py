@@ -270,7 +270,7 @@ def merchant_profile(request):
     initial['zip_code'] = merchant.zip_code
     initial['country'] = merchant.country
     initial['phone_num'] = merchant.phone_num
-    website_obj = merchant.get_website()
+    website_obj = merchant.get_website_obj()
     if website_obj:
         initial['website'] = website_obj.url
 

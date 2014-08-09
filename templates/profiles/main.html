@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {{ merchant.business_name }} | CoinSafe
+{% endblock title %}
+
+{% block content %}
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <h1>{{ merchant.business_name }}</h1>
+    {% if merchant.phone_num %}
+      <p>{{ merchant.phone_num.as_international }}</p>
+    {% endif %}
+    {% if merchant.country %}
+      <p>{{ merchant.get_physical_address_html|safe }}</p>
+      <div class="map">
+        <iframe width="350" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q={{ merchant.get_physical_address_qs|safe }}"></iframe>
+      </div>
+    {% endif %}
+    {% if merchant.get_website_obj %}
+    <p><a href="{{ merchant.get_website_obj.url }}" rel="nofollow">Website</a></p>
+    {% endif %}
+    {# TODO: add pricing via JS call to get_bitcoin_price #}
+
+
+  </div>
+</div>
+{% endblock content %}
+
+{% block static_page_footer %}
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}
+
+{% block extra_js %}
+{% endblock %}

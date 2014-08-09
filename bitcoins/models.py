@@ -520,6 +520,12 @@ class BTCTransaction(models.Model):
         except Exception as e:
             print 'Error was: %s' % e
 
+    def get_transaction_url(self):
+        if self.destination_address:
+            # Not a forwarding txn
+            return ''
+        return 'https://blockchain.info/tx/%s' % self.txn_hash
+
     def get_type(self):
         return _('Bought BTC')
 
@@ -764,10 +770,22 @@ class ShopperBTCPurchase(models.Model):
     def get_status(self):
         if self.cancelled_at:
             return _('Cancelled')
-        if self.confirmed_by_merchant_at:
+        elif self.confirmed_by_merchant_at and self.funds_sent_at:
             return _('Complete')
+        elif self.expires_at and self.expires_at < now():
+            return _('Cancelled by Expiration')
         else:
             return _('Waiting on Merchant Approval')
+
+    def get_transaction_url(self):
+        if not self.base_sent_btc:
+            return ''
+        if self.btc_transaction and self.btc_transaction.txn_hash:
+            return 'https://blockchain.info/tx/%s' % self.btc_transaction.txn_hash
+        if self.b58_address:
+            return 'https://blockchain.info/address/%s' % self.b58_address
+        # Must be CB off blockchain, logic will change here when we support multiple off-blockchain options
+        return "https://coinbase.com/accounts/"
 
     def get_type(self):
         return _('Sold BTC')

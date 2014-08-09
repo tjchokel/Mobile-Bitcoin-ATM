@@ -16,7 +16,7 @@ from users.models import FutureShopper
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 from users.forms import CustomerRegistrationForm, ContactForm, ChangePWForm
 
-from emails.trigger import send_and_log
+from emails.trigger import send_and_log, send_admin_email
 
 
 @render_to('index.html')
@@ -151,13 +151,24 @@ def customer_dashboard(request):
                 if password_form.is_valid():
                     btc_purchase_request_updated, api_call, err_str = btc_purchase_request.pay_out_bitcoin(send_receipt=True)
                     if err_str:
-                        api_call.send_admin_btcpurchase_error_email(btc_purchase_request_updated)
-                        show_confirm_purchase_modal = 'false'
-                        if btc_purchase_request_updated.credential:
-                            credential_display = btc_purchase_request_updated.credential.get_credential_to_display()
+                        if api_call:
+                            api_call.send_admin_btcpurchase_error_email(btc_purchase_request_updated)
                         else:
-                            credential_display = ''
-                        msg = ugettext_lazy('Bitcoin sending failed. The %s API returned the following error: %s' % (credential_display, err_str))
+                            # These errors are OK to include in plaintext emails, they messages are written by us
+                            body_context = {
+                                    'coinsafe_err_str': err_str,
+                                    'shopper_request_url': reverse_lazy(
+                                        'admin:bitcoins_shopperbtcpurchase_change',
+                                        args=(btc_purchase_request.id, )
+                                        )
+                                    }
+                            send_admin_email(
+                                    body_template='btc_purchase_not_attempted_notification.html',
+                                    subject='Non API Error for Shopper BTC Purchase Request %s' % btc_purchase_request.id,
+                                    body_context=body_context,
+                                    )
+                        show_confirm_purchase_modal = 'false'
+                        msg = ugettext_lazy('Bitcoin sending failed. The API returned the following error: %s' % err_str)
                         messages.warning(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                     else:

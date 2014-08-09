@@ -627,18 +627,16 @@ class ShopperBTCPurchase(models.Model):
         """
 
         if self.cancelled_at and not force_resend:
-            msg = _('Rejected: this price quote was previously cancelled. Please start over and create a new request. Sorry for the inconvenience.')
+            msg = _('This price quote was previously cancelled. Please start over and create a new request. Sorry for the inconvenience.')
             return self, None, msg
 
-        if self.expires_at > now() and not force_resend:
-            msg = _('Rejected: the price quote in this transaction has expired. Please start over and create a new request. Sorry for the inconvenience.')
-            self.mark_cancelled()
+        if self.expires_at < now() and not force_resend:
+            msg = _('The price quote in this transaction has expired. Please start over and create a new request. Sorry for the inconvenience.')
             return self, None, msg
 
         if (self.base_sent_btc or self.funds_sent_at) and not force_resend:
             # defensive check to prevent double-sending
             msg = _('The bitcoin for this transaction was already sent. Please see the transactions log in the admin section for details.')
-            self.mark_cancelled()
             return self, None, msg
 
         if not self.credential:

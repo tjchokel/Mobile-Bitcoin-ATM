@@ -257,6 +257,7 @@ BFHCurrenciesList = {
   'AFN':{'label':'Afghan afghani','currencyflag':'','symbol':'؋'},
   'ALL':{'label':'Albanian lek','currencyflag':'','symbol':'L'},
   'AMD':{'label':'Armenian dram','currencyflag':'','symbol':'դր'},
+  'ANG':{'label':'Netherlands Antillean guilder','currencyflag':'','symbol':'NAf'},
   'AOA':{'label':'Angolan kwanza','currencyflag':'','symbol':'Kz'},
   'ARS':{'label':'Argentine peso (Dolar Blue)','currencyflag':'','symbol':'$'},
   'AUD':{'label':'Australian dollar','currencyflag':'AUD','symbol':'$'},

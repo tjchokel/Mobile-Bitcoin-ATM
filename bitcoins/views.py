@@ -266,8 +266,8 @@ def process_blockcypher_webhook(request, random_id):
                 # This shouldn't be the case, but it's a protection from things falling behind
 
                 # Mark it as such
-                fwd_btc_txn.met_minimum_confirmation_at = now()
-                fwd_btc_txn.save()
+                fwd_txn.met_minimum_confirmation_at = now()
+                fwd_txn.save()
 
                 # Send confirmed notifications only (no need to send newtx notifications)
                 fwd_txn.send_all_txconfirmed_notifications(force_resend=False)

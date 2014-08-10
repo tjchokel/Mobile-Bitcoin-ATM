@@ -266,18 +266,19 @@ class CBSCredential(BaseCredential):
 
         resp_json = json.loads(r.content)
 
-        if 'success' not in resp_json:
-            # TODO: this assumes all error messages here are safe to display to the user
-            return None, None, api_call, resp_json.get('error')
+        if resp_json.get('error') or resp_json.get('errors'):
+            err_str = resp_json.get('error')
+            # combine the two
+            if resp_json.get('errors'):
+                if err_str:
+                    err_str += ' %s' % resp_json.get('errors')
+                else:
+                    err_str = resp_json.get('errors')
+
+            # this assumes all error messages here are safe to display to the user
+            return None, None, api_call, err_str
 
         transaction = resp_json['transaction']
-
-        recipient_address = transaction['recipient_address']
-        msg = '%s != %s' % (recipient_address, dest_addr_to_use)
-        assert recipient_address == dest_addr_to_use, msg
-
-        currency = transaction['amount']['currency']
-        assert currency == 'BTC', currency
 
         satoshis = -1 * btc_to_satoshis(transaction['amount']['amount'])
 

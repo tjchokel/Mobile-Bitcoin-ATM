@@ -3,7 +3,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
 
 from bitcoins.BCAddressField import is_valid_btc_address
-from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from annoying.functions import get_object_or_None
 
@@ -90,9 +89,8 @@ class MerchantRegistrationForm(forms.Form):
         email = self.cleaned_data['email'].lower().strip()
         existing_user = get_object_or_None(self.AuthUser, username=email)
         if existing_user:
-            # TODO: move this to clean_email
-            login_url = '%s?e=%s' % (reverse('login_request'), existing_user.email)
-            msg = _('That email is already taken, do you want to <a href="%s">login</a>?' % login_url)
+            login_uri = existing_user.get_login_uri()
+            msg = _('That email is already taken, do you want to <a href="%s">login</a>?' % login_uri)
             raise forms.ValidationError(mark_safe(msg))
 
         if len(email) > 100:

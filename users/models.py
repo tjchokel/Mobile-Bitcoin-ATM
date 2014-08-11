@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.urlresolvers import reverse
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -25,6 +26,9 @@ class AuthUser(AbstractUser):
 
     def get_merchant(self):
         return self.merchant_set.last()
+
+    def get_login_uri(self):
+        return '%s?e=%s' % (reverse('login_request'), self.email)
 
 
 class LoggedLogin(models.Model):

@@ -90,7 +90,7 @@ class MerchantRegistrationForm(forms.Form):
         existing_user = get_object_or_None(self.AuthUser, username=email)
         if existing_user:
             login_uri = existing_user.get_login_uri()
-            msg = _('That email is already taken, do you want to <a href="%s">login</a>?' % login_uri)
+            msg = _('That email is already taken, do you want to <a href="%(login_uri)s">login</a>?') % {'login_uri': login_uri}
             raise forms.ValidationError(mark_safe(msg))
 
         if len(email) > 100:

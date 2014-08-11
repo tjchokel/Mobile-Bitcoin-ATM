@@ -252,10 +252,10 @@ class BTCTransaction(models.Model):
         if self.met_minimum_confirmation_at:
             return _('BTC Received')
         else:
-            msg = 'BTC Pending (%s of %s Confirms Needed)' % (
-                    self.conf_num,
-                    self.get_confs_needed(),
-                    )
+            msg = _('BTC Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)') % {
+                    'conf_num': self.conf_num,
+                    'confs_needed': self.get_confs_needed(),
+                    }
             return _(msg)
 
     def get_currency_symbol(self):
@@ -341,15 +341,12 @@ class BTCTransaction(models.Model):
 
         shopper = self.get_shopper()
         if shopper and shopper.phone_num:
-            msg = 'You just sent %s to %s. '
-            msg += 'You will receive %s when this transaction confirms in %s mins.'
-            msg = msg % (
-                    self.format_satoshis_amount(),
-                    self.get_merchant().business_name,
-                    self.get_fiat_amount_formatted(),
-                    self.get_time_range_in_minutes()
-                    )
-            msg = _(msg)
+            msg = _('You just sent %(btc_amount)s to %(business_name)s. You will receive %(fiat_amount_formatted)s when this transaction confirms in %(time_range_in_minutes)s mins.') % {
+                    'btc_amount': self.format_satoshis_amount(),
+                    'business_name': self.get_merchant().business_name,
+                    'fiat_amount_formatted': self.get_fiat_amount_formatted(),
+                    'time_range_in_minutes': self.get_time_range_in_minutes()
+                    }
             return SentSMS.send_and_log(
                     phone_num=shopper.phone_num,
                     message=msg,
@@ -400,13 +397,11 @@ class BTCTransaction(models.Model):
 
         shopper = self.get_shopper()
         if shopper and shopper.phone_num:
-            msg = 'The %s you sent to %s has been confirmed. They now owe you %s.'
-            msg = msg % (
-                    self.format_satoshis_amount(),
-                    self.get_merchant().business_name,
-                    self.get_fiat_amount_formatted(),
-                    )
-            msg = _(msg)
+            msg = _('The %(btc_amount)s you sent to %(business_name)s has been confirmed. They now owe you %(fiat_amount)s.') % {
+                    'btc_amount': self.format_satoshis_amount(),
+                    'business_name': self.get_merchant().business_name,
+                    'fiat_amount': self.get_fiat_amount_formatted(),
+                    }
             return SentSMS.send_and_log(
                     phone_num=shopper.phone_num,
                     message=msg,
@@ -457,28 +452,33 @@ class BTCTransaction(models.Model):
                 return
 
         merchant = self.get_merchant()
-        if merchant.phone_num:
-            msg = 'The %s you received from %s has been confirmed. Please pay them %s immediately.'
-            shopper = self.get_shopper()
-            if shopper and shopper.name:
-                customer_string = shopper.name
-            else:
-                customer_string = 'the customer'
-            msg = msg % (
-                    self.format_satoshis_amount(),
-                    customer_string,
-                    self.get_fiat_amount_formatted(),
-                    )
-            msg = _(msg)
-            return SentSMS.send_and_log(
-                    phone_num=merchant.phone_num,
-                    message=msg,
-                    to_user=merchant.user,
-                    to_merchant=merchant,
-                    to_shopper=shopper,
-                    message_type=SentSMS.MERCHANT_TX_CONFIRMED,
-                    btc_transaction=self,
-                    )
+        if not merchant.phone_num:
+            return
+        shopper = self.get_shopper()
+        if not shopper:
+            return
+
+        if shopper.name:
+            msg = _('The %(btc_amount)s you received from %(customer_name)s has been confirmed. Please pay them %(fiat_amount)s immediately.') % {
+                    'customer_name': shopper.name,
+                    'btc_amount': self.format_satoshis_amount(),
+                    'fiat_amount': self.get_fiat_amount_formatted(),
+                    }
+        else:
+            msg = _('The %(btc_amount)s you received from the customer has been confirmed. Please pay them %(fiat_amount)s immediately.') % {
+                    'btc_amount': self.format_satoshis_amount(),
+                    'fiat_amount': self.get_fiat_amount_formatted(),
+                    }
+
+        return SentSMS.send_and_log(
+                phone_num=merchant.phone_num,
+                message=msg,
+                to_user=merchant.user,
+                to_merchant=merchant,
+                to_shopper=shopper,
+                message_type=SentSMS.MERCHANT_TX_CONFIRMED,
+                btc_transaction=self,
+                )
 
     def send_all_txconfirmed_notifications(self, force_resend=False):
         """

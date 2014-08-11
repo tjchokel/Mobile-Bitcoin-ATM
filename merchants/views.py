@@ -49,10 +49,11 @@ def login_request(request):
 
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
-                    msg = _("Sorry, that's not the right password for <b>%s</b>." % escape(email))
+                    msg = _("Sorry, that's not the right password for <b>%(email)s</b>.") % {
+                            'email': escape(email)}
                     messages.warning(request, msg, extra_tags='safe')
             else:
-                msg = _("No account found for <b>%s</b>." % escape(email))
+                msg = _("No account found for <b>%(email)s</b>.") % {'email': escape(email)}
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':

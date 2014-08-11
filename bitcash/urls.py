@@ -76,4 +76,7 @@ urlpatterns = patterns('',
     # Logging Test
     url(r'^fail500/$', 'services.views.fail500', name='services500'),
 
+    # Short URLs
+    url(r'^(?P<uri>[-\w]+)/$', 'profiles.views.merchant_site', name='merchant_site'),
+
 )

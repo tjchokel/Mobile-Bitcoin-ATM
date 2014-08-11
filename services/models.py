@@ -1,6 +1,9 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 from jsonfield import JSONField
+
+from emails.trigger import send_admin_email
 
 from utils import get_client_ip
 
@@ -74,6 +77,23 @@ class APICall(models.Model):
     # optional FKs
     merchant = models.ForeignKey('merchants.Merchant', null=True, blank=True)
     credential = models.ForeignKey('credentials.BaseCredential', null=True, blank=True)
+
+    def __str__(self):
+        return '%s from %s' % (self.id, self.api_name)
+
+    def send_admin_btcpurchase_error_email(self, btc_purchase_request):
+        api_url = reverse('admin:services_apicall_change', args=(self.id, ))
+        shopper_request_url = reverse('admin:bitcoins_shopperbtcpurchase_change',
+                args=(btc_purchase_request.id, ))
+        body_context = {
+                'api_url': api_url,
+                'shopper_request_url': shopper_request_url,
+                }
+        return send_admin_email(
+                body_template='btc_purchase_error_notification.html',
+                subject='API Error for Shopper BTC Purchase Request %s' % btc_purchase_request.id,
+                body_context=body_context,
+                )
 
 
 class WebHook(models.Model):

@@ -34,24 +34,14 @@
                   <td>{{transaction.format_satoshis_amount}}</td>
                   <td>{{transaction.get_fiat_amount_formatted}}</td>
                   <td>
-                    {% if transaction.credential.get_credential_abbrev == 'CBS' %}
-                      <a href="https://coinbase.com/accounts/" target="_blank">CoinBase</a>
-                    {% elif transaction.credential.get_credential_abbrev == 'BTS' %}
-                      <a href="https://www.bitstamp.net/account/transactions/" target="_blank">BitStamp</a>
-                    {% elif transaction.credential.get_credential_abbrev == 'BCI' %}
-                      <a href="https://blockchain.info/wallet/login" target="_blank">BlockChain</a>
+                    {% if transaction.credential %}
+                    <a href="{{ transaction.credential.get_login_link }}" target="_blank">{{ transaction.credential.get_credential_to_display }}</a>
                     {% else %}
                       Bitcoin Network
                     {% endif %}
                   </td>
                   <td>
-                    {% if transaction.txn_hash or transaction.btc_transaction %}
-                      <a href="https://blockchain.info/tx/{% firstof transaction.txn_hash transaction.btc_transaction.txn_hash %}" target="_blank">{{transaction.get_status|format_status_string}}</a>
-                    {% elif transaction.b58_address %}
-                      <a href="https://blockchain.info/address/{{ transaction.b58_address }}" target="_blank">{{transaction.get_status|format_status_string}}</a>
-                    {% else %}
-                      <a href="https://coinbase.com/accounts/" target="_blank">{{transaction.get_status|format_status_string}}</a>
-                    {% endif %}
+                    <a href="{{ transaction.get_transaction_url }}" target="_blank">{{transaction.get_status|format_status_string}}</a>
                   </td>
                 </tr>
               {% endfor %}

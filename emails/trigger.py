@@ -1,6 +1,6 @@
 from django.template.loader import render_to_string
 
-from bitcash.settings import POSTMARK_SENDER, EMAIL_DEV_PREFIX, BASE_URL
+from bitcash.settings import POSTMARK_SENDER, EMAIL_DEV_PREFIX, BASE_URL, ADMINS
 
 from utils import split_email_header, cat_email_header
 
@@ -138,3 +138,32 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     pm.send()
 
     return se
+
+
+def send_admin_email(subject, body_template, body_context):
+    """
+    Send an admin email and don't log it
+    """
+    body_context_modified = body_context.copy()
+    body_context_modified['BASE_URL'] = BASE_URL
+
+    # Generate html body
+    html_body = render_to_string('emails/admin/'+body_template, body_context_modified)
+
+    if EMAIL_DEV_PREFIX:
+        subject += ' [DEV]'
+
+    # BCC everything to self (for now at least)
+    pm_dict = {
+            'sender': POSTMARK_SENDER,
+            'to': ','.join([x[1] for x in ADMINS]),
+            'bcc': POSTMARK_SENDER,
+            'subject': subject,
+            'html_body': html_body,
+            }
+
+    # Make email object
+    pm = PMMail(**pm_dict)
+
+    # Send email object
+    return pm.send()

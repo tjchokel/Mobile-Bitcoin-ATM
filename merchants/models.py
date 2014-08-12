@@ -75,6 +75,11 @@ class Merchant(models.Model):
                     merchant=self,
                     credential=credential_used)
 
+    def get_phone_num_formatted(self):
+        if self.phone_num:
+            return self.phone_num.as_international
+        return None
+
     def set_new_forwarding_address(self):
         return self.get_destination_address().create_new_forwarding_address()
 

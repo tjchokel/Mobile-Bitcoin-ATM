@@ -12,7 +12,7 @@ from phones.models import SentSMS
 from emails.models import SentEmail
 
 from emails.trigger import send_and_log
-from emails.internal_msg import send_admin_email
+from emails.internal_msg import send_internal_email
 
 from countries import BFHCurrenciesList
 
@@ -236,7 +236,7 @@ class ForwardingAddress(models.Model):
                 # Fewer confirmations than the past
                 # Only possible with orphaned blocks (extremely rare)
                 # and potentially in the case of double-sending to an address (the second send might reset the confirmations counter)
-                send_admin_email(
+                send_internal_email(
                         subject='Confirmation Discrepency for %s' % input_txn_hash,
                         message='Source says %s confirms and DB has %s confirms' % (
                             num_confirmations, fwd_txn.conf_num),

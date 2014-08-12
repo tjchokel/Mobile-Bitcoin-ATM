@@ -995,7 +995,7 @@ msgid ""
 "          "
 msgstr ""
 "\n"
-" Cajero:. Por favor, entregue a %(shopper_name)s <b>%(fiat)s</b> en este "
+" Cajero: Por favor, entregue a %(shopper_name)s <b>%(fiat)s</b> en este "
 "momento."
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:33

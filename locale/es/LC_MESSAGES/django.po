@@ -86,14 +86,6 @@ msgid ""
 "clicking the Admin button below."
 msgstr ""
 
-#: bitcoins/views.py:360
-msgid "Your request has been cancelled"
-msgstr "Su perfil ha sido actualizado"
-
-#: bitcoins/views.py:377
-msgid "Your buy request has been cancelled"
-msgstr "Su perfil ha sido actualizado"
-
 #: credentials/forms.py:8
 msgid "Username (Wallet Identifier)"
 msgstr "Nombre de usuario (identificador de la Billetera)"
@@ -3723,19 +3715,3 @@ msgstr ""
 #: users/views.py:242
 msgid "Message Received! We'll get back to you soon."
 msgstr "Gracias! Nos pondremos en contacto con usted pronto."
-
-#: users/views.py:261
-msgid "Your password has been changed."
-msgstr "Su perfil ha sido actualizado"
-
-#~ msgid "The percent you want to charge above the market rate."
-#~ msgstr "Porcentaje a cobrar por encima de la tasa de mercado"
-
-#~ msgid "Waiting for customer's deposit to"
-#~ msgstr "Esperando depósito a"
-
-#~ msgid "Shopper Information"
-#~ msgstr "Información del Cliente"
-
-#~ msgid "Phone"
-#~ msgstr "Teléfono"

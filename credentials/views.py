@@ -142,10 +142,18 @@ def refresh_bci_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_blockchain_credential()
+    success = False
+
     try:
-        credential.get_balance()
-        messages.success(request, _('Your Blockchain API info has been refreshed'))
+        balance = credential.get_balance()
+        if balance is not False:
+            success = True
     except:
+        pass
+
+    if success:
+        messages.success(request, _('Your Blockchain API info has been refreshed'))
+    else:
         messages.warning(request, _('Your Blockchain API info could not be validated'))
     return HttpResponse("*ok*")
 
@@ -155,10 +163,18 @@ def refresh_cb_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_coinbase_credential()
+    success = False
+
     try:
-        credential.get_balance()
-        messages.success(request, _('Your Coinbase API info has been refreshed'))
+        balance = credential.get_balance()
+        if balance is not False:
+            success = True
     except:
+        pass
+
+    if success:
+        messages.success(request, _('Your Coinbase API info has been refreshed'))
+    else:
         messages.warning(request, _('Your Coinbase API info could not be validated'))
     return HttpResponse("*ok*")
 
@@ -168,10 +184,17 @@ def refresh_bs_credentials(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_bitstamp_credential()
+    success = False
     try:
-        credential.get_balance()
-        messages.success(request, _('Your Bistamp API info has been refreshed'))
+        balance = credential.get_balance()
+        if balance is not False:
+            success = True
     except:
+        pass
+
+    if success:
+        messages.success(request, _('Your Bistamp API info has been refreshed'))
+    else:
         messages.warning(request, _('Your Bistamp API info could not be validated'))
     return HttpResponse("*ok*")
 

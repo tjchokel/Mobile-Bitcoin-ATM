@@ -24,7 +24,7 @@ class CBSCredential(BaseCredential):
         return 'CBS'
 
     def get_credential_to_display(self):
-        return 'CoinBase'
+        return 'Coinbase'
 
     def get_login_link(self):
         return 'https://coinbase.com/signin'
@@ -198,8 +198,8 @@ class CBSCredential(BaseCredential):
         CB requires a fee for txns < .001 BTC, so this method will
         automatically include txn fees for those.
 
-        Returns a tuple of the form:
-            BTCTransaction, error_string
+        Returns a tuple of the form (some or all may be none):
+            btc_txn, sent_btc_obj, api_call, err_str
         """
 
         msg = "Can't have both a destination email and BTC address. %s | %s" % (
@@ -253,7 +253,7 @@ class CBSCredential(BaseCredential):
                 body=body)
 
         # Log the API call
-        APICall.objects.create(
+        api_call = APICall.objects.create(
             api_name=APICall.COINBASE_SEND_BTC,
             url_hit=SEND_URL,
             response_code=r.status_code,
@@ -266,18 +266,19 @@ class CBSCredential(BaseCredential):
 
         resp_json = json.loads(r.content)
 
-        if 'success' not in resp_json:
-            # TODO: this assumes all error messages here are safe to display to the user
-            return None, resp_json.get('error')
+        if resp_json.get('error') or resp_json.get('errors'):
+            err_str = resp_json.get('error')
+            # combine the two
+            if resp_json.get('errors'):
+                if err_str:
+                    err_str += ' %s' % resp_json.get('errors')
+                else:
+                    err_str = resp_json.get('errors')
+
+            # this assumes all error messages here are safe to display to the user
+            return None, None, api_call, err_str
 
         transaction = resp_json['transaction']
-
-        recipient_address = transaction['recipient_address']
-        msg = '%s != %s' % (recipient_address, dest_addr_to_use)
-        assert recipient_address == dest_addr_to_use, msg
-
-        currency = transaction['amount']['currency']
-        assert currency == 'BTC', currency
 
         satoshis = -1 * btc_to_satoshis(transaction['amount']['amount'])
 
@@ -291,16 +292,16 @@ class CBSCredential(BaseCredential):
                 'transaction_id': transaction['id'],
                 'notes': notes,
                 })
-        CBSSentBTC.objects.create(**send_btc_dict)
+        sent_btc_obj = CBSSentBTC.objects.create(**send_btc_dict)
 
         if txn_hash:
             return BTCTransaction.objects.create(
                     txn_hash=txn_hash,
                     satoshis=satoshis,
-                    conf_num=0), None
+                    conf_num=0), sent_btc_obj, api_call, None
         else:
             # Coinbase seems finicky about transaction hashes
-            return None, None
+            return None, sent_btc_obj, api_call, None
 
     def get_new_receiving_address(self, set_as_merchant_address=False):
         """

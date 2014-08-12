@@ -12,7 +12,7 @@ from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction, ForwardingAddress
 from services.models import WebHook
 
-from emails.internal_msg import send_admin_email
+from emails.internal_msg import send_internal_email
 from utils import format_fiat_amount
 import json
 
@@ -134,14 +134,14 @@ def process_bci_webhook(request, random_id):
         # Run some safety checks and email us of discrepencies (but don't break)
         if fwd_btc_txn:
             if fwd_btc_txn.satoshis != satoshis:
-                send_admin_email(
+                send_internal_email(
                         subject='BTC Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s satoshis and BCI says %s' % (
                             fwd_btc_txn.satoshis, satoshis),
                         recipient_list=['monitoring@coinsafe.com', ],
                         )
             if fwd_btc_txn.conf_num < num_confirmations and num_confirmations <= 6:
-                send_admin_email(
+                send_internal_email(
                         subject='Confirmations Discrepency for %s' % input_txn_hash,
                         message='Blockcypher says %s confs and BCI says %s' % (
                             fwd_btc_txn.conf_num, num_confirmations),
@@ -266,8 +266,8 @@ def process_blockcypher_webhook(request, random_id):
                 # This shouldn't be the case, but it's a protection from things falling behind
 
                 # Mark it as such
-                fwd_btc_txn.met_minimum_confirmation_at = now()
-                fwd_btc_txn.save()
+                fwd_txn.met_minimum_confirmation_at = now()
+                fwd_txn.save()
 
                 # Send confirmed notifications only (no need to send newtx notifications)
                 fwd_txn.send_all_txconfirmed_notifications(force_resend=False)
@@ -371,8 +371,7 @@ def cancel_buy(request):
 
         buy_request = merchant.get_bitcoin_purchase_request()
         assert buy_request, 'No buy request to cancel'
-        buy_request.cancelled_at = now()
-        buy_request.save()
+        buy_request.mark_cancelled()
 
         msg = _("Your buy request has been cancelled")
         messages.success(request, msg)

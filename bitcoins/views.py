@@ -208,8 +208,7 @@ def cancel_buy(request):
 
         buy_request = merchant.get_bitcoin_purchase_request()
         assert buy_request, 'No buy request to cancel'
-        buy_request.cancelled_at = now()
-        buy_request.save()
+        buy_request.mark_cancelled()
 
         msg = _("Your buy request has been cancelled")
         messages.success(request, msg)

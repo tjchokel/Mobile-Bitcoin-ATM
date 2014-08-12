@@ -84,10 +84,15 @@ class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
         'satoshis_formatted',
         'currency_code_when_created',
         'confirmed_by_merchant_at',
-        'expires_at',
         'cancelled_at',
+        'funds_sent_at',
+        'expires_at',
+        'credential',
+        'btc_transaction',
+        'merchant_email_sent_at',
+        'shopper_email_sent_at',
     )
-    raw_id_fields = ('merchant', 'shopper', 'credential', 'btc_transaction', )
+    raw_id_fields = ('merchant', 'shopper', 'credential', 'btc_transaction', 'base_sent_btc', )
 
     class Meta:
         model = ShopperBTCPurchase

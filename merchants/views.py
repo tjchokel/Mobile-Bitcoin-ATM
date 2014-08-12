@@ -163,7 +163,7 @@ def register_bitcoin(request):
         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     initial = {
-            'btc_markup': 2.0,
+            'btc_markup': 3.0,
             'exchange_choice': 'coinbase',
             'wallet_type_choice': 'new',
     }

@@ -8,8 +8,43 @@ import requests
 import json
 
 
+def fetch_bcypher_txn_data_from_address(address, merchant=None, forwarding_obj=None):
+    BASE_URL = 'http://api.blockcypher.com/v1/btc/main/addrs/%s'
+    url_to_hit = BASE_URL % address
+
+    if BLOCKCYPHER_API_KEY:
+        url_to_hit += '?token=%s' % BLOCKCYPHER_API_KEY
+
+    assert is_valid_btc_address(address), address
+
+    r = requests.get(url_to_hit)
+
+    # Log the API call
+    APICall.objects.create(
+            api_name=APICall.BLOCKCYPHER_TXN_FROM_ADDR,
+            url_hit=url_to_hit,
+            response_code=r.status_code,
+            post_params=None,
+            api_results=r.content,
+            merchant=merchant,
+            forwarding_address=forwarding_obj,
+            )
+
+    err_msg = 'Expected status code 2XX but got %s' % r.status_code
+    assert str(r.status_code).startswith('2'), err_msg
+
+    dict_response = json.loads(r.content)
+
+    assert 'error' not in dict_response, dict_response
+    assert 'errors' not in dict_response, dict_response
+
+    return dict_response
+
+
 def set_blockcypher_webhook(monitoring_address, callback_url, merchant=None):
     '''
+    NOT USED ANYMORE
+
     Set a blockcypher webhook to monitoring an address.
 
     We'll use this for the forwarding address, but the code here is generic

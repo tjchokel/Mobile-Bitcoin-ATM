@@ -17,8 +17,11 @@ class APICall(models.Model):
     # api_name choices
     BCI_RECEIVE_PAYMENTS = 'BRP'
     BLOCKCYPHER_ADDR_MONITORING = 'BAM'
+    BLOCKCYPHER_TXN_FROM_ADDR = 'BCA'
     BCI_TXN_FROM_HASH = 'BTH'
     BCI_TXN_FROM_ADDR = 'BTA'
+
+    CHAINCOM_TXN_FROM_ADDR = 'CTA'
 
     COINBASE_BALANCE = 'CBL'
     COINBASE_LIST_PURCHASE_SALE = 'CLC'
@@ -74,6 +77,8 @@ class APICall(models.Model):
     # optional FKs
     merchant = models.ForeignKey('merchants.Merchant', null=True, blank=True)
     credential = models.ForeignKey('credentials.BaseCredential', null=True, blank=True)
+    forwarding_address = models.ForeignKey('bitcoins.ForwardingAddress', null=True, blank=True)
+    destination_address = models.ForeignKey('bitcoins.DestinationAddress', null=True, blank=True)
 
 
 class WebHook(models.Model):

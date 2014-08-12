@@ -6,12 +6,13 @@ from django.utils.translation import ugettext as _
 from annoying.functions import get_object_or_None
 
 from bitcoins.bci import set_bci_webhook
-from bitcoins.blockcypher import set_blockcypher_webhook
-
-from emails.trigger import send_and_log
+from bitcoins.chain_com import fetch_chaincom_txn_data_from_address, filter_chaincom_txns
 
 from phones.models import SentSMS
 from emails.models import SentEmail
+
+from emails.trigger import send_and_log
+from emails.internal_msg import send_admin_email
 
 from countries import BFHCurrenciesList
 
@@ -47,9 +48,8 @@ class DestinationAddress(models.Model):
         # this helps solve some edge cases
         kw_to_use = {'random_id': simple_random_generator(16)}
 
-        # blockchain.info and blockcypher callback uris
+        # blockchain.info callback uris
         bci_uri = reverse('process_bci_webhook', kwargs=kw_to_use)
-        blockcypher_uri = reverse('process_blockcypher_webhook', kwargs=kw_to_use)
 
         # get address to forward to (this also signs up for webhook on destination address)
         forwarding_address = set_bci_webhook(
@@ -61,12 +61,6 @@ class DestinationAddress(models.Model):
         ForwardingAddress.objects.create(
                 b58_address=forwarding_address,
                 destination_address=self,
-                merchant=self.merchant)
-
-        # set webhook for forwarding address
-        set_blockcypher_webhook(
-                monitoring_address=forwarding_address,
-                callback_url=uri_to_url(BASE_URL, blockcypher_uri),
                 merchant=self.merchant)
 
         return forwarding_address
@@ -81,12 +75,13 @@ class ForwardingAddress(models.Model):
             db_index=True, unique=True)
     paid_out_at = models.DateTimeField(blank=True, null=True, db_index=True)
     destination_address = models.ForeignKey(DestinationAddress, blank=False, null=False)
-
     # technically, this is redundant through DestinationAddress
     # but having it here makes for easier querying (especially before there is a destination address)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     shopper = models.ForeignKey('shoppers.Shopper', blank=True, null=True)
+
     customer_confirmed_deposit_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    last_activity_check_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
@@ -111,36 +106,16 @@ class ForwardingAddress(models.Model):
 
         txn_group_list = []
 
-        for dest_txn in self.btctransaction_set.filter(destination_address__isnull=False):
-            txn_dict = {
-                    'satoshis': dest_txn.satoshis,
-                    'destination_txn_hash': dest_txn.txn_hash,
-                    'destination_conf_num': dest_txn.conf_num,
-                    }
-
-            fwd_txn = dest_txn.input_btc_transaction
-            if fwd_txn:
-                txn_dict['forwarding_txn_hash'] = fwd_txn.txn_hash
-                txn_dict['forwarding_conf_num'] = fwd_txn.conf_num
-                txn_dict['forwarding_fiat_amount'] = fwd_txn.fiat_amount
-                txn_dict['currency_code_when_created'] = fwd_txn.currency_code_when_created
-
-            # add txn to list
-            txn_group_list.append(txn_dict)
-
-        fwd_txn_hashes = [x['forwarding_txn_hash'] for x in txn_group_list if 'forwarding_txn_hash' in x]
-
-        # loop through forwarding txns to get any that might be missing (no destination confirms)
+        # loop through forwarding txns
         for fwd_txn in self.btctransaction_set.filter(destination_address__isnull=True):
-            if fwd_txn.txn_hash not in fwd_txn_hashes:
-                txn_dict = {
-                        'satoshis': fwd_txn.satoshis,
-                        'forwarding_txn_hash': fwd_txn.txn_hash,
-                        'forwarding_conf_num': fwd_txn.conf_num,
-                        'forwarding_fiat_amount': fwd_txn.fiat_amount,
-                        'currency_code_when_created': fwd_txn.currency_code_when_created,
-                        }
-                txn_group_list.append(txn_dict)
+            txn_dict = {
+                    'satoshis': fwd_txn.satoshis,
+                    'forwarding_txn_hash': fwd_txn.txn_hash,
+                    'forwarding_conf_num': fwd_txn.conf_num,
+                    'forwarding_fiat_amount': fwd_txn.fiat_amount,
+                    'currency_code_when_created': fwd_txn.currency_code_when_created,
+                    }
+            txn_group_list.append(txn_dict)
 
         return txn_group_list
 
@@ -173,7 +148,63 @@ class ForwardingAddress(models.Model):
                 self.get_fiat_transactions_total(),
                 self.get_first_forwarding_transaction().currency_code_when_created)
 
-    # If an address has already been shown to the user, can it be shown again
+    def activity_check_due(self):
+        """
+        Decide whether to supplement inbound webhook with outbound api call
+        """
+        if self.customer_confirmed_deposit_at or self.paid_out_at:
+            # This txn is done
+            return False
+        if not self.last_activity_check_at:
+            # This txn has never been checked, go!
+            return True
+
+        seconds_since_last_activity_check = (now() - self.last_activity_check_at).total_seconds()
+
+        txn_detected = bool(self.get_all_forwarding_transactions().count())
+        if txn_detected:
+            # A txn has been detected
+            if seconds_since_last_activity_check > 90:
+                return True
+            else:
+                return False
+        else:
+            # No txn detected
+            if seconds_since_last_activity_check > 20:
+                return True
+            else:
+                return False
+
+    def check_for_activity(self):
+        """
+        Make outbound API call for the forwarding address
+
+        Right now this only (explicitly) handles the forwarding address,
+        though the destination address will get some data incidentally returned.
+        In the future, we may want a separate process for the destination address.
+        """
+        all_txn_data = fetch_chaincom_txn_data_from_address(self.b58_address,
+                merchant=self.merchant, forwarding_obj=self)
+
+        txn_data = filter_chaincom_txns(
+                forwarding_address=self.b58_address,
+                destination_address=self.destination_address.b58_address,
+                txn_data=all_txn_data)
+
+        for address, satoshis, confirmations, txn_hash in txn_data:
+            if address == self.b58_address:
+                ForwardingAddress.handle_forwarding_txn(
+                    input_address=address,
+                    satoshis=satoshis,
+                    num_confirmations=confirmations,
+                    input_txn_hash=txn_hash)
+            else:
+                ForwardingAddress.handle_destination_txn(
+                    destination_address=address,
+                    satoshis=satoshis,
+                    num_confirmations=confirmations,
+                    destination_txn_hash=txn_hash)
+
     def can_be_reused(self):
         seconds_old = (now() - self.generated_at).total_seconds()
         if seconds_old > 600:
@@ -183,6 +214,139 @@ class ForwardingAddress(models.Model):
         if self.get_transaction():
             return False
         return True
+
+    @staticmethod
+    def handle_forwarding_txn(input_address, satoshis, num_confirmations, input_txn_hash):
+        """
+        Abstracted helper function that can be used on API calls and webhook
+
+        One day, this could support many different data sources for uptime.
+        """
+
+        fwd_txn = get_object_or_None(BTCTransaction, txn_hash=input_txn_hash)
+
+        if fwd_txn:
+            # already had txn in DB
+
+            # Record the activity
+            fwd_txn.last_activity_check_at = now()
+            fwd_txn.save()
+
+            if num_confirmations < fwd_txn.conf_num:
+                # Fewer confirmations than the past
+                # Only possible with orphaned blocks (extremely rare)
+                # and potentially in the case of double-sending to an address (the second send might reset the confirmations counter)
+                send_admin_email(
+                        subject='Confirmation Discrepency for %s' % input_txn_hash,
+                        message='Source says %s confirms and DB has %s confirms' % (
+                            num_confirmations, fwd_txn.conf_num),
+                        recipient_list=['monitoring@coinsafe.com', ],
+                        )
+            elif num_confirmations == fwd_txn.conf_num:
+                # No update
+                pass
+            elif num_confirmations > fwd_txn.foo:
+                if num_confirmations >= 6 and not fwd_txn.irreversible_by:
+                    fwd_txn.irreversible_by = now()
+                fwd_txn.conf_num = num_confirmations
+                fwd_txn.save()
+
+                if fwd_txn.meets_minimum_confirmations() and not fwd_txn.met_minimum_confirmation_at:
+                    # Mark it as such
+                    fwd_txn.met_minimum_confirmation_at = now()
+                    fwd_txn.save()
+
+                    # send out emails
+                    fwd_txn.send_all_txconfirmed_notifications(force_resend=False)
+
+        else:
+            # didn't have input txn in DB
+
+            # Confirmations logic
+            if num_confirmations >= 6:
+                irreversible_by = now()
+            else:
+                irreversible_by = None
+
+            forwarding_obj = get_object_or_None(ForwardingAddress, b58_address=input_address)
+            assert forwarding_obj, input_address
+
+            fiat_amount = forwarding_obj.merchant.calculate_fiat_amount(satoshis=satoshis)
+
+            # Create TX
+            fwd_txn = BTCTransaction.objects.create(
+                    txn_hash=input_txn_hash,
+                    satoshis=satoshis,
+                    conf_num=num_confirmations,
+                    irreversible_by=irreversible_by,
+                    forwarding_address=forwarding_obj,
+                    currency_code_when_created=forwarding_obj.merchant.currency_code,
+                    fiat_amount=fiat_amount,
+                    last_activity_check_at=now(),
+                    )
+
+            # Send out shopper/merchant emails
+            if fwd_txn.meets_minimum_confirmations():
+                # This shouldn't be the case, but it's a protection from things falling behind
+
+                # Mark it as such
+                fwd_txn.met_minimum_confirmation_at = now()
+                fwd_txn.save()
+
+                # Send confirmed notifications only (no need to send newtx notifications)
+                fwd_txn.send_all_txconfirmed_notifications(force_resend=False)
+            else:
+                # It's new *and* not yet confirmed, this is what we expect
+                fwd_txn.send_all_newtx_notifications(force_resend=False)
+
+        return fwd_txn
+
+    @staticmethod
+    def handle_destination_txn(destination_address, satoshis, num_confirmations, destination_txn_hash):
+
+        dest_txn = get_object_or_None(BTCTransaction, txn_hash=destination_txn_hash)
+
+        if dest_txn:
+            # already had destination txn in db
+
+            if num_confirmations > dest_txn.conf_num:
+                # Increase conf_num
+                dest_txn.conf_num = num_confirmations
+                if num_confirmations >= 6 and not dest_txn.irreversible_by:
+                    # if we wanted to notify stores their BTC has arrived
+                    # (or trigger a bitcoin exchange action) this would be a good place
+                    dest_txn.irreversible_by = now()
+                dest_txn.save()
+
+            return dest_txn
+        else:
+            # Didn't have destination txn in db
+
+            # Get forwarding and destination_obj
+            forwarding_obj = get_object_or_None(ForwardingAddress, destination_address=destination_address)
+            destination_obj = forwarding_obj.destination_address
+
+            msg = '%s != %s' % (destination_obj.b58_address, destination_address)
+            assert destination_obj.b58_address == destination_address, msg
+
+            # Confirmations logic
+            if num_confirmations >= 6:
+                # In case we fall behind
+                irreversible_by = now()
+            else:
+                irreversible_by = None
+
+            # Create TX
+            dest_txn = BTCTransaction.objects.create(
+                    txn_hash=destination_txn_hash,
+                    satoshis=satoshis,
+                    conf_num=num_confirmations,
+                    irreversible_by=irreversible_by,
+                    forwarding_address=forwarding_obj,
+                    destination_address=destination_obj,
+                    )
+
+        return dest_txn
 
 
 class BTCTransaction(models.Model):
@@ -202,8 +366,6 @@ class BTCTransaction(models.Model):
     forwarding_address = models.ForeignKey(ForwardingAddress, blank=True, null=True)
     # We we only have this when the deposit is being relayed:
     destination_address = models.ForeignKey(DestinationAddress, blank=True, null=True)
-    # We only have this once the deposit has been relayed (and assuming all APIS worked as expected)
-    input_btc_transaction = models.ForeignKey('self', blank=True, null=True)
     fiat_amount = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=2)
     currency_code_when_created = models.CharField(max_length=5, blank=True, null=True, db_index=True)
     met_minimum_confirmation_at = models.DateTimeField(blank=True, null=True, db_index=True)
@@ -577,7 +739,6 @@ class ShopperBTCPurchase(models.Model):
         Set fiat_amount when this object is first created
         http://stackoverflow.com/a/2311499/1754586
         """
-        # Only do this for blockcypher and not BCI
         if not self.pk:
             # This only happens if the objects isn't in the database yet.
             self.currency_code_when_created = self.merchant.currency_code

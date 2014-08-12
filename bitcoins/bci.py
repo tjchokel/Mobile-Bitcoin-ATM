@@ -51,7 +51,7 @@ def set_bci_webhook(dest_address, callback_url, merchant=None):
 # UNUSED METHODS:
 
 
-def fetch_bci_txn_data_from_hash(txn_hash, merchant=None):
+def fetch_bci_txn_data_from_hash(txn_hash, merchant=None, forwarding_obj=None):
     url = 'https://blockchain.info/rawtx/%s?api_code=%s' % (txn_hash,
             BCI_SECRET_KEY)
     r = requests.get(url)
@@ -63,7 +63,9 @@ def fetch_bci_txn_data_from_hash(txn_hash, merchant=None):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=merchant)
+            merchant=merchant,
+            forwarding_address=forwarding_obj,
+            )
 
     err_msg = 'Expected status code 200 but got %s' % r.status_code
     assert r.status_code == 200, err_msg
@@ -71,11 +73,13 @@ def fetch_bci_txn_data_from_hash(txn_hash, merchant=None):
     return json.loads(r.content)
 
 
-def fetch_bci_txn_data(address, merchant=None):
+def fetch_bci_txn_data_from_address(address, merchant=None, forwarding_obj=None):
     """
     Get all BCI transactions for a given address
     """
     assert address, 'Must supply an address'
+    assert is_valid_btc_address(address), address
+
     bci_url = 'https://blockchain.info/address/%s?format=json&api_code=%s' % (
             address, BCI_SECRET_KEY)
     r = requests.get(bci_url)
@@ -87,7 +91,9 @@ def fetch_bci_txn_data(address, merchant=None):
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,
-            merchant=merchant)
+            merchant=merchant,
+            forwarding_address=forwarding_obj,
+            )
 
     err_msg = 'Expected status code 200 but got %s' % r.status_code
     assert r.status_code == 200, err_msg

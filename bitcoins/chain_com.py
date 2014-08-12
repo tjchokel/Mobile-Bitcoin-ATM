@@ -2,11 +2,10 @@ from services.models import APICall
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
+from bitcash.settings import CHAIN_COM_API_KEY
+
 import requests
 import json
-
-# FIXME:
-CHAIN_COM_API_KEY = 'DEMO-4a5e1e4'
 
 
 def fetch_chaincom_txn_data_from_address(address, merchant=None, forwarding_obj=None):

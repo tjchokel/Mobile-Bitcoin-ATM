@@ -28,7 +28,7 @@ def poll_deposits(request):
         forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
         if forwarding_obj:
             if forwarding_obj.activity_check_due():
-                forwarding_obj = forwarding_obj.check_for_activity()
+                forwarding_obj.check_for_activity()
             # annoying:
             forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_obj.b58_address)
             confs_needed = forwarding_obj.get_confs_needed()
@@ -97,17 +97,18 @@ def process_bci_webhook(request, random_id):
 
     # process the transactions
     ForwardingAddress.handle_forwarding_txn(
-        input_address=input_address,
-        satoshis=satoshis,
-        num_confirmations=num_confirmations,
-        input_txn_hash=input_txn_hash,
-        )
+            input_address=input_address,
+            satoshis=satoshis,
+            num_confirmations=num_confirmations,
+            input_txn_hash=input_txn_hash,
+            )
     ForwardingAddress.handle_destination_txn(
-        destination_address=destination_address,
-        satoshis=satoshis,
-        num_confirmations=num_confirmations,
-        destination_txn_hash=destination_txn_hash,
-        )
+            forwarding_address=input_address,
+            destination_address=destination_address,
+            satoshis=satoshis,
+            num_confirmations=num_confirmations,
+            destination_txn_hash=destination_txn_hash,
+            )
 
     if num_confirmations > 6:
         return HttpResponse("*ok*")

@@ -200,6 +200,7 @@ class ForwardingAddress(models.Model):
                     input_txn_hash=txn_hash)
             else:
                 ForwardingAddress.handle_destination_txn(
+                    forwarding_address=self.b58_address,
                     destination_address=address,
                     satoshis=satoshis,
                     num_confirmations=confirmations,
@@ -245,7 +246,7 @@ class ForwardingAddress(models.Model):
             elif num_confirmations == fwd_txn.conf_num:
                 # No update
                 pass
-            elif num_confirmations > fwd_txn.foo:
+            else:
                 if num_confirmations >= 6 and not fwd_txn.irreversible_by:
                     fwd_txn.irreversible_by = now()
                 fwd_txn.conf_num = num_confirmations
@@ -282,8 +283,10 @@ class ForwardingAddress(models.Model):
                     forwarding_address=forwarding_obj,
                     currency_code_when_created=forwarding_obj.merchant.currency_code,
                     fiat_amount=fiat_amount,
-                    last_activity_check_at=now(),
                     )
+
+            forwarding_obj.last_activity_check_at = now()
+            forwarding_obj.save()
 
             # Send out shopper/merchant emails
             if fwd_txn.meets_minimum_confirmations():
@@ -302,7 +305,7 @@ class ForwardingAddress(models.Model):
         return fwd_txn
 
     @staticmethod
-    def handle_destination_txn(destination_address, satoshis, num_confirmations, destination_txn_hash):
+    def handle_destination_txn(forwarding_address, destination_address, satoshis, num_confirmations, destination_txn_hash):
 
         dest_txn = get_object_or_None(BTCTransaction, txn_hash=destination_txn_hash)
 
@@ -323,7 +326,7 @@ class ForwardingAddress(models.Model):
             # Didn't have destination txn in db
 
             # Get forwarding and destination_obj
-            forwarding_obj = get_object_or_None(ForwardingAddress, destination_address=destination_address)
+            forwarding_obj = get_object_or_None(ForwardingAddress, b58_address=forwarding_address)
             destination_obj = forwarding_obj.destination_address
 
             msg = '%s != %s' % (destination_obj.b58_address, destination_address)

@@ -38,8 +38,8 @@
       </p>
       {% if transactions %}
         <div style="text-align:center;">
-          <a class="btn btn-info btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
-            {% trans "Override Required Confirmations?" %}
+          <a class="btn btn-warning btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
+            {% trans "Override Required Confirmations" %}
           </a>
         </div>
         {% include "customer_dash/cash_out/_override_confirmations_modal.html" %}

@@ -2,9 +2,11 @@
 {% load i18n %}
 {% load app_extras %}
 {% load staticfiles %}
+
 {% block title %}
   {% trans "Customer Dashboard | CoinSafe" %}
 {% endblock title %}
+
 {% block content %}
   {% if transactions or current_address.customer_confirmed_deposit_at %}
     {% if current_address.all_transactions_complete and shopper %}
@@ -12,12 +14,10 @@
     {% else %}
       {% include "customer_dash/cash_out/_deposit_confirm.html" %}
     {% endif %}
-  {% else %}
-    {% if buy_request %}
+  {% elif buy_request %}
       {% include "customer_dash/cash_in/_bitcoin_purchase.html" %}
-    {% else %}
-      {% include "customer_dash/cash_out/_no_deposit_confirm.html" %}
-    {% endif %}
+  {% else %}
+    {% include "customer_dash/cash_out/_no_deposit_confirm.html" %}
   {% endif %}
 {% endblock content %}
 
@@ -28,8 +28,11 @@
 
 {% block extra_js %}
   <script>
-      var TIMEOUT_LENGTH = 30000;
+
+      {# timing vars #}
       var LAST_POLL_TIME = new Date();
+      var NEW_DEPOSITS_TIMEOUT_MS = 10000; {# fast but has expontential backoff #}
+      var NEW_CONFS_TIMEOUT_MS = 30000; {# no backoff #}
 
       function poll_new_deposits() {
         console.log('poll new desposits');
@@ -40,15 +43,15 @@
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
                 $('#last-polled-time').html(time_since);
-                var deposits = data['deposits']['txns']
+                var deposits = data['txns']
                 if(deposits.length == 0){
-                  setTimeout(poll_new_deposits,TIMEOUT_LENGTH);
+                  setTimeout(poll_new_deposits,NEW_DEPOSITS_TIMEOUT_MS*1.3);
                 }else{
                   location.reload(true);
                 }
               },
               error: function(data) {
-                setTimeout(poll_new_deposits,TIMEOUT_LENGTH*3);
+                setTimeout(poll_new_deposits,NEW_DEPOSITS_TIMEOUT_MS*3);
               }
           });
       }
@@ -61,12 +64,13 @@
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
                 $('#last-polled-time').html(time_since);
-                var deposits = data['deposits']
-                if(deposits['txns'].length == 0){
-                  setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
-                }else if(! deposits['all_complete']){
+                var txns = data['txns'];
+                var all_complete = data['all_complete'];
+                if(txns.length == 0){
+                  setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_MS);
+                }else if(! all_complete){
                   var confs_needed = data['confs_needed'];
-                  var txns = deposits['txns'];
+                  var txns = txns;
                   var txns_length = txns.length;
                   for (var i = 0; i < txns_length; i++) {
                     var txn = txns[i];
@@ -75,13 +79,13 @@
                     var conf_num_text = 'Pending ('+conf_num+' of '+confs_needed+' Confirms Needed)';
                     $('#tx-status-'+txn_hash).html(conf_num_text);
                   }
-                  setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+                  setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_MS);
                 }else{
                   location.reload(true);
                 }
               },
               error: function(data) {
-                setTimeout(poll_new_confirmations,TIMEOUT_LENGTH);
+                setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_MS);
               }
           });
       }
@@ -97,7 +101,7 @@
       }
 
       function set_expires_at_time() {
-        var expires_at_unix_time = "{{buy_request.expires_at_unix_time}}"
+        var expires_at_unix_time = "{{buy_request.expires_at_unix_time}}";
         var expires_at = new Date(expires_at_unix_time * 1000);
         var time_until = timeUntil(expires_at);
         $("#expires-in").html(time_until)
@@ -226,7 +230,7 @@
         }
         var buy_price_no_format = parseFloat($('#buy-price').data('price-data'));
         var final_btc = parseFloat(entered_amount) / buy_price_no_format;
-        
+
         if (final_btc > 0.5){
           var final_string = final_btc.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           $("#btc-amount").html(' ≈ '+final_string +' BTC');
@@ -251,6 +255,7 @@
 
 
     $(document).ready(function(){
+
       if( isMobileDevice() ){
         $('#id_amount').attr('type', 'number');
         olark('api.box.hide');
@@ -280,65 +285,41 @@
 
       $("#id_btc_address").after('<a class="btn btn-info btn-med" id="scan-qr-code" style="margin-left: 5px;" onclick="scanQrCode();"><i class="fa fa-camera"></i> QR Code</a>');
 
-      {% if transactions or current_address.customer_confirmed_deposit_at %}
+      {% if transactions and not current_address.all_transactions_complete %}
 
-        {% if transactions %}
+          poll_new_confirmations();
+          set_time_since();
 
-          {% if not current_address.all_transactions_complete %}
-            setTimeout(
-            function() {
-              poll_new_confirmations();
-            }, 15000);
+      {% elif current_address.customer_confirmed_deposit_at %}
 
-            setTimeout(
-            function() {
-              set_time_since();
-            }, 1000);
-          {% endif %}
+          poll_new_deposits();
+          set_time_since();
 
-        {% else %}
+      {% elif buy_request %}
 
-          setTimeout(
-          function() {
-            poll_new_deposits();
-          }, 30000);
-
-          setTimeout(
-          function() {
-            set_time_since();
-          }, 1000);
-
-        {% endif %}
+        set_expires_at_time();
+        $('#confirm-purchase-modal').on('shown.bs.modal', function () {
+            $('#id_password').focus();
+        })
 
       {% else %}
 
-        {% if buy_request %}
-          $('#confirm-purchase-modal').on('shown.bs.modal', function () {
-              $('#id_password').focus();
-          })
-        {% else %}
-          getBtcPrice();
-          {% if not transactions %}
-            poll_new_deposits();
-          {% endif %}
-        {% endif %}
+        getBtcPrice();
+        $('#deposit-address-modal').on('shown.bs.modal', function () {
+          poll_new_deposits();
+        })
 
       {% endif %}
-      {% if buy_request %}
-        set_expires_at_time();
-      {% endif %}
 
-
+      {# pre-seed cash-in modal #}
       function approximate_rounding(quantity) {
         {# Function used to pre-seed the local currency entry field #}
         quantity_string = Math.round(quantity).toString()
-        var digits = quantity_string.length;
-        return quantity_string[0] + Array(digits).join("0");
+        return quantity_string[0] + Array(quantity_string.length).join("0");
       }
-
       $('#buy-bitcoin-modal').on('shown.bs.modal', function () {
         if(!$('#id_amount').val()){
-          {# Pre-seed to 100 mBTC (may be a little less due to rounding) #}
+          {# Pre-seed to 50-100 mBTC (range due to rounding, will be closer to 100 mBTC) #}
           $('#id_amount').val(approximate_rounding($('#buy-price').data().priceData/10));
           $('#id_amount').trigger('keyup');
         }
@@ -346,6 +327,7 @@
       })
 
     });
+
   </script>
 
   <!-- Stuff for QR codes - https://github.com/LazarSoft/jsqrcode -->
@@ -368,4 +350,5 @@
   <script type="text/javascript" src="{% static "js/alignpat.js" %}"></script>
   <script type="text/javascript" src="{% static "js/databr.js" %}"></script>
   <script type="text/javascript" src="{% static "js/webqr.js" %}"></script>
+
 {% endblock %}

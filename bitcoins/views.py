@@ -11,9 +11,10 @@ from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction, ForwardingAddress
 from services.models import WebHook
 
+from emails.trigger import send_admin_email
+
 from utils import format_fiat_amount
 import json
-
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
@@ -24,21 +25,33 @@ def poll_deposits(request):
     txns_grouped = []
     all_complete = False
     confs_needed = 6
-    forwarding_address = request.session.get('forwarding_address')
-    if forwarding_address:
-        forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
-        if forwarding_obj:
-            if forwarding_obj.activity_check_due():
+    merchant = request.user.get_merchant()
+    forwarding_obj = merchant.get_latest_forwarding_obj()
+    if forwarding_obj:
+        if forwarding_obj.activity_check_due():
+            try:
                 forwarding_obj.check_for_activity()
-            # annoying:
-            forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_obj.b58_address)
-            confs_needed = forwarding_obj.get_confs_needed()
-            txns_grouped = forwarding_obj.get_and_group_all_transactions()
-            if forwarding_obj.all_transactions_complete():
-                all_complete = True
+            except Exception as e:
+                body_context = {
+                        'merchant': request.user.get_merchant(),
+                        'err_str': str(e),
+                        }
+                send_admin_email(
+                        subject='chain.com api call failed',
+                        body_template='',
+                        body_context=body_context,
+                        )
+        # annoying:
+        forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_obj.b58_address)
+
+        confs_needed = forwarding_obj.get_confs_needed()
+        txns_grouped = forwarding_obj.get_and_group_all_transactions()
+        if forwarding_obj.all_transactions_complete():
+            all_complete = True
 
     json_dict = {
-            'deposits': {'txns': txns_grouped, 'all_complete': all_complete},
+            'txns': txns_grouped,
+            'all_complete': all_complete,
             'confs_needed': confs_needed,
             }
     json_response = json.dumps(json_dict, cls=DjangoJSONEncoder)
@@ -121,16 +134,8 @@ def process_bci_webhook(request, random_id):
 def get_next_deposit_address(request):
     user = request.user
     merchant = user.get_merchant()
-    forwarding_address = request.session.get('forwarding_address')
-    if forwarding_address:
-        forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_address)
-        # if cookie forwarding address has not been used (user just closed modal)
-        if forwarding_obj and forwarding_obj.can_be_reused():
-            json_response = json.dumps({"address": forwarding_address})
-            return HttpResponse(json_response, content_type='application/json')
-    address = merchant.set_new_forwarding_address()
-    request.session['forwarding_address'] = address
-    json_response = json.dumps({"address": address})
+    forwarding_obj = merchant.get_or_set_available_forwarding_address()
+    json_response = json.dumps({"address": forwarding_obj.b58_address})
     return HttpResponse(json_response, content_type='application/json')
 
 
@@ -139,16 +144,9 @@ def customer_confirm_deposit(request):
     if request.method == 'POST':
         user = request.user
         merchant = user.get_merchant()
-
-        forwarding_address = request.session.get('forwarding_address')
-        assert forwarding_address, 'No forwarding address'
-        address = ForwardingAddress.objects.get(b58_address=forwarding_address)
-
-        msg = '%s != %s' % (merchant.id, address.merchant.id)
-        assert merchant.id == address.merchant.id, msg
-
-        address.customer_confirmed_deposit_at = now()
-        address.save()
+        forwarding_obj = merchant.get_latest_forwarding_obj()
+        forwarding_obj.customer_confirmed_deposit_at = now()
+        forwarding_obj.save()
 
     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
@@ -158,19 +156,11 @@ def merchant_complete_deposit(request):
     if request.method == 'POST':
         user = request.user
         merchant = user.get_merchant()
+        forwarding_obj = merchant.get_latest_forwarding_obj()
 
-        forwarding_address = request.session.get('forwarding_address')
-        assert forwarding_address, 'No forwarding address'
-
-        address = ForwardingAddress.objects.get(b58_address=forwarding_address)
-
-        msg = '%s != %s' % (merchant.id, address.merchant.id)
-        assert merchant.id == address.merchant.id, msg
-
-        if address.all_transactions_complete():
-            address.paid_out_at = now()
-            address.save()
-            del request.session['forwarding_address']
+        if forwarding_obj.all_transactions_complete():
+            forwarding_obj.paid_out_at = now()
+            forwarding_obj.save()
 
             msg = _("Transaction complete. You can always see your transaction history by clicking the Admin button below.")
             messages.success(request, msg)
@@ -184,17 +174,11 @@ def cancel_address(request):
         user = request.user
         merchant = user.get_merchant()
 
-        forwarding_address = request.session.get('forwarding_address')
-        assert forwarding_address, 'No forwarding address'
+        forwarding_obj = merchant.get_latest_forwarding_obj()
 
-        address = ForwardingAddress.objects.get(b58_address=forwarding_address)
-
-        msg = '%s != %s' % (merchant.id, address.merchant.id)
-        assert merchant.id == address.merchant.id, msg
-
-        address.paid_out_at = now()
-        address.save()
-        del request.session['forwarding_address']
+        # FIXME: we should have a cancelled state
+        forwarding_obj.paid_out_at = now()
+        forwarding_obj.save()
 
         msg = _("Your request has been cancelled")
         messages.success(request, msg)

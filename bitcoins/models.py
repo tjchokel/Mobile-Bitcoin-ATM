@@ -22,7 +22,7 @@ from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
         format_num_for_printing, btc_to_satoshis)
 
-import datetime
+from datetime import timedelta
 import json
 import requests
 
@@ -42,7 +42,39 @@ class DestinationAddress(models.Model):
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
 
-    def create_new_forwarding_address(self):
+    def get_available_forwarding_obj(self):
+        """
+        Get existing forwarding address from DB (if showable to a new shopper),
+        otherwise return an empty list.
+
+        Used for showing to a new shopper in the cashin modal.
+        """
+        latest_forward_obj = self.forwardingaddress_set.filter(
+                generated_at__gt=now()-timedelta(seconds=600),
+                customer_confirmed_deposit_at=None,
+                paid_out_at=None,  # defensive, not neccesary
+                ).order_by('generated_at').last()
+
+        if not latest_forward_obj:
+            return None
+        elif latest_forward_obj.get_transaction():
+            return None
+        else:
+            return latest_forward_obj
+
+    def get_latest_forwarding_obj(self):
+        """
+        Get latest forwarding address from DB (regardless if showable to a new shopper),
+        otherwise return an empty list.
+
+        Used for actions within the app (
+        """
+        return self.forwardingaddress_set.filter(paid_out_at=None).order_by('generated_at').last()
+
+    def set_new_forwarding_address(self):
+        """
+        This currently uses blockchain.info, but it could use any service
+        """
 
         # generate random id so that each webhook has a unqiue endpoint to hit
         # this helps solve some edge cases
@@ -58,12 +90,21 @@ class DestinationAddress(models.Model):
                 merchant=self.merchant)
 
         # Store it in the DB
-        ForwardingAddress.objects.create(
+        return ForwardingAddress.objects.create(
                 b58_address=forwarding_address,
                 destination_address=self,
                 merchant=self.merchant)
 
-        return forwarding_address
+    def get_or_set_available_forwarding_address(self):
+        """
+        Fetch existing (current) unused forwarding address,
+        set new one if it doesn't exist or is unusable.
+        """
+        fwd_obj = self.get_available_forwarding_obj()
+        if fwd_obj:
+            return fwd_obj
+        else:
+            return self.set_new_forwarding_address()
 
 
 class ForwardingAddress(models.Model):
@@ -205,20 +246,6 @@ class ForwardingAddress(models.Model):
                     satoshis=satoshis,
                     num_confirmations=confirmations,
                     destination_txn_hash=txn_hash)
-
-    def can_be_reused(self):
-        """
-        Decide whether a forwarding address is still valid to display to the user
-        (if not, we'll want to generatea  new one)
-        """
-        seconds_old = (now() - self.generated_at).total_seconds()
-        if seconds_old > 600:
-            return False
-        if self.customer_confirmed_deposit_at:
-            return False
-        if self.get_transaction():
-            return False
-        return True
 
     @staticmethod
     def handle_forwarding_txn(input_address, satoshis, num_confirmations, input_txn_hash):
@@ -758,7 +785,7 @@ class ShopperBTCPurchase(models.Model):
             # This only happens if the objects isn't in the database yet.
             self.currency_code_when_created = self.merchant.currency_code
 
-            now_plus_15 = now() + datetime.timedelta(minutes=15)
+            now_plus_15 = now() + timedelta(minutes=15)
             self.expires_at = now_plus_15
             self.satoshis = self.get_satoshis_from_fiat()
         super(ShopperBTCPurchase, self).save(*args, **kwargs)

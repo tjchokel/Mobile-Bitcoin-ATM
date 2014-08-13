@@ -6,9 +6,8 @@ from django.contrib import messages
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
 from annoying.decorators import render_to
-from annoying.functions import get_object_or_None
 
-from bitcoins.models import BTCTransaction, ForwardingAddress, ShopperBTCPurchase
+from bitcoins.models import BTCTransaction, ShopperBTCPurchase
 from shoppers.models import Shopper
 from users.models import FutureShopper
 
@@ -44,8 +43,7 @@ def customer_dashboard(request):
     if not merchant or not merchant.has_destination_address():
         return HttpResponseRedirect(reverse_lazy('register_router'))
     transactions, shopper = None, None
-    forwarding_address_obj = get_object_or_None(ForwardingAddress,
-            b58_address=request.session.get('forwarding_address'))
+    forwarding_address_obj = merchant.get_latest_forwarding_obj()
     btc_purchase_request = merchant.get_bitcoin_purchase_request()
 
     if btc_purchase_request and btc_purchase_request.is_cancelled():

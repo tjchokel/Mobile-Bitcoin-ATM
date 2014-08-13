@@ -1,0 +1,15 @@
+<html><body>
+<p>Here are the relevant links:</p>
+<ul>
+  <li>
+  Merchant Affected: <a href="{{ BASE_URL }}{{ merchant.get_admin_uri }}">{{ BASE_URL }}{{ merchant.get_admin_uri }}</a>
+  </li>
+  <li>
+  Relevant Services APICall List: <a href="{{ BASE_URL }}admin/services/apicall/?api_name=CTA&merchant={{ merchant.id }}">{{ BASE_URL }}admin/services/apicall/?api_name=CTA&merchant={{ merchant.id }}</a>
+  </li>
+</ul>
+<p>
+  The error was not displayed to the user (they just see stale data) and is not being captured by Sentry.
+  Please investigate this ASAP.
+</p>
+</body></html>

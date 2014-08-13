@@ -56,11 +56,11 @@
           <b> {{ merchant.get_physical_address_html|safe }}</b>
           <br/>
           {% if merchant.phone_num %}
-            <i class="fa fa-phone"></i><a href="#">{{ merchant.get_phone_num_formatted}}</a>
+            <i class="fa fa-phone"></i><a href="tel:{{merchant.phone_num}}">{{ merchant.get_phone_num_formatted}}</a>
             <br/>
           {% endif %}
           {% if merchant.get_website_obj %}
-            <i class="fa fa-external-link"></i><a href="#">{{ merchant.get_website_obj.url}}</a>
+            <i class="fa fa-external-link"></i><a href="{{ merchant.get_website_obj.url}}" target="_blank">{{ merchant.get_website_obj.url}}</a>
             <br/>
           <!-- {% endif %} -->
           <b>{{merchant.currency_code}} <i class="fa fa-arrows-h" style="padding-left: 5px;"></i> Bitcoin</b>
@@ -210,34 +210,41 @@
               <h4 class="hl" style="padding-left: 8px;"><i class="fa fa-clock-o"></i> Hours</h4>
               <table class="table">
                 <tbody>
-                  <tr>
-                    <td class="text-muted">Monday</td>
-                    <td>Closed</td>
-                  </tr>
-                  <tr>
-                    <td class="text-muted">Tuesday</td>
-                    <td>11:00 am - 9:00 pm</td>
-                  </tr>
-                  <tr>
-                    <td class="text-muted">Wednesday</td>
-                    <td>11:00 am - 9:00 pm</td>
-                  </tr>
-                  <tr>
-                    <td class="text-muted">Thursday</td>
-                    <td>11:00 am - 9:00 pm</td>
-                  </tr>
-                  <tr>
-                    <td class="text-muted">Friday</td>
-                    <td>11:00 am - 9:00 pm</td>
-                  </tr>
-                  <tr>
-                    <td class="text-muted">Saturday</td>
-                    <td>11:00 am - 9:00 pm</td>
-                  </tr>
-                  <tr>
-                    <td class="text-muted">Sunday</td>
-                    <td>Closed</td>
-                  </tr>
+                  {% if merchant.get_open_time %}
+                    <tr>
+                      <td class="text-muted">Monday</td>
+                      <td>Closed</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">Tuesday</td>
+                      <td>11:00 am - 9:00 pm</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">Wednesday</td>
+                      <td>11:00 am - 9:00 pm</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">Thursday</td>
+                      <td>11:00 am - 9:00 pm</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">Friday</td>
+                      <td>11:00 am - 9:00 pm</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">Saturday</td>
+                      <td>11:00 am - 9:00 pm</td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">Sunday</td>
+                      <td>Closed</td>
+                    </tr>
+                  {% else %}
+                    <tr>
+                      <td class="text-center">No Hours Provided</td>
+                    </tr>
+                  {% endif %}
+                  
                 </tbody>
               </table>
               <hr>

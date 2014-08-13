@@ -371,17 +371,15 @@ class Merchant(models.Model):
 
             self.save()
 
-    def get_map_tooltip_html(self):
-        html = '<p class="lead text-center>'+self.business_name+'</p>'
-        html += '<b>'+self.get_physical_address_qs()+'</b><br/>'
-        return html
-
     def get_profile_url(self):
         short_url = self.get_short_url()
         if short_url:
             return short_url.get_profile_url()
         else:
             return None
+
+    def get_open_time(self):
+        return self.opentime_set.last()
 
 
 class OpenTime(models.Model):

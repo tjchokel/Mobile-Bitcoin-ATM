@@ -109,8 +109,11 @@
         {% for merchant in merchants_for_map %}
           markers[i] = [ '{{ merchant.business_name }}', {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ];
           // markers.push([ {{ merchant.business_name }}, {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ]);
-          var tooltip_info = '<p class="lead text-center">{{ merchant.business_name }}</p><b>';
-          html = "{{merchant.get_physical_address_html}}";
+          {% if merchant.get_profile_url %}
+            var tooltip_info = '<p class="lead text-center"><a href="{{merchant.get_profile_url}}">{{ merchant.business_name }}</a></p><b>';
+          {% else %}
+            var tooltip_info = '<p class="lead text-center">{{ merchant.business_name }}</p><b>';
+          {% endif %}
           {% for line in merchant.get_physical_address_list %}
             tooltip_info += '{{line}}<br/>';
           {% endfor %}
@@ -169,7 +172,6 @@
       var script = document.createElement('script');
       script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeMap";
       document.body.appendChild(script);
-      console.log('apending script');
     });
 
   </script>

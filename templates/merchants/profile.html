@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
-
+{% load staticfiles %}
 {% block content %}
 <div class="container">
     <!-- Profile Menu -->
@@ -10,7 +10,56 @@
   <div class="col-sm-12 col-xs-12 col-md-9">
 
       <div class="row">
+        <div class="col-sm-6">
+
+          <div class="body-inverse" style="float:left;">
+            <div class="thumbnail">
+              <div class="avatar">
+                <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar">
+                  <img src="{%static "img/mels_diner.png" %}"  alt="...">
+                </a>
+                <!-- Upload new avatar bubble -->
+                <div class="avatar-bubble">
+                  <a href="#" data-toggle="modal" data-target="#upload-avatar"><i class="fa fa-plus"></i> New Profile Picture</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="upload-avatar" tabindex="-1" role="dialog" aria-labelledby="upload-avatar-title" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <h4 class="modal-title" id="upload-avatar-title">Upload new avatar</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Please choose a file to upload. JPG, PNG, GIF only.</p>
+                  <form role="form">
+                    <div class="form-group">
+                      <label for="file">File input</label>
+                      <input type="file" id="file">
+                      <p class="help-block">Files up to 5Mb only.</p>
+                    </div>
+                    <button type="button" class="hl-btn hl-btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="hl-btn hl-btn-green" data-dismiss="modal">Upload</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div> 
+
+        </div>
+        <!-- End profile image -->
+        <div class="col-sm-6">
+          <a class="btn btn-info btn-lg" href="#" style="transform: translateY(100%); float: right;">
+                {% trans "See Public Profile" %}
+          </a>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-sm-12">
+
           <h4 class="hl">
             <a style="color:#515151;" href="#">{% trans "Public Business Info" %}</a>
             <a href="#" onclick="editMerchantInfo();" id="merchant-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
@@ -22,36 +71,40 @@
                 <td align="right">{{merchant.business_name}}</td>
               </tr>
               <tr>
-                <td class="text-muted">{% trans "Address Line 1" %}</td>
-                <td align="right">{{merchant.address_1|default_if_none:''}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Address Line 2" %}</td>
-                <td align="right">{{merchant.address_2|default_if_none:''}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "City" %}</td>
-                <td align="right">{{merchant.city|default_if_none:''}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "State" %}</td>
-                <td align="right">{{merchant.state|default_if_none:''}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Country" %}</td>
-                <td align="right">{{merchant.get_country_display}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Zip Code" %}</td>
-                <td align="right">{{merchant.zip_code|default_if_none:''}}</td>
+                <td class="text-muted">{% trans "Business Address" %}</td>
+                {% if merchant.address_1 %}
+                  <td align="right">
+                    {{merchant.get_physical_address_html | safe}}
+                  </td>
+                {% else %}
+                  <td align="right" class="text-red">
+                    <b>(Not Provided)</b>
+                  </td>
+                {% endif %}
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Phone Number" %}</td>
-                <td align="right">{{merchant.phone_num.as_international}}</td>
+                {% if merchant.phone_num %}
+                  <td align="right">
+                    {{merchant.phone_num.as_international}}
+                  </td>
+                {% else %}
+                  <td align="right" class="text-red">
+                    <b>(Not Provided)</b>
+                  </td>
+                {% endif %}
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Website (URL)" %}</td>
-                <td align="right">{{merchant.get_website_obj.url }}</td>
+                {% if merchant.get_website_obj %}
+                  <td align="right">
+                    {{merchant.get_website_obj.url }}
+                  </td>
+                {% else %}
+                  <td align="right" class="text-red">
+                    <b>(Not Provided)</b>
+                  </td>
+                {% endif %}
               </tr>
             </tbody>
           </table>

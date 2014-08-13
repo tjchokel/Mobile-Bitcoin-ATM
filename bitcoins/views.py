@@ -176,8 +176,7 @@ def cancel_address(request):
 
         forwarding_obj = merchant.get_latest_forwarding_obj()
 
-        # FIXME: we should have a cancelled state
-        forwarding_obj.paid_out_at = now()
+        forwarding_obj.cancelled_at = now()
         forwarding_obj.save()
 
         msg = _("Your request has been cancelled")

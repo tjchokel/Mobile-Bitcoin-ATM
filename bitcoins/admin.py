@@ -29,6 +29,7 @@ class ForwardingAddressAdmin(admin.ModelAdmin):
             'b58_address',
             'paid_out_at',
             'destination_address',
+            'cancelled_at',
             'merchant',
             'shopper',
             'last_activity_check_at',

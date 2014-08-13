@@ -53,6 +53,7 @@ class DestinationAddress(models.Model):
                 generated_at__gt=now()-timedelta(seconds=600),
                 customer_confirmed_deposit_at=None,
                 paid_out_at=None,  # defensive, not neccesary
+                cancelled_at=None,
                 ).order_by('generated_at').last()
 
         if not latest_forward_obj:
@@ -69,7 +70,8 @@ class DestinationAddress(models.Model):
 
         Used for actions within the app (
         """
-        return self.forwardingaddress_set.filter(paid_out_at=None).order_by('generated_at').last()
+        return self.forwardingaddress_set.filter(paid_out_at=None,
+                cancelled_at=None).order_by('generated_at').last()
 
     def set_new_forwarding_address(self):
         """
@@ -115,6 +117,7 @@ class ForwardingAddress(models.Model):
     b58_address = models.CharField(blank=False, null=False, max_length=34,
             db_index=True, unique=True)
     paid_out_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     destination_address = models.ForeignKey(DestinationAddress, blank=False, null=False)
     # technically, this is redundant through DestinationAddress
     # but having it here makes for easier querying (especially before there is a destination address)
@@ -193,7 +196,7 @@ class ForwardingAddress(models.Model):
         """
         Decide whether to supplement inbound webhook with outbound api call
         """
-        if self.customer_confirmed_deposit_at or self.paid_out_at:
+        if self.customer_confirmed_deposit_at or self.paid_out_at or self.cancelled_at:
             # This txn is done
             return False
         if not self.last_activity_check_at:
@@ -443,9 +446,11 @@ class BTCTransaction(models.Model):
                 )
 
     def get_status(self):
-        if self.forwarding_address.paid_out_at:
+        if self.forwarding_address.cancelled_at:
+            return _('Transaction Cancelled')
+        elif self.forwarding_address.paid_out_at:
             return _('Cash Paid Out')
-        if self.met_minimum_confirmation_at:
+        elif self.met_minimum_confirmation_at:
             return _('BTC Received')
         else:
             msg = _('BTC Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)') % {

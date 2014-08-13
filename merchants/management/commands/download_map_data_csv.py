@@ -5,6 +5,9 @@ import csv
 
 
 class Command(BaseCommand):
+    """
+        NOTE! This is currently not used, but may use if we ever switch to using Google MapEngine
+    """
     help = "Back up all vault objects"
 
     def handle(self, *args, **kwargs):

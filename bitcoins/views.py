@@ -4,7 +4,7 @@ from annoying.functions import get_object_or_None
 from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers.json import DjangoJSONEncoder
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 
 from bitcoins.BCAddressField import is_valid_btc_address

@@ -36,69 +36,20 @@
     </p>
   </div>
 </div>
+
 <div class="container">
-    <div class="row" style="margin-top: -30px;">
+    <!-- <div class="row" style="margin-top: -30px;"> -->
 
-      <div class="col-lg-7 col-md-7">
-            <h2>{% trans "Businesses" %}</h2>
-            <p style="padding-left:15px; font-size: 16px; padding-top:8px;">
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Set Your Own Prices" %}</b><br/>
-              {% trans "Select a percent markup on market prices and know that you will make money on all transactions." %}
-              <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Attract New Customers" %}</b><br/>
-              {% trans "Prime placement on the CoinSafe map will send more foot traffic into your store." %}
-              <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Simple to Use" %}</b><br/>
-              {% trans "Mobile-optimized and user friendly, CoinSafe is designed so that even an employee with no Bitcoin knowledge can operate it." %}  <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Works Anywhere In the World" %}</b><br/>
-              {% trans "From Argentina to Australia, CoinSafe works everywhere in the world with the currency of your choice. More languages coming soon!" %}
-              <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Sell or Spend Your Bitcoin Immediately" %}</b><br/>
-              {% trans "If you don't want to hold bitcoin, you can set your prices so that you're able to sell it right away for a profit." %}
-              <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Get Your Money to a Safer Location" %}</b><br/>
-              {% trans "Moving cash into bitcoins can minimize theft and reduce robberies." %}
-              <br/>
-            </p>
-            <a class="btn btn-primary btn-lg" href="{% url 'register_merchant' %}" role="button" style="margin-left: 15px;">{% trans "List Your Business Today" %}</a>
+      <!-- <iframe src="https://mapsengine.google.com/map/u/1/embed?mid=zLpDLysj-RbQ.k-hSSC_mM1bM" width="100%" height="580"></iframe>
+       -->
 
+       <div id="map_wrapper" style="height: 400px;">
+          <div id="map_canvas" class="mapping" style="width: 100%; height: 100%;"></div>
       </div>
-      <div class="col-lg-4 col-lg-offset-1 col-md-5 hidden-sm hidden-xs">
-        </span>
-        <img src="{%static "img/shop.png" %}" style="margin-top: 30%;" width="90%" height="90%" />
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-
-      <div class="col-lg-7 col-md-7">
-            <h2>{% trans "Consumers" %}</h2>
-            <p style="padding-left:15px; font-size: 16px; padding-top:8px;">
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Bitcoin <-> Cash" %}</b><br/>
-              {% trans "Dealing in cash means you don't need a bank account and there are no long waiting periods. Exchange bitcoin and local currency in minutes!" %}
-              <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Transparent Pricing" %}</b><br/>
-              {% trans "Businesses publish their prices online so you can shop around for the best rate. There are never any surprises when you get to the store." %}
-              <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "No Messaging With Strangers" %}</b><br/>
-              {% trans "Businesses list their hours and location, so there is no need to arrange meetings with people you don't know." %}
-              <br/>
-              <i class="fa fa-circle green-color" style="padding-top:8px;"></i><b>{% trans "Businesses You Can Trust" %}</b><br/>
-              {% trans "Each business is rated by their users to ensure that the continue to provide the best service." %}
-              <br/>
-            </p>
-            <p>
-              <a class="btn btn-primary btn-lg" href="{% url 'register_customer' %}" role="button" style="margin-left: 15px;white-space: normal !important;max-width: 300px;">
-                {% trans "Get Notified of Nearby Locations" %}
-              </a>
-            </p>
-
-      </div>
-      <div class="col-lg-4 col-lg-offset-1 col-md-5 hidden-sm hidden-xs">
-        <img src="{%static "img/money.png" %}" style="margin-top: 5%;" width="90%" height="90%" />
-      </div>
-    </div>
+  </div>
 </div>
+
+
 <div class="divider-bar">
   <div class="container">
     <p class="lead text-center" style="padding-top:20px;">
@@ -141,6 +92,72 @@
         iframe.postMessage('{"event":"command","func":"' + func + '","args":""}', '*');
     }
 
+    function initialize() {
+        var map;
+        var bounds = new google.maps.LatLngBounds();
+        var mapOptions = {
+            mapTypeId: 'roadmap'
+        };
+                        
+        // Display a map on the page
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        map.setTilt(45);
+            
+        // Multiple Markers
+        var markers = [
+            ['London Eye, London', 51.503454,-0.119562],
+            ['Palace of Westminster, London', 51.499633,-0.124755]
+        ];
+        var markers = [];
+        var infoWindowContent = [];
+        var i =0;
+        {% for merchant in merchants_for_map %}
+          markers[i] = [ '{{ merchant.business_name }}', {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ];
+          // markers.push([ {{ merchant.business_name }}, {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ]);
+          var tooltip_info = '<p class="lead text-center">{{ merchant.business_name }}</p><b>';
+          tooltip_info += '{{merchant.address_1}}<br/>';
+          tooltip_info += '{{merchant.city}}<br/>';
+          tooltip_info += '{{merchant.state}}<br/>';
+          tooltip_info += '{{merchant.country}}<br/>';
+          tooltip_info += '<a href="{{merchant.get_profile_url}}">Profile Link</a>'
+
+          infoWindowContent[i] = [ tooltip_info ];
+          i = i + 1;
+        {% endfor %}
+                            
+        // Display multiple markers on a map
+        var infoWindow = new google.maps.InfoWindow(), marker, i;
+        
+        // Loop through our array of markers & place each one on the map  
+        for( i = 0; i < markers.length; i++ ) {
+            var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+            bounds.extend(position);
+            marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: markers[i][0]
+            });
+            
+            // Allow each marker to have an info window    
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infoWindow.setContent(infoWindowContent[i][0]);
+                    infoWindow.open(map, marker);
+                }
+            })(marker, i));
+
+            // Automatically center the map fitting all markers on the screen
+            map.fitBounds(bounds);
+        }
+
+        // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+        var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
+            // this.setZoom(14);
+            google.maps.event.removeListener(boundsListener);
+        });
+        
+    }
+
     $(document).ready(function(){
       // If not mobile, web video is incredibly broken
       if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -151,6 +168,11 @@
             toggleVideo('hide');
         })
       }
+      
+      var script = document.createElement('script');
+      script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize";
+      document.body.appendChild(script);
+      console.log('apending script');
     });
 
   </script>

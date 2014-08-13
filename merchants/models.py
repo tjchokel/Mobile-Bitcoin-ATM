@@ -9,7 +9,7 @@ from bitstamp_wallets.models import BTSCredential
 
 from phonenumber_field.modelfields import PhoneNumberField
 from bitcoins.models import DestinationAddress, ShopperBTCPurchase, BTCTransaction
-
+from profiles.models import ShortURL
 from emails.trigger import send_and_log
 
 from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
@@ -18,6 +18,8 @@ from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
 import math
 import urllib
+import requests
+import json
 
 
 class Merchant(models.Model):
@@ -37,6 +39,8 @@ class Merchant(models.Model):
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
     max_mbtc_shopper_purchase = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
     max_mbtc_shopper_sale = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
+    longitude_position = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+    latitude_position = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
@@ -302,10 +306,15 @@ class Merchant(models.Model):
                 location_strings.append('%s %s %s' % (self.city, self.state, self.zip_code))
             elif self.state and self.city:
                 location_strings.append('%s %s' % (self.city, self.state))
-            elif self.state:
-                location_strings.append(self.state)
+            else:
+                if self.city:
+                    location_strings.append(self.city)
+                if self.state:
+                    location_strings.append(self.state)
+            if self.zip_code:
+                location_strings.append(self.zip_code)
 
-            if self.state and self.city:
+            if self.city:
                 if self.address_2:
                     location_strings.append(self.address_2)
                 if self.address_1:
@@ -329,6 +338,51 @@ class Merchant(models.Model):
         fiat_btc = fiat_btc - markup_fee
         fiat_total = fiat_btc * satoshis_to_btc(satoshis)
         return math.floor(fiat_total*100)/100
+
+    def get_short_url(self):
+        return self.shorturl_set.last()
+
+    def create_short_url(self):
+        counter = 0
+        s, created = ShortURL.objects.get_or_create(uri_display=self.business_name, merchant=self)
+        while not created:
+            name = '%s%s' % (self.business_name, counter)
+            s, created = ShortURL.objects.get_or_create(uri_display=name, merchant=self)
+            counter += 1
+        return s
+
+    def set_latitude_longitude(self):
+        address_array = self.get_physical_address_list()
+        # address = self.get_physical_address_qs()
+        # address_string = address.replace(" ", "+")
+        url = "https://maps.googleapis.com/maps/api/geocode/json?address="
+        for line in address_array:
+            url += line.replace(" ", "+")
+            url += ","
+        r = requests.get(url)
+        content = json.loads(r.content)
+        results = content['results']
+
+        if results:
+            latitude = results[0]['geometry']['location']['lat']
+            longitude = results[0]['geometry']['location']['lng']
+
+            self.latitude_position = latitude
+            self.longitude_position = longitude
+
+            self.save()
+
+    def get_map_tooltip_html(self):
+        html = '<p class="lead text-center>'+self.business_name+'</p>'
+        html += '<b>'+self.get_physical_address_qs()+'</b><br/>'
+        return html
+
+    def get_profile_url(self):
+        short_url = self.get_short_url()
+        if short_url:
+            return short_url.get_profile_url()
+        else:
+            return None
 
 
 class OpenTime(models.Model):

@@ -1,5 +1,8 @@
 from django.db import models
 
+from utils import uri_to_url
+from bitcash.settings import BASE_URL
+
 
 class ShortURL(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -19,3 +22,6 @@ class ShortURL(models.Model):
         # This only happens if the objects isn't in the database yet.
         self.uri_lowercase = self.uri_display.lower()
         super(ShortURL, self).save(*args, **kwargs)
+
+    def get_profile_url(self):
+        return uri_to_url(BASE_URL, self.uri_display)

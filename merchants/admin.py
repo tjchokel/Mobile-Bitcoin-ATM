@@ -2,6 +2,12 @@ from django.contrib import admin
 from merchants.models import Merchant, OpenTime, MerchantWebsite
 
 
+def set_latitude_longitude(modeladmin, request, queryset):
+    for obj in queryset:
+        obj.set_latitude_longitude()
+set_latitude_longitude.short_description = "Set Latitiude and Longitude"
+
+
 class MerchantAdmin(admin.ModelAdmin):
 
     def btc_address(self, instance):
@@ -32,7 +38,7 @@ class MerchantAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Merchant
-
+    actions = [set_latitude_longitude]
 admin.site.register(Merchant, MerchantAdmin)
 
 

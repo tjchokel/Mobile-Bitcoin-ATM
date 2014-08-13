@@ -86,11 +86,12 @@
         iframe.postMessage('{"event":"command","func":"' + func + '","args":""}', '*');
     }
 
-    function initialize() {
+    function initializeMap() {
         var map;
         var bounds = new google.maps.LatLngBounds();
         var mapOptions = {
-            mapTypeId: 'roadmap'
+            mapTypeId: 'roadmap',
+            scrollwheel: false
         };
                         
         // Display a map on the page
@@ -109,11 +110,13 @@
           markers[i] = [ '{{ merchant.business_name }}', {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ];
           // markers.push([ {{ merchant.business_name }}, {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ]);
           var tooltip_info = '<p class="lead text-center">{{ merchant.business_name }}</p><b>';
-          tooltip_info += '{{merchant.address_1}}<br/>';
-          tooltip_info += '{{merchant.city}}<br/>';
-          tooltip_info += '{{merchant.state}}<br/>';
-          tooltip_info += '{{merchant.country}}<br/>';
-          tooltip_info += '<a href="{{merchant.get_profile_url}}">Profile Link</a>'
+          html = "{{merchant.get_physical_address_html}}";
+          {% for line in merchant.get_physical_address_list %}
+            tooltip_info += '{{line}}<br/>';
+          {% endfor %}
+          {% if merchant.get_profile_url %}
+            tooltip_info += '<a href="{{merchant.get_profile_url}}">Profile Link</a>'
+          {% endif %}
 
           infoWindowContent[i] = [ tooltip_info ];
           i = i + 1;
@@ -164,7 +167,7 @@
       }
       
       var script = document.createElement('script');
-      script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize";
+      script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeMap";
       document.body.appendChild(script);
       console.log('apending script');
     });

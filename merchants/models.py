@@ -311,14 +311,13 @@ class Merchant(models.Model):
                     location_strings.append(self.city)
                 if self.state:
                     location_strings.append(self.state)
-            if self.zip_code:
-                location_strings.append(self.zip_code)
-
-            if self.city:
-                if self.address_2:
-                    location_strings.append(self.address_2)
-                if self.address_1:
-                    location_strings.append(self.address_1)
+            if not self.state or not self.city:
+                if self.zip_code:
+                    location_strings.append(self.zip_code)
+            if self.address_2:
+                location_strings.append(self.address_2)
+            if self.address_1:
+                location_strings.append(self.address_1)
         location_strings.reverse()
         return location_strings
 

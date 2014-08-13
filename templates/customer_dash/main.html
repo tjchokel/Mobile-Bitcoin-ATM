@@ -8,6 +8,7 @@
 {% endblock title %}
 
 {% block content %}
+
   {% if transactions or current_address.customer_confirmed_deposit_at %}
     {% if current_address.all_transactions_complete and shopper %}
       {% include "customer_dash/cash_out/_deposit_complete.html" %}
@@ -17,8 +18,9 @@
   {% elif buy_request %}
       {% include "customer_dash/cash_in/_bitcoin_purchase.html" %}
   {% else %}
-    {% include "customer_dash/cash_out/_no_deposit_confirm.html" %}
+    {% include "customer_dash/start.html" %}
   {% endif %}
+
 {% endblock content %}
 
 

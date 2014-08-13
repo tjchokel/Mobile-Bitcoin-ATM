@@ -7,6 +7,7 @@ from annoying.functions import get_object_or_None
 
 from bitcoins.bci import set_bci_webhook
 from bitcoins.chain_com import fetch_chaincom_txn_data_from_address, filter_chaincom_txns
+from bitcoins.blockcypher import fetch_bcypher_txn_data_from_address, filter_bcypher_txns
 
 from phones.models import SentSMS
 from emails.models import SentEmail
@@ -219,8 +220,11 @@ class ForwardingAddress(models.Model):
             else:
                 return False
 
-    def check_for_activity(self):
+    def check_for_chaincom_activity(self):
         """
+        DEPRECATED: CHAIN.COM DOESN'T APPEAR TO RETURN REAL DATA
+        (at least in testing it's been 30+ minutes and still nothing)
+
         Make outbound API call for the forwarding address
 
         Right now this only (explicitly) handles the forwarding address,
@@ -231,6 +235,37 @@ class ForwardingAddress(models.Model):
                 merchant=self.merchant, forwarding_obj=self)
 
         txn_data = filter_chaincom_txns(
+                forwarding_address=self.b58_address,
+                destination_address=self.destination_address.b58_address,
+                txn_data=all_txn_data)
+
+        for address, satoshis, confirmations, txn_hash in txn_data:
+            if address == self.b58_address:
+                ForwardingAddress.handle_forwarding_txn(
+                    input_address=address,
+                    satoshis=satoshis,
+                    num_confirmations=confirmations,
+                    input_txn_hash=txn_hash)
+            else:
+                ForwardingAddress.handle_destination_txn(
+                    forwarding_address=self.b58_address,
+                    destination_address=address,
+                    satoshis=satoshis,
+                    num_confirmations=confirmations,
+                    destination_txn_hash=txn_hash)
+
+    def check_for_activity(self):
+        """
+        Make outbound API call for the forwarding address
+
+        Right now this only (explicitly) handles the forwarding address,
+        though the destination address will get some data incidentally returned (and stored).
+        In the future, we may want a separate process for the destination address.
+        """
+        all_txn_data = fetch_bcypher_txn_data_from_address(self.b58_address,
+                merchant=self.merchant, forwarding_obj=self)
+
+        txn_data = filter_bcypher_txns(
                 forwarding_address=self.b58_address,
                 destination_address=self.destination_address.b58_address,
                 txn_data=all_txn_data)
@@ -278,8 +313,7 @@ class ForwardingAddress(models.Model):
                         recipient_list=['monitoring@coinsafe.com', ],
                         )
             elif num_confirmations == fwd_txn.conf_num:
-                # No update
-                pass
+                pass  # No update
             else:
                 if num_confirmations >= 6 and not fwd_txn.irreversible_by:
                     fwd_txn.irreversible_by = now()

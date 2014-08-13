@@ -37,7 +37,7 @@ def poll_deposits(request):
                         'err_str': str(e),
                         }
                 send_admin_email(
-                        subject='chain.com api call failed',
+                        subject='BlockCypher API Call Failed %s' % now(),
                         body_template='',
                         body_context=body_context,
                         )

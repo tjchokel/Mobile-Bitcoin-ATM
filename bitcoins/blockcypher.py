@@ -41,6 +41,40 @@ def fetch_bcypher_txn_data_from_address(address, merchant=None, forwarding_obj=N
     return dict_response
 
 
+def filter_bcypher_txns(forwarding_address, destination_address, txn_data):
+    '''
+    Take the results from fetch_bcypher_txn_data_from_address and filter out
+    only ones with addresses we care about (outputs to the forwarding or destination address).
+
+    Return a list of the following form:
+    (
+        (address, satoshis, confirmations, txn_hash, )
+    )
+    '''
+    address = txn_data['address']
+
+    msg = '%s != %s' % (forwarding_address, address)
+    assert forwarding_address == address, msg
+
+    txn_data_filtered = []
+    for txn in txn_data['txrefs']:
+        if txn['tx_input_n'] >= 0:
+            # Destination Address Transaction
+            output_address = destination_address
+        else:
+            # Forwarding Address Transaction
+            output_address = forwarding_address
+
+        txn_data_filtered.append((
+            output_address,
+            txn['value'],
+            txn['confirmations'],
+            txn['tx_hash'],
+            ))
+
+    return txn_data_filtered
+
+
 def set_blockcypher_webhook(monitoring_address, callback_url, merchant=None):
     '''
     NOT USED ANYMORE

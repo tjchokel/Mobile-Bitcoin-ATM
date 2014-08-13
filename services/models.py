@@ -19,10 +19,11 @@ class APICall(models.Model):
 
     # api_name choices
     BCI_RECEIVE_PAYMENTS = 'BRP'
-    BLOCKCYPHER_ADDR_MONITORING = 'BAM'
-    BLOCKCYPHER_TXN_FROM_ADDR = 'BCA'
     BCI_TXN_FROM_HASH = 'BTH'
     BCI_TXN_FROM_ADDR = 'BTA'
+
+    BLOCKCYPHER_ADDR_MONITORING = 'BAM'
+    BLOCKCYPHER_TXN_FROM_ADDR = 'BCA'
 
     CHAINCOM_TXN_FROM_ADDR = 'CTA'
 
@@ -49,6 +50,8 @@ class APICall(models.Model):
             (BCI_TXN_FROM_HASH, 'blockchain.info txn data from hash'),
             (BCI_TXN_FROM_ADDR, 'blockchain.info txn data from address'),
             (BLOCKCYPHER_ADDR_MONITORING, 'blockcypher address monitoring'),
+            (BLOCKCYPHER_TXN_FROM_ADDR, 'blockcypher transaction from address'),
+            (CHAINCOM_TXN_FROM_ADDR, 'chain.com txn from address'),
             (COINBASE_BALANCE, 'Coinbase Balance'),
             (COINBASE_LIST_PURCHASE_SALE, 'Coinbase List Purchase & Sales'),
             (COINBASE_LIST_BTC_TRANSACTIONS, 'Coinbase List BTC Transactions'),

@@ -1,8 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext_lazy
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
@@ -168,11 +167,11 @@ def customer_dashboard(request):
                                     body_context=body_context,
                                     )
                         show_confirm_purchase_modal = 'false'
-                        msg = ugettext_lazy('Bitcoin sending failed. The API returned the following error: %s' % err_str)
+                        msg = _('Bitcoin sending failed. The API returned the following error: %s' % err_str)
                         messages.warning(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                     else:
-                        msg = ugettext_lazy('Success! Your bitcoin is being sent. A receipt will be emailed to %s' % btc_purchase_request.shopper.email)
+                        msg = _('Success! Your bitcoin is being sent. A receipt will be emailed to %s' % btc_purchase_request.shopper.email)
                         messages.success(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:

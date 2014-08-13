@@ -38,7 +38,7 @@ def poll_deposits(request):
                         }
                 send_admin_email(
                         subject='BlockCypher API Call Failed %s' % now(),
-                        body_template='',
+                        body_template='poll_deposits_apicall.html',
                         body_context=body_context,
                         )
         # annoying:

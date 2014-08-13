@@ -180,7 +180,7 @@ class ForwardingAddress(models.Model):
         Make outbound API call for the forwarding address
 
         Right now this only (explicitly) handles the forwarding address,
-        though the destination address will get some data incidentally returned.
+        though the destination address will get some data incidentally returned (and stored).
         In the future, we may want a separate process for the destination address.
         """
         all_txn_data = fetch_chaincom_txn_data_from_address(self.b58_address,
@@ -207,6 +207,10 @@ class ForwardingAddress(models.Model):
                     destination_txn_hash=txn_hash)
 
     def can_be_reused(self):
+        """
+        Decide whether a forwarding address is still valid to display to the user
+        (if not, we'll want to generatea  new one)
+        """
         seconds_old = (now() - self.generated_at).total_seconds()
         if seconds_old > 600:
             return False

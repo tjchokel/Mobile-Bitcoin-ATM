@@ -105,11 +105,11 @@ class MerchantRegistrationForm(forms.Form):
 class BitcoinRegistrationForm(forms.Form):
 
     btc_markup = forms.DecimalField(
-            label=_('Percent Markup'),
-            required=True,
-            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text=_('The percent you want to charge above the market rate'),
-            widget=forms.TextInput(),
+        label=_('Percent Markup'),
+        required=True,
+        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+        help_text=_('The percent you want to charge above the market rate'),
+        widget=forms.TextInput(),
     )
 
     wallet_type_choice = forms.ChoiceField(
@@ -213,6 +213,14 @@ class BitcoinRegistrationForm(forms.Form):
         max_length=256,
         widget=forms.PasswordInput(render_value=False),
     )
+
+    def clean_new_blockchain_password(self):
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        new_blockchain_password = self.cleaned_data.get('new_blockchain_password').strip()
+        if wallet_type_choice == 'new' and not new_blockchain_password:
+            msg = _('Please enter a Blockchain.info password')
+            raise forms.ValidationError(msg)
+        return new_blockchain_password
 
     def clean_cb_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')

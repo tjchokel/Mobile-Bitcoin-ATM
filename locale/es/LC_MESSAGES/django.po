@@ -330,12 +330,7 @@ msgstr "Lo sentimos, pero esa no es una dirección válida de Bitcoin"
 msgid "Please enter a valid bitcoin address"
 msgstr "Por favor, ingresar una dirección Bitcoin válida"
 
-#: merchants/forms.py:294
-msgid "Those passwords did not match. Please try again."
-msgstr ""
-"Sus credenciales de la API no son válidas. Por favor, inténtelo de nuevo."
-
-#: merchants/forms.py:333
+#: merchants/forms.py:335
 msgid "Phone Country"
 msgstr "Código País"
 

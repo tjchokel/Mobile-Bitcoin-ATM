@@ -19,6 +19,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 
 
+@login_required
 def poll_deposits(request):
     txns_grouped = []
     all_complete = False

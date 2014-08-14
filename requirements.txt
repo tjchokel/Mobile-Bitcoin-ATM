@@ -2,6 +2,7 @@ BitstampClient==2.0.3
 Django==1.6.5
 South==0.8.4
 Unidecode==0.04.16
+boto==2.32.1
 dj-database-url==0.3.0
 dj-static==0.0.5
 django-annoying==0.7.9
@@ -10,6 +11,7 @@ django-debug-toolbar==1.2.1
 django-fields==0.2.2
 django-phonenumber-field==0.5
 django-polymorphic==0.5.5
+django-storages==1.1.8
 django-toolbelt==0.0.1
 gnureadline==6.3.3
 gunicorn==18.0

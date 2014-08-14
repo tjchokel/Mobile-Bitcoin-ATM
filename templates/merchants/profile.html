@@ -53,7 +53,7 @@
         <!-- End profile image -->
         <div class="col-sm-6">
           {% if merchant.get_profile_url %}
-            <a class="btn btn-info btn-lg" href="{{merchant.get_profile_url}}" style="transform: translateY(100%); float: right;">
+            <a class="btn btn-info btn-md" href="{{merchant.get_profile_url}}" style="transform: translateY(100%); float: right;">
                   {% trans "See Public Profile" %}
             </a>
           {% endif %}
@@ -80,7 +80,7 @@
                   </td>
                 {% else %}
                   <td align="right" class="text-red">
-                    <b>(Not Provided)</b>
+                    <b>({% trans "Not Provided" %})</b>
                   </td>
                 {% endif %}
               </tr>
@@ -92,7 +92,7 @@
                   </td>
                 {% else %}
                   <td align="right" class="text-red">
-                    <b>(Not Provided)</b>
+                    <b>({% trans "Not Provided" %})</b>
                   </td>
                 {% endif %}
               </tr>
@@ -104,7 +104,7 @@
                   </td>
                 {% else %}
                   <td align="right" class="text-red">
-                    <b>(Not Provided)</b>
+                    <b>({% trans "Not Provided" %})</b>
                   </td>
                 {% endif %}
               </tr>
@@ -131,104 +131,111 @@
           </h4>
           <table id="hours-info-list" class="table">
             <tbody>
-              <tr>
-                <td class="text-muted">{% trans "Monday" %}</td>
-                <td align="right">
-                  {% if hours_form_initial.mon %}
-                    {% if hours_form_initial.mon.closed %}
-                      {% trans "Closed" %}
+              {% if merchant.get_open_time %}
+                <tr>
+                  <td class="text-muted">{% trans "Monday" %}</td>
+                  <td align="right">
+                    {% if hours_form_initial.mon %}
+                      {% if hours_form_initial.mon.closed %}
+                        {% trans "Closed" %}
+                      {% else %}
+                        {{biz_hours.1.from_time}} - {{biz_hours.1.to_time}}
+                      {% endif %}
                     {% else %}
-                      {{biz_hours.1.from_time}} - {{biz_hours.1.to_time}}
+                      <!-- {% trans "(Not Provided)" %} -->
                     {% endif %}
-                  {% else %}
-                    <!-- {% trans "(Not Provided)" %} -->
-                  {% endif %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Tuesday" %}</td>
-                <td align="right">
-                  {% if hours_form_initial.tues %}
-                    {% if hours_form_initial.tues.closed %}
-                      {% trans "Closed" %}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Tuesday" %}</td>
+                  <td align="right">
+                    {% if hours_form_initial.tues %}
+                      {% if hours_form_initial.tues.closed %}
+                        {% trans "Closed" %}
+                      {% else %}
+                        {{biz_hours.2.from_time}} - {{biz_hours.2.to_time}}
+                      {% endif %}
                     {% else %}
-                      {{biz_hours.2.from_time}} - {{biz_hours.2.to_time}}
+                      <!-- {% trans "(Not Provided)" %} -->
                     {% endif %}
-                  {% else %}
-                    <!-- {% trans "(Not Provided)" %} -->
-                  {% endif %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Wednesday" %}</td>
-                <td align="right">
-                  {% if hours_form_initial.wed %}
-                    {% if hours_form_initial.wed.closed %}
-                      {% trans "Closed" %}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Wednesday" %}</td>
+                  <td align="right">
+                    {% if hours_form_initial.wed %}
+                      {% if hours_form_initial.wed.closed %}
+                        {% trans "Closed" %}
+                      {% else %}
+                        {{biz_hours.3.from_time}} - {{biz_hours.3.to_time}}
+                      {% endif %}
                     {% else %}
-                      {{biz_hours.3.from_time}} - {{biz_hours.3.to_time}}
+                      <!-- {% trans "(Not Provided)" %} -->
                     {% endif %}
-                  {% else %}
-                    <!-- {% trans "(Not Provided)" %} -->
-                  {% endif %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Thursday" %}</td>
-                <td align="right">
-                  {% if hours_form_initial.thurs %}
-                    {% if hours_form_initial.thurs.closed %}
-                      {% trans "Closed" %}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Thursday" %}</td>
+                  <td align="right">
+                    {% if hours_form_initial.thurs %}
+                      {% if hours_form_initial.thurs.closed %}
+                        {% trans "Closed" %}
+                      {% else %}
+                        {{biz_hours.4.from_time}} - {{biz_hours.4.to_time}}
+                      {% endif %}
                     {% else %}
-                      {{biz_hours.4.from_time}} - {{biz_hours.4.to_time}}
+                      <!-- {% trans "(Not Provided)" %} -->
                     {% endif %}
-                  {% else %}
-                    <!-- {% trans "(Not Provided)" %} -->
-                  {% endif %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Friday" %}</td>
-                <td align="right">
-                  {% if hours_form_initial.fri %}
-                    {% if hours_form_initial.fri.closed %}
-                      {% trans "Closed" %}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Friday" %}</td>
+                  <td align="right">
+                    {% if hours_form_initial.fri %}
+                      {% if hours_form_initial.fri.closed %}
+                        {% trans "Closed" %}
+                      {% else %}
+                        {{biz_hours.5.from_time}} - {{biz_hours.5.to_time}}
+                      {% endif %}
                     {% else %}
-                      {{biz_hours.5.from_time}} - {{biz_hours.5.to_time}}
+                      <!-- {% trans "(Not Provided)" %} -->
                     {% endif %}
-                  {% else %}
-                    <!-- {% trans "(Not Provided)" %} -->
-                  {% endif %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Saturday" %}</td>
-                <td align="right">
-                  {% if hours_form_initial.sat %}
-                    {% if hours_form_initial.sat.closed %}
-                      {% trans "Closed" %}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Saturday" %}</td>
+                  <td align="right">
+                    {% if hours_form_initial.sat %}
+                      {% if hours_form_initial.sat.closed %}
+                        {% trans "Closed" %}
+                      {% else %}
+                        {{biz_hours.6.from_time}} - {{biz_hours.6.to_time}}
+                      {% endif %}
                     {% else %}
-                      {{biz_hours.6.from_time}} - {{biz_hours.6.to_time}}
+                      <!-- {% trans "(Not Provided)" %} -->
                     {% endif %}
-                  {% else %}
-                    <!-- {% trans "(Not Provided)" %} -->
-                  {% endif %}
-                </td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Sunday" %}</td>
-                <td align="right">
-                  {% if hours_form_initial.sun %}
-                    {% if hours_form_initial.sun.closed %}
-                      {% trans "Closed" %}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Sunday" %}</td>
+                  <td align="right">
+                    {% if hours_form_initial.sun %}
+                      {% if hours_form_initial.sun.closed %}
+                        {% trans "Closed" %}
+                      {% else %}
+                        {{biz_hours.7.from_time}} - {{biz_hours.7.to_time}}
+                      {% endif %}
                     {% else %}
-                      {{biz_hours.7.from_time}} - {{biz_hours.7.to_time}}
+                      <!-- {% trans "(Not Provided)" %} -->
                     {% endif %}
-                  {% else %}
-                    <!-- {% trans "(Not Provided)" %} -->
-                  {% endif %}
-                </td>
-              </tr>
+                  </td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td align="center" colspan="2" class="text-red"><b>({% trans "Not Provided" %})</b></td>
+                </tr>
+                <tr><td></td></tr>
+              {% endif %}
             </tbody>
           </table>
           <span class="hidden" id="hours-info-edit">
@@ -441,7 +448,7 @@
       ];
       for (i = 0; i < time_selectors.length; i++){
         var value = $(time_selectors[i]).val();
-        if (value == '0'){
+        if (value == '-1'){
           if (! $(closed_selectors[i]).prop('checked')){
             $(time_selectors[i]).val(valueSelected);
           }
@@ -472,7 +479,7 @@
       ];
       for (i = 0; i < time_selectors.length; i++){
         var value = $(time_selectors[i]).val();
-        if (value == '0'){
+        if (value == '-1'){
           if (! $(closed_selectors[i]).prop('checked')){
             $(time_selectors[i]).val(valueSelected);
           }
@@ -484,9 +491,9 @@
       if (this.checked){
         var open_select = $(this).closest('td').next().find('select');
         var closed_select = open_select.closest('td').next().find('select');
-        open_select.val('0');
+        open_select.val('-1');
         open_select.prop('disabled', 'disabled');
-        closed_select.val('0');
+        closed_select.val('-1');
         closed_select.prop('disabled', 'disabled');
       }else{
         var open_select = $(this).closest('td').next().find('select');

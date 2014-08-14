@@ -274,33 +274,10 @@ def merchant_profile(request):
     if website_obj:
         initial['website'] = website_obj.url
 
-    # biz hours, so WET :(
     hours_formatted = merchant.get_hours_formatted()
 
-    # if hours_formatted.get(1):
-    #     initial['monday_open'] = hours_formatted.get(1)['from_time'].hour
-    #     initial['monday_close'] = hours_formatted.get(1)['to_time'].hour
-    # if hours_formatted.get(2):
-    #     initial['tuesday_open'] = hours_formatted.get(2)['from_time'].hour
-    #     initial['tuesday_close'] = hours_formatted.get(2)['to_time'].hour
-    # if hours_formatted.get(3):
-    #     initial['wednesday_open'] = hours_formatted.get(3)['from_time'].hour
-    #     initial['wednesday_close'] = hours_formatted.get(3)['to_time'].hour
-    # if hours_formatted.get(4):
-    #     initial['thursday_open'] = hours_formatted.get(4)['from_time'].hour
-    #     initial['thursday_close'] = hours_formatted.get(4)['to_time'].hour
-    # if hours_formatted.get(5):
-    #     initial['friday_open'] = hours_formatted.get(5)['from_time'].hour
-    #     initial['friday_close'] = hours_formatted.get(5)['to_time'].hour
-    # if hours_formatted.get(6):
-    #     initial['saturday_open'] = hours_formatted.get(6)['from_time'].hour
-    #     initial['saturday_close'] = hours_formatted.get(6)['to_time'].hour
-    # if hours_formatted.get(7):
-    #     initial['sunday_open'] = hours_formatted.get(7)['from_time'].hour
-    #     initial['sunday_close'] = hours_formatted.get(7)['to_time'].hour
-
     hours_to_value = {}
-    for i in range(1, 24):
+    for i in range(0, 24):
         hours_to_value[datetime.time(i)] = i
     hours_form_initial = {}
     days_to_value = [[1, 'mon'], [2, 'tues'], [3, 'wed'], [4, 'thurs'], [5, 'fri'], [6, 'sat'], [7, 'sun']]
@@ -323,7 +300,6 @@ def merchant_profile(request):
         'transactions': transactions,
         'personal_form': OwnerInfoForm(initial=initial),
         'merchant_form': MerchantInfoForm(initial=initial),
-        # 'hours_form': BusinessHoursForm(initial=initial),
         'biz_hours': hours_formatted,
         'hours_form_initial': hours_form_initial
     }
@@ -380,7 +356,7 @@ def edit_hours_info(request):
         else:
             mon_open = int(data['mon_open'])
             mon_close = int(data['mon_close'])
-            if mon_open > 0 and mon_close > 0:
+            if mon_open >= 0 and mon_close >= 0:
                 hours.append((1, datetime.time(mon_open), datetime.time(mon_close)))
 
         if 'closed_tues' in data and data['closed_tues'] == 'on':
@@ -388,7 +364,7 @@ def edit_hours_info(request):
         else:
             tues_open = int(data['tues_open'])
             tues_close = int(data['tues_close'])
-            if tues_open > 0 and tues_close > 0:
+            if tues_open >= 0 and tues_close >= 0:
                 hours.append((2, datetime.time(tues_open), datetime.time(tues_close)))
 
         if 'closed_wed' in data and data['closed_wed'] == 'on':
@@ -396,7 +372,7 @@ def edit_hours_info(request):
         else:
             wed_open = int(data['wed_open'])
             wed_close = int(data['wed_close'])
-            if wed_open > 0 and wed_close > 0:
+            if wed_open >= 0 and wed_close >= 0:
                 hours.append((3, datetime.time(wed_open), datetime.time(wed_close)))
 
         if 'closed_thurs' in data and data['closed_thurs'] == 'on':
@@ -404,7 +380,7 @@ def edit_hours_info(request):
         else:
             thurs_open = int(data['thurs_open'])
             thurs_close = int(data['thurs_close'])
-            if thurs_open > 0 and thurs_close > 0:
+            if thurs_open >= 0 and thurs_close >= 0:
                 hours.append((4, datetime.time(thurs_open), datetime.time(thurs_close)))
 
         if 'closed_fri' in data and data['closed_fri'] == 'on':
@@ -412,7 +388,7 @@ def edit_hours_info(request):
         else:
             fri_open = int(data['fri_open'])
             fri_close = int(data['fri_close'])
-            if fri_open > 0 and fri_close > 0:
+            if fri_open >= 0 and fri_close >= 0:
                 hours.append((5, datetime.time(fri_open), datetime.time(fri_close)))
 
         if 'closed_sat' in data and data['closed_sat'] == 'on':
@@ -420,7 +396,7 @@ def edit_hours_info(request):
         else:
             sat_open = int(data['sat_open'])
             sat_close = int(data['sat_close'])
-            if sat_open > 0 and sat_close > 0:
+            if sat_open >= 0 and sat_close >= 0:
                 hours.append((6, datetime.time(sat_open), datetime.time(sat_close)))
 
         if 'closed_sun' in data and data['closed_sun'] == 'on':
@@ -428,8 +404,8 @@ def edit_hours_info(request):
         else:
             sun_open = int(data['sun_open'])
             sun_close = int(data['sun_close'])
-            if sun_open > 0 and sun_close > 0:
-                hours.append((6, datetime.time(sun_open), datetime.time(sun_close)))
+            if sun_open >= 0 and sun_close >= 0:
+                hours.append((7, datetime.time(sun_open), datetime.time(sun_close)))
 
         merchant = user.get_merchant()
         merchant.set_hours(hours)

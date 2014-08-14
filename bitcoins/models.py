@@ -197,7 +197,7 @@ class ForwardingAddress(models.Model):
         """
         Decide whether to supplement inbound webhook with outbound api call
         """
-        if self.customer_confirmed_deposit_at or self.paid_out_at or self.cancelled_at:
+        if self.paid_out_at or self.cancelled_at:
             # This txn is done
             return False
         if not self.last_activity_check_at:
@@ -209,13 +209,13 @@ class ForwardingAddress(models.Model):
         txn_detected = bool(self.get_all_forwarding_transactions().count())
         if txn_detected:
             # A txn has been detected
-            if seconds_since_last_activity_check > 90:
+            if seconds_since_last_activity_check > 60:
                 return True
             else:
                 return False
         else:
             # No txn detected
-            if seconds_since_last_activity_check > 20:
+            if seconds_since_last_activity_check > 15:
                 return True
             else:
                 return False

@@ -99,7 +99,7 @@
 
     <!-- Main profile info -->
     <div class="col-sm-8 col-md-9">
-      <h3 class="hl hidden-xs">
+      <h3 class="hl hidden-xs pull-left">
         {{ merchant.business_name }} 
         <!-- <small>
           <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> 3 Reviews
@@ -108,6 +108,12 @@
         <i class="fa fa-envelope"></i> Send message
         </a> -->
       </h3>
+      {% if is_users_profile %}
+        <a class="btn btn-info btn-md pull-right hidden-xs" href="{% url 'merchant_profile' %}" style="transform: translateY(50%);">
+                  {% trans "Edit Your Profile" %}
+            </a>
+      {% endif %}
+      <div class="clearfix"></div>
       <hr>
       <!-- User status update form -->
       <div class="user-status">
@@ -207,10 +213,10 @@
               <hr>
             </div>
             <div class="col-sm-6">
-              <h4 class="hl" style="padding-left: 8px;"><i class="fa fa-clock-o"></i> Hours</h4>
-              <table class="table">
-                <tbody>
-                  {% if merchant.get_open_time %}
+              {% if merchant.get_open_time %}
+                <h4 class="hl" style="padding-left: 8px;"><i class="fa fa-clock-o"></i> Hours</h4>
+                <table class="table">
+                  <tbody>
                     <tr>
                       <td class="text-muted">Monday</td>
                       <td>Closed</td>
@@ -239,15 +245,10 @@
                       <td class="text-muted">Sunday</td>
                       <td>Closed</td>
                     </tr>
-                  {% else %}
-                    <tr>
-                      <td class="text-center">No Hours Provided</td>
-                    </tr>
-                  {% endif %}
-                  
-                </tbody>
-              </table>
-              <hr>
+                  </tbody>
+                </table>
+                <hr>
+              {% endif %}
             </div>
           </div>
         </div>

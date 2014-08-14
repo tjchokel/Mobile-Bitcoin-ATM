@@ -26,4 +26,7 @@ def merchant_site(request, uri):
     cashin_price_formatted = '%s%s' % (currency_symbol, cashin_price)
     cashout_price_formatted = '%s%s' % (currency_symbol, cashout_price)
 
-    return {'merchant': short_url_obj.merchant, 'cashin_price': cashin_price_formatted, 'cashout_price': cashout_price_formatted}
+    is_users_profile = False
+    if merchant.user == request.user:
+        is_users_profile = True
+    return {'merchant': short_url_obj.merchant, 'cashin_price': cashin_price_formatted, 'cashout_price': cashout_price_formatted, 'is_users_profile': is_users_profile}

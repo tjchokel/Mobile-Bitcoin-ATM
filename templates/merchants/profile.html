@@ -52,17 +52,19 @@
         </div>
         <!-- End profile image -->
         <div class="col-sm-6">
-          <a class="btn btn-info btn-lg" href="#" style="transform: translateY(100%); float: right;">
-                {% trans "See Public Profile" %}
-          </a>
+          {% if merchant.get_profile_url %}
+            <a class="btn btn-info btn-lg" href="{{merchant.get_profile_url}}" style="transform: translateY(100%); float: right;">
+                  {% trans "See Public Profile" %}
+            </a>
+          {% endif %}
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
 
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Public Business Info" %}</a>
-            <a href="#" onclick="editMerchantInfo();" id="merchant-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
+            <a style="color:#515151;">{% trans "Public Business Info" %}</a>
+            <a onclick="editMerchantInfo();" id="merchant-info-edit-button" style="float:right; cursor: pointer;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="merchant-info-list" class="table">
             <tbody>
@@ -121,49 +123,120 @@
         </div>
       </div>
 
-      {% comment %}
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Business Hours"%}</a>
-            <a href="#" onclick="editHoursInfo();" id="hours-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
+            <a style="color:#515151;">{% trans "Business Hours"%}</a>
+            <a onclick="editHoursInfo();" id="hours-info-edit-button" style="float:right; cursor: pointer;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
           </h4>
           <table id="hours-info-list" class="table">
             <tbody>
               <tr>
                 <td class="text-muted">{% trans "Monday" %}</td>
-                <td align="right">{{biz_hours.1.from_time}} - {{biz_hours.1.to_time}}</td>
+                <td align="right">
+                  {% if hours_form_initial.mon %}
+                    {% if hours_form_initial.mon.closed %}
+                      {% trans "Closed" %}
+                    {% else %}
+                      {{biz_hours.1.from_time}} - {{biz_hours.1.to_time}}
+                    {% endif %}
+                  {% else %}
+                    <!-- {% trans "(Not Provided)" %} -->
+                  {% endif %}
+                </td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Tuesday" %}</td>
-                <td align="right">{{biz_hours.2.from_time}} - {{biz_hours.2.to_time}}</td>
+                <td align="right">
+                  {% if hours_form_initial.tues %}
+                    {% if hours_form_initial.tues.closed %}
+                      {% trans "Closed" %}
+                    {% else %}
+                      {{biz_hours.2.from_time}} - {{biz_hours.2.to_time}}
+                    {% endif %}
+                  {% else %}
+                    <!-- {% trans "(Not Provided)" %} -->
+                  {% endif %}
+                </td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Wednesday" %}</td>
-                <td align="right">{{biz_hours.3.from_time}} - {{biz_hours.3.to_time}}</td>
+                <td align="right">
+                  {% if hours_form_initial.wed %}
+                    {% if hours_form_initial.wed.closed %}
+                      {% trans "Closed" %}
+                    {% else %}
+                      {{biz_hours.3.from_time}} - {{biz_hours.3.to_time}}
+                    {% endif %}
+                  {% else %}
+                    <!-- {% trans "(Not Provided)" %} -->
+                  {% endif %}
+                </td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Thursday" %}</td>
-                <td align="right">{{biz_hours.4.from_time}} - {{biz_hours.4.to_time}}</td>
+                <td align="right">
+                  {% if hours_form_initial.thurs %}
+                    {% if hours_form_initial.thurs.closed %}
+                      {% trans "Closed" %}
+                    {% else %}
+                      {{biz_hours.4.from_time}} - {{biz_hours.4.to_time}}
+                    {% endif %}
+                  {% else %}
+                    <!-- {% trans "(Not Provided)" %} -->
+                  {% endif %}
+                </td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Friday" %}</td>
-                <td align="right">{{biz_hours.5.from_time}} - {{biz_hours.5.to_time}}</td>
+                <td align="right">
+                  {% if hours_form_initial.fri %}
+                    {% if hours_form_initial.fri.closed %}
+                      {% trans "Closed" %}
+                    {% else %}
+                      {{biz_hours.5.from_time}} - {{biz_hours.5.to_time}}
+                    {% endif %}
+                  {% else %}
+                    <!-- {% trans "(Not Provided)" %} -->
+                  {% endif %}
+                </td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Saturday" %}</td>
-                <td align="right">{{biz_hours.6.from_time}} - {{biz_hours.6.to_time}}</td>
+                <td align="right">
+                  {% if hours_form_initial.sat %}
+                    {% if hours_form_initial.sat.closed %}
+                      {% trans "Closed" %}
+                    {% else %}
+                      {{biz_hours.6.from_time}} - {{biz_hours.6.to_time}}
+                    {% endif %}
+                  {% else %}
+                    <!-- {% trans "(Not Provided)" %} -->
+                  {% endif %}
+                </td>
               </tr>
               <tr>
                 <td class="text-muted">{% trans "Sunday" %}</td>
-                <td align="right">{{biz_hours.7.from_time}} - {{biz_hours.7.to_time}}</td>
+                <td align="right">
+                  {% if hours_form_initial.sun %}
+                    {% if hours_form_initial.sun.closed %}
+                      {% trans "Closed" %}
+                    {% else %}
+                      {{biz_hours.7.from_time}} - {{biz_hours.7.to_time}}
+                    {% endif %}
+                  {% else %}
+                    <!-- {% trans "(Not Provided)" %} -->
+                  {% endif %}
+                </td>
               </tr>
             </tbody>
           </table>
           <span class="hidden" id="hours-info-edit">
             <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_hours_info" %}" >
-              {% load crispy_forms_tags %}
-              {{ hours_form|crispy }}
+              <!-- {% load crispy_forms_tags %}
+              {{ hours_form|crispy }} -->
+              
+              {% include "merchants/_hours_form.html" %}
               {% csrf_token %}
               <div class="button-wrapper">
                 <button type="submit" class="btn btn-primary btn-lg">{% trans "Save Changes" %}</button>
@@ -172,8 +245,8 @@
           </span>
         </div>
       </div>
-      {% endcomment %}
 
+      {% comment %}
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
@@ -208,6 +281,7 @@
           </span>
         </div>
       </div>
+      {% endcomment %}
 
     <div>
       <a href="{% url 'promotional_material' %}">
@@ -237,7 +311,6 @@
         }
     }
 
-    {% comment %}
     function editHoursInfo() {
         $("#hours-info-list").toggleClass("show hidden");
         $("#hours-info-edit").toggleClass("show hidden");
@@ -247,8 +320,92 @@
         }else{
           edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
         }
+        //Handle initial hours form
+        if ('{{hours_form_initial.mon}}'){
+          if ('{{hours_form_initial.mon.closed}}'=='True'){
+            $("#closed_mon").prop('checked', true);
+            $('#mon_open').prop('disabled', 'disabled');
+            $('#mon_close').prop('disabled', 'disabled');
+          }else{
+            var open = '{{hours_form_initial.mon.open}}';
+            var close = '{{hours_form_initial.mon.close}}';
+            $('#mon_open').val(open);
+            $('#mon_close').val(close);
+          }
+        }
+        if ('{{hours_form_initial.tues}}'){
+          if ('{{hours_form_initial.tues.closed}}'=='True'){
+            $("#closed_tues").prop('checked', true);
+            $('#tues_open').prop('disabled', 'disabled');
+            $('#tues_close').prop('disabled', 'disabled');
+          }else{
+            var open = '{{hours_form_initial.tues.open}}';
+            var close = '{{hours_form_initial.tues.close}}';
+            $('#tues_open').val(open);
+            $('#tues_close').val(close);
+          }
+        }
+        if ('{{hours_form_initial.wed}}'){
+          if ('{{hours_form_initial.wed.closed}}'=='True'){
+            $("#closed_wed").prop('checked', true);
+            $('#wed_open').prop('disabled', 'disabled');
+            $('#wed_close').prop('disabled', 'disabled');
+          }else{
+            var open = '{{hours_form_initial.wed.open}}';
+            var close = '{{hours_form_initial.wed.close}}';
+            $('#wed_open').val(open);
+            $('#wed_close').val(close);
+          }
+        }
+        if ('{{hours_form_initial.thurs}}'){
+          if ('{{hours_form_initial.thurs.closed}}'=='True'){
+            $("#closed_thurs").prop('checked', true);
+            $('#thurs_open').prop('disabled', 'disabled');
+            $('#thurs_close').prop('disabled', 'disabled');
+          }else{
+            var open = '{{hours_form_initial.thurs.open}}';
+            var close = '{{hours_form_initial.thurs.close}}';
+            $('#thurs_open').val(open);
+            $('#thurs_close').val(close);
+          }
+        }
+        if ('{{hours_form_initial.fri}}'){
+          if ('{{hours_form_initial.fri.closed}}'=='True'){
+            $("#closed_fri").prop('checked', true);
+            $('#fri_open').prop('disabled', 'disabled');
+            $('#fri_close').prop('disabled', 'disabled');
+          }else{
+            var open = '{{hours_form_initial.fri.open}}';
+            var close = '{{hours_form_initial.fri.close}}';
+            $('#fri_open').val(open);
+            $('#fri_close').val(close);
+          }
+        }
+        if ('{{hours_form_initial.sat}}'){
+          if ('{{hours_form_initial.sat.closed}}'=='True'){
+            $("#closed_sat").prop('checked', true);
+            $('#sat_open').prop('disabled', 'disabled');
+            $('#sat_close').prop('disabled', 'disabled');
+          }else{
+            var open = '{{hours_form_initial.sat.open}}';
+            var close = '{{hours_form_initial.sat.close}}';
+            $('#sat_open').val(open);
+            $('#sat_close').val(close);
+          }
+        }
+        if ('{{hours_form_initial.sun}}'){
+          if ('{{hours_form_initial.sun.closed}}'=='True'){
+            $("#closed_sun").prop('checked', true);
+            $('#sun_open').prop('disabled', 'disabled');
+            $('#sun_close').prop('disabled', 'disabled');
+          }else{
+            var open = '{{hours_form_initial.sun.open}}';
+            var close = '{{hours_form_initial.sun.close}}';
+            $('#sun_open').val(open);
+            $('#sun_close').val(close);
+          }
+        }
     }
-    {% endcomment %}
 
     function editMerchantInfo() {
         $("#merchant-info-list").toggleClass("show hidden");
@@ -260,5 +417,86 @@
           edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
         }
     }
+
+    $("#mon_open, #tues_open, #wed_open, #thurs_open, #fri_open, #sat_open, #sun_open").change(function(){
+      var optionSelected = $("option:selected", this);
+      var valueSelected = this.value;
+      var time_selectors = [
+        "#mon_open",
+        "#tues_open",
+        "#wed_open",
+        "#thurs_open",
+        "#fri_open",
+        "#sat_open",
+        "#sun_open"
+      ];
+      var closed_selectors = [
+        "#closed_mon",
+        "#closed_tues",
+        "#closed_wed",
+        "#closed_thurs",
+        "#closed_fri",
+        "#closed_sat",
+        "#closed_sun"
+      ];
+      for (i = 0; i < time_selectors.length; i++){
+        var value = $(time_selectors[i]).val();
+        if (value == '0'){
+          if (! $(closed_selectors[i]).prop('checked')){
+            $(time_selectors[i]).val(valueSelected);
+          }
+        }
+      }
+    });
+
+    $("#mon_close, #tues_close, #wed_close, #thurs_close, #fri_close, #sat_close, #sun_close").change(function(){
+      var optionSelected = $("option:selected", this);
+      var valueSelected = this.value;
+      var time_selectors = [
+        "#mon_close",
+        "#tues_close",
+        "#wed_close",
+        "#thurs_close",
+        "#fri_close",
+        "#sat_close",
+        "#sun_close"
+      ];
+      var closed_selectors = [
+        "#closed_mon",
+        "#closed_tues",
+        "#closed_wed",
+        "#closed_thurs",
+        "#closed_fri",
+        "#closed_sat",
+        "#closed_sun"
+      ];
+      for (i = 0; i < time_selectors.length; i++){
+        var value = $(time_selectors[i]).val();
+        if (value == '0'){
+          if (! $(closed_selectors[i]).prop('checked')){
+            $(time_selectors[i]).val(valueSelected);
+          }
+        }
+      }
+    });
+
+    $("#closed_mon, #closed_tues, #closed_wed, #closed_thurs, #closed_fri, #closed_sat, #closed_sun").change(function(){
+      if (this.checked){
+        var open_select = $(this).closest('td').next().find('select');
+        var closed_select = open_select.closest('td').next().find('select');
+        open_select.val('0');
+        open_select.prop('disabled', 'disabled');
+        closed_select.val('0');
+        closed_select.prop('disabled', 'disabled');
+      }else{
+        var open_select = $(this).closest('td').next().find('select');
+        var closed_select = open_select.closest('td').next().find('select');
+        open_select.prop('disabled', null);
+        closed_select.prop('disabled', null);
+      }
+    });
+
+
+
   </script>
 {% endblock %}

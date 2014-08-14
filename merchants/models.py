@@ -225,7 +225,13 @@ class Merchant(models.Model):
         open_times = self.get_hours()
         hours_formatted = {}
         for open_time in open_times:
-            hours_formatted[open_time.weekday] = {
+            if open_time.is_closed_this_day:
+                hours_formatted[open_time.weekday] = {
+                    'from_time': 'closed',
+                    'to_time': 'closed',
+                    }
+            else:
+                hours_formatted[open_time.weekday] = {
                     'from_time': open_time.from_time,
                     'to_time': open_time.to_time,
                     }
@@ -238,6 +244,7 @@ class Merchant(models.Model):
             (weekday, from_hour, to_hour),
             (1, datetime.time(9), datetime.time(17)),
             (2, datetime.time(9), datetime.time(17)),
+            (3, 'closed', 'closed')
           )
         """
         # Delete current hours
@@ -245,7 +252,10 @@ class Merchant(models.Model):
 
         # Set new hours
         for weekday, from_time, to_time in hours:
-            OpenTime.objects.create(merchant=self, weekday=weekday, from_time=from_time, to_time=to_time)
+            if from_time == 'closed':
+                OpenTime.objects.create(merchant=self, weekday=weekday, is_closed_this_day=True)
+            else:
+                OpenTime.objects.create(merchant=self, weekday=weekday, from_time=from_time, to_time=to_time)
 
     def get_website_obj(self):
         websites = self.merchantwebsite_set.filter(deleted_at=None)
@@ -396,9 +406,10 @@ class OpenTime(models.Model):
     merchant = models.ForeignKey(Merchant, blank=False, null=False)
 
     weekday = models.IntegerField(choices=WEEKDAYS, db_index=True,
-            null=False, blank=False, unique=True)
-    from_time = models.TimeField()
-    to_time = models.TimeField()
+            null=False, blank=False)
+    from_time = models.TimeField(blank=True, null=True)
+    to_time = models.TimeField(blank=True, null=True)
+    is_closed_this_day = models.BooleanField(default=False)
 
     def __str__(self):
         return '%s: %s from %s to %s' % (self.id, self.weekday,

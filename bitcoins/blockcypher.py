@@ -57,6 +57,8 @@ def filter_bcypher_txns(forwarding_address, destination_address, txn_data):
     assert forwarding_address == address, msg
 
     txn_data_filtered = []
+    if 'txrefs' not in txn_data:
+        return []
     for txn in txn_data['txrefs']:
         if txn['tx_input_n'] >= 0:
             # Destination Address Transaction

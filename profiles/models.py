@@ -31,7 +31,7 @@ class MerchantDoc(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True, db_index=True)
     deleted_at = models.DateTimeField(blank=True, null=True, db_index=True)
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
-    img_file = models.FileField(upload_to='store-img/%Y%m%d/%H%M%S-%s-', blank=False, null=False)
+    img_file = models.FileField(upload_to='store-img/%Y%m%d/%H%M%S-%s', blank=False, null=False)
 
     def __str__(self):
         return '%s for %s' % (self.id, self.merchant)

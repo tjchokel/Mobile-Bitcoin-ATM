@@ -16,7 +16,7 @@ from profiles.forms import ImageUploadForm
 
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
-from profiles.modles import MerchantDoc
+from profiles.models import MerchantDoc
 
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential

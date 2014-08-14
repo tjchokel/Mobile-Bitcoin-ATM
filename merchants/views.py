@@ -12,8 +12,11 @@ import datetime
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
+from profiles.forms import ImageUploadForm
+
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
+from profiles.modles import MerchantDoc
 
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
@@ -298,6 +301,16 @@ def merchant_profile(request):
         initial['sunday_open'] = hours_formatted.get(7)['from_time'].hour
         initial['sunday_close'] = hours_formatted.get(7)['to_time'].hour
 
+    image_form = ImageUploadForm()
+    if request.method == 'POST':
+        image_form = ImageUploadForm(request.POST, request.FILES)
+        if image_form.is_valid():
+            img_file = image_form.cleaned_data['img_file']
+            MerchantDoc.objects.create(img_file=img_file, merchant=merchant)
+            msg = _('Your image has been uploaded')
+            messages.success(request, msg)
+            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+
     return {
         'user': user,
         'merchant': merchant,
@@ -306,6 +319,7 @@ def merchant_profile(request):
         'merchant_form': MerchantInfoForm(initial=initial),
         'hours_form': BusinessHoursForm(initial=initial),
         'biz_hours': hours_formatted,
+        'image_form': image_form,
     }
 
 

@@ -35,14 +35,14 @@
                 </div>
                 <div class="modal-body">
                   <p>Please choose a file to upload. JPG, PNG, GIF only.</p>
-                  <form role="form">
-                    <div class="form-group">
-                      <label for="file">File input</label>
-                      <input type="file" id="file">
-                      <p class="help-block">Files up to 5Mb only.</p>
+                  <form role="form" action="{% url merchant_profile %}" method="post" enctype="multipart/form-data" >
+                    {% load crispy_forms_tags %}
+                    {{ form|crispy }}
+                    {% csrf_token %}
+                    <div class="button-wrapper">  
+                      <button type="button" class="hl-btn hl-btn-default" data-dismiss="modal">Cancel</button>
+                      <button type="button" class="hl-btn hl-btn-green" data-dismiss="modal">Upload</button>
                     </div>
-                    <button type="button" class="hl-btn hl-btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="hl-btn hl-btn-green" data-dismiss="modal">Upload</button>
                   </form>
                 </div>
               </div>

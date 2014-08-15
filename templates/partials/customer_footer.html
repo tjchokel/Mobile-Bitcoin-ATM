@@ -6,7 +6,12 @@
         <a href="#" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">{% trans "Customers" %}</a>
       </li>
       <li style="width:50%">
-        <a href="{% url "merchant_transactions" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">{% trans "Admin" %}</a>
+        {% if merchant.finished_registration %}
+          <a href="{% url "merchant_transactions" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">{% trans "Admin" %}</a>
+        {% else %}
+          <a href="{% url "merchant_profile" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">{% trans "Admin" %}</a>
+        {% endif %}
+        }
       </li>
     </ul>
   </div>

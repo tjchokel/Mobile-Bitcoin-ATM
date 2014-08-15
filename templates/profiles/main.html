@@ -40,7 +40,11 @@
             <div class="avatar">
               <!-- <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar"> -->
               <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar">
-                <img src="{%static "img/mels_diner.png" %}"  alt="...">
+                {% if doc_object %}
+                  <img src="{{ doc_object.get_url }}"  alt="Profile Image" style="max-height:200px;max-width:200px;min-width:100px; min-height:100px;">
+                {% else %}
+                  <img src="{%static "img/default_profile_photo.png" %}"  alt="Profile Image">
+                {% endif %}
               </a>
               <!-- Upload new avatar bubble -->
               <!-- <div class="avatar-bubble">
@@ -110,8 +114,8 @@
       </h3>
       {% if is_users_profile %}
         <a class="btn btn-info btn-md pull-right hidden-xs" href="{% url 'merchant_profile' %}" style="transform: translateY(50%);">
-                  {% trans "Edit Your Profile" %}
-            </a>
+            {% trans "Edit Your Profile" %}
+        </a>
       {% endif %}
       <div class="clearfix"></div>
       <hr>

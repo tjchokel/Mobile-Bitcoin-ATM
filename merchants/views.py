@@ -12,8 +12,11 @@ import datetime
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
+from profiles.forms import ImageUploadForm
+
 from merchants.models import Merchant
 from users.models import AuthUser, LoggedLogin
+from profiles.models import MerchantDoc
 
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
@@ -295,6 +298,16 @@ def merchant_profile(request):
                     'close': hours_to_value[day['to_time']],
                 }
 
+    image_form = ImageUploadForm()
+    if request.method == 'POST':
+        image_form = ImageUploadForm(request.POST, request.FILES)
+        if image_form.is_valid():
+            img_file = image_form.cleaned_data['img_file']
+            MerchantDoc.objects.create(img_file=img_file, merchant=merchant)
+            msg = _('Your image has been uploaded')
+            messages.success(request, msg)
+            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+    doc_object = merchant.get_merchant_doc_obj()
     return {
         'user': user,
         'merchant': merchant,
@@ -302,7 +315,9 @@ def merchant_profile(request):
         'personal_form': OwnerInfoForm(initial=initial),
         'merchant_form': MerchantInfoForm(initial=initial),
         'biz_hours': hours_formatted,
-        'hours_form_initial': hours_form_initial
+        'image_form': image_form,
+        'hours_form_initial': hours_form_initial,
+        'doc_object': doc_object,
     }
 
 

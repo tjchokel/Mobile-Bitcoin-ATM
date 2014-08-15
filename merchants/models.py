@@ -397,6 +397,12 @@ class Merchant(models.Model):
         else:
             return ShortURL.objects.create(uri_display=slug, merchant=self)
 
+    def get_merchant_doc_obj(self):
+        """
+        Right now just a profile image
+        """
+        return self.merchantdoc_set.order_by('uploaded_at').last()
+
     def set_latitude_longitude(self):
         address_array = self.get_physical_address_list()
         # address = self.get_physical_address_qs()

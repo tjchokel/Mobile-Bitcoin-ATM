@@ -1,5 +1,5 @@
 from django.contrib import admin
-from profiles.models import ShortURL
+from profiles.models import ShortURL, MerchantDoc
 
 from utils import uri_to_url
 
@@ -26,3 +26,20 @@ class ShortURLAdmin(admin.ModelAdmin):
         model = ShortURL
 
 admin.site.register(ShortURL, ShortURLAdmin)
+
+
+class MerchantDocAdmin(admin.ModelAdmin):
+
+    list_display = (
+            'id',
+            'uploaded_at',
+            'deleted_at',
+            'merchant',
+            'img_file',
+            )
+    raw_id_fields = ('merchant', )
+
+    class Meta:
+        model = MerchantDoc
+
+admin.site.register(MerchantDoc, MerchantDocAdmin)

@@ -29,4 +29,12 @@ def merchant_site(request, uri):
     is_users_profile = False
     if merchant.user == request.user:
         is_users_profile = True
-    return {'merchant': short_url_obj.merchant, 'cashin_price': cashin_price_formatted, 'cashout_price': cashout_price_formatted, 'is_users_profile': is_users_profile}
+
+    doc_object = merchant.get_merchant_doc_obj()
+    return{
+            'merchant': short_url_obj.merchant,
+            'cashin_price': cashin_price_formatted,
+            'cashout_price': cashout_price_formatted,
+            'is_users_profile': is_users_profile,
+            'doc_object': doc_object,
+    }

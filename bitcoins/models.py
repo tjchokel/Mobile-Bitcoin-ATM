@@ -13,7 +13,6 @@ from phones.models import SentSMS
 from emails.models import SentEmail
 
 from emails.trigger import send_and_log
-from emails.internal_msg import send_internal_email
 
 from countries import BFHCurrenciesList
 
@@ -303,15 +302,11 @@ class ForwardingAddress(models.Model):
             fwd_txn.save()
 
             if num_confirmations < fwd_txn.conf_num:
-                # Fewer confirmations than the past
-                # Only possible with orphaned blocks (extremely rare)
-                # and potentially in the case of double-sending to an address (the second send might reset the confirmations counter)
-                send_internal_email(
-                        subject='Confirmation Discrepency for %s' % input_txn_hash,
-                        message='Source says %s confirms and DB has %s confirms' % (
-                            num_confirmations, fwd_txn.conf_num),
-                        recipient_list=['monitoring@coinsafe.com', ],
-                        )
+                # Fewer confirmations than the past, only possible in edge cases:
+                #   Orphaned blocks, extremely rare
+                #   Double-sending to an address, the second send might reset confs
+                #   Delayed BCI webhooks, they only give confirmations for the relay
+                pass
             elif num_confirmations == fwd_txn.conf_num:
                 pass  # No update
             else:

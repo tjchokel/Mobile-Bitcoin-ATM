@@ -130,7 +130,7 @@ class BCICredential(BaseCredential):
         """
         Generates a new receiving address
         """
-        label = 'CoinSafe Address %s' % now().strftime("%Y-%m-%d %H:%M:%S")
+        label = urllib.quote('CoinSafe Address %s' % now().strftime("%Y-%m-%d %H.%M.%S"))
 
         BASE_URL = 'https://blockchain.info/merchant/%s/new_address?password=%s&label=%s'
         ADDRESS_URL = BASE_URL % (self.username, urllib.quote(self.main_password), label)

@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 from annoying.functions import get_object_or_None
 
@@ -252,10 +252,10 @@ class BTCTransaction(models.Model):
         if self.met_minimum_confirmation_at:
             return _('BTC Received')
         else:
-            msg = 'BTC Pending (%s of %s Confirms Needed)' % (
-                    self.conf_num,
-                    self.get_confs_needed(),
-                    )
+            msg = _('BTC Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)') % {
+                    'conf_num': self.conf_num,
+                    'confs_needed': self.get_confs_needed(),
+                    }
             return _(msg)
 
     def get_currency_symbol(self):
@@ -341,15 +341,12 @@ class BTCTransaction(models.Model):
 
         shopper = self.get_shopper()
         if shopper and shopper.phone_num:
-            msg = 'You just sent %s to %s. '
-            msg += 'You will receive %s when this transaction confirms in %s mins.'
-            msg = msg % (
-                    self.format_satoshis_amount(),
-                    self.get_merchant().business_name,
-                    self.get_fiat_amount_formatted(),
-                    self.get_time_range_in_minutes()
-                    )
-            msg = _(msg)
+            msg = _('You just sent %(btc_amount)s to %(business_name)s. You will receive %(fiat_amount_formatted)s when this transaction confirms in %(time_range_in_minutes)s mins.') % {
+                    'btc_amount': self.format_satoshis_amount(),
+                    'business_name': self.get_merchant().business_name,
+                    'fiat_amount_formatted': self.get_fiat_amount_formatted(),
+                    'time_range_in_minutes': self.get_time_range_in_minutes()
+                    }
             return SentSMS.send_and_log(
                     phone_num=shopper.phone_num,
                     message=msg,
@@ -400,13 +397,11 @@ class BTCTransaction(models.Model):
 
         shopper = self.get_shopper()
         if shopper and shopper.phone_num:
-            msg = 'The %s you sent to %s has been confirmed. They now owe you %s.'
-            msg = msg % (
-                    self.format_satoshis_amount(),
-                    self.get_merchant().business_name,
-                    self.get_fiat_amount_formatted(),
-                    )
-            msg = _(msg)
+            msg = _('The %(btc_amount)s you sent to %(business_name)s has been confirmed. They now owe you %(fiat_amount)s.') % {
+                    'btc_amount': self.format_satoshis_amount(),
+                    'business_name': self.get_merchant().business_name,
+                    'fiat_amount': self.get_fiat_amount_formatted(),
+                    }
             return SentSMS.send_and_log(
                     phone_num=shopper.phone_num,
                     message=msg,
@@ -457,28 +452,33 @@ class BTCTransaction(models.Model):
                 return
 
         merchant = self.get_merchant()
-        if merchant.phone_num:
-            msg = 'The %s you received from %s has been confirmed. Please pay them %s immediately.'
-            shopper = self.get_shopper()
-            if shopper and shopper.name:
-                customer_string = shopper.name
-            else:
-                customer_string = 'the customer'
-            msg = msg % (
-                    self.format_satoshis_amount(),
-                    customer_string,
-                    self.get_fiat_amount_formatted(),
-                    )
-            msg = _(msg)
-            return SentSMS.send_and_log(
-                    phone_num=merchant.phone_num,
-                    message=msg,
-                    to_user=merchant.user,
-                    to_merchant=merchant,
-                    to_shopper=shopper,
-                    message_type=SentSMS.MERCHANT_TX_CONFIRMED,
-                    btc_transaction=self,
-                    )
+        if not merchant.phone_num:
+            return
+        shopper = self.get_shopper()
+        if not shopper:
+            return
+
+        if shopper.name:
+            msg = _('The %(btc_amount)s you received from %(customer_name)s has been confirmed. Please pay them %(fiat_amount)s immediately.') % {
+                    'customer_name': shopper.name,
+                    'btc_amount': self.format_satoshis_amount(),
+                    'fiat_amount': self.get_fiat_amount_formatted(),
+                    }
+        else:
+            msg = _('The %(btc_amount)s you received from the customer has been confirmed. Please pay them %(fiat_amount)s immediately.') % {
+                    'btc_amount': self.format_satoshis_amount(),
+                    'fiat_amount': self.get_fiat_amount_formatted(),
+                    }
+
+        return SentSMS.send_and_log(
+                phone_num=merchant.phone_num,
+                message=msg,
+                to_user=merchant.user,
+                to_merchant=merchant,
+                to_shopper=shopper,
+                message_type=SentSMS.MERCHANT_TX_CONFIRMED,
+                btc_transaction=self,
+                )
 
     def send_all_txconfirmed_notifications(self, force_resend=False):
         """
@@ -519,6 +519,12 @@ class BTCTransaction(models.Model):
             self.send_shopper_newtx_sms(force_resend=False)
         except Exception as e:
             print 'Error was: %s' % e
+
+    def get_transaction_url(self):
+        if self.destination_address:
+            # Not a forwarding txn
+            return ''
+        return 'https://blockchain.info/tx/%s' % self.txn_hash
 
     def get_type(self):
         return _('Bought BTC')
@@ -567,10 +573,12 @@ class ShopperBTCPurchase(models.Model):
     btc_transaction = models.ForeignKey(BTCTransaction, blank=True, null=True)
     merchant_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
     shopper_email_sent_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    # allowing null for backwards compatibility:
+    base_sent_btc = models.ForeignKey('credentials.BaseSentBTC', blank=True, null=True)
     objects = ShopperBTCPurchaseManager()
 
     def __str__(self):
-        return '%s: %s with %s' % (self.id, self.added_at[:16], self.merchant)
+        return '%s: with %s' % (self.id, self.merchant)
 
     def save(self, *args, **kwargs):
         """
@@ -598,6 +606,15 @@ class ShopperBTCPurchase(models.Model):
         satoshis = btc_to_satoshis(total_btc)
         return satoshis
 
+    def mark_cancelled(self):
+        if not self.cancelled_at:
+            self.cancelled_at = now()
+            self.save()
+        return self
+
+    def is_cancelled(self):
+        return bool(self.cancelled_at)
+
     def get_b58_address_or_email(self):
         " Get the base 58 email address if it exists, otherwise the email "
         if self.b58_address:
@@ -607,32 +624,54 @@ class ShopperBTCPurchase(models.Model):
     def format_mbtc_amount(self):
         return format_mbtc(satoshis_to_mbtc(self.satoshis))
 
-    def pay_out_bitcoin(self, send_receipt=True):
+    def pay_out_bitcoin(self, send_receipt=True, force_resend=False):
+        """
+        Returns:
+            btc_purchase_request*, api_call, err_str
+
+        *the updated version
+        """
+
+        if self.cancelled_at and not force_resend:
+            msg = _('This price quote was previously cancelled. Please start over and create a new request. Sorry for the inconvenience.')
+            return self, None, msg
+
+        if self.expires_at < now() and not force_resend:
+            msg = _('The price quote in this transaction has expired. Please start over and create a new request. Sorry for the inconvenience.')
+            return self, None, msg
+
+        if (self.base_sent_btc or self.funds_sent_at) and not force_resend:
+            # defensive check to prevent double-sending
+            msg = _('The bitcoin for this transaction was already sent. Please see the transactions log in the admin section for details.')
+            return self, None, msg
 
         if not self.credential:
             self.credential = self.merchant.get_valid_api_credential()
             self.save()
         if self.b58_address:
-            btc_txn, error_string = self.credential.send_btc(
+            btc_txn, sent_btc_obj, api_call, err_str = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=self.b58_address)
         else:
-            btc_txn, error_string = self.credential.send_btc(
+            btc_txn, sent_btc_obj, api_call, err_str = self.credential.send_btc(
                     satoshis_to_send=self.satoshis,
                     destination_btc_address=None,
                     destination_email_address=self.shopper.email)
 
         self.btc_transaction = btc_txn
-        if not error_string:
-            self.confirmed_by_merchant_at = now()
-            self.funds_sent_at = now()
+        self.base_sent_btc = sent_btc_obj
         self.save()
 
-        if send_receipt and not error_string:
+        if not err_str:
+            self.confirmed_by_merchant_at = now()
+            self.funds_sent_at = now()
+            self.save()
+
+        if send_receipt and not err_str:
             self.send_shopper_receipt()
             self.send_merchant_receipt()
 
-        return btc_txn, error_string
+        return self, api_call, err_str
 
     def send_merchant_receipt(self):
         assert self.credential
@@ -731,10 +770,22 @@ class ShopperBTCPurchase(models.Model):
     def get_status(self):
         if self.cancelled_at:
             return _('Cancelled')
-        if self.confirmed_by_merchant_at:
+        elif self.confirmed_by_merchant_at and self.funds_sent_at:
             return _('Complete')
+        elif self.expires_at and self.expires_at < now():
+            return _('Cancelled by Expiration')
         else:
             return _('Waiting on Merchant Approval')
+
+    def get_transaction_url(self):
+        if not self.base_sent_btc:
+            return ''
+        if self.btc_transaction and self.btc_transaction.txn_hash:
+            return 'https://blockchain.info/tx/%s' % self.btc_transaction.txn_hash
+        if self.b58_address:
+            return 'https://blockchain.info/address/%s' % self.b58_address
+        # Must be CB off blockchain, logic will change here when we support multiple off-blockchain options
+        return "https://coinbase.com/accounts/"
 
     def get_type(self):
         return _('Sold BTC')

@@ -26,7 +26,7 @@ function addMessage(text, extra_tags) {
         var div_class="alert alert-info"
     }
 
-    var message = $('<div class="'+div_class+'">'+text+'<a class="close" data-dismiss="alert">×</a></div>').hide().fadeIn(500);
+    var message = $('<div class="'+div_class+'">'+text+'<button type="button" class="close" data-dismiss="alert">×</button></div>').hide().fadeIn(500);
     $("#messages").append(message);
     $(".page-tip").slideDown();
     setTimeout(function() {

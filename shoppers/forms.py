@@ -1,6 +1,5 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MinValueValidator
 from countries import COUNTRY_DROPDOWN
 from decimal import Decimal
 
@@ -63,7 +62,8 @@ def clean_amount(self):
         msg = _("Sorry, you must buy at least 1 mBTC")
         raise forms.ValidationError(msg)
     if max_mbtc_shopper_purchase < amount_in_mbtc:
-        msg = _("Sorry, the amount you entered exceeds the purchase limit (%s mBTC)" % max_mbtc_shopper_purchase)
+        msg = _("Sorry, the amount you entered exceeds the purchase limit (%(max_mbtc)s mBTC)") % {
+                'max_mbtc': max_mbtc_shopper_purchase}
         raise forms.ValidationError(msg)
 
     # Check if amount exceeds available balance
@@ -73,7 +73,8 @@ def clean_amount(self):
         if balance is False:
             # This will incorrecty display on the amount input and not the form as a whole
             # That's worth it here for simplicity and not having to make 2 API calls
-            msg = _("Sorry, the business API credentials for %s are invalid." % credential.get_credential_to_display())
+            msg = _("Sorry, the business API credentials for %(credential_name)s are invalid.") % {
+                    'credential_name': credential.get_credential_to_display()}
             raise forms.ValidationError(msg)
         elif balance < (mbtc_to_satoshis(float(amount_in_mbtc))*1.01 + 2*STANDARD_TX_FEE_IN_SATOSHIS):
             # The 1% increase is hackey buffer for the fact that the price isn't locked in.

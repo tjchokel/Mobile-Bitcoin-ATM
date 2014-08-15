@@ -13,6 +13,7 @@ import requests
 import json
 import urllib
 
+
 class BCICredential(BaseCredential):
 
     username = EncryptedCharField(max_length=64, blank=False, null=False, db_index=True)
@@ -72,8 +73,8 @@ class BCICredential(BaseCredential):
 
     def send_btc(self, satoshis_to_send, destination_btc_address):
         """
-        Returns a tuple of the form:
-            BTCTransaction, error_string
+        Returns a tuple of the form (some or all may be none):
+            btc_txn, sent_btc_obj, api_call, err_str
         """
 
         msg = '%s is not a valid bitcoin address' % destination_btc_address
@@ -89,7 +90,7 @@ class BCICredential(BaseCredential):
         r = requests.get(SEND_URL)
 
         # Log the API call
-        APICall.objects.create(
+        api_call = APICall.objects.create(
             api_name=APICall.BLOCKCHAIN_WALLET_SEND_BTC,
             url_hit=SEND_URL,
             response_code=r.status_code,
@@ -104,16 +105,16 @@ class BCICredential(BaseCredential):
 
         if 'error' in resp_json:
             # TODO: this assumes all error messages here are safe to display to the user
-            return None, resp_json['error']
+            return None, None, api_call, resp_json['error']
 
         if 'tx_hash' not in resp_json:
             # TODO: this assumes all error messages here are safe to display to the user
-            return None, 'No Transaction Hash Received from Blockchain.Info'
+            return None, None, api_call, 'No Transaction Hash Received from Blockchain.Info'
 
         tx_hash = resp_json['tx_hash']
 
         # Record the Send
-        BCISentBTC.objects.create(
+        sent_btc_obj = BCISentBTC.objects.create(
                 credential=self,
                 satoshis=satoshis_to_send,
                 destination_btc_address=destination_btc_address,
@@ -123,7 +124,7 @@ class BCICredential(BaseCredential):
         return BTCTransaction.objects.create(
             txn_hash=tx_hash,
             satoshis=satoshis_to_send,
-            conf_num=0), None
+            conf_num=0), sent_btc_obj, api_call, None
 
     def get_new_receiving_address(self, set_as_merchant_address=False):
         """

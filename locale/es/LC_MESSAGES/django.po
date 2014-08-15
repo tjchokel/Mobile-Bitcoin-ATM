@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CoinSafe 20140803 v2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-07 23:41+0000\n"
+"POT-Creation-Date: 2014-08-11 18:09+0000\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +25,40 @@ msgstr "Dinero Entregado"
 msgid "BTC Received"
 msgstr "BTC Recibidos"
 
+#: bitcoins/models.py:255
+#, python-format
+msgid "BTC Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)"
+msgstr ""
+
+#: bitcoins/models.py:344
+#, python-format
+msgid ""
+"You just sent %(btc_amount)s to %(business_name)s. You will receive "
+"%(fiat_amount_formatted)s when this transaction confirms in "
+"%(time_range_in_minutes)s mins."
+msgstr ""
+
+#: bitcoins/models.py:400
+#, python-format
+msgid ""
+"The %(btc_amount)s you sent to %(business_name)s has been confirmed. They "
+"now owe you %(fiat_amount)s."
+msgstr ""
+
+#: bitcoins/models.py:462
+#, python-format
+msgid ""
+"The %(btc_amount)s you received from %(customer_name)s has been confirmed. "
+"Please pay them %(fiat_amount)s immediately."
+msgstr ""
+
+#: bitcoins/models.py:468
+#, python-format
+msgid ""
+"The %(btc_amount)s you received from the customer has been confirmed. Please "
+"pay them %(fiat_amount)s immediately."
+msgstr ""
+
 #: bitcoins/models.py:524
 msgid "Bought BTC"
 msgstr "BTC Comprado"
@@ -46,17 +80,17 @@ msgstr "Esperando la aprobación del Comerciante"
 msgid "Sold BTC"
 msgstr "BTC Vendido"
 
-#: bitcoins/views.py:335
+#: bitcoins/views.py:336
 msgid ""
 "Transaction complete. You can always see your transaction history by "
 "clicking the Admin button below."
 msgstr ""
 
-#: bitcoins/views.py:359
+#: bitcoins/views.py:360
 msgid "Your request has been cancelled"
 msgstr "Su perfil ha sido actualizado"
 
-#: bitcoins/views.py:376
+#: bitcoins/views.py:377
 msgid "Your buy request has been cancelled"
 msgstr "Su perfil ha sido actualizado"
 
@@ -141,75 +175,78 @@ msgstr "Su información referente a la API de Bitstamp ha sido actualizada"
 msgid "Your Bistamp API info could not be validated"
 msgstr "Su información referente a la API de Bitstamp no pudo ser validada"
 
-#: merchants/forms.py:29 merchants/forms.py:45 merchants/forms.py:304
-#: merchants/forms.py:329 templates/merchants/profile.html:138
+#: merchants/forms.py:28 merchants/forms.py:44 merchants/forms.py:302
+#: merchants/forms.py:327 templates/merchants/profile.html:138
 #: users/forms.py:8
 msgid "Email"
 msgstr "Correo Electrónico"
 
-#: merchants/forms.py:33 merchants/forms.py:311
+#: merchants/forms.py:32 merchants/forms.py:309
 msgid "Password"
 msgstr "Contraseña"
 
-#: merchants/forms.py:51
+#: merchants/forms.py:50
 msgid "Secure Password"
 msgstr "Contraseña Segura"
 
-#: merchants/forms.py:56 merchants/forms.py:319
+#: merchants/forms.py:55 merchants/forms.py:317
 msgid "Your Name"
 msgstr "Nombre y Apellido"
 
-#: merchants/forms.py:63 merchants/forms.py:354
+#: merchants/forms.py:62 merchants/forms.py:352
 #: templates/merchants/profile.html:21
 msgid "Business Name"
 msgstr "Razón Social"
 
-#: merchants/forms.py:70 shoppers/forms.py:30
+#: merchants/forms.py:69 shoppers/forms.py:29
 #: templates/merchants/profile.html:41 users/forms.py:17
 msgid "Country"
 msgstr "País"
 
-#: merchants/forms.py:77 merchants/forms.py:466
+#: merchants/forms.py:76 merchants/forms.py:464
 msgid "The Currency You Want to Trade for BTC"
 msgstr "Moneda que deseas cambiar por BTC"
 
-#: merchants/forms.py:95
+#: merchants/forms.py:93
 #, python-format
-msgid "That email is already taken, do you want to <a href=\"%s\">login</a>?"
+msgid ""
+"That email is already taken, do you want to <a href=\"%(login_uri)s\">login</"
+"a>?"
 msgstr ""
-"Este correo ya esta en uso, ¿quieres <a href=\"%s\">Iniciar Sesión</a>?>"
+"Este correo ya esta en uso, ¿quieres <a href=\"%(login_uri)s\">iniciar "
+"sesión</a>?"
 
-#: merchants/forms.py:99
+#: merchants/forms.py:97
 msgid "Sorry, your email address must be less than 100 characters"
 msgstr ""
 "Lo sentimos, tu dirección de correo electrónico debe ser inferior a 100 "
 "caracteres"
 
-#: merchants/forms.py:110
+#: merchants/forms.py:108
 msgid "Percent Markup"
 msgstr "Margen de Ganancia"
 
-#: merchants/forms.py:113
+#: merchants/forms.py:111
 msgid "The percent you want to charge above the market rate"
 msgstr "El porcentaje de recargo por encima de la tasa del mercado"
 
-#: merchants/forms.py:118
+#: merchants/forms.py:116
 msgid "Wallet Choice"
 msgstr "Billetera"
 
-#: merchants/forms.py:122
+#: merchants/forms.py:120
 msgid "Create New blockchain.info Wallet"
 msgstr "Crear una nueva Billetera en blockchain.info"
 
-#: merchants/forms.py:123
+#: merchants/forms.py:121
 msgid "Link Existing Hosted Wallet"
 msgstr "Vincular Billetera Existente"
 
-#: merchants/forms.py:128
+#: merchants/forms.py:126
 msgid "New Blockchain Wallet Password"
 msgstr "Contraseña Principal en Blockchain"
 
-#: merchants/forms.py:133
+#: merchants/forms.py:131
 msgid ""
 "Do not forget this password! Blockchain.info does not support password "
 "recovery."
@@ -217,178 +254,173 @@ msgstr ""
 "¡No olvides esta contraseña! Blockchain.info no posee un sistema de "
 "recuperación de contraseña."
 
-#: merchants/forms.py:137 templates/merchants/password_prompt.html:36
+#: merchants/forms.py:135 templates/merchants/password_prompt.html:36
 msgid "Confirm Password"
 msgstr "Confirmar Contraseña"
 
-#: merchants/forms.py:145
+#: merchants/forms.py:143
 msgid "Existing Bitcoin Wallet Provider"
 msgstr "Proveedor de Billetera Bitcoin Existente"
 
-#: merchants/forms.py:156
+#: merchants/forms.py:154
 msgid "Coinbase API Key"
 msgstr "Llave de la API de Coinbase"
 
-#: merchants/forms.py:164
+#: merchants/forms.py:162
 msgid "Coinbase Secret Key"
 msgstr "Clave Secreta en Coinbase"
 
-#: merchants/forms.py:172
+#: merchants/forms.py:170
 msgid "Bitstamp Customer ID"
 msgstr "Identificador de cliente en Bitstamp"
 
-#: merchants/forms.py:180
+#: merchants/forms.py:178
 msgid "Bitstamp API Key"
 msgstr "Llave de la API de Bitstamp"
 
-#: merchants/forms.py:188
+#: merchants/forms.py:186
 msgid "Bitstamp Secret Key"
 msgstr "Clave Secreta en Bitstamp"
 
-#: merchants/forms.py:196
+#: merchants/forms.py:194
 msgid "Blockchain Username (Wallet Identifier)"
 msgstr "Nombre de usuario en Blockchain (Identificador de Billetera)"
 
-#: merchants/forms.py:204
+#: merchants/forms.py:202
 msgid "Blockchain Main Password"
 msgstr "Contraseña Principal en Blockchain"
 
-#: merchants/forms.py:212
+#: merchants/forms.py:210
 msgid "Blockchain Second Password"
 msgstr "Segunda Contraseña en Blockchain"
 
-#: merchants/forms.py:224
+#: merchants/forms.py:222
 msgid "Please enter your Coinbase API key"
 msgstr "Introduzca su clave de API Coinbase"
 
-#: merchants/forms.py:233
+#: merchants/forms.py:231
 msgid "Please enter your Coinbase secret key"
 msgstr "Por favor, introduzca un nombre para el recibo"
 
-#: merchants/forms.py:241
+#: merchants/forms.py:239
 msgid "Please enter your Bitstamp username"
 msgstr "Por favor, ingrese su nombre de usuario en Bitstamp"
 
-#: merchants/forms.py:249
+#: merchants/forms.py:247
 msgid "Please enter your Bitstamp API key"
 msgstr "Introduzca su llave de API para Bitstamp"
 
-#: merchants/forms.py:257
+#: merchants/forms.py:255
 msgid "Please enter your Bitstamp Secret Key"
 msgstr "Por favor, introduzca un nombre para el recibo"
 
-#: merchants/forms.py:265
+#: merchants/forms.py:263
 msgid "Please enter your Blockchain username"
 msgstr "Por favor, ingrese su nombre de usuario en Blockchain"
 
-#: merchants/forms.py:275
+#: merchants/forms.py:273
 msgid "Please enter your Blockchain API key"
 msgstr "Introduzca su llave de API para Blockchain"
 
-#: merchants/forms.py:283 merchants/forms.py:519 shoppers/forms.py:161
+#: merchants/forms.py:281 merchants/forms.py:517 shoppers/forms.py:162
 msgid "Sorry, that's not a valid bitcoin address"
 msgstr "Lo sentimos, pero esa no es una dirección válida de Bitcoin"
 
-#: merchants/forms.py:286 shoppers/forms.py:124
+#: merchants/forms.py:284 shoppers/forms.py:125
 msgid "Please enter a valid bitcoin address"
 msgstr "Por favor, ingresar una dirección Bitcoin válida"
-
-#: merchants/forms.py:296
-msgid "Those passwords did not match. Please try again."
-msgstr ""
-"Sus credenciales de la API no son válidas. Por favor, inténtelo de nuevo."
 
 #: merchants/forms.py:335
 msgid "Phone Country"
 msgstr "Código País"
 
-#: merchants/forms.py:342
+#: merchants/forms.py:340
 msgid "Cell Phone Number in International Format"
 msgstr "Número de teléfono móvil (en formato internacional)"
 
-#: merchants/forms.py:358
+#: merchants/forms.py:356
 msgid "Mel's Diner"
 msgstr "Hostal Bellavista"
 
-#: merchants/forms.py:362 templates/merchants/profile.html:25
+#: merchants/forms.py:360 templates/merchants/profile.html:25
 msgid "Address Line 1"
 msgstr "Dirección 1"
 
-#: merchants/forms.py:366
+#: merchants/forms.py:364
 msgid "Street address, P.O. box, company name, c/o "
 msgstr "Calle, Casilla de Correo, Nombre de la Empresa, c/o"
 
-#: merchants/forms.py:370 templates/merchants/profile.html:29
+#: merchants/forms.py:368 templates/merchants/profile.html:29
 msgid "Address Line 2"
 msgstr "Dirección 2"
 
-#: merchants/forms.py:373
+#: merchants/forms.py:371
 msgid "Apartment, suite, unit, building, floor, etc."
 msgstr "Departamento, habitación, unidad, edificio, piso, etc"
 
-#: merchants/forms.py:377 templates/merchants/profile.html:33
+#: merchants/forms.py:375 templates/merchants/profile.html:33
 #: users/forms.py:13
 msgid "City"
 msgstr "Ciudad"
 
-#: merchants/forms.py:383
+#: merchants/forms.py:381
 msgid "State/Province/Region"
 msgstr "Estado / Provincia / Región"
 
-#: merchants/forms.py:391 templates/merchants/profile.html:45
+#: merchants/forms.py:389 templates/merchants/profile.html:45
 msgid "Zip Code"
 msgstr "Código Postal"
 
-#: merchants/forms.py:404 templates/merchants/profile.html:49
+#: merchants/forms.py:402 templates/merchants/profile.html:49
 #: templates/merchants/profile.html:142
 msgid "Phone Number"
 msgstr "Número de Teléfono"
 
-#: merchants/forms.py:410
+#: merchants/forms.py:408
 msgid "Website URL"
 msgstr "URL del sitio web"
 
-#: merchants/forms.py:473 shoppers/forms.py:108
+#: merchants/forms.py:471 shoppers/forms.py:109
 msgid "Bitcoin Deposit Address"
 msgstr "Dirección Bitcoin para Depósitos"
 
-#: merchants/forms.py:477 shoppers/forms.py:110
+#: merchants/forms.py:475 shoppers/forms.py:111
 msgid "The wallet address where you want your bitcoin sent"
 msgstr "La dirección de la billetera donde quieres recibir los bitcoin"
 
-#: merchants/forms.py:482 templates/merchants/settings.html:30
+#: merchants/forms.py:480 templates/merchants/settings.html:30
 msgid "Percent Markup When Selling Bitcoin"
-msgstr ""
+msgstr "Margen de Ganancia (Vender Bitcoin)"
 
-#: merchants/forms.py:485
+#: merchants/forms.py:483
 msgid "The percentage you charge above the market price when selling bitcoin"
-msgstr "El porcentaje de recargo por encima de la tasa del mercado"
+msgstr "El porcentaje de recargo por encima de la tasa del mercado en vender bitcoin."
 
-#: merchants/forms.py:490 templates/merchants/settings.html:34
+#: merchants/forms.py:488 templates/merchants/settings.html:34
 msgid "Percent Markup When Buying Bitcoin"
-msgstr ""
+msgstr "Margen de Ganancia (Comprar Bitcoin)"
 
-#: merchants/forms.py:493
+#: merchants/forms.py:491
 msgid "The percentage you pay below the market price when buying bitcoin."
-msgstr ""
+msgstr "El porcentaje de recargo por abajo de la tasa del mercado en comprar bitcoin."
 
-#: merchants/forms.py:498 templates/merchants/settings.html:38
+#: merchants/forms.py:496 templates/merchants/settings.html:38
 msgid "Max Shopper Purchase"
 msgstr "Máxima Compra por Cliente"
 
-#: merchants/forms.py:500
+#: merchants/forms.py:498
 msgid "The maximum amount of mBTC a shopper can purchase."
 msgstr "La cantidad máxima de mBTC que un comprador puede adquirir."
 
-#: merchants/forms.py:505 templates/merchants/settings.html:42
+#: merchants/forms.py:503 templates/merchants/settings.html:42
 msgid "Max Shopper Sale"
 msgstr "Máxima Venta por cliente"
 
-#: merchants/forms.py:507
+#: merchants/forms.py:505
 msgid "The maximum amount of mBTC a shopper can sell."
 msgstr "La cantidad máxima de mBTC que un cliente puede vender."
 
-#: merchants/forms.py:531
+#: merchants/forms.py:529
 msgid "CoinSafe Password"
 msgstr "Contraseña en CoinSafe"
 
@@ -422,19 +454,19 @@ msgstr "Domingo"
 
 #: merchants/views.py:52
 #, python-format
-msgid "Sorry, that's not the right password for <b>%s</b>."
-msgstr "Lo sentimos, pero esa no es la contraseña correcta para <b>%s</b>"
+msgid "Sorry, that's not the right password for <b>%(email)s</b>."
+msgstr "Lo sentimos, pero esa no es la contraseña correcta para <b>%(email)s</b>"
 
-#: merchants/views.py:55
+#: merchants/views.py:56
 #, python-format
-msgid "No account found for <b>%s</b>."
-msgstr "No se encontró la cuenta <b>%s</b>."
+msgid "No account found for <b>%(email)s</b>."
+msgstr "No se encontró la cuenta <b>%(email)s</b>."
 
-#: merchants/views.py:69
+#: merchants/views.py:70
 msgid "You Are Now Logged Out"
 msgstr "Usted ha terminado la sesión"
 
-#: merchants/views.py:180
+#: merchants/views.py:181
 msgid ""
 "Your account has been configured! Customers can use this page while at your "
 "store to trade bitcoin with you."
@@ -442,7 +474,7 @@ msgstr ""
 "Su cuenta ha sido creada! Sus clientes pueden utilizar esta página, mientras "
 "estén en la tienda para comerciar bitcoin con usted."
 
-#: merchants/views.py:189
+#: merchants/views.py:190
 msgid ""
 "Your blockchain.info wallet has been created! Customers can use this page "
 "while at your store to trade bitcoin with you."
@@ -450,101 +482,103 @@ msgstr ""
 "Su cuenta ha sido creada! Sus clientes pueden utilizar esta página, mientras "
 "estén en la tienda para comerciar bitcoin con usted."
 
-#: merchants/views.py:221
+#: merchants/views.py:222
 msgid "Your API credentials are not valid. Please try again."
 msgstr ""
 "Sus credenciales de la API no son válidas. Por favor, inténtelo de nuevo."
 
-#: merchants/views.py:341
+#: merchants/views.py:342
 msgid "Your profile has been updated"
 msgstr "Su perfil ha sido actualizado"
 
-#: merchants/views.py:345
+#: merchants/views.py:346
 msgid "Your profile was not updated"
 msgstr "Su perfil no fue actualizado"
 
-#: merchants/views.py:393
+#: merchants/views.py:394
 msgid "Your business hours have been updated"
 msgstr "El horario de su negocio ha sido actualizado"
 
-#: merchants/views.py:397
+#: merchants/views.py:398
 msgid "Your business hours have not been updated"
 msgstr "El horario de su negocio no ha sido actualizado"
 
-#: merchants/views.py:423
+#: merchants/views.py:424
 msgid "Your business info has been updated"
 msgstr "La información de su negocio ha sido actualizada"
 
-#: merchants/views.py:426
+#: merchants/views.py:427
 msgid "Your business info was not updated"
 msgstr "La información de su negocio no ha sido actualizada"
 
-#: merchants/views.py:449
+#: merchants/views.py:450
 msgid "Your bitcoin info has been updated"
 msgstr "Su información referente a bitcoin ha sido actualizada"
 
-#: merchants/views.py:452
+#: merchants/views.py:453
 msgid "Your bitcoin info was not updated"
 msgstr "Su información referente a bitcoin no ha sido actualizada"
 
-#: shoppers/forms.py:18
+#: shoppers/forms.py:17
 msgid "Customer Name"
 msgstr "Nombre del Cliente"
 
-#: shoppers/forms.py:24 shoppers/forms.py:95 shoppers/forms.py:140
+#: shoppers/forms.py:23 shoppers/forms.py:96 shoppers/forms.py:141
 msgid "Customer Email"
 msgstr "E-mail del Cliente"
 
-#: shoppers/forms.py:37
+#: shoppers/forms.py:36
 msgid "Customer Mobile Phone"
 msgstr "Teléfono móvil del Cliente"
 
-#: shoppers/forms.py:63
+#: shoppers/forms.py:62
 msgid "Sorry, you must buy at least 1 mBTC"
 msgstr ""
 
-#: shoppers/forms.py:66
+#: shoppers/forms.py:65
 #, python-format
-msgid "Sorry, the amount you entered exceeds the purchase limit (%s mBTC)"
+msgid ""
+"Sorry, the amount you entered exceeds the purchase limit (%(max_mbtc)s mBTC)"
 msgstr ""
 "Lo sentimos, la cantidad que ha introducido sobrepasa el límite de compra "
-"(%s mBTC)"
+"(%(max_mbtc)s mBTC)"
 
 #: shoppers/forms.py:76
 #, python-format
-msgid "Sorry, the business API credentials for %s are invalid."
+msgid ""
+"Sorry, the business API credentials for %(credential_name)s are invalid."
 msgstr ""
-"Lo sentimos, las credenciales de la API del negocio para %s no son válidas."
+"Lo sentimos, las credenciales de la API del negocio para %(credential_name)s no son válidas."
 
-#: shoppers/forms.py:81
+#: shoppers/forms.py:82
 msgid "Sorry, the amount you entered exceeds the available balance"
 msgstr "Lo sentimos, la cantidad que ha introducido excede el saldo disponible"
 
-#: shoppers/forms.py:88 shoppers/forms.py:133
+#: shoppers/forms.py:89 shoppers/forms.py:134
 msgid "Amount of Cash to Pay"
 msgstr "Cantidad de dinero a pagar"
 
-#: shoppers/forms.py:90 shoppers/forms.py:135
+#: shoppers/forms.py:91 shoppers/forms.py:136
 msgid "This is what you will give to the cashier"
 msgstr "Esto es lo que le dará al cajero"
 
-#: shoppers/forms.py:101
+#: shoppers/forms.py:102
 msgid "Send Bitcoin to Email or BTC Address"
 msgstr "Enviar Bitcoins a un E-mail o dirección BTC"
 
-#: shoppers/forms.py:146
+#: shoppers/forms.py:147
 msgid "Customer Bitcoin Address"
 msgstr "Dirección Bitcoin de Depósito"
 
-#: shoppers/forms.py:150
+#: shoppers/forms.py:151
 msgid "The wallet address where you want to receive your bitcoin"
 msgstr "La dirección de la billetera donde quieres recibir los bitcoins"
 
-#: shoppers/forms.py:171
+#: shoppers/forms.py:172
 msgid "Verify Merchant Password"
 msgstr "Verificar Contraseña de Comercio"
 
-#: shoppers/forms.py:178
+#: shoppers/forms.py:179
 msgid "Invalid password"
 msgstr "Contraseña inválida"
 
@@ -556,44 +590,44 @@ msgstr "Introducción a CoinSafe"
 msgid "Your Free Bitcoin ATM App | CoinSafe"
 msgstr "La App para tener un cajero de Bitcoins gratuito | CoinSafe"
 
-#: templates/base.html:55
+#: templates/base.html:58
 msgid "FAQ"
 msgstr "Preguntas Frecuentes"
 
-#: templates/base.html:56 templates/fixed_pages/team.html:22
+#: templates/base.html:59 templates/fixed_pages/team.html:22
 #: templates/partials/_static_page_footer.html:18
 msgid "Team"
 msgstr "Equipo"
 
-#: templates/base.html:57 templates/fixed_pages/contact.html:20
+#: templates/base.html:60 templates/fixed_pages/contact.html:20
 msgid "Contact Us"
 msgstr "Contáctenos"
 
-#: templates/base.html:71
+#: templates/base.html:74
 msgid "Dashboard"
 msgstr "Escritorio"
 
-#: templates/base.html:71
+#: templates/base.html:74
 msgid "Sign out"
 msgstr "Cerrar Sesión"
 
-#: templates/base.html:77 templates/login.html:21 templates/login.html.py:32
+#: templates/base.html:80 templates/login.html:24 templates/login.html.py:35
 msgid "Sign In"
 msgstr "Ingresar"
 
-#: templates/base.html:80
+#: templates/base.html:83
 msgid "Sign Up"
 msgstr "Registrarse"
 
-#: templates/base.html:103
+#: templates/base.html:106
 msgid "Set Language"
 msgstr "Ajustar Idioma"
 
-#: templates/base.html:107
+#: templates/base.html:110
 msgid "Translations are currently in Beta."
 msgstr ""
 
-#: templates/base.html:110
+#: templates/base.html:113
 msgid "More languages?"
 msgstr "Ajustar Idioma"
 
@@ -763,11 +797,19 @@ msgstr ""
 msgid "Get Notified of Nearby Locations"
 msgstr "Mandar Su Dinero a una Ubicación Más Segura"
 
-#: templates/login.html:4
+#: templates/index.html:105
+msgid ""
+"\n"
+"        \"Now every physical store in the world can become a Bitcoin ATM "
+"with no new hardware\"\n"
+"      "
+msgstr ""
+
+#: templates/login.html:7
 msgid "Your Free Bitcoin ATM App | Login"
 msgstr "La App para tener un cajero de Bitcoins gratuito | CoinSafe"
 
-#: templates/login.html:39
+#: templates/login.html:42
 #, python-format
 msgid ""
 "To create a new account, please <a href=\"%(register_url)s\">click here</a>."
@@ -775,7 +817,7 @@ msgstr ""
 "Para crear una nueva cuenta, por favor, <a href=\"%(register_url)s\">haga "
 "clic aquí</a>."
 
-#: templates/login.html:42
+#: templates/login.html:45
 msgid "Forgot password?"
 msgstr "Confirmar Contraseña"
 
@@ -805,6 +847,7 @@ msgid "Submit"
 msgstr "Enviar"
 
 #: templates/register_customer.html:50
+#, python-format
 msgid ""
 "\n"
 "        To register as a business (not an individual) please\n"
@@ -813,7 +856,7 @@ msgid ""
 msgstr ""
 "\n"
 " Para registrarse como un usuario individual (no un negocio), por favor <a "
-"href=\"%(rc_url)s\">haga clic aquí </a>."
+"href=\"%(rm_url)s\">haga clic aquí </a>."
 
 #: templates/customer_dash/_transaction_row.html:12
 msgid "Detected"
@@ -857,6 +900,7 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:58
+#, python-format
 msgid ""
 "\n"
 "          Customer: please pay %(business_name)s <b>%(currency_symbol)s"
@@ -867,7 +911,7 @@ msgstr ""
 "\n"
 " al Cliente: por favor, entregue %(business_name)s <b>%(currency_symbol)s "
 "%(fiat_amount)s %(currency_code)s</b> para recibir <b>%(format_mbtc_amount)s "
-"mBTC</b>."
+"mBTC</b> a %(b58_address_or_email)s."
 
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:69
 #, python-format
@@ -904,6 +948,7 @@ msgstr ""
 " Vender sus Bitcoins a %(merchant_name)s por Efectivo"
 
 #: templates/customer_dash/cash_out/_deposit_address_modal.html:18
+#, python-format
 msgid ""
 "\n"
 "                Customer: send 1 mBTC - %(max_btc_formatted)s to this "
@@ -1019,13 +1064,14 @@ msgid "Transaction not yet detected"
 msgstr "Transacción no ha sido detectada"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:5
+#, python-format
 msgid ""
 "\n"
 "        Welcome to <b>%(business_name)s</b>\n"
 "      "
 msgstr ""
 "\n"
-" Vender Bitcoins a %(merchant_name)s"
+" Bienvenidos a %(business_name)s"
 
 #: templates/customer_dash/cash_out/_no_deposit_confirm.html:11
 msgid "Market BTC Price"
@@ -1509,11 +1555,12 @@ msgstr ""
 "configuró esa opción para su cuenta:"
 
 #: templates/fixed_pages/coinbase_instructions.html:63
+#, python-format
 msgid ""
 "\n"
 "        Check the box for <b>%(select_all_text)s</b> under <b>"
 "%(accounts_text)s</b> and <b>%(permisions_text)s</b> and leave <b>"
-"%(allowed_ip_text)s</b> blank, then hit %(<b>{{ create_text)s</b>.\n"
+"%(allowed_ip_text)s</b> blank, then hit <b>%(create_text)s</b>.\n"
 "        "
 msgstr ""
 "\n"
@@ -1620,18 +1667,6 @@ msgstr "La App para tener un cajero de Bitcoins gratuito | CoinSafe"
 #: templates/fixed_pages/help.html:12
 msgid "Frequently Asked Questions"
 msgstr "Preguntas Frecuentes"
-
-#: templates/fixed_pages/help.html:32 templates/fixed_pages/help.html.py:89
-#: templates/fixed_pages/help.html:912
-msgid ""
-"\n"
-"          If you have other questions, please don't hesitate to <a href="
-"\"%(contact_url)s\">contact us</a>.\n"
-"        "
-msgstr ""
-"\n"
-" (Si ha olvidado su identificador puede recuperarlo <a href=\"%(forgot_url)s"
-"\"> aquí </a>)"
 
 #: templates/fixed_pages/help.html:40 templates/fixed_pages/help.html.py:52
 #: templates/fixed_pages/help.html:78 templates/fixed_pages/help.html:770
@@ -2454,6 +2489,7 @@ msgstr ""
 "\"%(contact_url)s\">avísanos</a> para añadirla."
 
 #: templates/fixed_pages/help.html:546
+#, python-format
 msgid ""
 "\n"
 "                  Selling bitcoin is similar to selling any other product in "
@@ -2518,6 +2554,7 @@ msgstr ""
 " Más plataformas de cambio próximamente."
 
 #: templates/fixed_pages/help.html:574
+#, python-format
 msgid ""
 "\n"
 "                  Please <a href=\"%(contact_url)s\">contact us</a>\n"
@@ -2882,38 +2919,6 @@ msgstr ""
 "                   Por favor, <a href=\"%(contact_url)s\"> haznos saber </a> "
 "si no estás de acuerdo!"
 
-#: templates/fixed_pages/help.html:841
-msgid ""
-"\n"
-"                  We're working on it! You can see the list of languages we "
-"are trying to translate and submit your own translations\n"
-"                  <a href=\"%(translation_url)s\">here</a>.\n"
-"                  We'd love your help in bringing bitcoin to the masses!\n"
-"                "
-msgstr ""
-"\n"
-"Estamos trabajando en dos funcionalidades (beta) para solucionar esto, por "
-"favor\n"
-"                  <a href=\"%(contact_url)s\">contáctanos</a>\n"
-"                  si deseas hacer un piloto con ellas."
-
-#: templates/fixed_pages/help.html:848
-msgid ""
-"\n"
-"                  Currently we're live in Spanish (you can change the "
-"language in the upper right of your screen) and we're working to add support "
-"for\n"
-"                  <a href=\"%(translation_url)s\">many more languages</a>.\n"
-"                  If there's a language you'd like us to support, please <a "
-"href=\"%(contact_url)s\">let us know</a>.\n"
-"                "
-msgstr ""
-"\n"
-"Actualmente estamos probando Español con algunos clientes en nuestro "
-"programa beta, y vamos agregar soporte para más lenguajes muy pronto.\n"
-"Si hay algún lenguaje especifico que quieres que demos soporte, por favor <a "
-"href=\"%(contact_url)s\">háznoslo saber</a>."
-
 #: templates/fixed_pages/help.html:868
 #, python-format
 msgid ""
@@ -3103,6 +3108,19 @@ msgstr ""
 "Si piensas que eres un buen candidato, escríbenos a jobs@coinsafe.com con tu "
 "información y un enlace a tu cuenta de Github."
 
+#: templates/fixed_pages/press.html:4
+msgid "Your Free Bitcoin ATM App | Press | CoinSafe"
+msgstr "La App para tener un cajero de Bitcoins Gratuito | CoinSafe"
+
+#: templates/fixed_pages/press.html:22
+#: templates/partials/_static_page_footer.html:21
+msgid "Press"
+msgstr ""
+
+#: templates/fixed_pages/press.html:82
+msgid "Press Contact: Press@CoinSafe.com"
+msgstr ""
+
 #: templates/fixed_pages/promotional_material.html:4
 msgid "Your Free Bitcoin ATM App | Promotional Material | CoinSafe"
 msgstr ""
@@ -3110,7 +3128,7 @@ msgstr ""
 "CoinSafe"
 
 #: templates/fixed_pages/promotional_material.html:13
-#: templates/partials/_static_page_footer.html:21
+#: templates/partials/_static_page_footer.html:22
 msgid "Promotional Posters for Merchants"
 msgstr "Afiches Promocionales para Comerciantes"
 
@@ -3200,15 +3218,6 @@ msgstr ""
 " Revisa <a href=\"%(jobs_url)s\">nuestra página de trabajos</a> para saber "
 "más."
 
-#: templates/merchants/_add_funds_modal.html:8
-msgid ""
-"\n"
-"            Add funds to %(credential_name)s Wallet\n"
-"          "
-msgstr ""
-"\n"
-" Vender Bitcoins a %(merchant_name)s"
-
 #: templates/merchants/_add_funds_modal.html:18
 msgid ""
 "\n"
@@ -3230,16 +3239,8 @@ msgstr ""
 "<a class=\"btn btn-primary btn-lg\" href=\"%(login_url)s\" target=\"_blank"
 "\">Ingresar a %(credential_name)s</a>"
 
-#: templates/merchants/_delete_api_credentials_modal.html:8
-msgid ""
-"\n"
-"            Delete %(credential_display)s Credentials\n"
-"          "
-msgstr ""
-"\n"
-" Activar las credenciales de la API pegándolas en Coinbase."
-
 #: templates/merchants/_delete_api_credentials_modal.html:18
+#, python-format
 msgid ""
 "\n"
 "                Are you sure you want to remove your %(credential_display)s "
@@ -3247,7 +3248,7 @@ msgid ""
 "              "
 msgstr ""
 "\n"
-"¿Está seguro que desea eliminar sus Credenciales de la API de Coinbase?"
+"¿Está seguro que desea eliminar sus Credenciales de la API de %(credential_display)s?"
 
 #: templates/merchants/_delete_api_credentials_modal.html:23
 msgid "No"
@@ -3620,15 +3621,15 @@ msgstr "Ayuda"
 msgid "Contact"
 msgstr "Contáctenos"
 
-#: templates/partials/_static_page_footer.html:22
+#: templates/partials/_static_page_footer.html:23
 msgid "Cold Storage Guide"
 msgstr "Guía de Almacenamiento en Frio"
 
-#: templates/partials/_static_page_footer.html:27
+#: templates/partials/_static_page_footer.html:28
 msgid "Privacy Policy"
 msgstr "Política de Privacidad"
 
-#: templates/partials/_static_page_footer.html:28
+#: templates/partials/_static_page_footer.html:29
 msgid "Terms of Service"
 msgstr "Términos de Servicio"
 
@@ -3703,6 +3704,7 @@ msgid "The API returned the following error: %s"
 msgstr ""
 
 #: users/views.py:153
+#, python-format
 msgid "Success! Your bitcoin is being sent. A receipt will be emailed to %s"
 msgstr ""
 "¡Éxito! Ahora se está enviando sus Bitcoins. Un recibo será enviado a %s."
@@ -3732,21 +3734,3 @@ msgstr "Su perfil ha sido actualizado"
 
 #~ msgid "Phone"
 #~ msgstr "Teléfono"
-
-#~ msgid ""
-#~ "\n"
-#~ "                    <b>Instant buy with Coinbase</b>.\n"
-#~ "                    If you have a verified account with Coinbase\n"
-#~ "                    (<a href=\"%(cb_instant_url)s\">more info</a>),\n"
-#~ "                    you can keep 0 BTC in stock and instant buy it as "
-#~ "needed to send to customers in your store.\n"
-#~ "                  "
-#~ msgstr ""
-#~ "\n"
-#~ "<b>Compra instantanea con Coinbase</b>.\n"
-#~ "                    Si posees una cuenta verificada con Coinbase\n"
-#~ "                    (<a href=\"%(cb_instant_url)s\">más información</"
-#~ "a>),\n"
-#~ "                    puedes mantener un inventario de 0 BTC y comprar los "
-#~ "bitcoins que sean necesarios para hacer una venta a un cliente en su "
-#~ "tienda."

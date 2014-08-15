@@ -3,7 +3,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import ugettext_lazy as _
 
 from bitcoins.BCAddressField import is_valid_btc_address
-from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from annoying.functions import get_object_or_None
 
@@ -90,9 +89,8 @@ class MerchantRegistrationForm(forms.Form):
         email = self.cleaned_data['email'].lower().strip()
         existing_user = get_object_or_None(self.AuthUser, username=email)
         if existing_user:
-            # TODO: move this to clean_email
-            login_url = '%s?e=%s' % (reverse('login_request'), existing_user.email)
-            msg = _('That email is already taken, do you want to <a href="%s">login</a>?' % login_url)
+            login_uri = existing_user.get_login_uri()
+            msg = _('That email is already taken, do you want to <a href="%(login_uri)s">login</a>?') % {'login_uri': login_uri}
             raise forms.ValidationError(mark_safe(msg))
 
         if len(email) > 100:
@@ -107,11 +105,11 @@ class MerchantRegistrationForm(forms.Form):
 class BitcoinRegistrationForm(forms.Form):
 
     btc_markup = forms.DecimalField(
-            label=_('Percent Markup'),
-            required=True,
-            validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-            help_text=_('The percent you want to charge above the market rate'),
-            widget=forms.TextInput(),
+        label=_('Percent Markup'),
+        required=True,
+        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+        help_text=_('The percent you want to charge above the market rate'),
+        widget=forms.TextInput(),
     )
 
     wallet_type_choice = forms.ChoiceField(
@@ -215,6 +213,14 @@ class BitcoinRegistrationForm(forms.Form):
         max_length=256,
         widget=forms.PasswordInput(render_value=False),
     )
+
+    def clean_new_blockchain_password(self):
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        new_blockchain_password = self.cleaned_data.get('new_blockchain_password').strip()
+        if wallet_type_choice == 'new' and not new_blockchain_password:
+            msg = _('Please enter a Blockchain.info password')
+            raise forms.ValidationError(msg)
+        return new_blockchain_password
 
     def clean_cb_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')

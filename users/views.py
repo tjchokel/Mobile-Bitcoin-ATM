@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 
@@ -16,7 +16,7 @@ from merchants.models import Merchant
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 from users.forms import CustomerRegistrationForm, ContactForm, ChangePWForm
 
-from emails.trigger import send_and_log
+from emails.trigger import send_and_log, send_admin_email
 
 
 @render_to('index.html')
@@ -49,7 +49,12 @@ def customer_dashboard(request):
     transactions, shopper = None, None
     forwarding_address_obj = get_object_or_None(ForwardingAddress,
             b58_address=request.session.get('forwarding_address'))
-    buy_request = merchant.get_bitcoin_purchase_request()
+    btc_purchase_request = merchant.get_bitcoin_purchase_request()
+
+    if btc_purchase_request and btc_purchase_request.is_cancelled():
+        # Defensive check on cash-in, can't think of when this *should* happen
+        msg = _('Sorry, that request was cancelled. Please contact us if that was not intentional.')
+        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     if merchant.has_valid_coinbase_credentials():
         buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, merchant=merchant)
@@ -142,24 +147,40 @@ def customer_dashboard(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
         # if submitting password confirmation form
         elif 'password' in request.POST:
-            # cash in scenario, sending bitcoin to shopper
-            if buy_request:
+            if btc_purchase_request:
+                # cash in scenario, sending bitcoin to shopper
                 password_form = ConfirmPasswordForm(user=user, data=request.POST)
                 if password_form.is_valid():
-                    _, err_str = buy_request.pay_out_bitcoin(send_receipt=True)
+                    btc_purchase_request_updated, api_call, err_str = btc_purchase_request.pay_out_bitcoin(send_receipt=True)
                     if err_str:
+                        if api_call:
+                            api_call.send_admin_btcpurchase_error_email(btc_purchase_request_updated)
+                        else:
+                            # These errors are OK to include in plaintext emails, they messages are written by us
+                            body_context = {
+                                    'coinsafe_err_str': err_str,
+                                    'shopper_request_url': reverse_lazy(
+                                        'admin:bitcoins_shopperbtcpurchase_change',
+                                        args=(btc_purchase_request.id, )
+                                        )
+                                    }
+                            send_admin_email(
+                                    body_template='btc_purchase_not_attempted_notification.html',
+                                    subject='Non API Error for Shopper BTC Purchase Request %s' % btc_purchase_request.id,
+                                    body_context=body_context,
+                                    )
                         show_confirm_purchase_modal = 'false'
-                        msg = ugettext_lazy('The API returned the following error: %s' % err_str)
+                        msg = _('Bitcoin sending failed. The API returned the following error: %s' % err_str)
                         messages.warning(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                     else:
-                        msg = ugettext_lazy('Success! Your bitcoin is being sent. A receipt will be emailed to %s' % buy_request.shopper.email)
+                        msg = _('Success! Your bitcoin is being sent. A receipt will be emailed to %s' % btc_purchase_request.shopper.email)
                         messages.success(request, msg)
                         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
                     show_confirm_purchase_modal = 'true'
-            # cash out scenario, overriding required confirmations
             else:
+                # cash out scenario, overriding required confirmations
                 override_confirmation_form = ConfirmPasswordForm(user=user, data=request.POST)
                 if override_confirmation_form.is_valid():
                     if transactions:
@@ -180,7 +201,7 @@ def customer_dashboard(request):
         'current_address': forwarding_address_obj,
         'transactions': transactions,
         'shopper': shopper,
-        'buy_request': buy_request,
+        'buy_request': btc_purchase_request,
         'password_form': password_form,
         'shopper_form': shopper_form,
         'buy_form': buy_form,

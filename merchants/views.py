@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import escape
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.debug import sensitive_variables, sensitive_post_parameters
 from django.utils.timezone import now
 import datetime
@@ -49,10 +49,11 @@ def login_request(request):
 
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
-                    msg = _("Sorry, that's not the right password for <b>%s</b>." % escape(email))
+                    msg = _("Sorry, that's not the right password for <b>%(email)s</b>.") % {
+                            'email': escape(email)}
                     messages.warning(request, msg, extra_tags='safe')
             else:
-                msg = _("No account found for <b>%s</b>." % escape(email))
+                msg = _("No account found for <b>%(email)s</b>.") % {'email': escape(email)}
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':
@@ -162,7 +163,7 @@ def register_bitcoin(request):
         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     initial = {
-            'btc_markup': 2.0,
+            'btc_markup': 3.0,
             'exchange_choice': 'coinbase',
             'wallet_type_choice': 'new',
     }

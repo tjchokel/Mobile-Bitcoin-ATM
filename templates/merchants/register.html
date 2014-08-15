@@ -57,15 +57,12 @@
 {% block extra_js %}
   {% if form_valid == True %}
 
-    <script>
-      $(document).ready(function(){
-        $('#id_email').focus();
-      });
-    </script>
 
     <script>
       $(document).ready(function(){
-        {# Copied 2014-06-04 from www.nationsonline.org/oneworld/country_code_list.htm #}
+        $('#id_email').focus();
+
+        // {# Copied 2014-06-04 from www.nationsonline.org/oneworld/country_code_list.htm #}
         var country2_to_country3 = {
           'AF': 'AFG',
           'AX': 'ALA',
@@ -317,7 +314,7 @@
           'ZW': 'ZWE',
         };
 
-        {# Copied 2014-06-04 from http://www.likeforex.com/misc/country-currency.php #}
+        // {# Copied 2014-06-04 from http://www.likeforex.com/misc/country-currency.php #}
         var country3_to_currency3 = {
           'AFG': 'AFN',
           'ALB': 'ALL',
@@ -565,7 +562,6 @@
           'ZWE': 'ZWL',
         };
         
-
         $.getJSON('https://freegeoip.net/json/', function(data) {
           var response = data;
           var country3 = country2_to_country3[response.country_code]
@@ -573,7 +569,7 @@
           var currency3 = country3_to_currency3[country3];
           $('#id_currency_code').val(currency3);
         });
-
+        
       });
     </script>
 

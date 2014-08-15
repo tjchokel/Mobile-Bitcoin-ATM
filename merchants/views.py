@@ -181,6 +181,9 @@ def register_bitcoin(request):
             merchant.cashout_markup_in_bps = basis_points_markup * 100
             merchant.save()
 
+            # create merchant profile
+            merchant.create_short_url()
+
             SUCCESS_MSG = _('Your account has been configured! Customers can use this page while at your store to trade bitcoin with you.')
             DASHBOARD_URI = reverse_lazy('customer_dashboard')
 

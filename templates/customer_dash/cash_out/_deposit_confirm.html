@@ -19,7 +19,7 @@
             <span style="color: #72a53b;">{{customer_address}} </span>
           {% endblocktrans %}
           {% csrf_token %}
-          <button type="submit" class="btn btn-warning btn-md" style="display: inline; margin-left: 5px;">{% trans "Cancel" %}</button>
+          <button type="submit" class="btn btn-warning" style="display: inline; margin-left: 5px;">{% trans "Cancel" %}</button>
         </p>
       </form>
     {% endif %}
@@ -38,8 +38,8 @@
       </p>
       {% if transactions %}
         <div style="text-align:center;">
-          <a class="btn btn-info btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
-            {% trans "Override Required Confirmations?" %}
+          <a class="btn btn-warning btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
+            {% trans "Override Required Confirmations" %}
           </a>
         </div>
         {% include "customer_dash/cash_out/_override_confirmations_modal.html" %}

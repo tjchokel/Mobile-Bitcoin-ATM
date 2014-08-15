@@ -38,13 +38,13 @@ def format_status_string(string):
     RED_STATUSES = ['canceled', 'invalid']
 
     if string.lower() in GREEN_STATUSES:
-        return mark_safe('<span class ="text-green">%s</span> ' % (string))
+        return mark_safe(u'<span class ="text-green">%s</span> ' % (string))
     # if string.lower() in YELLOW_STATUSES:
     #     return mark_safe('<span class ="text-amethyst">%s</span>' % (string))
     elif string.lower() in RED_STATUSES:
-        return mark_safe('<span class ="text-red">%s</span>' % (string))
+        return mark_safe(u'<span class ="text-red">%s</span>' % (string))
     else:
-        return mark_safe('%s' % (string))
+        return mark_safe(u'%s' % (string))
 
 
 @register.filter(name='format_fiat_amount')

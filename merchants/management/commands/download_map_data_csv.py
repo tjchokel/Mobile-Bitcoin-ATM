@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from merchants.models import Merchant
-from profiles.models import ShortURL
 import csv
 
 
@@ -18,7 +17,7 @@ class Command(BaseCommand):
 
             merchants = Merchant.objects.filter(address_1__isnull=False)
             for m in merchants:
-                short_url = m.get_short_url()
+                short_url = m.get_short_url_obj()
                 if not short_url:
                     short_url = m.create_short_url()
                 csv_writer.writerow(

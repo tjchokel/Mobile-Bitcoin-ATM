@@ -45,6 +45,9 @@ class Merchant(models.Model):
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
 
+    def get_admin_uri(self):
+        return reverse('admin:merchants_merchant_change', args=(self.id, ))
+
     def get_destination_addresses(self):
         # There should only ever be one at a time
         return self.destinationaddress_set.filter(retired_at__isnull=True)
@@ -87,8 +90,11 @@ class Merchant(models.Model):
     def set_new_forwarding_address(self):
         return self.get_destination_address().create_new_forwarding_address()
 
-    def get_all_forwarding_addresses(self):
-        return self.forwardingaddress_set.all()
+    def get_latest_forwarding_obj(self):
+        return self.get_destination_address().get_latest_forwarding_obj()
+
+    def get_or_set_available_forwarding_address(self):
+        return self.get_destination_address().get_or_set_available_forwarding_address()
 
     def get_all_forwarding_transactions(self):
         txns = []

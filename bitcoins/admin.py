@@ -25,12 +25,16 @@ class ForwardingAddressAdmin(admin.ModelAdmin):
     list_display = (
             'id',
             'generated_at',
+            'customer_confirmed_deposit_at',
             'b58_address',
             'paid_out_at',
             'destination_address',
+            'cancelled_at',
             'merchant',
+            'shopper',
+            'last_activity_check_at',
             )
-    raw_id_fields = ('merchant', 'destination_address', )
+    raw_id_fields = ('merchant', 'shopper', 'destination_address', )
 
     class Meta:
         model = ForwardingAddress
@@ -53,13 +57,12 @@ class BTCTransactionAdmin(admin.ModelAdmin):
         'suspected_double_spend_at',
         'forwarding_address',
         'destination_address',
-        'input_btc_transaction',
         'fiat_amount',
         'currency_code_when_created',
         'met_minimum_confirmation_at',
-        'min_confirmations_overrode_at'
+        'min_confirmations_overrode_at',
     )
-    raw_id_fields = ('forwarding_address', 'destination_address', 'input_btc_transaction', )
+    raw_id_fields = ('forwarding_address', 'destination_address', )
 
     class Meta:
         model = BTCTransaction

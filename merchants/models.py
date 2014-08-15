@@ -2,14 +2,18 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import slugify
+from annoying.functions import get_object_or_None
 
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from phonenumber_field.modelfields import PhoneNumberField
+
 from bitcoins.models import DestinationAddress, ShopperBTCPurchase, BTCTransaction
 from profiles.models import ShortURL
+
 from emails.trigger import send_and_log
 
 from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
@@ -348,17 +352,25 @@ class Merchant(models.Model):
         fiat_total = fiat_btc * satoshis_to_btc(satoshis)
         return math.floor(fiat_total*100)/100
 
-    def get_short_url(self):
-        return self.shorturl_set.last()
+    def get_short_url_obj(self):
+        """
+        A user may have multiple short URLs, but we'll only surface one
+        """
+        return self.shorturl_set.order_by('created_at').last()
 
-    def create_short_url(self):
-        counter = 0
-        s, created = ShortURL.objects.get_or_create(uri_display=self.business_name, merchant=self)
-        while not created:
-            name = '%s%s' % (self.business_name, counter)
-            s, created = ShortURL.objects.get_or_create(uri_display=name, merchant=self)
-            counter += 1
-        return s
+    def create_short_url(self, counter=1):
+        """
+        Dumb method to create a short url from the slugified business name.
+        """
+        if counter > 1:
+            slug = slugify('%s %s' % (self.business_name, counter))
+        else:
+            slug = slugify(self.business_name)
+        existing_shorturl_obj = get_object_or_None(ShortURL, uri_lowercase=slug)
+        if existing_shorturl_obj:
+            return self.create_short_url(counter+1)
+        else:
+            return ShortURL.objects.create(uri_display=slug, merchant=self)
 
     def set_latitude_longitude(self):
         address_array = self.get_physical_address_list()
@@ -382,7 +394,7 @@ class Merchant(models.Model):
             self.save()
 
     def get_profile_url(self):
-        short_url = self.get_short_url()
+        short_url = self.get_short_url_obj()
         if short_url:
             return short_url.get_profile_url()
         else:

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 from utils import uri_to_url
 from bitcash.settings import BASE_URL
@@ -21,6 +22,15 @@ class ShortURL(models.Model):
         """
         self.uri_lowercase = self.uri_display.lower()
         super(ShortURL, self).save(*args, **kwargs)
+
+    def get_admin_uri(self):
+        return reverse('admin:profiles_shorturl_change', args=(self.id, ))
+
+    def get_new_admin_uri(self):
+        return reverse('admin:profiles_shorturl_add')
+
+    def get_profile_uri(self):
+        return reverse('merchant_site', kwargs={'uri': self.uri_display})
 
     def get_profile_url(self):
         return uri_to_url(BASE_URL, self.uri_display)

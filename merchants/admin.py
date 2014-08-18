@@ -33,6 +33,8 @@ class MerchantAdmin(admin.ModelAdmin):
         'cashin_markup_in_bps',
         'cashout_markup_in_bps',
         'website',
+        'latitude_position',
+        'longitude_position'
     )
     raw_id_fields = ('user', )
 

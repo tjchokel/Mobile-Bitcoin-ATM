@@ -156,6 +156,7 @@ LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
     ('en-us', 'English'),
     ('es', 'Spanish'),
+    ('cs', 'Czech'),
 )
 
 TIME_ZONE = 'UTC'

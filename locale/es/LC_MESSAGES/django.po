@@ -785,10 +785,6 @@ msgstr ""
 "Cada comerciante es evaluado por sus usuarios para asegurar que siguen "
 "ofreciendo el mejor servicio."
 
-#: templates/index.html:92
-msgid "Get Notified of Nearby Locations"
-msgstr "Mandar Su Dinero a una Ubicación Más Segura"
-
 #: templates/index.html:105
 msgid ""
 "\n"

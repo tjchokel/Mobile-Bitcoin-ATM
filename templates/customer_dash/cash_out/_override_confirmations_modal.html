@@ -5,14 +5,14 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="cashinmodal">
-          {% trans "Override Required Confirmations?" %}
+          {% trans "Override Required Confirmations" %}
         </h4>
         <div class="clearfix"></div>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-12">
-            
+
             <p class="">
               {% blocktrans %}
                 A transaction has been detected, but it has not yet been confirmed by the Bitcoin network.
@@ -31,7 +31,7 @@
               {{ override_confirmation_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg" id="submit-button">{% trans "Confirm" %}</button>
+                <button type="submit" class="btn btn-warning btn-lg" id="submit-button">{% trans "Override Required Confirmations" %}</button>
               </div>
             </form>
           </div>

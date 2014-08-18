@@ -53,7 +53,6 @@ urlpatterns = patterns('',
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),
-    url(r'^blockcypher-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_blockcypher_webhook', name='process_blockcypher_webhook'),
 
     # Static Pages
     url(r'^$', 'users.views.home', name='home'),  # homepage

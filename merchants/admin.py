@@ -18,9 +18,19 @@ class MerchantAdmin(admin.ModelAdmin):
         return instance.get_website_obj()
     website.allow_tags = True
 
+    def short_url(self, instance):
+        short_url_obj = instance.get_short_url_obj()
+        if short_url_obj:
+            profile_uri = short_url_obj.get_profile_uri()
+            if profile_uri:
+                return '<a href="%s">%s</a>' % (profile_uri, profile_uri)
+        return ''
+    short_url.allow_tags = True
+
     list_display = (
         'id',
         'business_name',
+        'short_url',
         'currency_code',
         'btc_address',
         'address_1',

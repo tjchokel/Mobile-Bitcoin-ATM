@@ -34,7 +34,8 @@ class MerchantAdmin(admin.ModelAdmin):
         'cashout_markup_in_bps',
         'website',
         'latitude_position',
-        'longitude_position'
+        'longitude_position',
+        'ignored_at',
     )
     raw_id_fields = ('user', )
 

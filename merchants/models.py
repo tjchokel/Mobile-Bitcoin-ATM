@@ -13,6 +13,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from bitcoins.models import DestinationAddress, ShopperBTCPurchase, BTCTransaction
 from profiles.models import ShortURL
+from services.models import APICall
 
 from emails.trigger import send_and_log
 
@@ -20,6 +21,7 @@ from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
+import datetime
 import math
 import urllib
 import requests
@@ -43,8 +45,8 @@ class Merchant(models.Model):
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
     max_mbtc_shopper_purchase = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
     max_mbtc_shopper_sale = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
-    longitude_position = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
-    latitude_position = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+    longitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True)
+    latitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
@@ -266,6 +268,29 @@ class Merchant(models.Model):
                     }
         return hours_formatted
 
+    def get_hours_dict(self):
+        hours_formatted = self.get_hours_formatted()
+
+        hours_to_value = {}
+        for i in range(0, 24):
+            hours_to_value[datetime.time(i)] = i
+        hours_dict = {}
+        days_to_value = [[1, 'mon'], [2, 'tues'], [3, 'wed'], [4, 'thurs'], [5, 'fri'], [6, 'sat'], [7, 'sun']]
+        for num, value in days_to_value:
+            if hours_formatted.get(num):
+                hours_dict[value] = {}
+                day = hours_formatted.get(num)
+                if day['from_time'] == 'closed':
+                    hours_dict[value] = {'closed': True}
+                else:
+                    hours_dict[value] = {
+                        'closed': False,
+                        'open': hours_to_value[day['from_time']],
+                        'close': hours_to_value[day['to_time']],
+                    }
+
+        return hours_dict
+
     def set_hours(self, hours):
         """
         hours is a list that looks like the following:
@@ -409,11 +434,21 @@ class Merchant(models.Model):
         # address_string = address.replace(" ", "+")
         url = "https://maps.googleapis.com/maps/api/geocode/json?address="
         for line in address_array:
-            url += line.replace(" ", "+")
+            no_space_line = line.replace(" ", "+")
+            url += urllib.quote(no_space_line)
             url += ","
         r = requests.get(url)
         content = json.loads(r.content)
         results = content['results']
+
+        APICall.objects.create(
+            api_name=APICall.GOOGLE_MAPS,
+            url_hit=url,
+            response_code=r.status_code,
+            post_params=None,
+            api_results=r.content,
+            merchant=self,
+            )
 
         if results:
             latitude = results[0]['geometry']['location']['lat']
@@ -433,6 +468,9 @@ class Merchant(models.Model):
 
     def get_open_time(self):
         return self.opentime_set.last()
+
+    def has_open_time(self):
+        return bool(self.get_open_time())
 
 
 class OpenTime(models.Model):

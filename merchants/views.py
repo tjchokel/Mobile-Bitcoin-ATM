@@ -282,24 +282,7 @@ def merchant_profile(request):
         initial['website'] = website_obj.url
 
     hours_formatted = merchant.get_hours_formatted()
-
-    hours_to_value = {}
-    for i in range(0, 24):
-        hours_to_value[datetime.time(i)] = i
-    hours_form_initial = {}
-    days_to_value = [[1, 'mon'], [2, 'tues'], [3, 'wed'], [4, 'thurs'], [5, 'fri'], [6, 'sat'], [7, 'sun']]
-    for num, value in days_to_value:
-        if hours_formatted.get(num):
-            hours_form_initial[value] = {}
-            day = hours_formatted.get(num)
-            if day['from_time'] == 'closed':
-                hours_form_initial[value] = {'closed': True}
-            else:
-                hours_form_initial[value] = {
-                    'closed': False,
-                    'open': hours_to_value[day['from_time']],
-                    'close': hours_to_value[day['to_time']],
-                }
+    hours_form_initial = merchant.get_hours_dict()
 
     image_form = ImageUploadForm()
     if request.method == 'POST':

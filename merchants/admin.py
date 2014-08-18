@@ -44,7 +44,7 @@ admin.site.register(Merchant, MerchantAdmin)
 
 class OpenTimeAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'merchant', 'weekday', 'from_time', 'to_time', )
+    list_display = ('id', 'merchant', 'weekday', 'from_time', 'to_time', 'is_closed_this_day')
     raw_id_fields = ('merchant', )
 
     class Meta:

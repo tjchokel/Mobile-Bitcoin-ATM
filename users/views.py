@@ -28,7 +28,7 @@ def home(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 return HttpResponseRedirect(reverse_lazy('register_router'))
-    merchants_for_map = Merchant.objects.filter(latitude_position__isnull=False, longitude_position__isnull=False)
+    merchants_for_map = Merchant.objects.filter(longitude_position__isnull=False, latitude_position__isnull=False)
 
     return {'merchants_for_map': merchants_for_map}
 

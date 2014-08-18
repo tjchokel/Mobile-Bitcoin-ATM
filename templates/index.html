@@ -115,26 +115,18 @@
         // Display a map on the page
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
         map.setTilt(45);
-            
-        // Multiple Markers
-        var markers = [
-            ['London Eye, London', 51.503454,-0.119562],
-            ['Palace of Westminster, London', 51.499633,-0.124755]
-        ];
         var markers = [];
         var infoWindowContent = [];
         var i =0;
         {% for merchant in merchants_for_map %}
           markers[i] = [ '{{ merchant.business_name }}', {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ];
-          // markers.push([ {{ merchant.business_name }}, {{ merchant.latitude_position }}, {{ merchant.longitude_position }} ]);
           {% if merchant.get_profile_url %}
             var tooltip_info = '<p class="lead text-center"><a href="{{merchant.get_profile_url}}">{{ merchant.business_name }}</a></p><b>';
           {% else %}
             var tooltip_info = '<p class="lead text-center">{{ merchant.business_name }}</p><b>';
           {% endif %}
-          {% for line in merchant.get_physical_address_list %}
-            tooltip_info += '{{line}}<br/>';
-          {% endfor %}
+          tooltip_info += '{{merchant.get_physical_address_html | safe}}';
+          tooltip_info += '<br/>';
           {% if merchant.get_profile_url %}
             tooltip_info += '<a href="{{merchant.get_profile_url}}">Profile Link</a>'
           {% endif %}

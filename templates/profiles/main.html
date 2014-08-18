@@ -218,37 +218,107 @@
               <hr>
             </div>
             <div class="col-sm-6">
-              {% if merchant.get_open_time %}
+              {% if merchant.has_open_time %}
                 <h4 class="hl" style="padding-left: 8px;"><i class="fa fa-clock-o"></i> Hours</h4>
                 <table class="table">
                   <tbody>
                     <tr>
-                      <td class="text-muted">Monday</td>
-                      <td>Closed</td>
+                      <td class="text-muted">{% trans "Monday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.mon %}
+                          {% if hours_dict.mon.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.1.from_time}} - {{biz_hours.1.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="text-muted">Tuesday</td>
-                      <td>11:00 am - 9:00 pm</td>
+                      <td class="text-muted">{% trans "Tuesday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.tues %}
+                          {% if hours_dict.tues.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.2.from_time}} - {{biz_hours.2.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="text-muted">Wednesday</td>
-                      <td>11:00 am - 9:00 pm</td>
+                      <td class="text-muted">{% trans "Wednesday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.wed %}
+                          {% if hours_dict.wed.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.3.from_time}} - {{biz_hours.3.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="text-muted">Thursday</td>
-                      <td>11:00 am - 9:00 pm</td>
+                      <td class="text-muted">{% trans "Thursday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.thurs %}
+                          {% if hours_dict.thurs.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.4.from_time}} - {{biz_hours.4.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="text-muted">Friday</td>
-                      <td>11:00 am - 9:00 pm</td>
+                      <td class="text-muted">{% trans "Friday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.fri %}
+                          {% if hours_dict.fri.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.5.from_time}} - {{biz_hours.5.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="text-muted">Saturday</td>
-                      <td>11:00 am - 9:00 pm</td>
+                      <td class="text-muted">{% trans "Saturday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.sat %}
+                          {% if hours_dict.sat.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.6.from_time}} - {{biz_hours.6.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
                     </tr>
                     <tr>
-                      <td class="text-muted">Sunday</td>
-                      <td>Closed</td>
+                      <td class="text-muted">{% trans "Sunday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.sun %}
+                          {% if hours_dict.sun.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.7.from_time}} - {{biz_hours.7.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -299,53 +369,3 @@
 {% block static_page_footer %}
   {% include "partials/_static_page_footer.html" %}
 {% endblock static_page_footer %}
-<!-- 
-{% block extra_js %}
-  <script>
-    function getBtcPrice() {
-        console.log('get_btc_price');
-        $.ajax({
-          type: 'get',
-          url: '/get-bitcoin-price/',
-          success: function (data) {
-            $("#fiat-amt-loader").addClass("hidden");
-            $(".price-loader").addClass("hidden");
-            $("#pricing-info").removeClass("hidden");
-            $("#sell-price-holder").removeClass("hidden");
-            $("#buy-price-holder").removeClass("hidden");
-
-            $("#fiat-amt").text(data['no_markup_price']);
-            $(".currency-code").text(data['currency_code']);
-
-            $(".buy-percent-markup").text(data['buy_markup_percent']);
-            $(".sell-percent-markup").text(data['sell_markup_percent']);
-            $("#buy-price").data('price-data', data['buy_price_no_format']);
-            $("#sell-price").data('price-data', data['sell_price_no_format']);
-
-            $("#buy-price").text(data['buy_price']);
-            $("#sell-price").text(data['sell_price']);
-
-            var entered_amount = $('#id_amount').val();
-            if (entered_amount){
-              var buy_price_no_format = parseFloat($('#buy-price').data('price-data'));
-              var final_btc = parseFloat(entered_amount) / buy_price_no_format;
-              var final_mbtc = final_btc * 1000;
-
-              $("#btc-amount").html(' ≈ '+final_mbtc.toFixed(1) + ' mBTC');
-            }
-          },
-          error: function(data) {
-            console.log('getBtcPrice Failed');
-            setTimeout(getBtcPrice, 30000);
-          }
-        });
-
-      }
-
-    $(document).ready(function(){
-      getBtcPrice();
-    });
-  </script>
-
-{% endblock extra_js %}
- -->

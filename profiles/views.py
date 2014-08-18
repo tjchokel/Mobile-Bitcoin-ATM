@@ -31,10 +31,15 @@ def merchant_site(request, uri):
         is_users_profile = True
 
     doc_object = merchant.get_merchant_doc_obj()
+    hours_formatted = merchant.get_hours_formatted()
+    hours_dict = merchant.get_hours_dict()
+
     return{
             'merchant': short_url_obj.merchant,
             'cashin_price': cashin_price_formatted,
             'cashout_price': cashout_price_formatted,
             'is_users_profile': is_users_profile,
             'doc_object': doc_object,
+            'hours_dict': hours_dict,
+            'biz_hours': hours_formatted,
     }

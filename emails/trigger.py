@@ -100,15 +100,21 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
 
     if EMAIL_DEV_PREFIX:
         subject += ' [DEV]'
-
-    # BCC everything to self (for now at least)
-    pm_dict = {
-            'sender': cat_email_header(from_name, from_email),
-            'to': cat_email_header(to_name, to_email),
-            'bcc': POSTMARK_SENDER,
-            'subject': subject,
-            'html_body': html_body,
-            }
+        pm_dict = {
+                'sender': cat_email_header(from_name, from_email),
+                'to': cat_email_header(to_name, to_email),
+                'subject': subject,
+                'html_body': html_body,
+                }
+    else:
+        # BCC everything to self (for now at least)
+        pm_dict = {
+                'sender': cat_email_header(from_name, from_email),
+                'to': cat_email_header(to_name, to_email),
+                'bcc': POSTMARK_SENDER,
+                'subject': subject,
+                'html_body': html_body,
+                }
 
     if cc_email:
         pm_dict['cc'] = cat_email_header(cc_name, cc_email)

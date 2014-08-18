@@ -45,8 +45,8 @@ class Merchant(models.Model):
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
     max_mbtc_shopper_purchase = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
     max_mbtc_shopper_sale = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
-    longitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True)
-    latitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True)
+    longitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True, db_index=True)
+    latitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
@@ -430,20 +430,15 @@ class Merchant(models.Model):
 
     def set_latitude_longitude(self):
         address_array = self.get_physical_address_list()
-        # address = self.get_physical_address_qs()
-        # address_string = address.replace(" ", "+")
-        url = "https://maps.googleapis.com/maps/api/geocode/json?address="
-        for line in address_array:
-            no_space_line = line.replace(" ", "+")
-            url += urllib.quote(no_space_line)
-            url += ","
-        r = requests.get(url)
+        MAP_URL = "https://maps.googleapis.com/maps/api/geocode/json"
+        address_string = ','.join(address_array)
+        r = requests.get(MAP_URL, params={'address': address_string})
         content = json.loads(r.content)
         results = content['results']
 
         APICall.objects.create(
             api_name=APICall.GOOGLE_MAPS,
-            url_hit=url,
+            url_hit=MAP_URL,
             response_code=r.status_code,
             post_params=None,
             api_results=r.content,

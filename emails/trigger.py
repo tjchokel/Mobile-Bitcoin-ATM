@@ -163,7 +163,6 @@ def send_admin_email(subject, body_template, body_context):
     pm_dict = {
             'sender': POSTMARK_SENDER,
             'to': ','.join([x[1] for x in ADMINS]),
-            'bcc': POSTMARK_SENDER,
             'subject': subject,
             'html_body': html_body,
             }

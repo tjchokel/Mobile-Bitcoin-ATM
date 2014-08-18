@@ -23,7 +23,11 @@ class MerchantAdmin(admin.ModelAdmin):
         if short_url_obj:
             profile_uri = short_url_obj.get_profile_uri()
             if profile_uri:
-                return '<a href="%s">%s</a>' % (profile_uri, profile_uri)
+                return '<a href="%s">%s</a> (<a href="%s">edit</a> or <a href="%s">add</a>)' % (
+                        profile_uri, profile_uri,
+                        short_url_obj.get_admin_uri(),
+                        short_url_obj.get_new_admin_uri()
+                        )
         return ''
     short_url.allow_tags = True
 

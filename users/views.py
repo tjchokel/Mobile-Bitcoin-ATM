@@ -10,6 +10,7 @@ from annoying.decorators import render_to
 from bitcoins.models import BTCTransaction, ShopperBTCPurchase
 from shoppers.models import Shopper
 from users.models import FutureShopper
+from merchants.models import Merchant
 
 from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBitcoinForm, ConfirmPasswordForm
 from users.forms import CustomerRegistrationForm, ContactForm, ChangePWForm
@@ -27,7 +28,9 @@ def home(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
             else:
                 return HttpResponseRedirect(reverse_lazy('register_router'))
-    return {}
+    merchants_for_map = Merchant.objects.filter(longitude_position__isnull=False, latitude_position__isnull=False)
+
+    return {'merchants_for_map': merchants_for_map}
 
 
 @sensitive_variables('password', 'password_form')

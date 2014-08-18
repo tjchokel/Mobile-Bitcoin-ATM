@@ -2,6 +2,12 @@ from django.contrib import admin
 from merchants.models import Merchant, OpenTime, MerchantWebsite
 
 
+def set_latitude_longitude(modeladmin, request, queryset):
+    for obj in queryset:
+        obj.set_latitude_longitude()
+set_latitude_longitude.short_description = "Set Latitiude and Longitude"
+
+
 class MerchantAdmin(admin.ModelAdmin):
 
     def btc_address(self, instance):
@@ -9,7 +15,7 @@ class MerchantAdmin(admin.ModelAdmin):
     btc_address.allow_tags = True
 
     def website(self, instance):
-        return instance.get_website()
+        return instance.get_website_obj()
     website.allow_tags = True
 
     list_display = (
@@ -27,18 +33,20 @@ class MerchantAdmin(admin.ModelAdmin):
         'cashin_markup_in_bps',
         'cashout_markup_in_bps',
         'website',
+        'latitude_position',
+        'longitude_position'
     )
     raw_id_fields = ('user', )
 
     class Meta:
         model = Merchant
-
+    actions = [set_latitude_longitude]
 admin.site.register(Merchant, MerchantAdmin)
 
 
 class OpenTimeAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'merchant', 'weekday', 'from_time', 'to_time', )
+    list_display = ('id', 'merchant', 'weekday', 'from_time', 'to_time', 'is_closed_this_day')
     raw_id_fields = ('merchant', )
 
     class Meta:

@@ -2,13 +2,18 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.template.defaultfilters import slugify
+from annoying.functions import get_object_or_None
 
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from phonenumber_field.modelfields import PhoneNumberField
+
 from bitcoins.models import DestinationAddress, ShopperBTCPurchase, BTCTransaction
+from profiles.models import ShortURL
+from services.models import APICall
 
 from emails.trigger import send_and_log
 
@@ -16,7 +21,11 @@ from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
+import datetime
 import math
+import urllib
+import requests
+import json
 
 
 class Merchant(models.Model):
@@ -36,6 +45,8 @@ class Merchant(models.Model):
     minimum_confirmations = models.PositiveSmallIntegerField(blank=True, null=True, db_index=True, default=1)
     max_mbtc_shopper_purchase = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
     max_mbtc_shopper_sale = models.IntegerField(blank=True, null=True, db_index=True, default=1000)
+    longitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True, db_index=True)
+    latitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)
@@ -76,6 +87,14 @@ class Merchant(models.Model):
                     b58_address=dest_address,
                     merchant=self,
                     credential=credential_used)
+
+    def get_phone_num_formatted(self):
+        if self.phone_num:
+            return self.phone_num.as_international
+        return None
+
+    def set_new_forwarding_address(self):
+        return self.get_destination_address().create_new_forwarding_address()
 
     def get_latest_forwarding_obj(self):
         return self.get_destination_address().get_latest_forwarding_obj()
@@ -237,11 +256,40 @@ class Merchant(models.Model):
         open_times = self.get_hours()
         hours_formatted = {}
         for open_time in open_times:
-            hours_formatted[open_time.weekday] = {
+            if open_time.is_closed_this_day:
+                hours_formatted[open_time.weekday] = {
+                    'from_time': 'closed',
+                    'to_time': 'closed',
+                    }
+            else:
+                hours_formatted[open_time.weekday] = {
                     'from_time': open_time.from_time,
                     'to_time': open_time.to_time,
                     }
         return hours_formatted
+
+    def get_hours_dict(self):
+        hours_formatted = self.get_hours_formatted()
+
+        hours_to_value = {}
+        for i in range(0, 24):
+            hours_to_value[datetime.time(i)] = i
+        hours_dict = {}
+        days_to_value = [[1, 'mon'], [2, 'tues'], [3, 'wed'], [4, 'thurs'], [5, 'fri'], [6, 'sat'], [7, 'sun']]
+        for num, value in days_to_value:
+            if hours_formatted.get(num):
+                hours_dict[value] = {}
+                day = hours_formatted.get(num)
+                if day['from_time'] == 'closed':
+                    hours_dict[value] = {'closed': True}
+                else:
+                    hours_dict[value] = {
+                        'closed': False,
+                        'open': hours_to_value[day['from_time']],
+                        'close': hours_to_value[day['to_time']],
+                    }
+
+        return hours_dict
 
     def set_hours(self, hours):
         """
@@ -250,6 +298,7 @@ class Merchant(models.Model):
             (weekday, from_hour, to_hour),
             (1, datetime.time(9), datetime.time(17)),
             (2, datetime.time(9), datetime.time(17)),
+            (3, 'closed', 'closed')
           )
         """
         # Delete current hours
@@ -257,16 +306,19 @@ class Merchant(models.Model):
 
         # Set new hours
         for weekday, from_time, to_time in hours:
-            OpenTime.objects.create(merchant=self, weekday=weekday, from_time=from_time, to_time=to_time)
+            if from_time == 'closed':
+                OpenTime.objects.create(merchant=self, weekday=weekday, is_closed_this_day=True)
+            else:
+                OpenTime.objects.create(merchant=self, weekday=weekday, from_time=from_time, to_time=to_time)
 
-    def get_website(self):
+    def get_website_obj(self):
         websites = self.merchantwebsite_set.filter(deleted_at=None)
         if websites:
             return websites[0]
         return None
 
     def set_website(self, website_to_set):
-        current_website_obj = self.get_website()
+        current_website_obj = self.get_website_obj()
         if current_website_obj:
             if current_website_obj.url != website_to_set:
                 # Mark current websites as deleted
@@ -305,6 +357,40 @@ class Merchant(models.Model):
                 body_context=body_context,
                 )
 
+    def get_physical_address_list(self):
+        """
+        Returns a list of address strings that can be manipulated (for display, a mapping API, etc):
+
+            ['123 Fake St', 'Apt #1', 'City, State, Country', 'USA']
+        """
+        location_strings = []
+        if self.country:
+            location_strings.append(self.country)
+            if self.state and self.city and self.zip_code:
+                location_strings.append('%s %s %s' % (self.city, self.state, self.zip_code))
+            elif self.state and self.city:
+                location_strings.append('%s %s' % (self.city, self.state))
+            else:
+                if self.city:
+                    location_strings.append(self.city)
+                if self.state:
+                    location_strings.append(self.state)
+            if not self.state or not self.city:
+                if self.zip_code:
+                    location_strings.append(self.zip_code)
+            if self.address_2:
+                location_strings.append(self.address_2)
+            if self.address_1:
+                location_strings.append(self.address_1)
+        location_strings.reverse()
+        return location_strings
+
+    def get_physical_address_html(self):
+        return '<br />'.join(self.get_physical_address_list())
+
+    def get_physical_address_qs(self):
+        return urllib.quote(' '.join(self.get_physical_address_list()))
+
     def calculate_fiat_amount(self, satoshis):
         """
         Calculates the fiat amount that X satoshis gets you right now.
@@ -315,6 +401,71 @@ class Merchant(models.Model):
         fiat_btc = fiat_btc - markup_fee
         fiat_total = fiat_btc * satoshis_to_btc(satoshis)
         return math.floor(fiat_total*100)/100
+
+    def get_short_url_obj(self):
+        """
+        A user may have multiple short URLs, but we'll only surface one
+        """
+        return self.shorturl_set.order_by('created_at').last()
+
+    def create_short_url(self, counter=1):
+        """
+        Dumb method to create a short url from the slugified business name.
+        """
+        if counter > 1:
+            slug = slugify('%s %s' % (self.business_name, counter))
+        else:
+            slug = slugify(self.business_name)
+        existing_shorturl_obj = get_object_or_None(ShortURL, uri_lowercase=slug)
+        if existing_shorturl_obj:
+            return self.create_short_url(counter+1)
+        else:
+            return ShortURL.objects.create(uri_display=slug, merchant=self)
+
+    def get_merchant_doc_obj(self):
+        """
+        Right now just a profile image
+        """
+        return self.merchantdoc_set.order_by('uploaded_at').last()
+
+    def set_latitude_longitude(self):
+        address_array = self.get_physical_address_list()
+        MAP_URL = "https://maps.googleapis.com/maps/api/geocode/json"
+        address_string = ','.join(address_array)
+        r = requests.get(MAP_URL, params={'address': address_string})
+        content = json.loads(r.content)
+        results = content['results']
+
+        APICall.objects.create(
+            api_name=APICall.GOOGLE_MAPS,
+            url_hit=MAP_URL,
+            response_code=r.status_code,
+            post_params=None,
+            api_results=r.content,
+            merchant=self,
+            )
+
+        if results:
+            latitude = results[0]['geometry']['location']['lat']
+            longitude = results[0]['geometry']['location']['lng']
+
+            self.latitude_position = latitude
+            self.longitude_position = longitude
+
+            self.save()
+
+    def get_profile_url(self):
+        short_url = self.get_short_url_obj()
+        if short_url:
+            return short_url.get_profile_url()
+        else:
+            return None
+
+    def get_open_time(self):
+        return self.opentime_set.last()
+
+    def has_open_time(self):
+        return bool(self.get_open_time())
 
 
 class OpenTime(models.Model):
@@ -331,9 +482,10 @@ class OpenTime(models.Model):
     merchant = models.ForeignKey(Merchant, blank=False, null=False)
 
     weekday = models.IntegerField(choices=WEEKDAYS, db_index=True,
-            null=False, blank=False, unique=True)
-    from_time = models.TimeField()
-    to_time = models.TimeField()
+            null=False, blank=False)
+    from_time = models.TimeField(blank=True, null=True)
+    to_time = models.TimeField(blank=True, null=True)
+    is_closed_this_day = models.BooleanField(default=False)
 
     def __str__(self):
         return '%s: %s from %s to %s' % (self.id, self.weekday,

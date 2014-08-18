@@ -1648,6 +1648,13 @@ a.anchor{
     color:#49c3ab;
 }
 
+.hours-table th {
+    padding-right:20px;
+}
+
+.hours-table td {
+    padding-right:20px;
+}
 /* Show and affix the side nav for ui elements when space allows it */
 @media (min-width: 992px) {
   .bs-sidebar .nav > .active > ul {

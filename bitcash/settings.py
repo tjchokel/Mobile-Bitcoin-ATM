@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'raven.contrib.django.raven_compat',
     'polymorphic',
     'south',
+    'storages',
     'crispy_forms',
     'users',
     'merchants',
@@ -77,6 +78,7 @@ INSTALLED_APPS = (
     'coinbase_wallets',
     'bitstamp_wallets',
     'blockchain_wallets',
+    'profiles',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -180,6 +182,16 @@ STATICFILES_DIRS = (
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(PROJECT_PATH, 'templates'),)
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+# http://blog.iambob.me/the-super-stupid-idiots-guide-to-getting-started-with-django-pipeline-and-s3/
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+assert AWS_ACCESS_KEY_ID
+assert AWS_SECRET_ACCESS_KEY
+assert AWS_STORAGE_BUCKET_NAME
 
 BCI_SECRET_KEY = os.getenv('BCI_SECRET_KEY')
 assert BCI_SECRET_KEY, 'Must have BCI_SECRET_KEY (to create BCI wallets)'

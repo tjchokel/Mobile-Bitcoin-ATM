@@ -1,0 +1,134 @@
+{% load i18n %}
+<table class="hours-table" style="width:100%">
+  <thead>
+    <tr>
+      <th>{% trans "Day" %}</th>
+      <th>{% trans "Closed" %}</th>
+      <th>{% trans "Open Time" %}</th>
+      <th>{% trans "Close Time" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td>{% trans "Monday" %}</td>
+      <td>
+        <input class="checkboxinput checkbox" id="closed_mon" name="closed_mon" type="checkbox">
+      </td>
+      <td>
+        <select class="select form-control" id="mon_open" name="mon_open">
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+      <td>
+        <select class="select form-control" id="mon_close" name="mon_close" >
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Tuesday" %}</td>
+      <td>
+        <input class="checkboxinput checkbox" id="closed_tues" name="closed_tues" type="checkbox">
+      </td>
+      <td>
+        <select class="select form-control" id="tues_open" name="tues_open">
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+      <td>
+        <select class="select form-control" id="tues_close" name="tues_close" >
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Wednesday" %}</td>
+      <td>
+        <input class="checkboxinput checkbox" id="closed_wed" name="closed_wed" type="checkbox">
+      </td>
+      <td>
+        <select class="select form-control" id="wed_open" name="wed_open">
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+      <td>
+        <select class="select form-control" id="wed_close" name="wed_close" >
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Thursday" %}</td>
+      <td>
+        <input class="checkboxinput checkbox" id="closed_thurs" name="closed_thurs" type="checkbox">
+      </td>
+      <td>
+        <select class="select form-control" id="thurs_open" name="thurs_open">
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+      <td>
+        <select class="select form-control" id="thurs_close" name="thurs_close" >
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Friday" %}</td>
+      <td>
+        <input class="checkboxinput checkbox" id="closed_fri" name="closed_fri" type="checkbox">
+      </td>
+      <td>
+        <select class="select form-control" id="fri_open" name="fri_open">
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+      <td>
+        <select class="select form-control" id="fri_close" name="fri_close" >
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Saturday" %}</td>
+      <td>
+        <input class="checkboxinput checkbox" id="closed_sat" name="closed_sat" type="checkbox">
+      </td>
+      <td>
+        <select class="select form-control" id="sat_open" name="sat_open">
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+      <td>
+        <select class="select form-control" id="sat_close" name="sat_close" >
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Sunday" %}</td>
+      <td>
+        <input class="checkboxinput checkbox" id="closed_sun" name="closed_sun" type="checkbox">
+      </td>
+      <td>
+        <select class="select form-control" id="sun_open" name="sun_open">
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+      <td>
+        <select class="select form-control" id="sun_close" name="sun_close" >
+          {% include "merchants/_hours_form_options.html" %}
+        </select>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+<br/><br/>

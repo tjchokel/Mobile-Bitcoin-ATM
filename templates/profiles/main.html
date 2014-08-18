@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% block title %}
+  {{ merchant.business_name }} | CoinSafe
+{% endblock title %}
+
+{% block content %}
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <p class="lead" style="padding-top:20px;">
+        <!-- <a href="#">USA (107)</a> > <a href="#">WA (3)</a> > <a href="#">Seattle (2)</a> > Mel's Diner 
+      </span>
+      <hr>
+      -->
+    </div>
+  </div>
+  <div class="row ">
+
+
+    <!-- Avatar & address info -->
+    <!-- <div class="col-sm-12">
+      <div class="row"> -->
+    <div class="col-sm-4 col-md-3">
+      <div class="block-inverse">
+        <div class="body-inverse">
+          <div class="thumbnail">
+            <div class="avatar">
+              <!-- <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar"> -->
+              <a href="#" class="thumbnail bottom-15" data-toggle="modal" data-target="#upload-avatar">
+                {% if doc_object %}
+                  <img src="{{ doc_object.get_url }}"  alt="Profile Image" style="max-height:200px;max-width:200px;min-width:100px; min-height:100px;">
+                {% else %}
+                  <img src="{%static "img/default_profile_photo.png" %}"  alt="Profile Image">
+                {% endif %}
+              </a>
+              <!-- Upload new avatar bubble -->
+              <!-- <div class="avatar-bubble">
+                <a href="#" data-toggle="modal" data-target="#upload-avatar"><i class="fa fa-plus"></i> New Profile Picture</a>
+              </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="head-inverse">
+          <h3 class="hl hidden-sm hidden-md hidden-lg" style="margin-top: 0px;">
+            {{ merchant.business_name }} 
+          </h3>
+          <b> {{ merchant.get_physical_address_html|safe }}</b>
+          <br/>
+          {% if merchant.phone_num %}
+            <i class="fa fa-phone"></i><a href="tel:{{merchant.phone_num}}">{{ merchant.get_phone_num_formatted}}</a>
+            <br/>
+          {% endif %}
+          {% if merchant.get_website_obj %}
+            <i class="fa fa-external-link"></i><a href="{{ merchant.get_website_obj.url}}" target="_blank">{{ merchant.get_website_obj.url}}</a>
+            <br/>
+          {% endif %}
+          <b>{{merchant.currency_code}} <i class="fa fa-arrows-h" style="padding-left: 5px;"></i> Bitcoin</b>
+        </div>
+      </div>
+
+
+      <!-- Modal window: Send a private message -->
+      <!-- <div class="modal fade" id="upload-avatar" tabindex="-1" role="dialog" aria-labelledby="upload-avatar-title" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title" id="upload-avatar-title">Upload new avatar</h4>
+            </div>
+            <div class="modal-body">
+              <p>Please choose a file to upload. JPG, PNG, GIF only.</p>
+              <form role="form">
+                <div class="form-group">
+                  <label for="file">File input</label>
+                  <input type="file" id="file">
+                  <p class="help-block">Files up to 5Mb only.</p>
+                </div>
+                <button type="button" class="hl-btn hl-btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="hl-btn hl-btn-green" data-dismiss="modal">Upload</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div> 
+      -->
+      <!-- End of modal window --> 
+
+
+    </div>
+
+    <!-- Main profile info -->
+    <div class="col-sm-8 col-md-9">
+      <h3 class="hl hidden-xs pull-left">
+        {{ merchant.business_name }} 
+        <!-- <small>
+          <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> 3 Reviews
+        </small> -->
+        <!-- <a href="#" class="hl-btn hl-btn-green hl-btn-sm" data-toggle="modal" data-target="#sendemail" style="float:right;">
+        <i class="fa fa-envelope"></i> Send message
+        </a> -->
+      </h3>
+      {% if is_users_profile %}
+        <a class="btn btn-info btn-md pull-right hidden-xs" href="{% url 'merchant_profile' %}" style="transform: translateY(50%);">
+            {% trans "Edit Your Profile" %}
+        </a>
+      {% endif %}
+      <div class="clearfix"></div>
+      <hr>
+      <!-- User status update form -->
+      <div class="user-status">
+        <p class="show"></p>
+      </div>
+      <div class="map">
+        <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q={{ merchant.get_physical_address_qs|safe }}"></iframe>
+      </div>
+      <div class="bottom-15">
+        <!-- <div class="modal fade" id="sendemail" tabindex="-1" role="dialog" aria-labelledby="sendemailtitle" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="sendemailtitle">Administrator</h4>
+                <p class="text-muted"><i class="fa fa-envelope"></i> New Email</p>
+                <div class="clearfix"></div>
+              </div>
+              <div class="modal-body">
+                <form role="form">
+                  <div class="form-group">
+                    <label for="subject" class="sr-only">Subject</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Subject">
+                  </div>
+                  <div class="form-group">
+                    <label for="message-1" class="sr-only">Message</label>
+                    <textarea class="form-control" rows="3" id="message-1" placeholder="Enter your message here"></textarea>
+                  </div>
+                  <button type="button" class="hl-btn hl-btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="hl-btn hl-btn-green" data-dismiss="modal">Send Email</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <!-- End of modal window -->
+
+        <!-- Modal window: Send a private message -->
+        <div class="modal fade" id="sendpm" tabindex="-1" role="dialog" aria-labelledby="sendpmtitle" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <!-- <img src="img/face1.jpg" alt="..."> -->
+                <h4 class="modal-title" id="sendpmtitle">Administrator</h4>
+                <p class="text-muted"><i class="fa fa-envelope"></i> New PM</p>
+                <div class="clearfix"></div>
+              </div>
+              <div class="modal-body">
+                <form role="form">
+                  <div class="form-group">
+                    <label for="message-2" class="sr-only">Message</label>
+                    <textarea class="form-control" rows="3" id="message-2" placeholder="Enter your message here"></textarea>
+                  </div>
+                  <button type="button" class="hl-btn hl-btn-default" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="hl-btn hl-btn-green" data-dismiss="modal">Send Message</button>
+                </form>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <!-- End of modal window -->
+      </div>
+    </div>
+    <!-- End of profile header -->
+    <!-- Info Section-->
+    <div class="row">
+      
+        <div class="col-xs-12 col-sm-9 col-md-9 col-sm-offset-4 col-md-offset-3">
+          <div class="row">
+            
+
+            <div class="col-sm-6">
+              <h4 class="hl" style="padding-left: 8px;"><i class="fa fa-bitcoin"></i> Bitcoin Information</h4>
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="text-muted">Selling BTC At</td>
+                    <td>{{cashin_price}} ({{merchant.get_cashin_percent_markup}}% markup)</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Buying BTC at</td>
+                    <td>{{cashout_price}} ({{merchant.get_cashout_percent_markup}}% markdown)</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Max BTC Purchase</td>
+                    <td>{{merchant.get_max_mbtc_purchase_formatted}}</td>
+                  </tr>
+                  <tr>
+                    <td class="text-muted">Max BTC Sale</td>
+                    <td>{{merchant.get_max_mbtc_sale_formatted}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <hr>
+            </div>
+            <div class="col-sm-6">
+              {% if merchant.has_open_time %}
+                <h4 class="hl" style="padding-left: 8px;"><i class="fa fa-clock-o"></i> Hours</h4>
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td class="text-muted">{% trans "Monday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.mon %}
+                          {% if hours_dict.mon.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.1.from_time}} - {{biz_hours.1.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">{% trans "Tuesday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.tues %}
+                          {% if hours_dict.tues.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.2.from_time}} - {{biz_hours.2.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">{% trans "Wednesday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.wed %}
+                          {% if hours_dict.wed.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.3.from_time}} - {{biz_hours.3.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">{% trans "Thursday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.thurs %}
+                          {% if hours_dict.thurs.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.4.from_time}} - {{biz_hours.4.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">{% trans "Friday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.fri %}
+                          {% if hours_dict.fri.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.5.from_time}} - {{biz_hours.5.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">{% trans "Saturday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.sat %}
+                          {% if hours_dict.sat.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.6.from_time}} - {{biz_hours.6.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-muted">{% trans "Sunday" %}</td>
+                      <td align="right">
+                        {% if hours_dict.sun %}
+                          {% if hours_dict.sun.closed %}
+                            {% trans "Closed" %}
+                          {% else %}
+                            {{biz_hours.7.from_time}} - {{biz_hours.7.to_time}}
+                          {% endif %}
+                        {% else %}
+                          <!-- {% trans "(Not Provided)" %} -->
+                        {% endif %}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr>
+              {% endif %}
+            </div>
+          </div>
+          <!-- end row -->
+        </div>
+      </div>
+    </div>
+
+    <!-- End of Info Section -->
+
+    <!-- Reviews -->
+    <!-- <div class="row">
+      <div class="col-sm-3">
+      </div>
+      <div class="col-sm-9">
+        <h4>1 Review</h4>
+        <hr>
+        <div class="comment">
+          <div class="media">
+            <a class="pull-left" href="#">
+            </a>
+            <div class="media-body" style="padding-left: 10px;">
+              <p>
+                <a href="profile.html">Mike</a>
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consectetur urna at neque mollis sagittis. Vivamus viverra justo in dui vulputate tincidunt in eu magna. Ut ut risus pretium, varius felis a, congue metus.
+              </p>
+              <ul class="text-muted list-inline">
+                <li><i class="fa fa-clock-o"></i> 20 minutes ago</li>
+                <li><i class="fa fa-cog"></i> <a href="#">Edit</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <!-- End of Reviews -->
+
+  </div>
+</div>
+{% endblock content %}
+
+{% block static_page_footer %}
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}

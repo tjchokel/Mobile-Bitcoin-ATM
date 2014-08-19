@@ -7,15 +7,19 @@
       {% endblocktrans %}
     </h3>
     <h3 class="pull-right hidden-xs hl" style="color: #72a53b; float:right;">
-      <span id='pricing-info' class="hidden">
+      <span>
         {% trans "Market BTC Price"%}:
-        <span id="fiat-amt"></span> <span class="currency-code"></span>
-      </span>
-      <a class="active has-spinner" id="fiat-amt-loader">
-        <span class="spinner">
-          <i class="fa fa-spinner fa-spin"></i>
+        <span class='price-display'>
+          <span id="fiat-amt"></span> <span class="currency-code"></span>
         </span>
-      </a>
+        <span class="price-loader">
+          <a class="active has-spinner">
+            <span class="spinner">
+              <i class="fa fa-spinner fa-spin"></i>
+            </span>
+          </a>
+        </span>
+      </span>
     </h3>
     <div class="clearfix"></div>
   </div>
@@ -38,17 +42,22 @@
             <div class="arrow"></div>
           </div>
           <div class="sceleton">
-            <h5 class="hidden" id="buy-price-holder">
-              <span class="currency_symbol"></span><span id="buy-price"></span><span> / BTC</span>
-              <span class="text-muted">(+<span class="buy-percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
+
+            <h5 id="buy-price-holder">
+              <span>1 BTC =</span>
+              <span class="price-display hidden">
+                <span class="currency_symbol"></span><span id="buy-price"></span>
+                <span class="text-muted">(+</span><span class="buy-percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
+              </span>
+              <span class="active has-spinner price-loader">
+                <span class="spinner">
+                  <i class="fa fa-spinner fa-spin"></i>
+                </span>
+              </span>
             </h5>
 
-            <a class="active has-spinner price-loader">
-            <span class="spinner">
-              <i class="fa fa-spinner fa-spin"></i>
-            </span>
-          </a>
-          {% with merchant_credential_abbrev=merchant.get_valid_api_credential.get_credential_abbrev %}
+            {% with merchant_credential_abbrev=merchant.get_valid_api_credential.get_credential_abbrev %}
+
             <table class="table dashboard-instructions-table">
               <tbody>
                 <tr>
@@ -104,15 +113,20 @@
 
     <div class="sceleton">
 
-      <h5 class="hidden" id="sell-price-holder">
-        <span class="currency_symbol"></span><span id="sell-price"></span><span> / BTC</span>
-        <span class="text-muted">(-<span class="sell-percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
-      </h5>
-      <a class="active has-spinner price-loader">
-        <span class="spinner">
-          <i class="fa fa-spinner fa-spin"></i>
+      <h5 id="sell-price-holder">
+        <span>1 BTC = </span>
+        <span class="price-display hidden">
+          <span class="currency_symbol"></span><span id="sell-price"></span>
+          <span class="text-muted">(-</span><span class="sell-percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
         </span>
-      </a>
+        <span class="active has-spinner price-loader">
+          <span class="spinner">
+            <i class="fa fa-spinner fa-spin"></i>
+          </span>
+        </span>
+      </h5>
+
+
 
       <table class="table dashboard-instructions-table">
         <tbody>

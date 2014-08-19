@@ -165,36 +165,42 @@
       $('#override-confirmations-modal').modal();
     }
 
-    var BTC_PRICE_TIMEOUT_MS = 30000;
+    var BTC_PRICE_TIMEOUT_MS = 20000;
     function getBtcPrice() {
       $.ajax({
         type: 'get',
         url: '/get-bitcoin-price/',
         success: function (data) {
-          $("#fiat-amt-loader").addClass("hidden");
-          $(".price-loader").addClass("hidden");
-          $("#pricing-info").removeClass("hidden");
-          $("#sell-price-holder").removeClass("hidden");
-          $("#buy-price-holder").removeClass("hidden");
 
-          $("#fiat-amt").text(data['no_markup_price']);
-          $(".currency-code").text(data['currency_code']);
+          {# make sure we have all fields #}
+          var REQUIRED_FIELDS = ['no_markup_price', 'currency_code', 'buy_markup_percent', 'sell_markup_percent', 'buy_price_no_format', 'sell_price_no_format', 'buy_price', 'sell_price', ];
+          var fields_length = REQUIRED_FIELDS.length;
+          var has_all_fields = true;
+          for (var i = 0; i < fields_length; i++) {
+            if (!(REQUIRED_FIELDS[i] in data)) {
+              has_all_fields = false;
+            }
+          }
 
-          $(".buy-percent-markup").text(data['buy_markup_percent']);
-          $(".sell-percent-markup").text(data['sell_markup_percent']);
-          $("#buy-price").data('price-data', data['buy_price_no_format']);
-          $("#sell-price").data('price-data', data['sell_price_no_format']);
+          if (has_all_fields) {
+            {# if we don't have all fields, then still show loading and keep trying later #}
 
-          $("#buy-price").text(data['buy_price']);
-          $("#sell-price").text(data['sell_price']);
+            {# Hide loaders and show data #}
+            $(".price-loader").addClass("hidden");
+            $(".price-display").removeClass("hidden");
 
-          var entered_amount = $('#id_amount').val();
-          if (entered_amount){
-            var buy_price_no_format = parseFloat($('#buy-price').data('price-data'));
-            var final_btc = parseFloat(entered_amount) / buy_price_no_format;
-            var final_mbtc = final_btc * 1000;
+            $("#buy-price").data('price-data', data['buy_price_no_format']);
+            $("#sell-price").data('price-data', data['sell_price_no_format']);
 
-            $("#btc-amount").html(' ≈ '+final_mbtc.toFixed(1) + ' mBTC');
+            {# update prics with animation like effect #}
+            $("#fiat-amt").hide().text(data['no_markup_price']).show('slow');
+            $(".currency-code").hide().text(data['currency_code']).show('slow');
+            $(".buy-percent-markup").hide().text(data['buy_markup_percent']).show('slow');
+            $(".sell-percent-markup").hide().text(data['sell_markup_percent']).show('slow');
+            $("#buy-price").hide().text(data['buy_price']).show('slow');
+            $("#sell-price").hide().text(data['sell_price']).show('slow');
+
+            $('#id_amount').trigger('keyup');
           }
 
           BTC_PRICE_TIMEOUT_MS *= 1.3;

@@ -17,7 +17,8 @@ from services.models import APICall
 
 from emails.trigger import send_and_log
 
-from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
+from utils import (format_satoshis_with_units, mbtc_to_satoshis,
+        satoshis_to_btc, format_fiat_amount)
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
@@ -481,6 +482,34 @@ class Merchant(models.Model):
 
     def has_open_time(self):
         return bool(self.get_open_time())
+
+    def get_merchant_btc_pricing_info(self):
+        " Return dict of pricing info "
+
+        currency_code = self.currency_code
+        currency_symbol = self.get_currency_symbol()
+        fiat_btc = BTCTransaction.get_btc_market_price(currency_code)
+
+        buy_markup_percent = self.get_cashin_percent_markup()
+        sell_markup_percent = self.get_cashout_percent_markup()
+
+        buy_markup_fee = fiat_btc * buy_markup_percent / 100.00
+        sell_markup_fee = fiat_btc * sell_markup_percent / 100.00
+
+        buy_price = fiat_btc + buy_markup_fee
+        sell_price = fiat_btc - sell_markup_fee
+
+        return {
+                "no_markup_price": format_fiat_amount(fiat_btc, currency_symbol),
+                "buy_price": format_fiat_amount(buy_price, currency_symbol),
+                "sell_price": format_fiat_amount(sell_price, currency_symbol),
+                "sell_price_no_format": round(sell_price, 2),
+                "buy_price_no_format": round(buy_price, 2),
+                "buy_markup_percent": buy_markup_percent,
+                "sell_markup_percent": sell_markup_percent,
+                "currency_code": currency_code,
+                "currency_symbol": currency_symbol,
+                }
 
 
 class OpenTime(models.Model):

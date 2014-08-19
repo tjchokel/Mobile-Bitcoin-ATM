@@ -243,7 +243,8 @@ class BitcoinRegistrationForm(forms.Form):
     def clean_bs_customer_id(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
         bs_customer_id = self.cleaned_data.get('bs_customer_id').strip()
-        if exchange_choice == 'bitstamp' and not bs_customer_id:
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        if exchange_choice == 'bitstamp' and not bs_customer_id and wallet_type_choice == 'old':
             msg = _('Please enter your Bitstamp username')
             raise forms.ValidationError(msg)
         return bs_customer_id
@@ -251,7 +252,8 @@ class BitcoinRegistrationForm(forms.Form):
     def clean_bs_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
         bs_api_key = self.cleaned_data.get('bs_api_key').strip()
-        if exchange_choice == 'bitstamp' and not bs_api_key:
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        if exchange_choice == 'bitstamp' and not bs_api_key and wallet_type_choice == 'old':
             msg = _('Please enter your Bitstamp API key')
             raise forms.ValidationError(msg)
         return bs_api_key
@@ -259,7 +261,8 @@ class BitcoinRegistrationForm(forms.Form):
     def clean_bs_secret_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
         bs_secret_key = self.cleaned_data.get('bs_secret_key').strip()
-        if exchange_choice == 'bitstamp' and not bs_secret_key:
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        if exchange_choice == 'bitstamp' and not bs_secret_key and wallet_type_choice == 'old':
             msg = _('Please enter your Bitstamp Secret Key')
             raise forms.ValidationError(msg)
         return bs_secret_key
@@ -267,7 +270,8 @@ class BitcoinRegistrationForm(forms.Form):
     def clean_bci_username(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
         bci_username = self.cleaned_data.get('bci_username').strip()
-        if exchange_choice == 'blockchain' and not bci_username:
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        if exchange_choice == 'blockchain' and not bci_username and wallet_type_choice == 'old':
             msg = _('Please enter your Blockchain username')
             raise forms.ValidationError(msg)
         if bci_username.startswith('https://blockchain.info/wallet/'):
@@ -277,7 +281,8 @@ class BitcoinRegistrationForm(forms.Form):
     def clean_bci_main_password(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
         bci_main_password = self.cleaned_data.get('bci_main_password').strip()
-        if exchange_choice == 'blockchain' and not bci_main_password:
+        wallet_type_choice = self.cleaned_data.get('wallet_type_choice')
+        if exchange_choice == 'blockchain' and not bci_main_password and wallet_type_choice == 'old':
             msg = _('Please enter your Blockchain API key')
             raise forms.ValidationError(msg)
         return bci_main_password

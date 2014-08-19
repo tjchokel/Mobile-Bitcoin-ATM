@@ -384,7 +384,7 @@ def set_new_password(request):
         msg = _('Site error. Please generate a new link.')
         messages.warning(request, msg)
         return HttpResponseRedirect(reverse_lazy('request_new_password')+'?e='+ea_token.auth_user.email)
-    if ea_token.key_used_at + timedelta(minutes=15) < now():
+    if ea_token.key_used_at + timedelta(minutes=15) > now():
         msg = _('Time limit expired. Please generate a new link.')
         messages.warning(request, msg)
         return HttpResponseRedirect(reverse_lazy('request_new_password')+'?e='+ea_token.auth_user.email)

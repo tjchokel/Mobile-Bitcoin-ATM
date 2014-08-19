@@ -112,7 +112,7 @@
                 <td class="text-muted">{% trans "Business Address" %}</td>
                 {% if merchant.address_1 %}
                   <td align="right">
-                    {{merchant.get_physical_address_html | safe}}
+                    {{merchant.get_physical_address_html_raw | safe}}
                   </td>
                 {% else %}
                   <td align="right">

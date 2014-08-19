@@ -57,7 +57,7 @@
           <h3 class="hl hidden-sm hidden-md hidden-lg" style="margin-top: 0px;">
             {{ merchant.business_name }} 
           </h3>
-          <b> {{ merchant.get_physical_address_html|safe }}</b>
+          <b> {{ merchant.get_physical_address_html_raw | safe }}</b>
           <br/>
           {% if merchant.phone_num %}
             <i class="fa fa-phone"></i><a href="tel:{{merchant.phone_num}}">{{ merchant.get_phone_num_formatted}}</a>

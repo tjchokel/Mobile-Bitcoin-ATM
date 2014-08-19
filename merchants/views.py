@@ -23,7 +23,7 @@ from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistrationForm,
-        BitcoinInfoForm, BusinessHoursForm, OwnerInfoForm, MerchantInfoForm, PasswordConfirmForm)
+        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm, PasswordConfirmForm)
 
 
 @sensitive_variables('password', )

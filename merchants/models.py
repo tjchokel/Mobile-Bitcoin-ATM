@@ -21,6 +21,8 @@ from utils import format_satoshis_with_units, mbtc_to_satoshis, satoshis_to_btc
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
+from unidecode import unidecode
+
 import datetime
 import math
 import urllib
@@ -358,7 +360,7 @@ class Merchant(models.Model):
                 body_context=body_context,
                 )
 
-    def get_physical_address_list(self):
+    def get_physical_address_list(self, transliterate=True):
         """
         Returns a list of address strings that can be manipulated (for display, a mapping API, etc):
 
@@ -384,13 +386,25 @@ class Merchant(models.Model):
             if self.address_1:
                 location_strings.append(self.address_1)
         location_strings.reverse()
-        return location_strings
+        if transliterate:
+            return [unidecode(x) for x in location_strings]
+        else:
+            return location_strings
 
-    def get_physical_address_html(self):
-        return '<br />'.join(self.get_physical_address_list())
+    def get_physical_address_list_raw(self, transliterate=True):
+        return self.get_physical_address_list(transliterate=False)
 
-    def get_physical_address_qs(self):
-        return urllib.quote(' '.join(self.get_physical_address_list()))
+    def get_physical_address_html(self, transliterate=True):
+        return '<br />'.join(self.get_physical_address_list(transliterate=transliterate))
+
+    def get_physical_address_html_raw(self, transliterate=True):
+        return self.get_physical_address_html(transliterate=False)
+
+    def get_physical_address_qs(self, transliterate=True):
+        return urllib.quote(' '.join(self.get_physical_address_list(transliterate=transliterate)))
+
+    def get_physical_address_qs_raw(self):
+        return self.get_physical_address_qs(transliterate=False)
 
     def calculate_fiat_amount(self, satoshis):
         """

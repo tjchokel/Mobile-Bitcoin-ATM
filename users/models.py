@@ -88,7 +88,7 @@ class EmailAuthToken(models.Model):
     verif_key = models.CharField(max_length=64, db_index=True, default=simple_csprng, blank=False, null=False)
     key_used_at = models.DateTimeField(default=None, null=True, blank=True, db_index=True)
     key_expires_at = models.DateTimeField(default=default_expires_time, null=False, blank=False, db_index=True)
-    key_deleted_at = models.DateTimeField(default=default_expires_time, null=True, blank=True, db_index=True)
+    key_deleted_at = models.DateTimeField(default=None, null=True, blank=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.verif_key)
@@ -110,8 +110,7 @@ class EmailAuthToken(models.Model):
                 body_context=body_context,
                 )
 
-    @classmethod
-    def expire_outstanding_tokens(cls, self):
-        for unexpired_token in cls.objects.filter(key_deleted_at=None, auth_user=self.auth_user):
+    def expire_outstanding_tokens(self):
+        for unexpired_token in EmailAuthToken.objects.filter(key_deleted_at=None, auth_user=self.auth_user):
             unexpired_token.key_deleted_at = now()
             unexpired_token.save()

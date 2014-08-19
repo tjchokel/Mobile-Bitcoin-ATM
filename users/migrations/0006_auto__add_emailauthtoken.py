@@ -15,9 +15,10 @@ class Migration(SchemaMigration):
             ('auth_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['users.AuthUser'])),
             ('ip_address', self.gf('django.db.models.fields.IPAddressField')(max_length=15, db_index=True)),
             ('user_agent', self.gf('django.db.models.fields.CharField')(max_length=1024)),
-            ('verif_key', self.gf('django.db.models.fields.CharField')(default='PDtQ2pbg2hT8zGV4PrJGVcVDuaq7nhha', max_length=64, db_index=True)),
+            ('verif_key', self.gf('django.db.models.fields.CharField')(default='PAgJ3pvkWNNxmCTT5EY2GhGhGXGmSmrh', max_length=64, db_index=True)),
             ('key_used_at', self.gf('django.db.models.fields.DateTimeField')(default=None, null=True, db_index=True, blank=True)),
             ('key_expires_at', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2014, 8, 20, 0, 0), db_index=True)),
+            ('key_deleted_at', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2014, 8, 20, 0, 0), null=True, db_index=True, blank=True)),
         ))
         db.send_create_signal(u'users', ['EmailAuthToken'])
 
@@ -73,10 +74,11 @@ class Migration(SchemaMigration):
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip_address': ('django.db.models.fields.IPAddressField', [], {'max_length': '15', 'db_index': 'True'}),
+            'key_deleted_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 8, 20, 0, 0)', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
             'key_expires_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2014, 8, 20, 0, 0)', 'db_index': 'True'}),
             'key_used_at': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
             'user_agent': ('django.db.models.fields.CharField', [], {'max_length': '1024'}),
-            'verif_key': ('django.db.models.fields.CharField', [], {'default': "'TfQWP2VtVPTTaj2AGdG7VvnMfmuRQfpZ'", 'max_length': '64', 'db_index': 'True'})
+            'verif_key': ('django.db.models.fields.CharField', [], {'default': "'RMXhtG2QJdGK5GySSXn8bbNkC3reAQYd'", 'max_length': '64', 'db_index': 'True'})
         },
         u'users.futureshopper': {
             'Meta': {'object_name': 'FutureShopper'},

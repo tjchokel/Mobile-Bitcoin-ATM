@@ -417,7 +417,7 @@ def set_new_password(request):
                         msg = _('Your API credentials were unlinked from your CoinSafe account for safety, please link your wallet again in order to sell bitcoin to customers.')
                         messages.success(request, msg)
 
-                # Mark all other tokens for that user as expired
+                # Mark this + all other tokens for that user as expired
                 ea_token.expire_outstanding_tokens()
 
                 msg = _('Password succesfully updated.')

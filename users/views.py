@@ -302,7 +302,7 @@ def change_password(request):
 def request_new_password(request):
     if request.user.is_authenticated():
         msg = _('You are already logged in. You must <a href="/logout/">logout</a> before you can reset your password.')
-        messages.error(request, msg)
+        messages.error(request, msg, extra_tags='safe')
 
     form = RequestNewPWForm()
     show_form = True

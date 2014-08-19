@@ -365,15 +365,19 @@ def set_new_password(request):
         messages.error(request, msg, extra_tags='safe')
         return HttpResponseRedirect(reverse_lazy('home'))
 
+    # none of these things *should* ever happen, hence the cryptic error message (to figure out how that's possible)
     email_auth_token_id = request.session.get('email_auth_token_id')
     if not email_auth_token_id:
-        msg = _('Access denied. Please generate a new link.')
+        msg = _('Token cookie not found. Please generate a new link.')
         messages.warning(request, msg)
         return HttpResponseRedirect(reverse_lazy('request_new_password'))
     ea_token = get_object_or_None(EmailAuthToken, id=email_auth_token_id)
-
     if not ea_token:
-        msg = _('Access denied. Please generate a new link.')
+        msg = _('Token not found. Please generate a new link.')
+        messages.warning(request, msg)
+        return HttpResponseRedirect(reverse_lazy('request_new_password'))
+    if ea_token.key_deleted_at:
+        msg = _('Token deleted. Please generate a new link.')
         messages.warning(request, msg)
         return HttpResponseRedirect(reverse_lazy('request_new_password'))
     if not ea_token.key_used_at:
@@ -410,8 +414,11 @@ def set_new_password(request):
                     if api_cred.get_balance() > SATOSHIS_PER_BTC:
                         merchant.disable_all_credentials()
                         # TODO: poor UX, but let's wait until we actually have people doing this
-                        msg = _('Your API credentials were unlinked from your CoinSafe account, please link your wallet again in order to sell bitcoin to customers.')
+                        msg = _('Your API credentials were unlinked from your CoinSafe account for safety, please link your wallet again in order to sell bitcoin to customers.')
                         messages.success(request, msg)
+
+                # Mark all other tokens for that user as expired
+                ea_token.expire_outstanding_tokens()
 
                 msg = _('Password succesfully updated.')
                 messages.success(request, msg)

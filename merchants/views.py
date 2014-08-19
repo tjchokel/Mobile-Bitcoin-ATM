@@ -70,6 +70,10 @@ def login_request(request):
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':
+        user = request.user
+        if user.is_authenticated():
+            return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+
         email = request.GET.get('e')
         if email:
             form = LoginForm(initial={'email': email})

@@ -379,15 +379,15 @@ def set_new_password(request):
     if ea_token.key_deleted_at:
         msg = _('Token deleted. Please generate a new link.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_password'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password')+'?e='+ea_token.auth_user.email)
     if not ea_token.key_used_at:
         msg = _('Site error. Please generate a new link.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_password'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password')+'?e='+ea_token.auth_user.email)
     if ea_token.key_used_at + timedelta(minutes=15) < now():
         msg = _('Time limit expired. Please generate a new link.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_password'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password')+'?e='+ea_token.auth_user.email)
     else:
         # We're good to go!
         form = SetPWForm()

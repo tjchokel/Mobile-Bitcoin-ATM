@@ -22,6 +22,8 @@ from emails.trigger import send_and_log, send_admin_email
 
 from datetime import timedelta
 
+from utils import SATOSHIS_PER_BTC
+
 
 @render_to('index.html')
 def home(request):
@@ -296,105 +298,124 @@ def change_password(request):
             }
 
 
-@render_to('users/request_new_pw.html')
-def request_new_pw(request):
+@render_to('users/request_new_password.html')
+def request_new_password(request):
     if request.user.is_authenticated():
-        msg = _('''You're already logged in. You must <a href="/logout/">logout</a> before you can reset your password.''')
+        msg = _('You are already logged in. You must <a href="/logout/">logout</a> before you can reset your password.')
         messages.error(request, msg)
-        return HttpResponseRedirect(reverse_lazy('reset_password'))
 
     form = RequestNewPWForm()
+    show_form = True
     if request.method == 'POST':
+        form = RequestNewPWForm(data=request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
             existing_user = get_object_or_None(AuthUser, username=email.lower())
             if existing_user:
                 new_token = existing_user.create_email_auth_token(request=request)
                 new_token.send_pwreset_email()
+                show_form = False
 
-                msg = _('Please check your email for a link to reset your password.')
-                messages.info(request, msg)
-                return HttpResponseRedirect(reverse_lazy('reset_password'))
             else:
                 msg = _('Sorry, no user found with that email address. Please <a href="/contact/">contact us</a> if this is a mistake.')
                 messages.error(request, msg, extra_tags='safe')
+    elif request.method == 'GET':
+        email = request.GET.get('e')
+        if email:
+            form = RequestNewPWForm(initial={'email': email})
 
-    return {'form': form}
+    return {'form': form, 'show_form': show_form}
 
 
 @render_to('users/reset_password.html')
 def reset_password(request, verif_key):
     if request.user.is_authenticated():
         msg = _('''You're already logged in. You must <a href="/logout/">logout</a> before you can reset your password.''')
-        messages.error(request, msg)
-        return HttpResponseRedirect(reverse_lazy('reset_password'))
+        messages.error(request, msg, extra_tags='safe')
+        return HttpResponseRedirect(reverse_lazy('home'))
 
     ea_token = get_object_or_None(EmailAuthToken, verif_key=verif_key)
     if not ea_token:
         msg = _('Sorry, that link is not valid. Please <a href="/contact/">contact us</a> if this is a mistake.')
         messages.warning(request, msg, extra_tags='safe')
-        return HttpResponseRedirect(reverse_lazy('request_new_pw'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password'))
     if now() > ea_token.key_expires_at:
         msg = _('Sorry, that link was already used. Please generate a new one.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_pw'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password'))
     if ea_token.key_used_at:
         if ea_token.key_used_at - timedelta(minutes=15) < now():
             request.session['email_auth_token_id'] = ea_token.id
-            return HttpResponseRedirect(reverse_lazy('set_new_pw'))
+            return HttpResponseRedirect(reverse_lazy('set_new_password'))
         else:
             msg = _('Sorry, that link was already used. Please generate a new one.')
             messages.warning(request, msg)
-            return HttpResponseRedirect(reverse_lazy('request_new_pw'))
+            return HttpResponseRedirect(reverse_lazy('request_new_password'))
     else:
         ea_token.key_used_at = now()
         ea_token.save()
         request.session['email_auth_token_id'] = ea_token.id
-        return HttpResponseRedirect(reverse_lazy('set_new_pw'))
+        return HttpResponseRedirect(reverse_lazy('set_new_password'))
 
 
 @render_to('users/set_new_password.html')
 def set_new_password(request):
+    if request.user.is_authenticated():
+        msg = _('''You're already logged in. You must <a href="/logout/">logout</a> before you can reset your password.''')
+        messages.error(request, msg, extra_tags='safe')
+        return HttpResponseRedirect(reverse_lazy('home'))
+
     email_auth_token_id = request.session.get('email_auth_token_id')
     if not email_auth_token_id:
         msg = _('Access denied. Please generate a new link.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_pw'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password'))
     ea_token = get_object_or_None(EmailAuthToken, id=email_auth_token_id)
 
     if not ea_token:
         msg = _('Access denied. Please generate a new link.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_pw'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password'))
     if not ea_token.key_used_at:
-        msg = _('Access denied. Please generate a new link.')
+        msg = _('Site error. Please generate a new link.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_pw'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password'))
     if ea_token.key_used_at + timedelta(minutes=15) < now():
         msg = _('Time limit expired. Please generate a new link.')
         messages.warning(request, msg)
-        return HttpResponseRedirect(reverse_lazy('request_new_pw'))
+        return HttpResponseRedirect(reverse_lazy('request_new_password'))
     else:
         # We're good to go!
         form = SetPWForm()
-        if form.is_valid():
-            new_pw = form.cleaned_data['newpassword']
-            user = ea_token.auth_user
-            user.set_password(new_pw)
-            user.save()
+        if request.method == 'POST':
+            form = SetPWForm(data=request.POST)
+            if form.is_valid():
+                new_pw = form.cleaned_data['newpassword']
+                user = ea_token.auth_user
+                user.set_password(new_pw)
+                user.save()
 
-            # login user
-            user_to_login = authenticate(username=user.username, password=new_pw)
-            login(request, user_to_login)
+                # login user
+                user_to_login = authenticate(username=user.username, password=new_pw)
+                login(request, user_to_login)
 
-            LoggedLogin.record_login(request)
+                LoggedLogin.record_login(request)
 
-            # delete the token from the session
-            del request.session['email_auth_token_id']
+                # delete the token from the session
+                del request.session['email_auth_token_id']
 
-            msg = _('Password succesfully updated.')
-            messages.success(request, msg)
+                merchant = user.get_merchant()
+                if merchant:
+                    api_cred = merchant.get_valid_api_credential()
+                    if api_cred.get_balance() > SATOSHIS_PER_BTC:
+                        merchant.disable_all_credentials()
+                        # TODO: poor UX, but let's wait until we actually have people doing this
+                        msg = _('Your API credentials were unlinked from your CoinSafe account, please link your wallet again in order to sell bitcoin to customers.')
+                        messages.success(request, msg)
 
-            return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                msg = _('Password succesfully updated.')
+                messages.success(request, msg)
+
+                return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     return {'form': form}

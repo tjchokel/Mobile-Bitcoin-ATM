@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from users.models import AuthUser, FutureShopper
+from users.models import AuthUser, FutureShopper, EmailAuthToken
 
 
 class AuthUserAdmin(admin.ModelAdmin):
@@ -23,3 +23,21 @@ class FutureShopperAdmin(admin.ModelAdmin):
         model = FutureShopper
 
 admin.site.register(FutureShopper, FutureShopperAdmin)
+
+
+class EmailAuthTokenAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'created_at',
+        'auth_user',
+        'ip_address',
+        'verif_key',
+        'key_used_at',
+        'key_expires_at',
+    )
+    raw_id_fields = ('auth_user', )
+
+    class Meta:
+        model = EmailAuthToken
+
+admin.site.register(EmailAuthToken, EmailAuthTokenAdmin)

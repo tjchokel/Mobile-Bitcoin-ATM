@@ -42,7 +42,7 @@
             {% blocktrans %}To create a new account, please <a href="{{ register_url }}">click here</a>.{% endblocktrans %}
         </p>
         <br />
-        <p><a href="/help#forgot_pw">{% trans "Forgot password?" %}<a/></p>
+        <p><a href="{% url 'request_new_password' %}">{% trans "Forgot password?" %}</a></p>
     </div>
 
 </div>

@@ -21,6 +21,7 @@
   {% url 'coinbase_instructions' as coinbase_url %}
   {% url 'blockchain_instructions' as blockchain_url %}
   {% url 'bitstamp_instructions' as bitstamp_url %}
+  {% url 'request_new_password' as request_new_password_url %}
 
   <div class="row">
     <!-- FAQs accordion -->
@@ -678,14 +679,13 @@
             <div class="panel-body">
               <p>
                 {% blocktrans %}
-                  Please send an email to
-                  <a href="mailto:support@coinsafe.com?Subject=Forgot%20Password">support@coinsafe.com</a>
-                  from the email address that is associated with your account and we can restore your access.
+                  If you're locked out, you can reset your password via email on
+                  <a href="{{ request_new_password_url }}">this page</a>.
                 {% endblocktrans %}
               </p>
               <p>
                 {% blocktrans %}
-                  For security, when you email us we will immediately remove any third party API credentials associated with your account.
+                  For security, we will immediately remove your API credentials for any hosted wallets with large balances.
                   You'll need to add your API credentials back in the admin tab before you can use the app to sell bitcoin.
                   We do this in case someone has compromised your email account and is trying to use that to gain access to your bitcoin.
                   Sorry for the inconvenience, we're working on a better 2FA mechanism to restore your access without but it's not ready yet.

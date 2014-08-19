@@ -344,7 +344,7 @@ def reset_password(request, verif_key):
         messages.warning(request, msg)
         return HttpResponseRedirect(reverse_lazy('request_new_password'))
     if ea_token.key_used_at:
-        if ea_token.key_used_at - timedelta(minutes=15) < now():
+        if now() - ea_token.key_used_at < timedelta(minutes=15):
             request.session['email_auth_token_id'] = ea_token.id
             return HttpResponseRedirect(reverse_lazy('set_new_password'))
         else:
@@ -384,7 +384,7 @@ def set_new_password(request):
         msg = _('Site error. Please generate a new link.')
         messages.warning(request, msg)
         return HttpResponseRedirect(reverse_lazy('request_new_password')+'?e='+ea_token.auth_user.email)
-    if ea_token.key_used_at + timedelta(minutes=15) > now():
+    if now() - ea_token.key_used_at > timedelta(minutes=15):
         msg = _('Time limit expired. Please generate a new link.')
         messages.warning(request, msg)
         return HttpResponseRedirect(reverse_lazy('request_new_password')+'?e='+ea_token.auth_user.email)

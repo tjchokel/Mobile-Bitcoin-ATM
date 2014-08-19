@@ -8,12 +8,11 @@ from django.contrib import messages
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
-from bitcoins.models import BTCTransaction, ForwardingAddress
+from bitcoins.models import ForwardingAddress
 from services.models import WebHook
 
 from emails.trigger import send_admin_email
 
-from utils import format_fiat_amount
 import json
 
 from django.http import HttpResponseRedirect
@@ -62,31 +61,8 @@ def poll_deposits(request):
 def get_bitcoin_price(request):
     user = request.user
     merchant = user.get_merchant()
-    currency_code = merchant.currency_code
-    currency_symbol = merchant.get_currency_symbol()
-    fiat_btc = BTCTransaction.get_btc_market_price(currency_code)
-
-    buy_markup_percent = merchant.get_cashin_percent_markup()
-    sell_markup_percent = merchant.get_cashout_percent_markup()
-
-    buy_markup_fee = fiat_btc * buy_markup_percent / 100.00
-    sell_markup_fee = fiat_btc * sell_markup_percent / 100.00
-
-    buy_price = fiat_btc + buy_markup_fee
-    sell_price = fiat_btc - sell_markup_fee
-
-    json_response = json.dumps({
-                "no_markup_price": format_fiat_amount(fiat_btc, currency_symbol),
-                "buy_price": format_fiat_amount(buy_price, currency_symbol),
-                "sell_price": format_fiat_amount(sell_price, currency_symbol),
-                "sell_price_no_format": round(sell_price, 2),
-                "buy_price_no_format": round(buy_price, 2),
-                # "markup": percent_markup,
-                "buy_markup_percent": buy_markup_percent,
-                "sell_markup_percent": sell_markup_percent,
-                "currency_code": currency_code,
-                "currency_symbol": currency_symbol,
-                })
+    merchant_btc_pricing_dict = merchant.get_merchant_btc_pricing_info()
+    json_response = json.dumps(merchant_btc_pricing_dict)
     return HttpResponse(json_response, content_type='application/json')
 
 

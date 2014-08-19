@@ -34,6 +34,11 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(render_value=False)
     )
 
+    redir_path = forms.CharField(
+            required=False,
+            widget=forms.HiddenInput(),
+            )
+
     def clean_email(self):
         email = self.cleaned_data['email']
         return email.lower().strip()

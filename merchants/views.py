@@ -30,7 +30,10 @@ from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistr
 @sensitive_post_parameters('password', )
 @render_to('login.html')
 def login_request(request):
-    form = LoginForm()
+    initial = None
+    if request.GET.get('next'):
+            initial = {'redir_path': request.GET.get('next')}
+    form = LoginForm(initial=initial)
 
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
@@ -50,7 +53,14 @@ def login_request(request):
                     # Log the login
                     LoggedLogin.record_login(request)
 
-                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    redir_path = form.cleaned_data['redir_path']
+                    if redir_path:
+                        # add leading/trailling slashes
+                        redir_path = '/%s/' % redir_path
+                    else:
+                        redir_path = reverse_lazy('customer_dashboard')
+
+                    return HttpResponseRedirect(redir_path)
                 else:
                     msg = _("Sorry, that's not the right password for <b>%(email)s</b>.") % {
                             'email': escape(email)}
@@ -258,6 +268,7 @@ def merchant_settings(request):
 @login_required
 @render_to('merchants/profile.html')
 def merchant_profile(request):
+    print 'merchant_profile'
     user = request.user
     merchant = user.get_merchant()
     if not merchant or not merchant.has_finished_registration():

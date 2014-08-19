@@ -2,11 +2,17 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 import json
 
-from bitcash.settings import MERCHANT_LOGIN_REQUIRED_PATHS, MERCHANT_LOGIN_PW_URL
+from bitcash.settings import MERCHANT_LOGIN_REQUIRED_PATHS, MERCHANT_LOGIN_PW_URL, LOGIN_URL
 
 
 class MerchantAdminSectionMiddleware(object):
     def process_request(self, request):
+        user = request.user
+        if not user.is_authenticated():
+            redirect_url = '%s?next=%s' % (LOGIN_URL, request.path.strip('/'))
+            # prevent redirect loop
+            if 'login' not in request.path:
+                return HttpResponseRedirect(redirect_url)
         if request.path in MERCHANT_LOGIN_REQUIRED_PATHS:
             if request.session.get('last_password_validation'):
                 # TODO: maybe make it so that it has to be recent?

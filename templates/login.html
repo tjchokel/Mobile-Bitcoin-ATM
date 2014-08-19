@@ -42,7 +42,9 @@
             {% blocktrans %}To create a new account, please <a href="{{ register_url }}">click here</a>.{% endblocktrans %}
         </p>
         <br />
-        <p><a href="{% url 'request_new_password' %}{% if form.cleaned_data.email %}?e={{ form.cleaned_data.email }}{% endif %}">{% trans "Forgot password?" %}</a></p>
+        <p>
+          <a href="{% url 'request_new_password' %}{% if form.cleaned_data.email %}?e={{ form.cleaned_data.email }}{% endif %}">{% trans "Reset Password" %}</a>
+          </p>
     </div>
 
 </div>

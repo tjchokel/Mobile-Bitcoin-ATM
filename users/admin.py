@@ -34,6 +34,7 @@ class EmailAuthTokenAdmin(admin.ModelAdmin):
         'verif_key',
         'key_used_at',
         'key_expires_at',
+        'key_deleted_at',
     )
     raw_id_fields = ('auth_user', )
 

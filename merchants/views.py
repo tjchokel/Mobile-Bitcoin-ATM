@@ -52,8 +52,9 @@ def login_request(request):
 
                     return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
                 else:
-                    msg = _("Sorry, that's not the right password for <b>%(email)s</b>.") % {
-                            'email': escape(email)}
+                    reset_uri = '%s?e=%s' % (reverse_lazy('request_new_password'), user_found.email)
+                    msg = _('''Sorry, that's not the right password for <b>%(email)s</b>. <a href="%(reset_uri)s">Reset password?</a>''') % {
+                            'email': escape(email), 'reset_uri': reset_uri}
                     messages.warning(request, msg, extra_tags='safe')
             else:
                 msg = _("No account found for <b>%(email)s</b>.") % {'email': escape(email)}

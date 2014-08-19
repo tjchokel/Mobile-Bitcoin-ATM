@@ -166,12 +166,25 @@ def simple_random_generator(num_chars=32, eligible_chars='abcdefghjkmnpqrstuvwxy
     Generate a random password using the characters in `chars` and with a
     length of `size`.
 
-    Note: this is NOT a CSPRNG and shouldn't be used for crypto.
+    http://stackoverflow.com/a/2257449
+
+    Not cryptographically secure but works on all OSs without blocking.
+    """
+    return ''.join(random.SystemRandom().choice(eligible_chars) for x in range(num_chars))
+
+
+def simple_csprng(num_chars=32, eligible_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'):
+
+    """
+    Generate a random password using the characters in `chars` and with a
+    length of `size`.
 
     http://stackoverflow.com/a/2257449
+
+    Cryptographically secure but may not work on all OSs.
+    Shouldn't cause blocking but it's possible.
     """
-    #FIXME: switch to CSPRNG
-    return ''.join(random.choice(eligible_chars) for x in range(num_chars))
+    return ''.join(random.SystemRandom().choice(eligible_chars) for x in range(num_chars))
 
 
 def clean_phone_num(self):

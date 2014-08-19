@@ -47,6 +47,15 @@ class ContactForm(forms.Form):
     )
 
 
+class RequestNewPWForm(forms.Form):
+    email = forms.EmailField(
+        label=_('Your Email'),
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
+        help_text=_('Be sure to enter the one you used when you created this account.'),
+    )
+
+
 class ChangePWForm(forms.Form):
 
     oldpassword = forms.CharField(
@@ -85,5 +94,28 @@ class ChangePWForm(forms.Form):
             raise forms.ValidationError(_('Your new passwords did not match.  Please try again.'))
         if self.cleaned_data.get('newpassword') == self.cleaned_data.get('oldpassword'):
             raise forms.ValidationError(_('Your old password matches your new password. Your password was not changed.'))
+        else:
+            return self.cleaned_data
+
+
+class SetPWForm(forms.Form):
+
+    newpassword = forms.CharField(
+            required=True,
+            label=_('New Password'),
+            widget=forms.PasswordInput(attrs={'autocomplete': 'off'}),
+            min_length=7,
+            help_text=_('Please choose a new secure password'),
+    )
+
+    newpassword_confirm = forms.CharField(
+            required=True,
+            label=_('Confirm New Password'),
+            widget=forms.PasswordInput(attrs={'autocomplete': 'off'}),
+    )
+
+    def clean(self):
+        if self.cleaned_data.get('newpassword') != self.cleaned_data.get('newpassword_confirm'):
+            raise forms.ValidationError(_('Your new passwords did not match.  Please try again.'))
         else:
             return self.cleaned_data

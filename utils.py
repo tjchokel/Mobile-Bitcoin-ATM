@@ -185,7 +185,7 @@ def clean_phone_num(self):
     # TODO: restrict phone number to one of Plivo's serviced countries:
     # https://s3.amazonaws.com/mf-tmp/plivo_countries.txt
     phone_num = self.cleaned_data['phone_num']
-    if not phone_num or len(phone_num.strip()) < 4:
+    if not phone_num or len(phone_num.strip('+').strip()) < 4:
         return None
     try:
         pn_parsed = phonenumbers.parse(phone_num, None)

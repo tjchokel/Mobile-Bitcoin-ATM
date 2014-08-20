@@ -30,7 +30,9 @@ from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistr
 @sensitive_post_parameters('password', )
 @render_to('login.html')
 def login_request(request):
-    form = LoginForm()
+
+    if request.user and request.user.is_authenticated():
+        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
@@ -50,7 +52,14 @@ def login_request(request):
                     # Log the login
                     LoggedLogin.record_login(request)
 
-                    return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+                    redir_path = form.cleaned_data['redir_path']
+                    if redir_path:
+                        # add leading/trailling slashes
+                        redir_path = '/%s/' % redir_path
+                    else:
+                        redir_path = reverse_lazy('customer_dashboard')
+
+                    return HttpResponseRedirect(redir_path)
                 else:
                     reset_uri = '%s?e=%s' % (reverse_lazy('request_new_password'), user_found.email)
                     msg = _('''Sorry, that's not the right password for <b>%(email)s</b>. <a href="%(reset_uri)s">Reset password?</a>''') % {
@@ -61,9 +70,13 @@ def login_request(request):
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':
-        email = request.GET.get('e')
-        if email:
-            form = LoginForm(initial={'email': email})
+        initial = {'email': request.GET.get('e')}
+        if request.GET.get('next'):
+                initial['redir_path'] = request.GET.get('next').strip('/')
+        form = LoginForm(initial=initial)
+
+    else:
+        form = LoginForm()
 
     return {'form': form}
 
@@ -482,7 +495,7 @@ def password_prompt(request):
     initial = None
     if request.method == 'GET':
         if request.GET.get('next'):
-            initial = {'redir_path': request.GET.get('next')}
+            initial = {'redir_path': request.GET.get('next').strip('/')}
 
     form = PasswordConfirmForm(user=user, initial=initial)
     if request.method == 'POST':

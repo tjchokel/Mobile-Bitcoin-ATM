@@ -1,5 +1,8 @@
 import re
 import random
+import urlparse
+
+from urllib import urlencode
 
 import phonenumbers
 from django import forms
@@ -209,3 +212,25 @@ def clean_phone_num(self):
         err_msg = _("Sorry, that number doesn't look like a real number")
         raise forms.ValidationError(err_msg)
     return phone_num
+
+
+def add_qs(link, qs_dict=None):
+    """
+    Add a querystring dict to a link:
+
+    link = 'http://example.com/directory/page.html'
+    qs = {'email': 'foo@bar.com'}
+
+    ->
+
+    http://example.com/directory/page.html?email=foo@bar.com
+
+    """
+
+    s = urlparse.urlsplit(link)
+
+    existing_qs_dict = urlparse.parse_qs(s.query)
+    qs_dict.update(existing_qs_dict)
+
+    query = urlencode(qs_dict)
+    return urlparse.urlunsplit((s.scheme, s.netloc, s.path, query, s.fragment))

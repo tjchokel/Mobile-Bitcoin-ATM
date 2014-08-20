@@ -30,10 +30,9 @@ from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistr
 @sensitive_post_parameters('password', )
 @render_to('login.html')
 def login_request(request):
-    initial = None
-    if request.GET.get('next'):
-            initial = {'redir_path': request.GET.get('next')}
-    form = LoginForm(initial=initial)
+
+    if request.user and request.user.is_authenticated():
+        return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     if request.method == 'POST':
         form = LoginForm(data=request.POST)
@@ -70,13 +69,14 @@ def login_request(request):
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':
-        user = request.user
-        if user.is_authenticated():
-            return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
+        initial = {
+                'email': request.GET.get('e'),
+                'redir_path': request.GET.get('next'),
+                }
+        form = LoginForm(initial=initial)
 
-        email = request.GET.get('e')
-        if email:
-            form = LoginForm(initial={'email': email})
+    else:
+        form = LoginForm()
 
     return {'form': form}
 

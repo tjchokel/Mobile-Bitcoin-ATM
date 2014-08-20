@@ -2,35 +2,11 @@ from django.template.loader import render_to_string
 
 from bitcash.settings import POSTMARK_SENDER, EMAIL_DEV_PREFIX, BASE_URL, ADMINS
 
-from utils import split_email_header, cat_email_header
+from utils import split_email_header, cat_email_header, add_qs
 
 from postmark import PMMail
 
 import re
-import urlparse
-from urllib import urlencode
-
-
-def add_qs(link, qs_dict=None):
-    """
-    Add a querystring dict to a link:
-
-    link = 'http://example.com/directory/page.html'
-    qs = {'email': 'foo@bar.com'}
-
-    ->
-
-    http://example.com/directory/page.html?email=foo@bar.com
-
-    """
-
-    s = urlparse.urlsplit(link)
-
-    existing_qs_dict = urlparse.parse_qs(s.query)
-    qs_dict.update(existing_qs_dict)
-
-    query = urlencode(qs_dict)
-    return urlparse.urlunsplit((s.scheme, s.netloc, s.path, query, s.fragment))
 
 
 def get_links(html):

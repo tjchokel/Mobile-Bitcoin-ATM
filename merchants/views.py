@@ -69,10 +69,9 @@ def login_request(request):
                 messages.warning(request, msg, extra_tags='safe')
 
     elif request.method == 'GET':
-        initial = {
-                'email': request.GET.get('e'),
-                'redir_path': request.GET.get('next'),
-                }
+        initial = {'email': request.GET.get('e')}
+        if request.GET.get('next'):
+                initial['redir_path'] = request.GET.get('next').strip('/')
         form = LoginForm(initial=initial)
 
     else:
@@ -495,7 +494,7 @@ def password_prompt(request):
     initial = None
     if request.method == 'GET':
         if request.GET.get('next'):
-            initial = {'redir_path': request.GET.get('next')}
+            initial = {'redir_path': request.GET.get('next').strip('/')}
 
     form = PasswordConfirmForm(user=user, initial=initial)
     if request.method == 'POST':

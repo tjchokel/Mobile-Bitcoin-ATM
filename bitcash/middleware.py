@@ -10,7 +10,6 @@ from emails.trigger import add_qs
 class MerchantAdminSectionMiddleware(object):
     def process_request(self, request):
         if request.path in MERCHANT_LOGIN_REQUIRED_PATHS:
-
             # Pass redirection querystring to login page when about to login:
             if not request.user.is_authenticated():
                 # Build next url and email querystring
@@ -18,9 +17,7 @@ class MerchantAdminSectionMiddleware(object):
                 if request.GET.get('e'):
                     qs_dict['e'] = request.GET.get('e')
                 redirect_url = add_qs(LOGIN_URL, qs_dict)
-                # prevent redirect loop
-                if 'login' not in request.path:
-                    return HttpResponseRedirect(redirect_url)
+                return HttpResponseRedirect(redirect_url)
 
             if request.session.get('last_password_validation'):
                 # TODO: maybe make it so that it has to be recent?

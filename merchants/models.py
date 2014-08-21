@@ -544,3 +544,11 @@ class MerchantWebsite(models.Model):
 
     def __str__(self):
         return '%s: %s' % (self.id, self.url)
+
+    def save(self, *args, **kwargs):
+        """
+        Append http when no scheme is given
+        """
+        if not self.url.lower().startswith('http'):
+            self.url = 'http://%s' % self.url
+        super(ShortURL, self).save(*args, **kwargs)

@@ -14,7 +14,7 @@ class ShortURL(models.Model):
     deleted_at = models.DateTimeField(db_index=True, blank=True, null=True)
 
     def __str__(self):
-        return '%s for %s' % (self.id, self.merchant)
+        return '%s (%s) for %s' % (self.id, self.uri_lowercase, self.merchant.business_name)
 
     def save(self, *args, **kwargs):
         """

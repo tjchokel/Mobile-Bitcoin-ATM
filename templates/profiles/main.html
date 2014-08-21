@@ -64,7 +64,7 @@
             <br/>
           {% endif %}
           {% if merchant.get_website_obj %}
-            <i class="fa fa-external-link"></i><a href="{{ merchant.get_website_obj.url}}" target="_blank">{{ merchant.get_website_obj.url}}</a>
+            <i class="fa fa-external-link"></i><a href="{{ merchant.get_website_obj.url}}" target="_blank">{{ merchant.get_website_obj.get_website_display }}</a>
             <br/>
           {% endif %}
           <b>{{merchant.currency_code}} <i class="fa fa-arrows-h" style="padding-left: 5px;"></i> Bitcoin</b>

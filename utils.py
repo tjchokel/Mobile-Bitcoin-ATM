@@ -234,3 +234,20 @@ def add_qs(link, qs_dict=None):
 
     query = urlencode(qs_dict)
     return urlparse.urlunsplit((s.scheme, s.netloc, s.path, query, s.fragment))
+
+
+def format_url_for_display(url):
+    """
+    Get rid of http(s):// as well as the www. subdomain (if applicable)
+    """
+    # Don't break if fed an invalid url
+    try:
+        pieces = urlparse.urlsplit(url)
+    except:
+        return ''
+
+    domain = pieces.netloc
+    if domain.startswith('www.') and len(domain.split('.')) == 3:
+        domain = '.'.join(domain.split('.')[1:])
+    unsplit_list = ('', domain, pieces.path, pieces.query, pieces.fragment)
+    return urlparse.urlunsplit(unsplit_list).lstrip('//')

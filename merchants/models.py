@@ -18,7 +18,7 @@ from services.models import APICall
 from emails.trigger import send_and_log
 
 from utils import (format_satoshis_with_units, mbtc_to_satoshis,
-        satoshis_to_btc, format_fiat_amount)
+        satoshis_to_btc, format_fiat_amount, format_url_for_display)
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
@@ -552,3 +552,6 @@ class MerchantWebsite(models.Model):
         if not self.url.lower().startswith('http'):
             self.url = 'http://%s' % self.url
         super(ShortURL, self).save(*args, **kwargs)
+
+    def get_website_display(self):
+        return format_url_for_display(self.url)

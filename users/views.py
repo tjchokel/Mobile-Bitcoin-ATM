@@ -411,11 +411,16 @@ def set_new_password(request):
                 merchant = user.get_merchant()
                 if merchant:
                     api_cred = merchant.get_valid_api_credential()
-                    if api_cred.get_balance() > SATOSHIS_PER_BTC:
-                        merchant.disable_all_credentials()
-                        # TODO: poor UX, but let's wait until we actually have people doing this
-                        msg = _('Your API credentials were unlinked from your CoinSafe account for safety, please link your wallet again in order to sell bitcoin to customers.')
-                        messages.success(request, msg)
+                    if api_cred:
+                        try:
+                            if api_cred.get_balance() > SATOSHIS_PER_BTC:
+                                merchant.disable_all_credentials()
+                                # TODO: poor UX, but let's wait until we actually have people doing this
+                                msg = _('Your API credentials were unlinked from your CoinSafe account for safety, please link your wallet again in order to sell bitcoin to customers.')
+                                messages.success(request, msg)
+                        except Exception as e:
+                            # TODO: log these somewhere when people start using this feature
+                            print 'Error was: %s' % e
 
                 # Mark this + all other tokens for that user as expired
                 ea_token.expire_outstanding_tokens()

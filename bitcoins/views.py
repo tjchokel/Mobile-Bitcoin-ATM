@@ -6,9 +6,12 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 
+from annoying.functions import get_object_or_None
+
 from bitcoins.BCAddressField import is_valid_btc_address
 
 from bitcoins.models import ForwardingAddress
+from merchants.models import Merchant
 from services.models import WebHook
 
 from emails.trigger import send_admin_email
@@ -57,11 +60,19 @@ def poll_deposits(request):
     return HttpResponse(json_response, content_type='application/json')
 
 
-@login_required
-def get_bitcoin_price(request):
-    user = request.user
-    merchant = user.get_merchant()
-    merchant_btc_pricing_dict = merchant.get_merchant_btc_pricing_info()
+def get_bitcoin_price(request, merchant_id=None):
+    if merchant_id:
+        merchant = get_object_or_None(Merchant, id=merchant_id)
+    else:
+        user = request.user
+        merchant = user.get_merchant()
+
+    if merchant:
+        merchant_btc_pricing_dict = merchant.get_merchant_btc_pricing_info()
+    else:
+        # should never happen
+        merchant_btc_pricing_dict = {}
+
     json_response = json.dumps(merchant_btc_pricing_dict)
     return HttpResponse(json_response, content_type='application/json')
 

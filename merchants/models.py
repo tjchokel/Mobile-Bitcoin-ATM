@@ -513,6 +513,8 @@ class Merchant(models.Model):
                 "sell_markup_percent": sell_markup_percent,
                 "currency_code": currency_code,
                 "currency_symbol": currency_symbol,
+                "max_mbtc_purchase_formatted": self.get_max_mbtc_purchase_formatted(),
+                "max_mbtc_sale_formatted": self.get_max_mbtc_sale_formatted(),
                 }
 
 

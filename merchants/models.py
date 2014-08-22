@@ -365,11 +365,11 @@ class Merchant(models.Model):
         """
         Returns a list of address strings that can be manipulated (for display, a mapping API, etc):
 
-            ['123 Fake St', 'Apt #1', 'City, State, Country', 'USA']
+            ['123 Fake St', 'Apt #1', 'City', 'State', 'Country']
         """
         location_strings = []
         if self.country:
-            location_strings.append(self.country)
+            location_strings.append(self.get_country_display())
             if self.state and self.city and self.zip_code:
                 location_strings.append('%s %s %s' % (self.city, self.state, self.zip_code))
             elif self.state and self.city:
@@ -396,6 +396,7 @@ class Merchant(models.Model):
         return self.get_physical_address_list(transliterate=False)
 
     def get_local_address_html(self, transliterate=True):
+        " Same as others but exclude country "
         return '<br />'.join(self.get_physical_address_list(transliterate=transliterate)[:-1])
 
     def get_physical_address_html(self, transliterate=True):

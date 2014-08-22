@@ -555,7 +555,7 @@ class MerchantWebsite(models.Model):
         """
         if not self.url.lower().startswith('http'):
             self.url = 'http://%s' % self.url
-        super(ShortURL, self).save(*args, **kwargs)
+        super(MerchantWebsite, self).save(*args, **kwargs)
 
     def get_website_display(self):
         return format_url_for_display(self.url)

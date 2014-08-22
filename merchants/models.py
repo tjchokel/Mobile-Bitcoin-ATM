@@ -395,6 +395,9 @@ class Merchant(models.Model):
     def get_physical_address_list_raw(self, transliterate=True):
         return self.get_physical_address_list(transliterate=False)
 
+    def get_local_address_html(self, transliterate=True):
+        return '<br />'.join(self.get_physical_address_list(transliterate=transliterate)[:-1])
+
     def get_physical_address_html(self, transliterate=True):
         return '<br />'.join(self.get_physical_address_list(transliterate=transliterate))
 

@@ -61,11 +61,14 @@ def poll_deposits(request):
 
 
 def get_bitcoin_price(request, merchant_id=None):
+    " Returns AJAX payload of bitcoin pricing info for a merchant "
+    merchant = None
     if merchant_id:
         merchant = get_object_or_None(Merchant, id=merchant_id)
     else:
         user = request.user
-        merchant = user.get_merchant()
+        if user.is_authenticated:
+            merchant = user.get_merchant()
 
     if merchant:
         merchant_btc_pricing_dict = merchant.get_merchant_btc_pricing_info()

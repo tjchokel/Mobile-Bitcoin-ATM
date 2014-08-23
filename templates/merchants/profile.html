@@ -31,8 +31,8 @@
         </div>
         <!-- End profile image -->
         <div class="col-sm-6">
-          {% if merchant.get_profile_url %}
-            <a class="btn btn-info btn-md" href="{{merchant.get_profile_url}}" style="float: right;">
+          {% if merchant.get_profile_uri %}
+            <a class="btn btn-info btn-md" href="{{merchant.get_profile_uri}}" style="float: right;">
                   {% trans "See Public Profile" %}
             </a>
           {% endif %}
@@ -58,8 +58,8 @@
               </div>
 
             </div>
-            {% if merchant.get_profile_url %}
-              <a class="btn btn-info btn-md" href="{{merchant.get_profile_url}}" style="width:200px;margin-bottom: 10px;">
+            {% if merchant.get_profile_uri %}
+              <a class="btn btn-info btn-md" href="{{merchant.get_profile_uri}}" style="width:200px;margin-bottom: 10px;">
                 {% trans "See Public Profile" %}
               </a>
             {% endif %}

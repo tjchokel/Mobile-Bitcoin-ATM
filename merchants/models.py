@@ -15,10 +15,11 @@ from bitcoins.models import DestinationAddress, ShopperBTCPurchase, BTCTransacti
 from profiles.models import ShortURL
 from services.models import APICall
 
-from emails.trigger import send_and_log
+from bitcash.settings import BASE_URL
 
 from utils import (format_satoshis_with_units, mbtc_to_satoshis,
-        satoshis_to_btc, format_fiat_amount, format_url_for_display)
+        satoshis_to_btc, format_fiat_amount, format_url_for_display,
+        uri_to_url)
 
 from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
@@ -33,6 +34,7 @@ import json
 
 class Merchant(models.Model):
     user = models.ForeignKey('users.AuthUser', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     business_name = models.CharField(max_length=256, blank=False, null=False, db_index=True)
     address_1 = models.CharField(max_length=256, blank=True, null=True, db_index=True)
     address_2 = models.CharField(max_length=256, blank=True, null=True, db_index=True)
@@ -315,6 +317,9 @@ class Merchant(models.Model):
             else:
                 OpenTime.objects.create(merchant=self, weekday=weekday, from_time=from_time, to_time=to_time)
 
+    def has_hours(self):
+        return bool(self.get_hours())
+
     def get_website_obj(self):
         websites = self.merchantwebsite_set.filter(deleted_at=None)
         if websites:
@@ -337,6 +342,9 @@ class Merchant(models.Model):
                 # Create (set) new website
                 MerchantWebsite.objects.create(merchant=self, url=website_to_set)
 
+    def has_website(self):
+        return bool(self.get_website_obj())
+
     def has_finished_registration(self):
         return self.has_destination_address()
 
@@ -345,21 +353,6 @@ class Merchant(models.Model):
 
     def get_max_mbtc_purchase_formatted(self):
         return format_satoshis_with_units(mbtc_to_satoshis(self.max_mbtc_shopper_purchase))
-
-    def send_welcome_email(self):
-        """
-        Send graphics and upsell to fill out profile (if neccesary)
-        """
-        body_context = {
-                'profile_url': reverse('merchant_profile'),
-                'promotional_material': reverse('promotional_material'),
-                }
-        return send_and_log(
-                subject='Welcome to CoinSafe ',
-                body_template='merchant/welcome_to_coinsafe.html',
-                to_merchant=self,
-                body_context=body_context,
-                )
 
     def get_physical_address_list(self, transliterate=True):
         """
@@ -442,11 +435,14 @@ class Merchant(models.Model):
         else:
             return ShortURL.objects.create(uri_display=slug, merchant=self)
 
-    def get_merchant_doc_obj(self):
+    def get_doc_obj(self):
         """
         Right now just a profile image
         """
         return self.merchantdoc_set.order_by('uploaded_at').last()
+
+    def has_doc_obj(self):
+        return bool(self.get_doc_obj())
 
     def set_latitude_longitude(self):
         address_array = self.get_physical_address_list()
@@ -474,10 +470,17 @@ class Merchant(models.Model):
 
             self.save()
 
-    def get_profile_url(self):
+    def get_profile_uri(self):
         short_url = self.get_short_url_obj()
         if short_url:
-            return short_url.get_profile_url()
+            return short_url.get_profile_uri()
+        else:
+            return None
+
+    def get_profile_url(self):
+        profile_uri = self.get_profile_uri()
+        if profile_uri:
+            return uri_to_url(BASE_URL, profile_uri)
         else:
             return None
 

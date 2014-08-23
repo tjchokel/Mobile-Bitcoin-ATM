@@ -1,0 +1,26 @@
+<html><body>
+Hi {% firstof salutation 'there' %},
+<br /><br />
+Thanks for signing up on CoinSafe.
+<br /><br />
+We've created a free profile for you at
+<a href="{{ BASE_URL }}{{ profile_uri }}">{{ BASE_URL }}{{ profile_uri }}</a>
+but we don't know the business phone number at {{ store_name }}.
+<br /><br />
+Many bitcoin customers strongly prefer to do business at stores with publicly advertised phone numbers.
+To add your phone number, please click this link:<br />
+<a href="{{ BASE_URL }}{{ add_phone_uri }}">{{ BASE_URL }}{{ add_phone_uri }}</a>
+<br /><br />
+You can also include a logo, website, and business hours.
+Just like everything else on CoinSafe, this is 100% free.
+<br /><br />
+If you have any feedback on how we can make CoinSafe better for you, please let me know.
+<br /><br />
+Best,
+<br /><br />
+Michael
+<br /><br /><br />
+P.S. Want to show off that you accept bitcoin?
+We made some cool promotional materials you can print out and put in your store.
+Check out <a {# no email appended to link #} href="{{ BASE_URL }}{{ promotional_material }}">our posters page</a>.
+</body></html>

@@ -84,7 +84,7 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     if EMAIL_DEV_PREFIX:
         subject += ' [DEV]'
         pm_dict['subject'] = subject
-    elif to_email != 'support@coinsafe.com':
+    elif to_email != POSTMARK_SENDER:
         # BCC everything to self (for now at least)
         pm_dict['bcc'] = POSTMARK_SENDER
 

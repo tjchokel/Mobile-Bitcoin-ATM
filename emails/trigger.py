@@ -84,8 +84,8 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     if EMAIL_DEV_PREFIX:
         subject += ' [DEV]'
         pm_dict['subject'] = subject
-    elif to_email != POSTMARK_SENDER:
-        # BCC everything to self (for now at least)
+    elif body_template != 'admin/contact_form.html':
+        # BCC everything to self (except contact us form)
         pm_dict['bcc'] = POSTMARK_SENDER
 
     if cc_email:
@@ -131,7 +131,6 @@ def send_admin_email(subject, body_template, body_context):
     if EMAIL_DEV_PREFIX:
         subject += ' [DEV]'
 
-    # BCC everything to self (for now at least)
     pm_dict = {
             'sender': POSTMARK_SENDER,
             'to': ','.join([x[1] for x in ADMINS]),

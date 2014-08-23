@@ -107,14 +107,14 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
         sent_via = SentEmail.SENDGRID
 
         # Convert PM field names to SG field names
-        PM_SG_MAPPINGS = {'sender': 'from', 'html_body': 'html'}
+        sg_dict = pm_dict.copy()
+        sg_dict['from_name'] = from_name
+        sg_dict['from_email'] = from_email
+        sg_dict['html'] = html_body
+        sg_dict['raise_errors'] = True
 
-        sg_dict = {'raise_errors': True}
-        for pm_key, pm_val in pm_dict.iteritems():
-            if pm_key in PM_SG_MAPPINGS:
-                sg_dict[PM_SG_MAPPINGS[pm_key]] = pm_val
-            else:
-                sg_dict[pm_key] = pm_val
+        del sg_dict['sender']
+        del sg_dict['html_body']
 
         sg = sendgrid.SendGridClient(SENDGRID_USERNAME, SENDGRID_PASSWORD)
         message = sendgrid.Mail(**sg_dict)

@@ -96,7 +96,7 @@ class Command(BaseCommand):
                         'store_name': recent_merchant.business_name,
                         'finish_register_uri': reverse('register_bitcoin'),
                         }
-                body_template = 'emails/drip/no_credentials.html'
+                body_template = 'drip/no_credentials.html'
                 subject = 'Your Bitcoin ATM is Almost Ready'
                 send_nag_email(
                         subject=subject,
@@ -111,7 +111,7 @@ class Command(BaseCommand):
                         'store_name': recent_merchant.business_name,
                         'profile_edit_uri': reverse('merchant_profile'),
                         }
-                body_template = 'emails/drip/no_address.html'
+                body_template = 'drip/no_address.html'
                 subject = "Where is %s?" % (recent_merchant.business_name)
                 send_nag_email(
                         subject=subject,
@@ -129,7 +129,7 @@ class Command(BaseCommand):
                         # TODO: move this to a better URL when we have one
                         'fund_wallet_uri': reverse('merchant_profile'),
                         }
-                body_template = 'emails/drip/no_balance.html'
+                body_template = 'drip/no_balance.html'
                 subject = 'Fund Your Bitcoin ATM So You Can Sell Bitcoin to Customers'
                 send_nag_email(
                         subject=subject,
@@ -150,7 +150,7 @@ class Command(BaseCommand):
                 # TODO: move this to a better URL when we have one
                 context_dict['add_phone_uri'] = reverse('merchant_profile')
 
-                body_template = 'emails/drip/no_phone.html'
+                body_template = 'drip/no_phone.html'
                 subject = "What Is the Phone Number at %s?" % recent_merchant.business_name
                 send_nag_email(
                         subject=subject,
@@ -164,7 +164,7 @@ class Command(BaseCommand):
                 # TODO: move this to a better URL when we have one
                 context_dict['add_logo_uri'] = reverse('merchant_profile')
 
-                body_template = 'emails/drip/no_logo.html'
+                body_template = 'drip/no_logo.html'
                 subject = "Does %s Have a Logo?" % recent_merchant.business_name
                 send_nag_email(
                         subject=subject,
@@ -175,7 +175,7 @@ class Command(BaseCommand):
                 continue
 
             if not has_website:
-                body_template = 'emails/drip/no_website.html'
+                body_template = 'drip/no_website.html'
                 subject = "Does %s Have a Website?" % recent_merchant.business_name
                 send_nag_email(
                         subject=subject,

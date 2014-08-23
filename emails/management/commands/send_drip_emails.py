@@ -54,6 +54,7 @@ def send_nag_email(body_template, incomplete_merchant, subject, context_dict={})
 
     dp('Sending %s to %s...' % (bt_clean, incomplete_merchant))
     return send_and_log(
+            subject=subject,
             to_merchant=incomplete_merchant,
             body_template=body_template,
             body_context=context_dict,
@@ -120,6 +121,7 @@ class Command(BaseCommand):
                         )
                 continue
 
+            context_dict['promotional_material_uri'] = reverse('promotional_material')
             balance = api_cred.get_balance()
             if balance == 0:
                 context_dict = {
@@ -141,10 +143,8 @@ class Command(BaseCommand):
             has_logo = recent_merchant.has_doc_obj()
             has_website = recent_merchant.has_website()
 
-            context_dict = {
-                    'profile_uri': recent_merchant.get_profile_uri(),
-                    'store_name': recent_merchant.business_name,
-                    }
+            context_dict['profile_uri'] = recent_merchant.get_profile_uri()
+            context_dict['store_name'] = recent_merchant.business_name
 
             if not has_phone:
                 # TODO: move this to a better URL when we have one

@@ -2,50 +2,122 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Coinsafe - Czech\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-15 00:25+0000\n"
+"POT-Creation-Date: 2014-08-24 00:37+0000\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 
-#: utils.py:193
+#: utils.py:209
 msgid "Sorry, that number isn't valid"
 msgstr "Toto číslo je neplatné"
 
-#: utils.py:196
+#: utils.py:212
 msgid "Sorry, that number doesn't look like a real number"
 msgstr "Toto číslo nevypadá jako platné číslo"
 
-#: bitcoins/models.py:253
+#: bitcoins/models.py:479
+#, fuzzy
+msgid "Transaction Cancelled"
+msgstr "Transakce"
+
+#: bitcoins/models.py:481
+msgid "Cash Paid Out"
+msgstr ""
+
+#: bitcoins/models.py:483
 msgid "BTC Received"
 msgstr "Bitcoiny doručeny"
 
-#: bitcoins/models.py:530
+#: bitcoins/models.py:485
+#, python-format
+msgid "BTC Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)"
+msgstr ""
+
+#: bitcoins/models.py:574
+#, python-format
+msgid ""
+"You just sent %(btc_amount)s to %(business_name)s. You will receive "
+"%(fiat_amount_formatted)s when this transaction confirms in "
+"%(time_range_in_minutes)s mins."
+msgstr ""
+
+#: bitcoins/models.py:630
+#, python-format
+msgid ""
+"The %(btc_amount)s you sent to %(business_name)s has been confirmed. They "
+"now owe you %(fiat_amount)s."
+msgstr ""
+
+#: bitcoins/models.py:692
+#, python-format
+msgid ""
+"The %(btc_amount)s you received from %(customer_name)s has been confirmed. "
+"Please pay them %(fiat_amount)s immediately."
+msgstr ""
+
+#: bitcoins/models.py:698
+#, python-format
+msgid ""
+"The %(btc_amount)s you received from the customer has been confirmed. Please "
+"pay them %(fiat_amount)s immediately."
+msgstr ""
+
+#: bitcoins/models.py:760
 msgid "Bought BTC"
 msgstr "Koupené BTC"
 
-#: bitcoins/models.py:772
+#: bitcoins/models.py:865
+msgid ""
+"This price quote was previously cancelled. Please start over and create a "
+"new request. Sorry for the inconvenience."
+msgstr ""
+
+#: bitcoins/models.py:869
+msgid ""
+"The price quote in this transaction has expired. Please start over and "
+"create a new request. Sorry for the inconvenience."
+msgstr ""
+
+#: bitcoins/models.py:874
+msgid ""
+"The bitcoin for this transaction was already sent. Please see the "
+"transactions log in the admin section for details."
+msgstr ""
+
+#: bitcoins/models.py:1001
 msgid "Cancelled"
 msgstr "Zrušeno"
 
+#: bitcoins/models.py:1003 templates/merchants/_registration_status_bar.html:7
 #: templates/merchants/_registration_status_bar.html:12
 msgid "Complete"
 msgstr "Hotovo"
 
-#: bitcoins/models.py:778
+#: bitcoins/models.py:1005
+msgid "Cancelled by Expiration"
+msgstr ""
+
+#: bitcoins/models.py:1007
 msgid "Waiting on Merchant Approval"
 msgstr "Čeká na schválení obchodníka"
 
-#: bitcoins/models.py:791
+#: bitcoins/models.py:1020
 msgid "Sold BTC"
 msgstr "Prodané BTC"
 
-#: bitcoins/views.py:360
+#: bitcoins/views.py:155
+msgid ""
+"Transaction complete. You can always see your transaction history by "
+"clicking the Admin button below."
+msgstr ""
+
+#: bitcoins/views.py:172
 msgid "Your request has been cancelled"
 msgstr "Vaše heslo bylo změněno"
 
-#: bitcoins/views.py:376
+#: bitcoins/views.py:188
 msgid "Your buy request has been cancelled"
 msgstr "Vaše heslo bylo změněno"
 
@@ -61,6 +133,7 @@ msgstr "Hlavní heslo"
 msgid "Second Password"
 msgstr "Druhé heslo"
 
+#: credentials/forms.py:41 credentials/forms.py:68
 #: templates/merchants/bitstamp.html:26 templates/merchants/coinbase.html:26
 msgid "API Key"
 msgstr "API Key"
@@ -129,307 +202,367 @@ msgstr "Vaše Bitstamp API info bylo obnoveno"
 msgid "Your Bistamp API info could not be validated"
 msgstr "Vaše Bitstamp API info nemohlo být ověřeno"
 
-#: users/forms.py:8
+#: merchants/forms.py:28 merchants/forms.py:49 merchants/forms.py:320
+#: merchants/forms.py:345 users/forms.py:8
 msgid "Email"
 msgstr "Email"
 
-#: merchants/forms.py:32 merchants/forms.py:317
+#: merchants/forms.py:32 merchants/forms.py:327
 msgid "Password"
 msgstr "Heslo"
 
-#: merchants/forms.py:50
+#: merchants/forms.py:55
 msgid "Secure Password"
 msgstr "Potvrdit heslo"
 
-#: merchants/forms.py:55 merchants/forms.py:325
+#: merchants/forms.py:60 merchants/forms.py:335
 msgid "Your Name"
 msgstr "Vaše jméno"
 
-#: templates/merchants/profile.html:21
+#: merchants/forms.py:67 merchants/forms.py:370
+#: templates/merchants/profile.html:108
 msgid "Business Name"
 msgstr "Společnost"
 
-#: templates/merchants/profile.html:41 users/forms.py:17
+#: merchants/forms.py:74 shoppers/forms.py:29 users/forms.py:17
 msgid "Country"
 msgstr "Stát"
 
-#: merchants/forms.py:76 merchants/forms.py:472
+#: merchants/forms.py:81 merchants/forms.py:437
 msgid "The Currency You Want to Trade for BTC"
 msgstr "Měna, kterou chcete směňovat za BTC"
 
-#: merchants/forms.py:93
+#: merchants/forms.py:98
+#, python-format
 msgid ""
 "That email is already taken, do you want to <a href=\"%(login_uri)s\">login</"
 "a>?"
-msgstr "Tento email již byl použit, chcete <a href=\"%(login_uri)s\">login</a>?"
+msgstr ""
+"Tento email již byl použit, chcete <a href=\"%(login_uri)s\">login</a>?"
 
-#: merchants/forms.py:97
+#: merchants/forms.py:102
 msgid "Sorry, your email address must be less than 100 characters"
 msgstr "Promiňte, vaše emailová adresa smí obsahovat max. 100 znaků"
 
-#: merchants/forms.py:108
+#: merchants/forms.py:113
 msgid "Percent Markup"
 msgstr "Přirážka v %"
 
-#: merchants/forms.py:111
+#: merchants/forms.py:116
 msgid "The percent you want to charge above the market rate"
 msgstr "Přirážka v %, kterou chcete aplikovat nad tržní cenu"
 
-#: merchants/forms.py:116
+#: merchants/forms.py:121
 msgid "Wallet Choice"
 msgstr "Peněženka"
 
+#: merchants/forms.py:125
+#, fuzzy
+msgid "Create New blockchain.info Wallet"
+msgstr "Blockchain Main Password"
+
 #: merchants/forms.py:126
+msgid "Link Existing Hosted Wallet"
+msgstr ""
+
+#: merchants/forms.py:131
 msgid "New Blockchain Wallet Password"
 msgstr "Blockchain Main Password"
 
-#: merchants/forms.py:135 templates/merchants/password_prompt.html:36
+#: merchants/forms.py:136
+msgid ""
+"Do not forget this password! Blockchain.info does not support password "
+"recovery."
+msgstr ""
+
+#: merchants/forms.py:140 templates/merchants/password_prompt.html:36
 msgid "Confirm Password"
 msgstr "Potvrdit heslo"
 
-#: merchants/forms.py:154
+#: merchants/forms.py:148
+msgid "Existing Bitcoin Wallet Provider"
+msgstr ""
+
+#: merchants/forms.py:159
 msgid "Coinbase API Key"
 msgstr "Coinbase API Key"
 
-#: merchants/forms.py:162
+#: merchants/forms.py:167
 msgid "Coinbase Secret Key"
 msgstr "Coinbase Secret Key"
 
-#: merchants/forms.py:170
+#: merchants/forms.py:175
 msgid "Bitstamp Customer ID"
 msgstr "Bitstamp Customer ID"
 
-#: merchants/forms.py:178
+#: merchants/forms.py:183
 msgid "Bitstamp API Key"
 msgstr "Bitstamp API Key"
 
-#: merchants/forms.py:186
+#: merchants/forms.py:191
 msgid "Bitstamp Secret Key"
 msgstr "Bitstamp Secret Key"
 
-#: merchants/forms.py:194
+#: merchants/forms.py:199
 msgid "Blockchain Username (Wallet Identifier)"
 msgstr "Blockchain Username (Identifik. peněž.)"
 
-#: merchants/forms.py:202
+#: merchants/forms.py:207
 msgid "Blockchain Main Password"
 msgstr "Blockchain Main Password"
 
-#: merchants/forms.py:210
+#: merchants/forms.py:215
 msgid "Blockchain Second Password"
 msgstr "Blockchain Second Password"
 
-#: merchants/forms.py:221
+#: merchants/forms.py:226
 msgid "Please enter a Blockchain.info password"
 msgstr "Prosím vložte váš Blockchain Username"
 
-#: merchants/forms.py:230
+#: merchants/forms.py:235
 msgid "Please enter your Coinbase API key"
 msgstr "Prosím vložte váš Coinbase API Key"
 
-#: merchants/forms.py:239
+#: merchants/forms.py:244
 msgid "Please enter your Coinbase secret key"
 msgstr "Prosím vložte váš Coinbase Secret Key"
 
-#: merchants/forms.py:247
+#: merchants/forms.py:253
 msgid "Please enter your Bitstamp username"
 msgstr "Prosím vložte váš Bitstamp Username"
 
-#: merchants/forms.py:255
+#: merchants/forms.py:262
 msgid "Please enter your Bitstamp API key"
 msgstr "Prosím vložte váš Bitstamp API Key"
 
-#: merchants/forms.py:263
+#: merchants/forms.py:271
 msgid "Please enter your Bitstamp Secret Key"
 msgstr "Prosím vložte váš Bitstamp Secret Key"
 
-#: merchants/forms.py:271
+#: merchants/forms.py:280
 msgid "Please enter your Blockchain username"
 msgstr "Prosím vložte váš Blockchain Username"
 
-#: merchants/forms.py:281
+#: merchants/forms.py:291
 msgid "Please enter your Blockchain API key"
 msgstr "Prosím vložte váš Blockchain API Key"
 
-#: merchants/forms.py:289 merchants/forms.py:525 shoppers/forms.py:162
+#: merchants/forms.py:299 merchants/forms.py:490 shoppers/forms.py:162
 msgid "Sorry, that's not a valid bitcoin address"
 msgstr "Promiňte, neplatná bitcoinová adresa"
 
-#: merchants/forms.py:292 shoppers/forms.py:125
+#: merchants/forms.py:302 shoppers/forms.py:125
 msgid "Please enter a valid bitcoin address"
 msgstr "Prosím vložte platnou Bitcoin adresu"
 
-#: merchants/forms.py:302
+#: merchants/forms.py:312
 msgid "Those passwords did not match. Please try again."
 msgstr "Vaše nové heslo se neshoduje, zkuste to znovu"
 
-#: merchants/forms.py:341
+#: merchants/forms.py:351
 msgid "Phone Country"
 msgstr "Tel. kód země"
 
-#: merchants/forms.py:348
+#: merchants/forms.py:358
 msgid "Cell Phone Number in International Format"
 msgstr "Číslo mobil. telefonu v mezinár. formátu"
 
-#: merchants/forms.py:364
+#: merchants/forms.py:374
 msgid "Mel's Diner"
 msgstr "Melova věčeře"
 
-#: merchants/forms.py:368 templates/merchants/profile.html:25
+#: merchants/forms.py:378
 msgid "Address Line 1"
 msgstr "Adresa řádek 1"
 
-#: merchants/forms.py:372
+#: merchants/forms.py:382
 msgid "Street address, P.O. box, company name, c/o "
 msgstr "Ulice, P.O. box, jméno firmy, c/o␣"
 
-#: merchants/forms.py:376 templates/merchants/profile.html:29
+#: merchants/forms.py:386
 msgid "Address Line 2"
 msgstr "Adresa řádek 2"
 
-#: merchants/forms.py:379
+#: merchants/forms.py:389
 msgid "Apartment, suite, unit, building, floor, etc."
 msgstr "Byt, apartmá, budova, podlaží atd."
 
-#: users/forms.py:13
+#: merchants/forms.py:393 users/forms.py:13
 msgid "City"
 msgstr "Město"
 
-#: merchants/forms.py:389
+#: merchants/forms.py:399
 msgid "State/Province/Region"
 msgstr "Stát/Provincie/Kraj"
 
-#: merchants/forms.py:397 templates/merchants/profile.html:45
+#: merchants/forms.py:407
 msgid "Zip Code"
 msgstr "PSČ"
 
-#: templates/merchants/profile.html:142
+#: merchants/forms.py:420 templates/merchants/profile.html:124
 msgid "Phone Number"
 msgstr "Telefonní číslo"
 
-#: merchants/forms.py:416
+#: merchants/forms.py:426
 msgid "Website URL"
 msgstr "Web URL"
 
-#: merchants/forms.py:479 shoppers/forms.py:109
+#: merchants/forms.py:444 shoppers/forms.py:109
 msgid "Bitcoin Deposit Address"
 msgstr "Adresa pro vklad BTC"
 
-#: merchants/forms.py:483 shoppers/forms.py:111
+#: merchants/forms.py:448 shoppers/forms.py:111
 msgid "The wallet address where you want your bitcoin sent"
 msgstr "Adresa peněženky, kam chcete bitcoiny poslat"
 
-#: merchants/forms.py:491
+#: merchants/forms.py:453 templates/merchants/settings.html:30
+msgid "Percent Markup When Selling Bitcoin"
+msgstr ""
+
+#: merchants/forms.py:456
 msgid "The percentage you charge above the market price when selling bitcoin"
 msgstr "Přirážka v %, kterou chcete aplikovat nad tržní cenu"
 
-#: merchants/forms.py:504 templates/merchants/settings.html:38
+#: merchants/forms.py:461 templates/merchants/settings.html:34
+msgid "Percent Markup When Buying Bitcoin"
+msgstr ""
+
+#: merchants/forms.py:464
+#, fuzzy
+msgid "The percentage you pay below the market price when buying bitcoin."
+msgstr "Přirážka v %, kterou chcete aplikovat nad tržní cenu"
+
+#: merchants/forms.py:469 templates/merchants/settings.html:38
 msgid "Max Shopper Purchase"
 msgstr "Max. nákup zákazníka"
 
-#: merchants/forms.py:506
+#: merchants/forms.py:471
 msgid "The maximum amount of mBTC a shopper can purchase."
 msgstr "Max. množství mBTC, které zákazník může nakoupit"
 
-#: merchants/forms.py:511 templates/merchants/settings.html:42
+#: merchants/forms.py:476 templates/merchants/settings.html:42
 msgid "Max Shopper Sale"
 msgstr "Max. prodej zákazníka"
 
-#: merchants/forms.py:513
+#: merchants/forms.py:478
 msgid "The maximum amount of mBTC a shopper can sell."
 msgstr "Max. množství mBTC, které může zákazník prodat"
 
-#: merchants/forms.py:537
+#: merchants/forms.py:502
 msgid "CoinSafe Password"
 msgstr "CoinSafe Password"
 
-#: merchants/models.py:320
+#: merchants/models.py:524 templates/merchants/_hours_form.html:14
+#: templates/merchants/profile.html:172 templates/profiles/main.html:268
 msgid "Monday"
 msgstr "Pondělí"
 
-#: merchants/models.py:321
+#: merchants/models.py:525 templates/merchants/_hours_form.html:31
+#: templates/merchants/profile.html:186 templates/profiles/main.html:282
 msgid "Tuesday"
 msgstr "Úterý"
 
-#: merchants/models.py:322
+#: merchants/models.py:526 templates/merchants/_hours_form.html:48
+#: templates/merchants/profile.html:200 templates/profiles/main.html:296
 msgid "Wednesday"
 msgstr "Středa"
 
-#: merchants/models.py:323
+#: merchants/models.py:527 templates/merchants/_hours_form.html:65
+#: templates/merchants/profile.html:214 templates/profiles/main.html:310
 msgid "Thursday"
 msgstr "Čtvrtek"
 
-#: merchants/models.py:324
+#: merchants/models.py:528 templates/merchants/_hours_form.html:82
+#: templates/merchants/profile.html:228 templates/profiles/main.html:324
 msgid "Friday"
 msgstr "Pátek"
 
-#: merchants/models.py:325
+#: merchants/models.py:529 templates/merchants/_hours_form.html:99
+#: templates/merchants/profile.html:242 templates/profiles/main.html:338
 msgid "Saturday"
 msgstr "Sobota"
 
-#: merchants/models.py:326
+#: merchants/models.py:530 templates/merchants/_hours_form.html:116
+#: templates/merchants/profile.html:256 templates/profiles/main.html:352
 msgid "Sunday"
 msgstr "Neděle"
 
-#: merchants/views.py:52
-msgid "Sorry, that's not the right password for <b>%(email)s</b>."
+#: merchants/views.py:65
+#, fuzzy, python-format
+msgid ""
+"Sorry, that's not the right password for <b>%(email)s</b>. <a href="
+"\"%(reset_uri)s\">Reset password?</a>"
 msgstr "Promiňte, toto není správné heslo <b>%(email)s</b>."
 
-#: merchants/views.py:56
+#: merchants/views.py:69
+#, python-format
 msgid "No account found for <b>%(email)s</b>."
 msgstr "Nenalezen účet pro <b>%(email)s</b>."
 
-#: merchants/views.py:70
+#: merchants/views.py:87
 msgid "You Are Now Logged Out"
 msgstr "Jste úspěšně odhlášen"
 
-#: merchants/views.py:181
+#: merchants/views.py:201
 msgid ""
 "Your account has been configured! Customers can use this page while at your "
 "store to trade bitcoin with you."
-msgstr "Váš účet byl nakonfigurován! Zákazníci mohou používat tuto stránku k obchodování s Bitcoiny s vámi."
+msgstr ""
+"Váš účet byl nakonfigurován! Zákazníci mohou používat tuto stránku k "
+"obchodování s Bitcoiny s vámi."
 
-#: merchants/views.py:190
+#: merchants/views.py:210
 msgid ""
 "Your blockchain.info wallet has been created! Customers can use this page "
 "while at your store to trade bitcoin with you."
-msgstr "Váš účet byl vytvořen! Tato stránka je nyní k dispozici Vašim zákazníkům pro obchody s Bitcoinem."
+msgstr ""
+"Váš účet byl vytvořen! Tato stránka je nyní k dispozici Vašim zákazníkům pro "
+"obchody s Bitcoinem."
 
-#: merchants/views.py:222
+#: merchants/views.py:242
 msgid "Your API credentials are not valid. Please try again."
 msgstr "Vaše API údaje jsou neplatné. Zkuste to znovu."
 
-#: merchants/views.py:342
+#: merchants/views.py:307
+#, fuzzy
+msgid "Your image has been uploaded"
+msgstr "Váš profil byl aktualizován."
+
+#: merchants/views.py:353
 msgid "Your profile has been updated"
 msgstr "Váš profil byl aktualizován."
 
-#: merchants/views.py:346
+#: merchants/views.py:357
 msgid "Your profile was not updated"
 msgstr "Váš profil nebyl aktualizován"
 
-#: merchants/views.py:394
+#: merchants/views.py:428
 msgid "Your business hours have been updated"
 msgstr "Vaše otevírací doba byla aktualizována"
 
-#: merchants/views.py:398
-msgid "Your business hours have not been updated"
-msgstr "Vaše otevírací doba nebyla aktualizována"
-
-#: merchants/views.py:424
+#: merchants/views.py:454
 msgid "Your business info has been updated"
 msgstr "Vaše firemní údaje byly aktualizovány"
 
-#: merchants/views.py:427
+#: merchants/views.py:457
 msgid "Your business info was not updated"
 msgstr "Vaše firemní údaje nebyly aktualizovány"
 
-#: merchants/views.py:450
+#: merchants/views.py:480
 msgid "Your bitcoin info has been updated"
 msgstr "Vaše Bitcoin info aktualizovány"
 
-#: merchants/views.py:453
+#: merchants/views.py:483
 msgid "Your bitcoin info was not updated"
 msgstr "Vaše Bitcoin info neaktualizovány"
+
+#: profiles/forms.py:7
+msgid "Image to Upload"
+msgstr ""
+
+#: profiles/forms.py:9
+msgid "Files up to 5Mb only"
+msgstr ""
 
 #: shoppers/forms.py:17
 msgid "Customer Name"
@@ -443,12 +576,18 @@ msgstr "Email zákazníka"
 msgid "Customer Mobile Phone"
 msgstr "Mobil. číslo zákazníka"
 
+#: shoppers/forms.py:62
+msgid "Sorry, you must buy at least 1 mBTC"
+msgstr ""
+
 #: shoppers/forms.py:65
+#, python-format
 msgid ""
 "Sorry, the amount you entered exceeds the purchase limit (%(max_mbtc)s mBTC)"
 msgstr "Promiňte, zadané množství překračuje nákupní limit (%(max_mbtc)s mBTC)"
 
 #: shoppers/forms.py:76
+#, python-format
 msgid ""
 "Sorry, the business API credentials for %(credential_name)s are invalid."
 msgstr "Promiňte, firemní API údaje pro %(credential_name)s jsou neplatné"
@@ -497,6 +636,7 @@ msgstr "Váš bezplatný BitcoMAT | CoinSafe"
 msgid "FAQ"
 msgstr "FAQ"
 
+#: templates/base.html:59 templates/fixed_pages/team.html:22
 #: templates/partials/_static_page_footer.html:18
 msgid "Team"
 msgstr "Tým"
@@ -524,6 +664,10 @@ msgstr "Registrace"
 #: templates/base.html:106
 msgid "Set Language"
 msgstr "Nastavit jazyk"
+
+#: templates/base.html:110
+msgid "Translations are currently in Beta."
+msgstr ""
 
 #: templates/base.html:113
 msgid "More languages?"
@@ -553,133 +697,34 @@ msgid ""
 "        With our easy to use mobile software and exchange partnerships, you "
 "can make money and attract new customers to your local business.\n"
 "      "
-msgstr "\n CoinSafe pomáhá obchodníkům na celém světě kupovat a prodávat Bitcoiny v jejich obchodech S naším uživatelsky přátelským software a s naší pomocí můžete vydělávat peníze a přilákat do svého obchodu nové zákazníky."
+msgstr ""
+"\n"
+" CoinSafe pomáhá obchodníkům na celém světě kupovat a prodávat Bitcoiny v "
+"jejich obchodech S naším uživatelsky přátelským software a s naší pomocí "
+"můžete vydělávat peníze a přilákat do svého obchodu nové zákazníky."
 
-#: templates/index.html:43
-msgid "Businesses"
-msgstr "Obchody"
-
-#: templates/index.html:45
-msgid "Set Your Own Prices"
-msgstr "Nastavte si své vlastní ceny"
-
-#: templates/index.html:46
+#: templates/index.html:68
 msgid ""
-"Select a percent markup on market prices and know that you will make money "
-"on all transactions."
-msgstr "Určete si přirážku nad tržní cenu a vydělávejte peníze na každé transakci"
-
-#: templates/index.html:48
-msgid "Attract New Customers"
-msgstr "Přilákejte nové zákazníky"
-
-#: templates/index.html:49
-msgid ""
-"Prime placement on the CoinSafe map will send more foot traffic into your "
-"store."
-msgstr "Umístění na CoinSafe mapě k vám přivede více zákazníků."
-
-#: templates/index.html:51
-msgid "Simple to Use"
-msgstr "Jednoduché použití"
-
-#: templates/index.html:52
-msgid ""
-"Mobile-optimized and user friendly, CoinSafe is designed so that even an "
-"employee with no Bitcoin knowledge can operate it."
-msgstr "Optimalizováno pro mobily. Uživatelsky přátelské CoinSafe rozhraní umožňuje obsluhu i člověku bez znalostí o Bitcoinu"
-
-#: templates/index.html:53
-msgid "Works Anywhere In the World"
-msgstr "Funguje kdekoliv na světě"
-
-#: templates/index.html:54
-msgid ""
-"From Argentina to Australia, CoinSafe works everywhere in the world with the "
-"currency of your choice. More languages coming soon!"
-msgstr "Od Argentiny po Austrálii. CoinSafe funguje kdekoli na světě s měnou dle vašeho výběru. Více jazyků již brzy!"
-
-#: templates/index.html:56
-msgid "Sell or Spend Your Bitcoin Immediately"
-msgstr "Prodejte nebo utraťe váš Bitcoin hned"
-
-#: templates/index.html:57
-msgid ""
-"If you don't want to hold bitcoin, you can set your prices so that you're "
-"able to sell it right away for a profit."
-msgstr "Pokud nechcete Bitcoin držet, můžete nastavit ceny tak, aby jste Bitcoin opět se ziskem prodali"
-
-#: templates/index.html:59
-msgid "Get Your Money to a Safer Location"
-msgstr "Dejte své peníze na bezpečnější místo"
-
-#: templates/index.html:60
-msgid "Moving cash into bitcoins can minimize theft and reduce robberies."
-msgstr "Převedení hotovosti na Bitcoin může pomoci snížit riziko krádeže."
-
-#: templates/index.html:63
-msgid "List Your Business Today"
-msgstr "Uveďte Váš obchod zdarma"
-
-#: templates/index.html:75
-msgid "Consumers"
-msgstr "Spotřebitelé"
-
-#: templates/index.html:77
-msgid "Bitcoin <-> Cash"
-msgstr "BTC <-> Hotovost"
-
-#: templates/index.html:78
-msgid ""
-"Dealing in cash means you don't need a bank account and there are no long "
-"waiting periods. Exchange bitcoin and local currency in minutes!"
-msgstr "Obchodování v hotovosti znamená, že nepotřebujete bankovní účet a vše probíhá rychle. Směňujte Bitcoin a hotovost v řádu minut!"
-
-#: templates/index.html:80
-msgid "Transparent Pricing"
-msgstr "Transparentní cena"
-
-#: templates/index.html:81
-msgid ""
-"Businesses publish their prices online so you can shop around for the best "
-"rate. There are never any surprises when you get to the store."
-msgstr "Firmy zveřejňují jejich ceny on-line, tzn. nejlepší cenu si můžete zjistit předem. Takže žádné překvapení při příchodu do obchodu."
-
-#: templates/index.html:83
-msgid "No Messaging With Strangers"
-msgstr "Žádné dopisování s lidmi, které neznáte"
-
-#: templates/index.html:84
-msgid ""
-"Businesses list their hours and location, so there is no need to arrange "
-"meetings with people you don't know."
-msgstr "Obchody uvádějí svou provozní dobu a adresu, takže není třeba domlouvat si schůzky s lidmi, které neznáte."
-
-#: templates/index.html:86
-msgid "Businesses You Can Trust"
-msgstr "Důvěryhodný obchod"
-
-#: templates/index.html:87
-msgid ""
-"Each business is rated by their users to ensure that the continue to provide "
-"the best service."
-msgstr "Každý obchod je hodnocen jeho uživateli aby byl zajištěn co nejlepší servis"
-
-#: templates/index.html:92
-msgid "Get Notified of Nearby Locations"
-msgstr "Nechte se informovat o nejbližších obchodech"
+"\n"
+"        \"Now every physical store in the world can become a Bitcoin ATM "
+"with no new hardware\"\n"
+"      "
+msgstr ""
 
 #: templates/login.html:7
 msgid "Your Free Bitcoin ATM App | Login"
 msgstr "Váš bezplatný BitcoMAT | CoinSafe"
 
 #: templates/login.html:42
+#, python-format
 msgid ""
 "To create a new account, please <a href=\"%(register_url)s\">click here</a>."
-msgstr "K založení nového účtu, prosím <a href=\"%(register_url)s\">klikněte zde</a>."
+msgstr ""
+"K založení nového účtu, prosím <a href=\"%(register_url)s\">klikněte zde</a>."
 
-#: templates/login.html:45
-msgid "Forgot password?"
+#: templates/login.html:46
+#, fuzzy
+msgid "Forgot Password?"
 msgstr "Potvrdit heslo"
 
 #: templates/register_customer.html:5
@@ -696,33 +741,115 @@ msgid ""
 "        We are building a network of merchants in cities around the world.\n"
 "        Sign up to be notified when a merchant is available near you.\n"
 "      "
-msgstr "\n Budujeme síť obchodníků ve městech po celém světě. Zaregistrujte se, abyste byli informováni o nových obchodech ve Vaší blízkosti."
+msgstr ""
+"\n"
+" Budujeme síť obchodníků ve městech po celém světě. Zaregistrujte se, abyste "
+"byli informováni o nových obchodech ve Vaší blízkosti."
 
 #: templates/register_customer.html:43
 msgid "Submit"
 msgstr "Odeslat"
 
 #: templates/register_customer.html:50
+#, python-format
 msgid ""
 "\n"
 "        To register as a business (not an individual) please\n"
 "        <a href=\"%(rm_url)s\">click here</a>.\n"
 "      "
-msgstr "\n Pro registraci jako obchodník (ne jako soukromá osoba) prosím <a href= \"%(rm_url)s\">klikněte zde</a>."
+msgstr ""
+"\n"
+" Pro registraci jako obchodník (ne jako soukromá osoba) prosím <a href= "
+"\"%(rm_url)s\">klikněte zde</a>."
 
 #: templates/customer_dash/_transaction_row.html:12
 msgid "Detected"
 msgstr "Zjištěno"
 
-#: templates/customer_dash/main.html:6
+#: templates/customer_dash/main.html:7
 msgid "Customer Dashboard | CoinSafe"
 msgstr "Zákaznické nastavení | CoinSafe"
+
+#: templates/customer_dash/start.html:5
+#, python-format
+msgid ""
+"\n"
+"        Welcome to <b>%(business_name)s</b>\n"
+"      "
+msgstr ""
+"\n"
+" Prodat bitcoiny %(business_name)s"
+
+#: templates/customer_dash/start.html:11
+msgid "Market BTC Price"
+msgstr "Tržní BTC cena"
+
+#: templates/customer_dash/start.html:38
+#, python-format
+msgid ""
+"\n"
+"                  Buy Bitcoin from %(merchant_name)s\n"
+"                "
+msgstr ""
+"\n"
+" Kupte bitcoin od %(merchant_name)s"
+
+#: templates/customer_dash/start.html:67
+msgid "Enter Your Email or BTC Address"
+msgstr "Vložte Váš email nebo BTC adresu"
+
+#: templates/customer_dash/start.html:69
+msgid "Enter Your BTC Address"
+msgstr "Vložte Vaši BTC adresu"
+
+#: templates/customer_dash/start.html:75
+msgid "Pay Physical Cash to Business"
+msgstr "Zaplatit hotovostí obchodu"
+
+#: templates/customer_dash/start.html:82
+msgid "Receive BTC by Email or BTC Address"
+msgstr "Obdržet BTC emailem nebo na BTC adr."
+
+#: templates/customer_dash/start.html:84
+msgid "Receive BTC from Business"
+msgstr "Přijmout BTC od obchodu"
+
+#: templates/customer_dash/start.html:93
+msgid "Buy Bitcoin with Cash"
+msgstr "Koupit BTC za hotovost"
+
+#: templates/customer_dash/start.html:107
+#, python-format
+msgid ""
+"\n"
+"            Sell Bitcoin to %(merchant_name)s\n"
+"          "
+msgstr ""
+"\n"
+" Prodat bitcoiny %(merchant_name)s"
+
+#: templates/customer_dash/start.html:134
+msgid "Get Business BTC Address"
+msgstr "Získat obchodní BTC adresu"
+
+#: templates/customer_dash/start.html:137
+msgid "Send Bitcoin to Business BTC Address"
+msgstr "Poslat Bitcoin na obchodní BTC peněženku"
+
+#: templates/customer_dash/start.html:140
+msgid "Receive Physical Cash from Business"
+msgstr "Přijmout hotovost od obchodu"
+
+#: templates/customer_dash/start.html:147
+msgid "Sell Your Bitcoin for Cash"
+msgstr "Směnit vaše BTC za hotovost"
 
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:13
 msgid "Confirm Cash Received"
 msgstr "Potvrdit příjem hotovosti"
 
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:21
+#, python-format
 msgid ""
 "\n"
 "                  Cashier: please enter your CoinSafe password to confirm "
@@ -730,7 +857,10 @@ msgid ""
 "                  <b>%(currency_symbol)s%(fiat_amount)s %(currency_code)s</"
 "b> from the customer.\n"
 "                "
-msgstr "\n Pokladník: prosím vložte vaše CoinSafe heslo pro potvrzení příjmu <b>%(currency_symbol)s%(fiat_amount)s %(currency_code)s</b> od zákazníka."
+msgstr ""
+"\n"
+" Pokladník: prosím vložte vaše CoinSafe heslo pro potvrzení příjmu <b>"
+"%(currency_symbol)s%(fiat_amount)s %(currency_code)s</b> od zákazníka."
 
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:32
 msgid "Send BTC to Customer"
@@ -740,42 +870,66 @@ msgstr "Poslat BTC zákazníkovi"
 msgid "Price expires in"
 msgstr "Cena vyprší za"
 
+#: templates/customer_dash/cash_in/_bitcoin_purchase.html:52
+#: templates/customer_dash/cash_in/_bitcoin_purchase.html:53
 #: templates/customer_dash/cash_out/_deposit_confirm.html:22
 msgid "Cancel"
 msgstr "Zrušit"
 
+#: templates/customer_dash/cash_in/_bitcoin_purchase.html:58
+#, python-format
+msgid ""
+"\n"
+"          Customer: please pay %(business_name)s <b>%(currency_symbol)s"
+"%(fiat_amount)s %(currency_code)s</b> to receive <b>%(format_mbtc_amount)s "
+"mBTC</b> at %(b58_address_or_email)s.\n"
+"        "
+msgstr ""
+
 #: templates/customer_dash/cash_in/_bitcoin_purchase.html:69
+#, python-format
 msgid ""
 "\n"
 "            I Have Paid <b>%(currency_symbol)s%(fiat_amount)s</b>\n"
 "          "
-msgstr "\n Zaplatil jsem <b>%(currency_symbol)s%(fiat_amount)s</b>"
+msgstr ""
+"\n"
+" Zaplatil jsem <b>%(currency_symbol)s%(fiat_amount)s</b>"
 
 #: templates/customer_dash/cash_in/_buy_bitcoin_modal.html:8
+#, python-format
 msgid ""
 "\n"
 "          Buy Bitcoin from %(merchant_name)s with Cash\n"
 "          "
-msgstr "\n Koupit Bitcoin od %(merchant_name)s za hotovost"
+msgstr ""
+"\n"
+" Koupit Bitcoin od %(merchant_name)s za hotovost"
 
 #: templates/customer_dash/cash_in/_buy_bitcoin_modal.html:38
 msgid "Get Price Quote"
 msgstr "Dostat cenovou nabídku"
 
 #: templates/customer_dash/cash_out/_deposit_address_modal.html:8
+#, python-format
 msgid ""
 "\n"
 "            Sell Your Bitcoin to %(merchant_name)s for Cash\n"
 "          "
-msgstr "\n Prodat Bitcoin %(merchant_name)s za hotovost"
+msgstr ""
+"\n"
+" Prodat Bitcoin %(merchant_name)s za hotovost"
 
 #: templates/customer_dash/cash_out/_deposit_address_modal.html:18
+#, python-format
 msgid ""
 "\n"
 "                Customer: send 1 mBTC - %(max_btc_formatted)s to this "
 "address:\n"
 "              "
-msgstr "\n Zákazník: pošlete %(max_btc_formatted)s na tuto adresu:"
+msgstr ""
+"\n"
+" Zákazník: pošlete %(max_btc_formatted)s na tuto adresu:"
 
 #: templates/customer_dash/cash_out/_deposit_address_modal.html:32
 msgid "The Bitcoin Has Been Sent"
@@ -786,6 +940,7 @@ msgid "Bitcoin Received"
 msgstr "Bitcoiny doručeny"
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:15
+#, python-format
 msgid ""
 "\n"
 "              The deposit of <b>%(mbtc)s</b> made by %(shopper_name)s has "
@@ -793,15 +948,22 @@ msgid ""
 "              (<a href=\"https://blockchain.info/address/%(b58_address)s\" "
 "target=\"_blank\">verify</a>).\n"
 "            "
-msgstr "\n Vklad <b>%(mbtc)s</b> vložený zákazníkem %(shopper_name)s byl přijat (<a href=\"https://blockchain.info/address/%(b58_address)s\" target=\"_blank \">verify</a>)."
+msgstr ""
+"\n"
+" Vklad <b>%(mbtc)s</b> vložený zákazníkem %(shopper_name)s byl přijat (<a "
+"href=\"https://blockchain.info/address/%(b58_address)s\" target=\"_blank "
+"\">verify</a>)."
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:22
+#, python-format
 msgid ""
 "\n"
 "            Cashier: please pay %(shopper_name)s <b>%(fiat)s</b> "
 "immediately.\n"
 "          "
-msgstr "\n Pokladník: prosím zaplaťte %(shopper_name)s <b>%(fiat)s</b> nyní."
+msgstr ""
+"\n"
+" Pokladník: prosím zaplaťte %(shopper_name)s <b>%(fiat)s</b> nyní."
 
 #: templates/customer_dash/cash_out/_deposit_complete.html:33
 msgid "I Have Paid The Customer"
@@ -815,6 +977,15 @@ msgstr "Poslední aktualizace"
 msgid "seconds ago"
 msgstr "seconds ago"
 
+#: templates/customer_dash/cash_out/_deposit_confirm.html:17
+#, python-format
+msgid ""
+"\n"
+"            Waiting for customer's deposit to\n"
+"            <span style=\"color: #72a53b;\">%(customer_address)s </span>\n"
+"          "
+msgstr ""
+
 #: templates/customer_dash/cash_out/_deposit_confirm.html:29
 msgid "Transaction"
 msgstr "Transakce"
@@ -823,30 +994,41 @@ msgstr "Transakce"
 msgid ""
 "Cashier: <b>do not pay out cash</b> until CoinSafe notifies you that the "
 "customer's transaction has been confirmed by the bitcoin network."
-msgstr "Pokladník: <b>nevyplácejte peníze</b> než vám CoinSafe oznámí, že zákazníkova transakce byla potvrzena bitcoinovou sítí"
+msgstr ""
+"Pokladník: <b>nevyplácejte peníze</b> než vám CoinSafe oznámí, že "
+"zákazníkova transakce byla potvrzena bitcoinovou sítí"
 
+#: templates/customer_dash/cash_out/_deposit_confirm.html:42
 #: templates/customer_dash/cash_out/_override_confirmations_modal.html:8
-msgid "Override Required Confirmations?"
+#: templates/customer_dash/cash_out/_override_confirmations_modal.html:34
+#, fuzzy
+msgid "Override Required Confirmations"
 msgstr "Přeskočit požadované potvrzení?"
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:50
 msgid ""
 "Please enter a name for this order. If you'd like a receipt, please include "
 "an email and/or phone number."
-msgstr "Prosím vložte jméno pro tuto objednávku. Pokud požadujete účtenku, připojte také email a/nebo tel. číslo."
+msgstr ""
+"Prosím vložte jméno pro tuto objednávku. Pokud požadujete účtenku, připojte "
+"také email a/nebo tel. číslo."
 
 #: templates/customer_dash/cash_out/_deposit_confirm.html:57
 msgid "Send Receipt"
 msgstr "Poslat účtenku"
 
+#: templates/customer_dash/cash_out/_deposit_dash_table.html:5
 #: templates/merchants/transactions.html:20
 msgid "Shopper"
 msgstr "Zákazník"
 
-#: templates/customer_dash/cash_out/_deposit_dash_table.html:6
+#: templates/customer_dash/cash_out/_deposit_dash_table.html:7
 msgid "Amount"
 msgstr "Množství"
 
+#: templates/customer_dash/cash_out/_deposit_dash_table.html:8
+#: templates/merchants/bitstamp.html:25 templates/merchants/blockchain.html:25
+#: templates/merchants/coinbase.html:25
 #: templates/merchants/transactions.html:24
 msgid "Status"
 msgstr "Stav"
@@ -854,71 +1036,6 @@ msgstr "Stav"
 #: templates/customer_dash/cash_out/_deposit_dash_table.html:29
 msgid "Transaction not yet detected"
 msgstr "Transakce ještě nezjištěna"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:5
-msgid ""
-"\n"
-"        Welcome to <b>%(business_name)s</b>\n"
-"      "
-msgstr "\n Prodat bitcoiny %(business_name)s"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:11
-msgid "Market BTC Price"
-msgstr "Tržní BTC cena"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:34
-msgid ""
-"\n"
-"                  Buy Bitcoin from %(merchant_name)s\n"
-"                "
-msgstr "\n Kupte bitcoin od %(merchant_name)s"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:58
-msgid "Enter Your Email or BTC Address"
-msgstr "Vložte Váš email nebo BTC adresu"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:60
-msgid "Enter Your BTC Address"
-msgstr "Vložte Vaši BTC adresu"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:66
-msgid "Pay Physical Cash to Business"
-msgstr "Zaplatit hotovostí obchodu"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:73
-msgid "Receive BTC by Email or BTC Address"
-msgstr "Obdržet BTC emailem nebo na BTC adr."
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:75
-msgid "Receive BTC from Business"
-msgstr "Přijmout BTC od obchodu"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:84
-msgid "Buy Bitcoin with Cash"
-msgstr "Koupit BTC za hotovost"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:98
-msgid ""
-"\n"
-"            Sell Bitcoin to %(merchant_name)s\n"
-"          "
-msgstr "\n Prodat bitcoiny %(merchant_name)s"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:120
-msgid "Get Business BTC Address"
-msgstr "Získat obchodní BTC adresu"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:123
-msgid "Send Bitcoin to Business BTC Address"
-msgstr "Poslat Bitcoin na obchodní BTC peněženku"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:126
-msgid "Receive Physical Cash from Business"
-msgstr "Přijmout hotovost od obchodu"
-
-#: templates/customer_dash/cash_out/_no_deposit_confirm.html:133
-msgid "Sell Your Bitcoin for Cash"
-msgstr "Směnit vaše BTC za hotovost"
 
 #: templates/customer_dash/cash_out/_override_confirmations_modal.html:17
 msgid ""
@@ -938,11 +1055,16 @@ msgid ""
 "                you can mark the transaction as complete now by entering "
 "your password below.\n"
 "              "
-msgstr "\n Transakce byla zjištěna, ale zatím nebyla potvrzena bitcoinovou sítí.Je možné (ačkoliv velmi vzácně), že nepotvrzená transakce bude vrácena přes <a href=\"https://en.bitcoin.it/wiki/Double-spending\" target=\"_blank \">Double Spend Attack</a>,  takže doporučujeme počkat,než bude transakce potvrzená. Toto většinou zabere v průměru 10 minut, ale občas to může trvat až dvojnásobně déle.  Pokud je to pro vás malá částka, nebo pokud jste si jisti, že tento zákazník není podvodník, můžete označit tuto transakci jako hotovou vložením vašeho hesla níže."
-
-#: templates/customer_dash/cash_out/_override_confirmations_modal.html:34
-msgid "Confirm"
-msgstr "Potvrdit"
+msgstr ""
+"\n"
+" Transakce byla zjištěna, ale zatím nebyla potvrzena bitcoinovou sítí.Je "
+"možné (ačkoliv velmi vzácně), že nepotvrzená transakce bude vrácena přes <a "
+"href=\"https://en.bitcoin.it/wiki/Double-spending\" target=\"_blank "
+"\">Double Spend Attack</a>,  takže doporučujeme počkat,než bude transakce "
+"potvrzená. Toto většinou zabere v průměru 10 minut, ale občas to může trvat "
+"až dvojnásobně déle.  Pokud je to pro vás malá částka, nebo pokud jste si "
+"jisti, že tento zákazník není podvodník, můžete označit tuto transakci jako "
+"hotovou vložením vašeho hesla níže."
 
 #: templates/fixed_pages/bitstamp_instructions.html:4
 msgid "Linking Your Bitstamp Account | CoinSafe"
@@ -952,57 +1074,114 @@ msgstr "Propojování vašeho Bitstamp účtu | CoinSafe"
 msgid "Bitstamp API Instructions"
 msgstr "Bitstamp API instrukce"
 
+#: templates/fixed_pages/bitstamp_instructions.html:19
+msgid ""
+"\n"
+"        Connecting your Bitstamp account to CoinSafe allows us to:\n"
+"      "
+msgstr "\nPřipojování vašeho Bitstamp účtu ke CoinSafe nám dovoluje:"
+
+#: templates/fixed_pages/bitstamp_instructions.html:25
+msgid ""
+"\n"
+"          Lookup your bitcoin address at Bitstamp so that shoppers can send "
+"funds there.\n"
+"        "
+msgstr "\nVyhledání vaší bitcoin adresy na Bitstamp, takže tam zákazník může posílat prostředky."
+
+#: templates/fixed_pages/bitstamp_instructions.html:30
+msgid ""
+"\n"
+"          Send Bitcoin from your Bitstamp account to shoppers (once you "
+"confirm they have paid you in cash for it).\n"
+"        "
+msgstr "\nPoslat Bitcoin z vašeho Bitstamp účtu zákazníkům (po potvrzení, že vám za to zaplatili v hotovosti)."
+
+#: templates/fixed_pages/bitstamp_instructions.html:35
+msgid ""
+"\n"
+"          Automatically buy or sell bitcoin with Bitstamp using the bank "
+"account you already have linked up with them (coming soon).\n"
+"        "
+msgstr "\nAutomaticky kupovat nebo prodávat bitcoiny na Bitstamp s použitím bankovního účtu, který jste s ním spárovali (připravujeme)."
+
 #: templates/fixed_pages/bitstamp_instructions.html:42
 msgid ""
 "\n"
 "      Please follow these instructions to grant CoinSafe access to your "
 "Bitstamp account:\n"
 "    "
-msgstr "\n Prosím následujte tyto instrukce pro poskytnutí CoinSafe přístupu k vašemu Bitstamp účtu:"
+msgstr ""
+"\n"
+" Prosím následujte tyto instrukce pro poskytnutí CoinSafe přístupu k vašemu "
+"Bitstamp účtu:"
 
 #: templates/fixed_pages/bitstamp_instructions.html:49
+#, python-format
 msgid ""
 "\n"
 "          Go to <a target=\"_blank\" href=\"%(bitstamp_url)s\">Bitstamp's "
 "API Access Page</a>.\n"
 "          You may be asked to login with your Bitstamp credentials.\n"
 "        "
-msgstr "\n Jděte na <a target=\"_blank\" href=\"%(bitstamp_url)s\">Bitstamp API Access stránce</a>.Můžete být vyzváni k přihlášení na Bitstamp."
+msgstr ""
+"\n"
+" Jděte na <a target=\"_blank\" href=\"%(bitstamp_url)s\">Bitstamp API Access "
+"stránce</a>.Můžete být vyzváni k přihlášení na Bitstamp."
 
 #: templates/fixed_pages/bitstamp_instructions.html:55
+#, python-format
 msgid ""
 "\n"
 "        Check all the permissions boxes, leave the text input boxes blank "
 "and click <b>%(generate_key_text)s</b>:\n"
 "        "
-msgstr "\n Zkontrolujte všechny zatržítka, ponechte vstupní textové pole prázdné a klikněte na <b>%(generate_key_text)s</b>:"
+msgstr ""
+"\n"
+" Zkontrolujte všechny zatržítka, ponechte vstupní textové pole prázdné a "
+"klikněte na <b>%(generate_key_text)s</b>:"
 
+#: templates/fixed_pages/bitstamp_instructions.html:63
 #: templates/fixed_pages/coinbase_instructions.html:100
+#, python-format
 msgid ""
 "\n"
 "          Copy the <b>%(key_field)s</b> and <b>%(secret_field)s</b> to "
 "CoinSafe.\n"
 "        "
-msgstr "\n Zkopírujte <b>%(key_field)s</b> and <b>%(secret_field)s</b> ke CoinSafe."
+msgstr ""
+"\n"
+" Zkopírujte <b>%(key_field)s</b> and <b>%(secret_field)s</b> ke CoinSafe."
 
 #: templates/fixed_pages/bitstamp_instructions.html:70
+#, python-format
 msgid ""
 "\n"
 "          Go back to Bitstamp and click the <b>%(activate_name)s</b> "
 "button.\n"
 "          This will send an email to you to confirm.\n"
 "        "
-msgstr "\n Jděte zpět na Bitstamp a klikněte na <b>%(activate_name)s</b> tlačítko.To vám pošle email k potvrzení."
+msgstr ""
+"\n"
+" Jděte zpět na Bitstamp a klikněte na <b>%(activate_name)s</b> tlačítko.To "
+"vám pošle email k potvrzení."
 
 #: templates/fixed_pages/bitstamp_instructions.html:78
+#, python-format
 msgid ""
 "\n"
 "          Check your email and click the link to confirm API access.\n"
 "          If you don't see the email, check your spam folder for a message "
 "from <b>%(bitstamp_email)s</b>.\n"
 "        "
-msgstr "\n Zkontrolujte váš email a klikněte na odkaz, který zaktivuje API přístup. Pokud nemůžete email najít, zkontrolujte složku se spamy a najděte email od <b>%(bitstamp_email)s</b>."
+msgstr ""
+"\n"
+" Zkontrolujte váš email a klikněte na odkaz, který zaktivuje API přístup. "
+"Pokud nemůžete email najít, zkontrolujte složku se spamy a najděte email od "
+"<b>%(bitstamp_email)s</b>."
 
+#: templates/fixed_pages/bitstamp_instructions.html:88
+#: templates/fixed_pages/blockchain_instructions.html:73
 #: templates/fixed_pages/coinbase_instructions.html:109
 msgid ""
 "\n"
@@ -1010,9 +1189,13 @@ msgid ""
 "        You can verify that your credentials are working by clicking the "
 "<b>refresh</b> button on CoinSafe anytime.\n"
 "      "
-msgstr "\n Vše je nastaveno! Můžete ověřit zda vaše údaje fungují kliknutím na <b>refresh</b> tlačítko na CoinSafu kdykoli"
+msgstr ""
+"\n"
+" Vše je nastaveno! Můžete ověřit zda vaše údaje fungují kliknutím na "
+"<b>refresh</b> tlačítko na CoinSafu kdykoli"
 
 #: templates/fixed_pages/bitstamp_instructions.html:95
+#, python-format
 msgid ""
 "\n"
 "        For security, we always recommend keeping low balances on third "
@@ -1023,7 +1206,13 @@ msgid ""
 "        You can always unlink your Bitstamp account by deleting your API "
 "keys on CoinSafe or Bitstamp.\n"
 "      "
-msgstr "\n Kvůli bezpečnosti doporučujeme na bitcoin stránkách třetích stran zanechávat jen malé zůstatky.Pro uschování vyššího zůstatku Btcoinu, doporučujeme cold storage. <a href=\"%(electrum_url)s\">Electrum</a> nebo <a href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Bitstamp účet vymazáním vašich API klíčů na CoinSafu nebo na Bitstampu."
+msgstr ""
+"\n"
+" Kvůli bezpečnosti doporučujeme na bitcoin stránkách třetích stran "
+"zanechávat jen malé zůstatky.Pro uschování vyššího zůstatku Btcoinu, "
+"doporučujeme cold storage. <a href=\"%(electrum_url)s\">Electrum</a> nebo <a "
+"href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Bitstamp účet "
+"vymazáním vašich API klíčů na CoinSafu nebo na Bitstampu."
 
 #: templates/fixed_pages/blockchain_instructions.html:4
 msgid "Linking Your Blockchain.info Account | CoinSafe"
@@ -1034,11 +1223,29 @@ msgid "Blockchain.info API Instructions"
 msgstr "Blockchain.info API instrukce"
 
 #: templates/fixed_pages/blockchain_instructions.html:19
+#, fuzzy
 msgid ""
 "\n"
 "        Connecting your Blockchain.info account to CoinSafe allows us to:\n"
 "      "
-msgstr "\nPropojování vašeho Blockchain.info účtu | CoinSafe"
+msgstr "\nPřipojování vašeho Blockchain.info účtu ke CoinSafe nám dovoluje:\n"
+
+#: templates/fixed_pages/blockchain_instructions.html:25
+msgid ""
+"\n"
+"          Lookup your bitcoin address at Blockchain.info so that shoppers "
+"can send funds there.\n"
+"          We can also generate new addresses for you.\n"
+"        "
+msgstr "\nVyhledávání vaší bitcoin adresy v Blockchain.info, takže tam zákazník může posílat prostředky. Můžeme vám také vygenerovat nové adresy."
+
+#: templates/fixed_pages/blockchain_instructions.html:31
+msgid ""
+"\n"
+"          Send Bitcoin from your Blockchain.info account to shoppers (once "
+"you confirm they have paid you in cash for it).\n"
+"        "
+msgstr "\nPoslat Bitcoin z vašeho Blockchain.info účtu zákazníkům (po potvrzení, že vám za to zaplatili v hotovosti)"
 
 #: templates/fixed_pages/blockchain_instructions.html:38
 msgid ""
@@ -1047,9 +1254,14 @@ msgid ""
 "accounts with two factor authentication (2FA) enabled.\n"
 "        We recommend Coinbase for a web wallet with full 2FA support.\n"
 "      "
-msgstr "\n Bohužel Blockchain.info API v současné době nefunguje pro účty se zapnutou dvojitou ochranou (2FA).Doporučejeme Coinbase pro webovou peněženku s plnou 2FA podporou."
+msgstr ""
+"\n"
+" Bohužel Blockchain.info API v současné době nefunguje pro účty se zapnutou "
+"dvojitou ochranou (2FA).Doporučejeme Coinbase pro webovou peněženku s plnou "
+"2FA podporou."
 
 #: templates/fixed_pages/blockchain_instructions.html:45
+#, python-format
 msgid ""
 "\n"
 "        All we need to access your Blockchain.info account is your "
@@ -1059,34 +1271,53 @@ msgid ""
 "what you enter on\n"
 "        <a href=\"%(bci_login_url)s\">this page</a>:\n"
 "      "
-msgstr "\n Vše co potřebujeme k přístupu na váš Blockchain.info účet je vaše %(login_text)s (%(identifier_text)s) a %(password_text)s. <br /><br /> Vaše <b>%(identifier_text)s</b> a <b>%(password_text)s</b> jsou ty, které jste vložili na  <a href=\"%(bci_login_url)s\">this page</a>:"
+msgstr ""
+"\n"
+" Vše co potřebujeme k přístupu na váš Blockchain.info účet je vaše "
+"%(login_text)s (%(identifier_text)s) a %(password_text)s. <br /><br /> Vaše "
+"<b>%(identifier_text)s</b> a <b>%(password_text)s</b> jsou ty, které jste "
+"vložili na  <a href=\"%(bci_login_url)s\">this page</a>:"
 
 #: templates/fixed_pages/blockchain_instructions.html:53
+#, python-format
 msgid ""
 "\n"
 "        (If you've forgotten your identifier you can recover it <a href="
 "\"%(forgot_url)s\">here</a>)\n"
 "      "
-msgstr "\n (Pokud jste ztratili váš indentifikátor můžete si ho obnovit <a href= \"%(forgot_url)s\">zde</a>)"
+msgstr ""
+"\n"
+" (Pokud jste ztratili váš indentifikátor můžete si ho obnovit <a href= "
+"\"%(forgot_url)s\">zde</a>)"
 
 #: templates/fixed_pages/blockchain_instructions.html:59
+#, python-format
 msgid ""
 "\n"
 "        If you have a %(secondary_password_text)s we'll need that as well to "
 "be able to sign transactions.\n"
 "        Your secondary password is what you enter on this page:\n"
 "      "
-msgstr "\n Pokud máte %(secondary_password_text)s budeme ho potřebovat také, abychom mohli podepisovat transakce. Váš secondady password je to, co jste vložili na této stránce:"
+msgstr ""
+"\n"
+" Pokud máte %(secondary_password_text)s budeme ho potřebovat také, abychom "
+"mohli podepisovat transakce. Váš secondady password je to, co jste vložili "
+"na této stránce:"
 
 #: templates/fixed_pages/blockchain_instructions.html:67
+#, python-format
 msgid ""
 "\n"
 "        Copy the <b>%(identifier_text)s</b>, <b>%(password_text)s</b> and <b>"
 "%(secondary_password_text)s</b> (if applicable) to CoinSafe.\n"
 "      "
-msgstr "\n Zkopírujte <b>%(identifier_text)s</b>, <b>%(password_text)s</b> and <b> %(secondary_password_text)s</b> (případně) do CoinSafe."
+msgstr ""
+"\n"
+" Zkopírujte <b>%(identifier_text)s</b>, <b>%(password_text)s</b> and <b> "
+"%(secondary_password_text)s</b> (případně) do CoinSafe."
 
 #: templates/fixed_pages/blockchain_instructions.html:80
+#, python-format
 msgid ""
 "\n"
 "        For security, we always recommend keeping low balances on third "
@@ -1097,7 +1328,14 @@ msgid ""
 "        You can always unlink your Blockchain.info account by deleting your "
 "API keys on CoinSafe or changing your credentials on Blockchain.info.\n"
 "      "
-msgstr "\n Kvůli bezpečnosti doporučujeme na bitcoin stránkách třetích stran zanechávat jen malé zůstatky. Pro uschování vyššího zůstatku Btcoinu, doporučujeme cold storage. <a href=\"%(electrum_url)s\">Electrum</a> nebo <a href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Blockchain.info účet vymazáním vašich API klíčů na CoinSafe nebo změněním vašich údajů na Blockchain.info."
+msgstr ""
+"\n"
+" Kvůli bezpečnosti doporučujeme na bitcoin stránkách třetích stran "
+"zanechávat jen malé zůstatky. Pro uschování vyššího zůstatku Btcoinu, "
+"doporučujeme cold storage. <a href=\"%(electrum_url)s\">Electrum</a> nebo <a "
+"href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Blockchain.info "
+"účet vymazáním vašich API klíčů na CoinSafe nebo změněním vašich údajů na "
+"Blockchain.info."
 
 #: templates/fixed_pages/coinbase_instructions.html:4
 msgid "Linking Your Coinbase Account | CoinSafe"
@@ -1107,74 +1345,139 @@ msgstr "Propojování vašeho Coinbase účtu | CoinSafe"
 msgid "Coinbase API Instructions"
 msgstr "Coinbase API instrukce"
 
+#: templates/fixed_pages/coinbase_instructions.html:19
+msgid ""
+"\n"
+"        Connecting your Coinbase account to CoinSafe allows us to:\n"
+"      "
+msgstr "\nPřipojování vašeho Coinbase účtu ke CoinSafe nám dovoluje:"
+
+#: templates/fixed_pages/coinbase_instructions.html:25
+msgid ""
+"\n"
+"          Lookup your bitcoin address at Coinbase so that shoppers can send "
+"funds there.\n"
+"          We can also generate new addresses for you.\n"
+"        "
+msgstr "\nVyhledávání vaší bitcoin adresy v Coinbase, takže tam zákazník může posílat prostředky. Můžeme vám také generovat nové adresy."
+
+#: templates/fixed_pages/coinbase_instructions.html:31
+msgid ""
+"\n"
+"          Send Bitcoin from your Coinbase account to shoppers (once you "
+"confirm they have paid you in cash for it).\n"
+"        "
+msgstr "\nPoslat Bitcoin z vašeho Coinbase účtu zákazníkům (po potvrzení, že vám za to zaplatil v hotovosti)."
+
+#: templates/fixed_pages/coinbase_instructions.html:36
+msgid ""
+"\n"
+"          Automatically buy or sell bitcoin with Coinbase using the bank "
+"account you already have linked up with them (coming soon).\n"
+"        "
+msgstr "\nAutomaticky kupovat nebo prodávat Bitcoiny na Coinbase s použitím bankovního účtu, který jste s ním spárovali (připravujeme)."
+
 #: templates/fixed_pages/coinbase_instructions.html:43
 msgid ""
 "\n"
 "      Please follow these instructions to grant CoinSafe access to your "
 "Coinbase account:\n"
 "    "
-msgstr "\n Prosím následujte tyto instrukce pro udělení přístupu CoinSafe na váš Coinbase účet:"
+msgstr ""
+"\n"
+" Prosím následujte tyto instrukce pro udělení přístupu CoinSafe na váš "
+"Coinbase účet:"
 
 #: templates/fixed_pages/coinbase_instructions.html:50
+#, python-format
 msgid ""
 "\n"
 "          Go to <a target=\"_blank\" href=\"%(coinbase_url)s\">Coinbase's "
 "API Access Page</a>.\n"
 "          You may be asked to login with your Coinbase credentials.\n"
 "        "
-msgstr "\n Jděte na<target=\"_blank\" href =\"%(coinbase_url)s\">Coinbase API Access stránku</a>. Můžete být požádáni o přihlášení na Coinbase. "
+msgstr ""
+"\n"
+" Jděte na<target=\"_blank\" href =\"%(coinbase_url)s\">Coinbase API Access "
+"stránku</a>. Můžete být požádáni o přihlášení na Coinbase. "
 
 #: templates/fixed_pages/coinbase_instructions.html:56
+#, python-format
 msgid ""
 "\n"
 "        Click <b>%(generate_key_text)s</b>. You may be asked to enter a two "
 "factor authentication phone code if you have that configured for your "
 "account:\n"
 "        "
-msgstr "\n Klikněte na <b>%(generate_key_text)s</b>. Můžete být požádáni o vložení kódu pro dvojité ověření z vašeho telefonu, pokud to máte nastavené na vašem účtu: "
+msgstr ""
+"\n"
+" Klikněte na <b>%(generate_key_text)s</b>. Můžete být požádáni o vložení "
+"kódu pro dvojité ověření z vašeho telefonu, pokud to máte nastavené na vašem "
+"účtu: "
 
 #: templates/fixed_pages/coinbase_instructions.html:63
+#, python-format
 msgid ""
 "\n"
 "        Check the box for <b>%(select_all_text)s</b> under <b>"
 "%(accounts_text)s</b> and <b>%(permisions_text)s</b> and leave <b>"
 "%(allowed_ip_text)s</b> blank, then hit <b>%(create_text)s</b>.\n"
 "        "
-msgstr "\n Zkontrolujte <b>%(select_all_text)s</b> pod <b>%(accounts_text)s</b> a <b> %(permisions_text)s</b> a nechte<b>%(allowed_ip_text)s</b> prázdné, potom zmáčkněte <b>%(create_text)s</b>."
+msgstr ""
+"\n"
+" Zkontrolujte <b>%(select_all_text)s</b> pod <b>%(accounts_text)s</b> a <b> "
+"%(permisions_text)s</b> a nechte<b>%(allowed_ip_text)s</b> prázdné, potom "
+"zmáčkněte <b>%(create_text)s</b>."
 
 #: templates/fixed_pages/coinbase_instructions.html:70
+#, python-format
 msgid ""
 "\n"
 "          You've created API credentials, but they aren't activated yet.\n"
 "          Now click the <b>%(activate_name)s</b> button to activate them.\n"
 "        "
-msgstr "\n Vytvořil jste API přístup, ale není ještě aktivován.Nyní klikněte na <b> %(activate_name)s</b> tlačítko pro jejich aktivaci"
+msgstr ""
+"\n"
+" Vytvořil jste API přístup, ale není ještě aktivován.Nyní klikněte na <b> "
+"%(activate_name)s</b> tlačítko pro jejich aktivaci"
 
 #: templates/fixed_pages/coinbase_instructions.html:78
+#, python-format
 msgid ""
 "\n"
 "          Check your email and copy the <b>%(api_code_text)s</b>.\n"
 "          If you don't see the email, check your spam folder for a message "
 "from <b>%(coinbase_email)s</b>.\n"
 "        "
-msgstr "\n Zkontrolujte váš email a zkopírujte <b>%(api_code_text)s</b>. Pokud nemůžete email najít, zkontrolujte složku se spamy a najděte email od <b>%(coinbase_email)s</b>. "
+msgstr ""
+"\n"
+" Zkontrolujte váš email a zkopírujte <b>%(api_code_text)s</b>. Pokud "
+"nemůžete email najít, zkontrolujte složku se spamy a najděte email od <b>"
+"%(coinbase_email)s</b>. "
 
 #: templates/fixed_pages/coinbase_instructions.html:86
 msgid ""
 "\n"
 "          Activate the API credential by pasting it onto Coinbase.\n"
 "        "
-msgstr "\n Aktivujte API údaje jejich vložením do Coinbase."
+msgstr ""
+"\n"
+" Aktivujte API údaje jejich vložením do Coinbase."
 
 #: templates/fixed_pages/coinbase_instructions.html:93
+#, python-format
 msgid ""
 "\n"
 "          Your API key is now active!\n"
 "          To get it, click on the <b>%(key_field)s</b> in blue.\n"
 "        "
-msgstr "\n Váš API klíč je nyní aktivní! Pro jeho získání klikněte na <b>%(key_field)s</b> v modré barvě."
+msgstr ""
+"\n"
+" Váš API klíč je nyní aktivní! Pro jeho získání klikněte na <b>"
+"%(key_field)s</b> v modré barvě."
 
 #: templates/fixed_pages/coinbase_instructions.html:116
+#, python-format
 msgid ""
 "\n"
 "        For security, we always recommend keeping low balances on third "
@@ -1185,18 +1488,28 @@ msgid ""
 "        You can always unlink your Coinbase account by deleting your API "
 "keys on CoinSafe or Coinbase.\n"
 "      "
-msgstr "\n Kvůli bezpečnosti doporučujeme zanechávat malé zůstatky na bitcoin stránkách třetích stran. Pro uschování vyššího zůstatku bitcoinu, doporučujeme studenou úschovu <a href=\"%(electrum_url)s\">Electrum</a> nebo <a href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Coinbase účet vymazáním vašich API klíčů na CoinSafu nebo na Coinbase."
+msgstr ""
+"\n"
+" Kvůli bezpečnosti doporučujeme zanechávat malé zůstatky na bitcoin "
+"stránkách třetích stran. Pro uschování vyššího zůstatku bitcoinu, "
+"doporučujeme studenou úschovu <a href=\"%(electrum_url)s\">Electrum</a> nebo "
+"<a href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Coinbase účet "
+"vymazáním vašich API klíčů na CoinSafu nebo na Coinbase."
 
 #: templates/fixed_pages/contact.html:4
 msgid "Your Free Bitcoin ATM App | Contact Us | CoinSafe"
 msgstr "Váš bezplatný BitcoMAT | Kontakt | CoinSafe"
 
 #: templates/fixed_pages/contact.html:29
+#, python-format
 msgid ""
 "We are here to help! Please feel free to contact us any time at <a href="
 "\"mailto:support@coinsafe.com?Subject=CoinSafe%%20Support\" target=\"_top"
 "\">support@coinsafe.com</a>"
-msgstr "Pomůžeme vám! Prosím nebojte se nás kontaktovat kdykoliv na <a href=\"mailto: support@coinsafe.com? Subject=CoinSafe%%20Support\" target=\"_top\">support@coinsafe.com</a>"
+msgstr ""
+"Pomůžeme vám! Prosím nebojte se nás kontaktovat kdykoliv na <a href="
+"\"mailto: support@coinsafe.com? Subject=CoinSafe%%20Support\" target=\"_top"
+"\">support@coinsafe.com</a>"
 
 #: templates/fixed_pages/contact.html:35
 msgid "Send Message"
@@ -1210,11 +1523,527 @@ msgstr "Naše adresa"
 msgid "Your Free Bitcoin ATM App | FAQ | CoinSafe"
 msgstr "Váš bezplatný BitcoMAT | CoinSafe"
 
-#: templates/fixed_pages/help.html:424
+#: templates/fixed_pages/help.html:12
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: templates/fixed_pages/help.html:33 templates/fixed_pages/help.html.py:90
+#: templates/fixed_pages/help.html:912
+#, fuzzy, python-format
+msgid ""
+"\n"
+"          If you have other questions, please don't hesitate to <a href="
+"\"%(contact_url)s\">contact us</a>.\n"
+"        "
+msgstr ""
+"\n"
+" (Pokud jste ztratili váš indentifikátor můžete si ho obnovit <a href= "
+"\"%(forgot_url)s\">zde</a>)"
+
+#: templates/fixed_pages/help.html:41 templates/fixed_pages/help.html.py:53
+#: templates/fixed_pages/help.html:79 templates/fixed_pages/help.html:770
+msgid "What Does CoinSafe Do?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:42 templates/fixed_pages/help.html:705
+msgid "Can You Notify Me When New Merchants Sign Up in My City?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:43 templates/fixed_pages/help.html:724
+msgid "Am I Getting a Fair Price?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:44 templates/fixed_pages/help.html:745
+msgid "How Are You Able To Send Me Bitcoin Via Email?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:45 templates/fixed_pages/help.html.py:72
+#: templates/fixed_pages/help.html:81 templates/fixed_pages/help.html:788
+msgid "Who Pays the Bitcoin Network Transaction Fee?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:46 templates/fixed_pages/help.html.py:69
+#: templates/fixed_pages/help.html:80 templates/fixed_pages/help.html:835
+msgid "Is CoinSafe Available in My Native Language?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:47 templates/fixed_pages/help.html.py:74
+#: templates/fixed_pages/help.html:82 templates/fixed_pages/help.html:862
+msgid "Does CoinSafe Have a Responsible Disclosure Policy?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:48 templates/fixed_pages/help.html.py:75
+#: templates/fixed_pages/help.html:83 templates/fixed_pages/help.html:882
+msgid "Does CoinSafe Support Any Altcoins?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:54 templates/fixed_pages/help.html:103
+msgid "Is CoinSafe Really Free?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:55 templates/fixed_pages/help.html:135
+msgid "Does My Cashier Need to Understand Bitcoin?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:56 templates/fixed_pages/help.html:156
+msgid ""
+"How is CoinSafe Different from Using the Bitcoin Wallet on My Phone to Trade "
+"with Customers?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:57 templates/fixed_pages/help.html:198
+msgid "Why Should I Use CoinSafe Instead of a Physical ATM?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:58 templates/fixed_pages/help.html:290
+msgid ""
+"Do I Have to Share Lots of Personal Info with CoinSafe to Use the Service?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:59 templates/fixed_pages/help.html:312
+msgid "Does CoinSafe Have Any Bitcoin Posters I Can Display in my Store?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:60 templates/fixed_pages/help.html:333
+msgid ""
+"When I Buy Bitcoin from a Customer, How Long Do I Have to Wait Before "
+"Releasing the Cash?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:61 templates/fixed_pages/help.html:359
+msgid "Can I Really Set Whatever Price I Want?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:62 templates/fixed_pages/help.html:387
+msgid "How Does CoinSafe Calculate the Market Price for BTC?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:63 templates/fixed_pages/help.html:420
+msgid "Does CoinSafe Have My Bitcoin Private Keys?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:64 templates/fixed_pages/help.html:452
+msgid "Is It Safe to Give CoinSafe API Access to My Online Wallet?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:65 templates/fixed_pages/help.html:493
+msgid "Which Wallet Service Does CoinSafe Recommend?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:66 templates/fixed_pages/help.html:518
+msgid "Does CoinSafe have any plans to support API Access to More Wallets?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:67 templates/fixed_pages/help.html:541
+msgid "How Much BTC Do I Need to Keep in Stock for Customers?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:68 templates/fixed_pages/help.html:588
+msgid "Is CoinSafe Legal in My Country?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:70 templates/fixed_pages/help.html:618
+msgid "Can I Accept Credit Cards for Bitcoin Purchases?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:71 templates/fixed_pages/help.html:640
+msgid ""
+"Why is there a Different Deposit Address for Each Customer that Sends me BTC?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:73 templates/fixed_pages/help.html:675
+msgid "I Forgot My Password, How Can I Reset It?"
+msgstr ""
+
+#: templates/fixed_pages/help.html:108
+msgid "Yes."
+msgstr ""
+
+#: templates/fixed_pages/help.html:110
+#, python-format
+msgid ""
+"\n"
+"                  We are currently 100%% free to use, and we don't charge "
+"any fees of any kind.\n"
+"                  With CoinSafe, there's no contract or commitment to "
+"continue using us.\n"
+"                  We hope you'll use CoinSafe because you love it, but "
+"you're always free to leave anytime.\n"
+"                  Remember, <a href=\"#private_keys\">we don't have access "
+"to your bitcoin private keys</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:118
+msgid ""
+"\n"
+"                  Right now, our focus is on spreading bitcoin to as many "
+"people throughout the world as possible.\n"
+"                  Just like any business, we'll probably need to charge a "
+"small fee at some point in the future to cover our costs.\n"
+"                  We're hoping we can keep the app completely free and do "
+"this through optional, premium features.\n"
+"                  If our pricing does change, you'll get lots of advanced "
+"notice.\n"
+"                  And of course, you're always free to leave at any time for "
+"any reason.\n"
+"                  Please don't go, we'd really miss you!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:130 templates/fixed_pages/help.html:151
+#: templates/fixed_pages/help.html:193 templates/fixed_pages/help.html:285
+#: templates/fixed_pages/help.html:307 templates/fixed_pages/help.html:328
+#: templates/fixed_pages/help.html:354 templates/fixed_pages/help.html:382
+#: templates/fixed_pages/help.html:415 templates/fixed_pages/help.html:447
+#: templates/fixed_pages/help.html:488 templates/fixed_pages/help.html:513
+#: templates/fixed_pages/help.html:536 templates/fixed_pages/help.html:583
+#: templates/fixed_pages/help.html:613 templates/fixed_pages/help.html:635
+#: templates/fixed_pages/help.html:670 templates/fixed_pages/help.html:697
+#: templates/fixed_pages/help.html:719 templates/fixed_pages/help.html:740
+#: templates/fixed_pages/help.html:762 templates/fixed_pages/help.html:783
+#: templates/fixed_pages/help.html:830 templates/fixed_pages/help.html:857
+#: templates/fixed_pages/help.html:904
+msgid "Back to Top"
+msgstr ""
+
+#: templates/fixed_pages/help.html:141
+msgid ""
+"\n"
+"                  Not at all!\n"
+"                  The app is designed to be used by someone who has no idea "
+"what bitcoin is.\n"
+"                  All the teller needs to do is confirm when they have "
+"received cash (so that the app can pay out bitcoin).\n"
+"                  The app will also monitor the bitcoin network and notify "
+"the cashier when it is safe to pay out cash to a customer (if buying "
+"bitcoin).\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:162
+msgid ""
+"\n"
+"                  You could always use something like Mycelium Local Trader "
+"or Local Bitcoins, but there are a number of advantages to using CoinSafe:\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:168
+msgid ""
+"\n"
+"                    <b>No more messaging with prospective customers</b>.\n"
+"                    We're only for use in-person.\n"
+"                    Customers just show up at your store when they want to "
+"buy or sell bitcoin.\n"
+"                    If you give us your address we can post your prices "
+"online to get you additional customers.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:176
+msgid ""
+"\n"
+"                    <b>Ridiculously easy to use</b>.\n"
+"                    The cashier at your store using the app doesn't have to "
+"know anything about bitcoin.\n"
+"                    It's designed so that both the cashier and the customer "
+"can be complete bitcoin newbies and it will walk them through everything.\n"
+"                    You don't have to worry about your cashiers running away "
+"with all of your bitcoins, double-spend attacks, if a bitcoin address is "
+"valid, managing private keys, etc.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:184
+msgid ""
+"\n"
+"                    <b>Better prices</b>.\n"
+"                    Because it's so much more safe and convenient for the "
+"customer to go to a reputable business and not have to send messages back "
+"and forth, you can often command prices that are more favorable to you.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:204
+msgid ""
+"\n"
+"                  Here are the main advantages of CoinSafe over the physical "
+"bitcoin ATMs (or vending machine) that are on the market:\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:210
+#, python-format
+msgid ""
+"\n"
+"                    <b>100%% free</b>.\n"
+"                    We charge no fees of any kind.\n"
+"                    You shouldn't have to pay up to $10,000 USD up front for "
+"physical hardware.\n"
+"                    With CoinSafe, all you need is an internet connected "
+"device at the store.\n"
+"                    We recommend a cheap tablet, but any smartphone or "
+"laptop works great too.\n"
+"                    (You can read more about our how we're able to be free "
+"<a href=\"#coinsafe_free\">here</a>).\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:220
+#, python-format
+msgid ""
+"\n"
+"                    <b>Be up and running in minutes</b> (from this very "
+"moment).\n"
+"                    No pre-orders, no waiting weeks for shipping, \n"
+"                    <a href=\"%(register_merchant_url)s\">Get your free ATM "
+"App now</a>.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:227
+msgid ""
+"\n"
+"                    <b>Get daily software updates automatically</b>.\n"
+"                    Being an HTML5 Web App means it happens automatically "
+"with nothing to download or install.\n"
+"                    We love adding features for our users, just tell us what "
+"would make you happier.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:234
+msgid ""
+"\n"
+"                    <b>Two-way with cash and bitcoin recycling</b>.\n"
+"                    Our app is both a bitcoin ATM and bitcoin vending "
+"machine.\n"
+"                    In other words, customers can come in and buy bitcoin "
+"from you with cash, or sell their bitcoin to you for cash (the latter is a "
+"great option for moving cash off the premises).\n"
+"                    You can use the cash from one transaction in another.\n"
+"                    You set your own prices and decide if you want to offer "
+"buying, selling, or both.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:243
+msgid ""
+"\n"
+"                    <b>Really simple to setup and use</b>.\n"
+"                    You don't need a \"bitcoin technician\" to set it up or "
+"perform any updates/maintenance.\n"
+"                    Your staff doesn't even have to know what bitcoin is.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:250
+msgid ""
+"\n"
+"                    <b>Save space</b>.\n"
+"                    You don't need to give up precious real estate for a big "
+"physical machine.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:256
+msgid ""
+"\n"
+"                    <b>No need to bolt a machine to the floor</b>.\n"
+"                    Your password is required to release any funds, so even "
+"if a customer stole your tablet all they'd get is the physical device and "
+"not your bitcoin.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:264
+msgid ""
+"\n"
+"                  So, what's the catch?\n"
+"                  The only drawback is that we require a cashier as an "
+"intermediary.\n"
+"                  When a customer buys bitcoin at your store, the app will "
+"ask the cashier to confirm that they have received the physical cash.\n"
+"                  The app will only send the customer your bitcoin after "
+"your staff enters their password.\n"
+"                  This human component is the same as all other purchases in "
+"your store, except that the chasier confirms everything with the CoinSafe "
+"app.\n"
+"                  Most stores find that having a human involved in "
+"transactions is a totally normal cost of doing businesses, and it doesn't "
+"become a nuisance until they're doing dozens of transactions per day.\n"
+"                  You can always adjust your minimums and pricing to be sure "
+"that each order is worth your cashier's time.\n"
+"                  However, if your store looks <a href=\"http://www.buzzfeed."
+"com/arielknutson/vending-machines-you-wont-believe-exist\">like this</a>, we "
+"might not be a good fit.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:276
+#, python-format
+msgid ""
+"\n"
+"                  You're also welcome to try out both us and a physical ATM, "
+"we don't require any exclusivity or contract at all.\n"
+"                  What are you waiting for?\n"
+"                  <a href=\"%(register_merchant_url)s\">Get your free ATM "
+"App now</a>!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:295
+msgid "Nope!"
+msgstr ""
+
+#: templates/fixed_pages/help.html:297
+#, python-format
+msgid ""
+"\n"
+"                  We encourage you to share some basic business info (like "
+"your business address and phone number) so that we can list your in our "
+"directory,\n"
+"                  but it's not required.\n"
+"                  You can see all the required personal info on\n"
+"                  <a href=\"%(register_merchant_url)s\">our merchant signup "
+"page</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:318
+#, python-format
+msgid ""
+"\n"
+"                  Absolutely!\n"
+"                  Check out our \n"
+"                  <a href=\"%(promotional_material_url)s\">promotional "
+"materials page here</a>.\n"
+"                  Feel free to submit your own!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:339
+#, python-format
+msgid ""
+"\n"
+"                  Bitcoin transactions take 10 minutes on average to be "
+"included in a block, though it varies greatly.\n"
+"                  While <a href=\"%(double_spend_url)s\">double-spend "
+"attacks</a> are rare, we recommend waiting for one confirmation just to be "
+"safe.\n"
+"                  You can set your own number of confirmations if you like.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:346
+#, python-format
+msgid ""
+"\n"
+"                  You can read more about how bitcoin transactions work in\n"
+"                  <a href=\"%(coindesk_url)s\">this article from CoinDesk</"
+"a>\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:365
+msgid ""
+"\n"
+"                  Yes.\n"
+"                  We continuously monitor exchange rates, and let merchants "
+"charge a markup on these prices.\n"
+"                  Just like any other product, you have to charge a "
+"competitive price if you want to get business.\n"
+"                  CoinSafe transparently displays your price markup to "
+"customers, so they can see exactly what they're paying.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:373
+msgid ""
+"\n"
+"                  That said, providing instant bitcoin in person provides a "
+"lot of benefits and so it can command retail pricing.\n"
+"                  Your customers don't have to have a bank account (or link "
+"it to a third party exchange) nor wait several days for their fiat "
+"transactions to process.\n"
+"                  Cash is instantaneous.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:393
+#, python-format
+msgid ""
+"\n"
+"                  For most countries, we use\n"
+"                  <a href=\"%(btc_avg_url)s\">bitcoinaverage.com</a>\n"
+"                  to get the latest bitcion price in your local currency.\n"
+"                  It's usually very close to\n"
+"                  <a href=\"%(coinbase_url)s\">Coinbase</a> and\n"
+"                  <a href=\"%(bitstamp_url)s\">Bitstamp</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:403
+#, python-format
+msgid ""
+"\n"
+"                  For countries with capital controls that cause\n"
+"                  <a href=\"%(dual_exchange_rate_url)s\">dual exchange "
+"rates</a>\n"
+"                  (like Argentina and Venezuela) we do something more "
+"complicated.\n"
+"                  We take market exchange rate (from various sources) and "
+"use that to convert the USD price of bitcoin to your local currency.\n"
+"                  Please let us know if you think our market prices are "
+"innaccurate in your country.\n"
+"                  We're always looking for better data.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:425
 msgid "No."
 msgstr "Ne."
 
-#: templates/fixed_pages/help.html:457
+#: templates/fixed_pages/help.html:427
+#, fuzzy, python-format
+msgid ""
+"\n"
+"                  If you want to sell bitcoin to customers (for cash), "
+"CoinSafe has to have a way to send the funds once the transaction is "
+"complete, so for those businesses we do this via API.\n"
+"                  The way this works is that you grant us API access to "
+"your\n"
+"                  <a href=\"%(coinbase_url)s\">Coinbase</a>,\n"
+"                  <a href=\"%(blockchain_url)s\">blockchain.info</a>, or\n"
+"                  <a href=\"%(bitstamp_url)s\">Bitstamp</a> wallet.\n"
+"                  For security, we always recommend keeping low balances on "
+"third party bitcoin sites.\n"
+"                  Remember that you always have absolute power to unlink a "
+"third party wallet from CoinSafe by revoking the credential.\n"
+"                "
+msgstr ""
+"\n"
+" Kvůli bezpečnosti doporučujeme zanechávat malé zůstatky na bitcoin "
+"stránkách třetích stran. Pro uschování vyššího zůstatku bitcoinu, "
+"doporučujeme studenou úschovu <a href=\"%(electrum_url)s\">Electrum</a> nebo "
+"<a href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Coinbase účet "
+"vymazáním vašich API klíčů na CoinSafu nebo na Coinbase."
+
+#: templates/fixed_pages/help.html:438
+msgid ""
+"\n"
+"                  If all you want to do is buy bitcoin from customers (with "
+"the cash in your cash register), then all CoinSafe needs is a valid bitcoin "
+"address for customers to send your funds to.\n"
+"                  That can be any address and we won't even know who holds "
+"the private key or what software/service you used to generated that "
+"address.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:458
+#, python-format
 msgid ""
 "\n"
 "                  We encrypt all information while in transit to our servers "
@@ -1228,20 +2057,516 @@ msgid ""
 "                  Remember that you always have absolute power to unlink a "
 "third party wallet from CoinSafe by revoking the credential.\n"
 "                "
-msgstr "\n Kvůli bezpečnosti doporučujeme zanechávat malé zůstatky na bitcoin stránkách třetích stran. Pro uschování vyššího zůstatku bitcoinu, doporučujeme studenou úschovu <a href=\"%(electrum_url)s\">Electrum</a> nebo <a href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Coinbase účet vymazáním vašich API klíčů na CoinSafu nebo na Coinbase."
+msgstr ""
+"\n"
+" Kvůli bezpečnosti doporučujeme zanechávat malé zůstatky na bitcoin "
+"stránkách třetích stran. Pro uschování vyššího zůstatku bitcoinu, "
+"doporučujeme studenou úschovu <a href=\"%(electrum_url)s\">Electrum</a> nebo "
+"<a href=\"%(armory_url)s\">Armory</a>. Vždy můžete odpojit váš Coinbase účet "
+"vymazáním vašich API klíčů na CoinSafu nebo na Coinbase."
+
+#: templates/fixed_pages/help.html:468
+#, python-format
+msgid ""
+"\n"
+"                  Here are links to our API access instructions for\n"
+"                  <a href=\"%(coinbase_url)s\">Coinbase</a>,\n"
+"                  <a href=\"%(blockchain_url)s\">blockchain.info</a>, and\n"
+"                  <a href=\"%(bitstamp_url)s\">Bitstamp</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:476
+#, python-format
+msgid ""
+"\n"
+"                  For the technically inclined, we use\n"
+"                  <a href=\"%(df_url)s\">django-fields</a>\n"
+"                  to store all credentials in an\n"
+"                  <code>EncryptedCharField</code>\n"
+"                  using the Advanced Encryption Standard (AES) which was "
+"established by the National Institute of Standards and Technology (NIST) in "
+"2001.\n"
+"                  If our database were ever compromised, it would still be "
+"impossible to decrypt the ciphertext without our secret key, which is not "
+"kept in the database.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:499
+#, python-format
+msgid ""
+"\n"
+"                  We support\n"
+"                  <a href=\"%(coinbase_url)s\">Coinbase</a>,\n"
+"                  <a href=\"%(blockchain_url)s\">blockchain.info</a>, and\n"
+"                  <a href=\"%(bitstamp_url)s\">Bitstamp</a> wallet.\n"
+"                  If you're new to bitcoin, we recommend\n"
+"                  <a href=\"%(coinbase_url)s\">Coinbase</a>\n"
+"                  because it has the most features and flexibility.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:524
+#, python-format
+msgid ""
+"\n"
+"                  We currently support\n"
+"                  <a href=\"%(coinbase_url)s\">Coinbase</a>,\n"
+"                  <a href=\"%(blockchain_url)s\">blockchain.info</a>, and\n"
+"                  <a href=\"%(bitstamp_url)s\">Bitstamp</a> wallet.\n"
+"                  We're always looking for more API partners,\n"
+"                  so if there's a wallet you'd like us to add please <a href="
+"\"%(contact_url)s\">let us know</a> so we can add it.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:547
+#, python-format
+msgid ""
+"\n"
+"                  Selling bitcoin is similar to selling any other product in "
+"that you need to have it in stock before you can sell it to potential "
+"customers.\n"
+"                  The difference with bitcoin is that the value of that "
+"inventory can fluctuate wildly.\n"
+"                  Over the long-term the volatility has tended upwards more "
+"than downards, but there's no guarantee that will continue, and that fact is "
+"little consolation when bitcoin falls 10%% in a single day\n"
+"                  (which has happened several times).\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:555
+#, fuzzy
+msgid ""
+"\n"
+"                  We're working on two beta features to address this:\n"
+"                "
+msgstr ""
+"\n"
+" Zákazník: pošlete %(max_btc_formatted)s na tuto adresu:"
+
+#: templates/fixed_pages/help.html:561
+msgid ""
+"\n"
+"                    <b>BTC Price Locking</b>.\n"
+"                    We're working with a third party service to lock bitcoin "
+"value (in USD, EUR or gold) so you don't have to worry about day-to-day "
+"flucations in the value of your bitcoin.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:567
+#, python-format
+msgid ""
+"\n"
+"                    <b>Nightly top-up with <a href=\"%(coinbase_url)s"
+"\">coinbase</a> or <a href=\"%(bitstamp_url)s\">bitstamp</a></b>.\n"
+"                    You set the amount of bitcoin you want to maintain and "
+"every night we'll ask your local exchange to top up your wallet so you're "
+"ready for new customers.\n"
+"                    More exchanges coming soon.\n"
+"                  "
+msgstr ""
+
+#: templates/fixed_pages/help.html:575
+#, python-format
+msgid ""
+"\n"
+"                  Please <a href=\"%(contact_url)s\">contact us</a>\n"
+"                  if you'd like to pilot either of these new features.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:594
+#, python-format
+msgid ""
+"\n"
+"                  Bitcoin is so new that the laws surrounding it many "
+"countries are still unclear.\n"
+"                  We're not lawyers, so we can't give you legal advice.\n"
+"                  CoinDesk has\n"
+"                  <a href=\"%(coindesk_url)s\">a great piece on bitcoin "
+"legality by country</a>\n"
+"                  and\n"
+"                  <a href=\"%(wikipedia_url)s\">wikipedia has some info as "
+"well</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:604
+#, python-format
+msgid ""
+"\n"
+"                  Please note that some countries may require you to comply "
+"with \"Know Your Customer\" (KYC) and \"Anti-Money Laundering\" (AML) "
+"regulations, which might include things like checking the customer's "
+"government ID and copying down their name, address, and telephone number.\n"
+"                  If you'd like us to build support for your country's "
+"requirements into our software,\n"
+"                  please <a href=\"%(contact_url)s\">tell us about it</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:624
+msgid ""
+"\n"
+"                  You can, but we strongly recommend against it.\n"
+"                  Besides the transactions fees they charge, there is a very "
+"high risk of chargeback.\n"
+"                  Someone could use a stolen credit card (or use their own "
+"card and later claim it was stolen) and then your payment processor might "
+"take that money back from you weeks later.\n"
+"                  Remember that bitcoin transactions are irreversible, so if "
+"that happens you would have lost both the money and the bitcoin.\n"
+"                  Yikes!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:646
+msgid ""
+"\n"
+"                  In order to uniquely identify each bitcoin transaction,\n"
+"                  we generate a new bitcoin address every time a customer "
+"sends bitcoin to your business.\n"
+"                  That way, we're able to know for sure who sent you that "
+"bitcoin.\n"
+"                  We forward these transactions to your destination address "
+"automatically,\n"
+"                  and there is no fee to you at all\n"
+"                  (we cover the bitcoin network fee when forwarding the "
+"transaction).\n"
+"                  As always, you can verify this on the bitcoin blockchain "
+"for yourself!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:657
+#, python-format
+msgid ""
+"\n"
+"                  Usually, our automated system forwards the bitcoin "
+"immediately,\n"
+"                  but sometimes there can be a slight delay.\n"
+"                  We're working on improving this.\n"
+"                  If your transaction is delayed, please don't hesitate to\n"
+"                  <a href=\"%(contact_url)s\">contact us</a>.\n"
+"                  No transaction has ever been lost,\n"
+"                  but sometimes our automated system can fall slightly "
+"behind.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:681
+#, python-format
+msgid ""
+"\n"
+"                  If you're locked out, you can reset your password via "
+"email on\n"
+"                  <a href=\"%(request_new_password_url)s\">this page</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:687
+msgid ""
+"\n"
+"                  For security, we will immediately remove your API "
+"credentials for any hosted wallets with large balances.\n"
+"                  You'll need to add your API credentials back in the admin "
+"tab before you can use the app to sell bitcoin.\n"
+"                  We do this in case someone has compromised your email "
+"account and is trying to use that to gain access to your bitcoin.\n"
+"                  Sorry for the inconvenience, we're working on a better 2FA "
+"mechanism to restore your access without but it's not ready yet.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:711
+#, python-format
+msgid ""
+"\n"
+"                  Of course!\n"
+"                  <a href=\"%(register_customer_url)s\">Click here to signup "
+"for email alerts</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:730
+#, python-format
+msgid ""
+"\n"
+"                  We display prices very transparently so you know exactly "
+"what price you're getting and what percentage markup it is from the major "
+"exchanges.\n"
+"                  Plus, you can easily shop around between different "
+"businesses on CoinSafe to find the ones with the best price.\n"
+"                  Bitcoin in person is always more expensive than online "
+"exchanges because you're getting bitcoin immediately (no multiple business "
+"day waiting periods) and without having to have a bank account (or link it "
+"to a third party).\n"
+"                  A good baseline for comparing prices is <a href="
+"\"%(lb_url)s\">localbitcoins.com</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:751
+#, python-format
+msgid ""
+"\n"
+"                  <a href=\"%(coinbase_url)s\">Coinbase</a>\n"
+"                  has a feature where you can send bitcoin to an email "
+"address, so when a merchant hooks up their Coinbase account to CoinSafe "
+"we're able to use that.\n"
+"                  Coinbase will immediately email you a simple link to claim "
+"your bitcoin, <b>please do that right away</b>.\n"
+"                  After a few weeks, if the bitcoin is unclaimed they will "
+"return it to the business you transacted with.\n"
+"                  Don't forget to claim your bitcoin!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:776
+msgid ""
+"\n"
+"                  CoinSafe makes it easy for individuals and small "
+"businesses to connect offline to buy and sell bitcoin.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:794
+#, python-format
+msgid ""
+"\n"
+"                  Contrary to popular belief, all bitcoin transactions "
+"require a very small fee in order to process in a reasonable amount of "
+"time.\n"
+"                  Currently, bitcoin's standard transaction fee is "
+"approximately 0.0001 BTC (0.1 mBTC).\n"
+"                  You can read more about this\n"
+"                  <a href=\"%(tx_fee_url)s\">here</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:802
+#, python-format
+msgid ""
+"\n"
+"                  When you are buying bitcoin with cash, this means that the "
+"store will pay the associated transaction fee so that you receive the exact "
+"amount of bitcoin you were quoted.\n"
+"                  CoinSafe will handle this case automatically.\n"
+"                  In the event both the customer and the store are using "
+"Coinbase, Coinbase can sends the funds\n"
+"                  <a href=\"%(off_chain_url)s\">off the blockchain</a>\n"
+"                  which has no transaction fees.\n"
+"                  This will happen automatically if the customer puts in an "
+"email address to send bitcoin to.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:812
+msgid ""
+"\n"
+"                  When you are selling bitcoin for cash, this means that you "
+"have to pay a sufficient fee for your transaction to be processed by the "
+"bitcoin network (just like any other bitcoin transaction).\n"
+"                  The exchange rate is calculated using the amount the store "
+"<b>received</b> (the amount after the bitcoin network fee).\n"
+"                  Your wallet software should handle fees for you "
+"automatically, but please note that a store cannot give you cash for your "
+"bitcoin until they have received your bitcoin.\n"
+"                  If you use a non-standard fee that is too low, it's "
+"possible your transaction will take many hours to be confirmed by the "
+"network (or in extreme cases never be confirmed by the bitcoin network).\n"
+"                  Our software automatically notifies the store to not "
+"release any cash until your transaction is confirmed by the bitcoin "
+"network.\n"
+"                  In other words, save yourself a lot of headache by paying "
+"the standard fee on your bitcoin transactions to be sure they are processed "
+"by the bitcoin network (and in a reasonable amount of time).\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:822
+#, python-format
+msgid ""
+"\n"
+"                  We feel this is the de facto standard in bitcoin "
+"transactions and the most fair solution for all parties.\n"
+"                  Please <a href=\"%(contact_url)s\">let us know</a> if you "
+"disagree!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:841
+#, python-format
+msgid ""
+"\n"
+"                  We're working on it! You can see the list of languages we "
+"are trying to translate and submit your own translations\n"
+"                  <a href=\"%(translation_url)s\">here</a>.\n"
+"                  We'd love your help in bringing bitcoin to the masses!\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:848
+#, python-format
+msgid ""
+"\n"
+"                  Currently we're live in Spanish (you can change the "
+"language in the upper right of your screen) and we're working to add support "
+"for\n"
+"                  <a href=\"%(translation_url)s\">many more languages</a>.\n"
+"                  If there's a language you'd like us to support, please <a "
+"href=\"%(contact_url)s\">let us know</a>.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:868
+#, python-format
+msgid ""
+"\n"
+"                  Yes we do, please send us any bugs you may find!\n"
+"                  Our program is managed by CrowdCurity, you can see the "
+"details <a href=\"%(crowdcurity_url)s\">here</a>.\n"
+"                  We support the <b>responsible</b> disclosure of all "
+"potential security vulnerabilities and promise not to bring legal action "
+"against researchers who do their best to follow the CrowdCurity guidelines.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:888
+msgid ""
+"\n"
+"                  Not currently, but we'd like to get there one day.\n"
+"                  One issue is that the web wallet API's are less developed "
+"for altcoins vs bitcoin, this will hopefully improve over time.\n"
+"                "
+msgstr ""
+
+#: templates/fixed_pages/help.html:894
+#, python-format
+msgid ""
+"\n"
+"                  If you're a merchant who is currently using CoinSafe for "
+"bitcoin and would like us to add support for altcoins, please\n"
+"                  <a href=\"%(contact_url)s\">contact us</a>\n"
+"                  and let us know which coins you'd like us to add.\n"
+"                  We love adding features to make our users happy!\n"
+"                "
+msgstr ""
 
 #: templates/fixed_pages/jobs.html:4
 msgid "Your Free Bitcoin ATM App | Jobs | CoinSafe"
 msgstr "Váš bezplatný BitcoMAT | CoinSafe"
 
+#: templates/fixed_pages/jobs.html:21
+#: templates/partials/_static_page_footer.html:19
+msgid "Jobs"
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:27
+msgid ""
+"CoinSafe is committed to making it easier to buy and sell bitcoin around the "
+"world. Come join a team that believes in what they're building."
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:37
+msgid "Sales and Marketing"
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:40
+msgid ""
+"\n"
+"              <b>Help us grow</b>. \n"
+"              We are looking for a self-starter with exceptional "
+"communication skills who shares our passion for Bitcoin. \n"
+"              You would be responsible for helping develop a content marking "
+"strategy, driving brand awareness, and exploring business development "
+"opportunities. \n"
+"              Experience working at a startup is a plus.\n"
+"              <br/> <br/>\n"
+"              If you think you are a good fit, email jobs@coinsafe.com with "
+"some info about yourself and why you want to work with us.\n"
+"            "
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:53
+msgid "Product Designer"
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:57
+msgid ""
+"\n"
+"              <b>Help us define our user experience and design easy to use "
+"products</b>.\n"
+"              We are looking for a designer who understands user interface "
+"design principles, has a critical eye for detail, and is capable of taking "
+"an idea through implementation. \n"
+"              Familiarity with Photoshop, HTML, and CSS is essential, and "
+"experience designing for the mobile web is a definite plus. \n"
+"              <br/><br/>\n"
+"              If you think you are a good fit, email jobs@coinsafe.com with "
+"some info about yourself and a link to your portfolio.\n"
+"            "
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:69
+msgid "Community Manager / Account Rep"
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:73
+msgid ""
+"\n"
+"              <b>Help us delight our users</b>.\n"
+"              We are looking for a community manager to help support current "
+"users and communicate our vision with the masses. \n"
+"              Exceptional communication skills are essential, and experience "
+"with content marketing and social media is a plus.\n"
+"              <br/><br/>\n"
+"              If you think you are a good fit, email jobs@coinsafe.com with "
+"some info about yourself and why you want to work with us.\n"
+"            "
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:86
+msgid "Software Engineer"
+msgstr ""
+
+#: templates/fixed_pages/jobs.html:90
+msgid ""
+"\n"
+"              <b>Help us build the future of international payments</b>.\n"
+"              We are looking for a software engineer who understands Bitcoin "
+"and is ready to contribute right away. \n"
+"              Experience with Python/Django and JavaScript/jQuery is "
+"essential as is a firm understanding of standard web development "
+"principles.\n"
+"              <br/><br/>\n"
+"              If you think you are a good fit, email jobs@coinsafe.com with "
+"some info about yourself and a link to your Github profile.\n"
+"            "
+msgstr ""
+
 #: templates/fixed_pages/press.html:4
 msgid "Your Free Bitcoin ATM App | Press | CoinSafe"
 msgstr "Váš bezplatný BitcoMAT | Registrace | CoinSafe"
+
+#: templates/fixed_pages/press.html:22
+#: templates/partials/_static_page_footer.html:21
+msgid "Press"
+msgstr ""
+
+#: templates/fixed_pages/press.html:82
+msgid "Press Contact: Press@CoinSafe.com"
+msgstr ""
 
 #: templates/fixed_pages/promotional_material.html:4
 msgid "Your Free Bitcoin ATM App | Promotional Material | CoinSafe"
 msgstr "Váš bezplatný BitcoMAT | Promo materiály | CoinSafe"
 
+#: templates/fixed_pages/promotional_material.html:13
 #: templates/partials/_static_page_footer.html:22
 msgid "Promotional Posters for Merchants"
 msgstr "Propagační plakáty pro obchodníky"
@@ -1259,6 +2584,7 @@ msgid "Poster 3"
 msgstr "Plakát 3"
 
 #: templates/fixed_pages/promotional_material.html:64
+#, python-format
 msgid ""
 "\n"
 "      Original vector files are available <a href=\"%(vector_files_url)s\" "
@@ -1266,7 +2592,10 @@ msgid ""
 "      Made your own?\n"
 "      We'd love to see it!\n"
 "    "
-msgstr "\n Originalní sobor ve vektorech k dispozici <a href=\"%(vector_files_url)s\" target=\"_blank\">here</a>. Vyrobili jste vlastní? Ukažte nám ho!"
+msgstr ""
+"\n"
+" Originalní sobor ve vektorech k dispozici <a href=\"%(vector_files_url)s\" "
+"target=\"_blank\">here</a>. Vyrobili jste vlastní? Ukažte nám ho!"
 
 #: templates/fixed_pages/team.html:4
 msgid "Your Free Bitcoin ATM App | Our Team | CoinSafe"
@@ -1276,7 +2605,9 @@ msgstr "Váš bezplatný BitcoMAT | Náš team | CoinSafe"
 msgid ""
 "We are a team of crypto-currency enthusiasts who believe that a network of "
 "decentralized bitcoin exchanges will change how money flows around the world"
-msgstr "Jsme dvojice nadšenců pro kryptoměny, kteří věří, že síť decentralizovaných Bitcoin směnáren změní tok peněz po světě"
+msgstr ""
+"Jsme dvojice nadšenců pro kryptoměny, kteří věří, že síť decentralizovaných "
+"Bitcoin směnáren změní tok peněz po světě"
 
 #: templates/fixed_pages/team.html:42
 msgid ""
@@ -1285,7 +2616,12 @@ msgid ""
 "priceonomics.com\" target=\"_blank\">priceonomics.com</a>) that have each "
 "raised money from top VCs like Sequoia, Andreesen Horowitz, and Spark "
 "Capital. Michael graduated from Brown University with a degree in Economics."
-msgstr "Michael vybudoval dvě venture funded společnosti (<a href=\"http://www. thumbtack.com\" target=\"_blank\">thumbtack.com</a> a <a href=\"http:// priceonomics.com\" target=\"_blank\">priceonomics.com</a>) pro které získal peníze od špiček rizikového kapitálu, jako je Sequoia, Andreesen Horowitz a Spark Capital. Michael vystudoval Brown University s titulem v ekonomii."
+msgstr ""
+"Michael vybudoval dvě venture funded společnosti (<a href=\"http://www. "
+"thumbtack.com\" target=\"_blank\">thumbtack.com</a> a <a href=\"http:// "
+"priceonomics.com\" target=\"_blank\">priceonomics.com</a>) pro které získal "
+"peníze od špiček rizikového kapitálu, jako je Sequoia, Andreesen Horowitz a "
+"Spark Capital. Michael vystudoval Brown University s titulem v ekonomii."
 
 #: templates/fixed_pages/team.html:52
 msgid ""
@@ -1294,22 +2630,73 @@ msgid ""
 "for small businesses, which was later acquired by <a href=\"https://www."
 "adstage.io/\" target=\"_blank\">AdStage</a>. Tom graduated from Georgetown "
 "University with degrees in Computer Science and Economics"
-msgstr "Tom je bývalý Google inženýr, který pracoval v týmu na potírání podvodů v AdWords. Opustil Google aby vybudoval Semply, společnost zaměřenou na výstavbu reklamních nástrojů pro malé a střední podniky, která byl později koupena <a href=\"https://www.adstage.io/\" target=\"_blank\"> AdStage </ a> . Tom absolvoval Georgetown University s tituly v informatice a ekonomii"
+msgstr ""
+"Tom je bývalý Google inženýr, který pracoval v týmu na potírání podvodů v "
+"AdWords. Opustil Google aby vybudoval Semply, společnost zaměřenou na "
+"výstavbu reklamních nástrojů pro malé a střední podniky, která byl později "
+"koupena <a href=\"https://www.adstage.io/\" target=\"_blank\"> AdStage </ "
+"a> . Tom absolvoval Georgetown University s tituly v informatice a ekonomii"
+
+#: templates/fixed_pages/team.html:62
+#, python-format
+msgid ""
+"\n"
+"        Interested in joining a scrappy, funded startup in the Bitcoin "
+"space?\n"
+"        Check out <a href=\"%(jobs_url)s\">our jobs page</a> to find out "
+"more.\n"
+"      "
+msgstr ""
+
+#: templates/merchants/_add_funds_modal.html:8
+#, fuzzy, python-format
+msgid ""
+"\n"
+"            Add funds to %(credential_name)s Wallet\n"
+"          "
+msgstr ""
+"\n"
+" Aktivujte API údaje jejich vložením do %(credential_display)s."
+
+#: templates/merchants/_add_funds_modal.html:18
+#, fuzzy
+msgid ""
+"\n"
+"                To top off your wallet, send funds to your address:\n"
+"              "
+msgstr ""
+"\n"
+" Zákazník: pošlete %(max_btc_formatted)s na tuto adresu:"
+
+#: templates/merchants/_add_funds_modal.html:27
+#, python-format
+msgid ""
+"\n"
+"                <a class=\"btn btn-primary btn-lg\" href=\"%(login_url)s\" "
+"target=\"_blank\">Login to %(credential_name)s</a>\n"
+"              "
+msgstr ""
 
 #: templates/merchants/_delete_api_credentials_modal.html:8
+#, python-format
 msgid ""
 "\n"
 "            Delete %(credential_display)s Credentials\n"
 "          "
-msgstr "\n Aktivujte API údaje jejich vložením do %(credential_display)s."
+msgstr ""
+"\n"
+" Aktivujte API údaje jejich vložením do %(credential_display)s."
 
 #: templates/merchants/_delete_api_credentials_modal.html:18
+#, python-format
 msgid ""
 "\n"
 "                Are you sure you want to remove your %(credential_display)s "
 "API Credentials?\n"
 "              "
-msgstr "\nJste si jisti, že chcete smazat váš %(credential_display)s API přístup?"
+msgstr ""
+"\n"
+"Jste si jisti, že chcete smazat váš %(credential_display)s API přístup?"
 
 #: templates/merchants/_delete_api_credentials_modal.html:23
 msgid "No"
@@ -1319,10 +2706,39 @@ msgstr "Ne"
 msgid "Yes"
 msgstr "Ano"
 
-#: templates/merchants/breadcrumb.html:64
+#: templates/merchants/_hours_form.html:5
+msgid "Day"
+msgstr ""
+
+#: templates/merchants/_hours_form.html:6 templates/merchants/profile.html:176
+#: templates/merchants/profile.html:190 templates/merchants/profile.html:204
+#: templates/merchants/profile.html:218 templates/merchants/profile.html:232
+#: templates/merchants/profile.html:246 templates/merchants/profile.html:260
+#: templates/profiles/main.html:272 templates/profiles/main.html.py:286
+#: templates/profiles/main.html:300 templates/profiles/main.html.py:314
+#: templates/profiles/main.html:328 templates/profiles/main.html.py:342
+#: templates/profiles/main.html:356
+msgid "Closed"
+msgstr ""
+
+#: templates/merchants/_hours_form.html:7
+msgid "Open Time"
+msgstr ""
+
+#: templates/merchants/_hours_form.html:8
+msgid "Close Time"
+msgstr ""
+
+#: templates/merchants/_registration_breadcrumb.html:4
+#: templates/merchants/_registration_breadcrumb.html:6
+#: templates/merchants/breadcrumb.html:48
+#: templates/merchants/breadcrumb.html:50
 msgid "Profile"
 msgstr "Profil"
 
+#: templates/merchants/_registration_breadcrumb.html:10
+#: templates/merchants/_registration_breadcrumb.html:12
+#: templates/merchants/register_bitcoin.html:20
 #: templates/merchants/settings.html:15
 msgid "Bitcoin Settings"
 msgstr "Bitcoin nastavení"
@@ -1332,25 +2748,37 @@ msgid "Registration Status"
 msgstr "Stav registrace"
 
 #: templates/merchants/_registration_status_bar.html:21
+#, python-format
 msgid "Next step: <a href=\"%(profile_url)s\">List your business address</a>"
-msgstr "Další krok: <a href=\"%(profile_url)s\">Uveďte vaší obchodní adresu</a>"
+msgstr ""
+"Další krok: <a href=\"%(profile_url)s\">Uveďte vaší obchodní adresu</a>"
 
 #: templates/merchants/_registration_status_bar.html:23
+#, python-format
 msgid ""
 "Next step: <a href=\"%(profile_url)s\">List your business phone number</a>"
-msgstr "Další krok: <a href=\"%(profile_url)s\">Uveďte váš obchodní telefonní kontakt</a>"
+msgstr ""
+"Další krok: <a href=\"%(profile_url)s\">Uveďte váš obchodní telefonní "
+"kontakt</a>"
 
 #: templates/merchants/_registration_status_bar.html:26
+#, python-format
 msgid ""
 "Next step: <a href=\"%(coinbase_url)s\">Check Your Coinbase Credentials</a>"
-msgstr "Další krok: <a href=\"%(coinbase_url)s\">Zkontrolujte váš Coinbase přístup</ a>"
+msgstr ""
+"Další krok: <a href=\"%(coinbase_url)s\">Zkontrolujte váš Coinbase přístup</ "
+"a>"
 
 #: templates/merchants/_registration_status_bar.html:28
+#, python-format
 msgid ""
 "Next step: <a href=\"%(bitstamp_url)s\">Check Your Bitstamp Credentials</a>"
-msgstr "Další krok: <a href=\"%(bitstamp_url)s\">Zkontrolujte váš Bitstamp přístup</ a>"
+msgstr ""
+"Další krok: <a href=\"%(bitstamp_url)s\">Zkontrolujte váš Bitstamp přístup</ "
+"a>"
 
 #: templates/merchants/_registration_status_bar.html:30
+#, python-format
 msgid "Next step: <a href=\"%(coinbase_url)s\">Attach An Exchange Account</a>"
 msgstr "Další krok: <a href=\"%(coinbase_url)s\">Připojte burzovní účet</a>"
 
@@ -1358,31 +2786,43 @@ msgstr "Další krok: <a href=\"%(coinbase_url)s\">Připojte burzovní účet</a
 msgid "Bitstamp API"
 msgstr "Bitstamp API"
 
+#: templates/merchants/bitstamp.html:24 templates/merchants/blockchain.html:24
 #: templates/merchants/coinbase.html:24
 msgid "Added At"
 msgstr "Přidáno"
 
+#: templates/merchants/bitstamp.html:27 templates/merchants/blockchain.html:27
 #: templates/merchants/coinbase.html:27
 msgid "Balance"
 msgstr "Zůstatek"
 
+#: templates/merchants/bitstamp.html:28 templates/merchants/blockchain.html:28
 #: templates/merchants/coinbase.html:28
 msgid "Refresh"
 msgstr "Obnovit"
 
+#: templates/merchants/bitstamp.html:29 templates/merchants/blockchain.html:29
 #: templates/merchants/coinbase.html:29
 msgid "Delete"
 msgstr "Smazat"
 
+#: templates/merchants/bitstamp.html:63 templates/merchants/blockchain.html:63
+#: templates/merchants/coinbase.html:63
+msgid "Add funds to this wallet"
+msgstr ""
+
 #: templates/merchants/bitstamp.html:68
 msgid ""
 "Enter your Bitstamp API credentials to take advantage of our partnership."
-msgstr "Vložte váš Bitstamp API přístup a využijte tak výhod našeho partnerství."
+msgstr ""
+"Vložte váš Bitstamp API přístup a využijte tak výhod našeho partnerství."
 
+#: templates/merchants/bitstamp.html:71 templates/merchants/blockchain.html:71
 #: templates/merchants/coinbase.html:71
 msgid "Click here for instructions"
 msgstr "Klikněte zde pro instrukce"
 
+#: templates/merchants/bitstamp.html:79 templates/merchants/blockchain.html:79
 #: templates/merchants/coinbase.html:79
 msgid "Save Credentials"
 msgstr "Uložit údaje"
@@ -1398,23 +2838,35 @@ msgstr "Uživatelské jméno"
 #: templates/merchants/blockchain.html:68
 msgid ""
 "Enter your Blockchain.info credentials to take advantage of our partnership."
-msgstr "Vložte váš Blockchain.info přístup a využijte tak výhod našeho partnerství."
+msgstr ""
+"Vložte váš Blockchain.info přístup a využijte tak výhod našeho partnerství."
 
-#: templates/partials/customer_footer.html:9
+#: templates/merchants/breadcrumb.html:5
+#: templates/partials/admin_footer.html:9
+#: templates/partials/customer_footer.html:10
+#: templates/partials/customer_footer.html:12
 msgid "Admin"
 msgstr "Admin"
 
+#: templates/merchants/breadcrumb.html:55
+#: templates/merchants/breadcrumb.html:57
 #: templates/merchants/transactions.html:14
 msgid "Transactions"
 msgstr "Transakce"
 
-#: templates/merchants/breadcrumb.html:57
+#: templates/merchants/breadcrumb.html:62
+#: templates/merchants/breadcrumb.html:64
 msgid "Settings"
 msgstr "Nastavení"
 
 #: templates/merchants/breadcrumb.html:70
 msgid "API Partners"
 msgstr "API Partneři"
+
+#: templates/merchants/breadcrumb.html:145
+#, fuzzy
+msgid "Promotional Posters for Your Business"
+msgstr "Propagační plakáty pro obchodníky"
 
 #: templates/merchants/coinbase.html:16
 msgid "Coinbase API"
@@ -1423,7 +2875,8 @@ msgstr "Coinbase API"
 #: templates/merchants/coinbase.html:68
 msgid ""
 "Enter your Coinbase API credentials to take advantage of our partnership."
-msgstr "Vložte váš Coinbase API přístup a využijte tak výhod našeho partnerství."
+msgstr ""
+"Vložte váš Coinbase API přístup a využijte tak výhod našeho partnerství."
 
 #: templates/merchants/password_prompt.html:13
 msgid ""
@@ -1432,7 +2885,10 @@ msgid ""
 "            <a href=\"#\" data-toggle=\"collapse\" data-target=\"#moreinfo"
 "\">More info</a>.\n"
 "          "
-msgstr "\n Prosím potvrďte vaše heslo pro přístup do admin sekce. <a href=\"#\" data-toggle=\"collapse\" data-target=\"#moreinfo\">Více informací</a>."
+msgstr ""
+"\n"
+" Prosím potvrďte vaše heslo pro přístup do admin sekce. <a href=\"#\" data-"
+"toggle=\"collapse\" data-target=\"#moreinfo\">Více informací</a>."
 
 #: templates/merchants/password_prompt.html:21
 msgid ""
@@ -1445,39 +2901,59 @@ msgid ""
 "customers enter their info into the device without worrying about them being "
 "able to change your settings.\n"
 "              "
-msgstr "\n Věříme, že jste to vážně vy, ale kvůli bezpečí budeme požadovat vaše heslo vždy když kliknete na admin sekci. Nebudete muset zadávat heslo znovu, dokud neopustíte admin sekci. Toto opatření je kvůli bezpečnosti vašeho účtu, takže můžete v klidu půjčit vaše zařízení a nemusíte se bát, že vám někdo změní nastavení. "
+msgstr ""
+"\n"
+" Věříme, že jste to vážně vy, ale kvůli bezpečí budeme požadovat vaše heslo "
+"vždy když kliknete na admin sekci. Nebudete muset zadávat heslo znovu, dokud "
+"neopustíte admin sekci. Toto opatření je kvůli bezpečnosti vašeho účtu, "
+"takže můžete v klidu půjčit vaše zařízení a nemusíte se bát, že vám někdo "
+"změní nastavení. "
 
-#: templates/merchants/profile.html:15
+#: templates/merchants/profile.html:36 templates/merchants/profile.html:63
+msgid "See Public Profile"
+msgstr ""
+
+#: templates/merchants/profile.html:102
 msgid "Public Business Info"
 msgstr "Obchodní info"
 
-#: templates/merchants/profile.html:16 templates/merchants/profile.html:129
+#: templates/merchants/profile.html:103 templates/merchants/profile.html:166
 msgid "Edit"
 msgstr "Upravit"
 
-#: templates/merchants/profile.html:37
-msgid "State"
-msgstr "Stát"
+#: templates/merchants/profile.html:112
+#, fuzzy
+msgid "Business Address"
+msgstr "Získat obchodní BTC adresu"
 
-#: templates/merchants/profile.html:53
+#: templates/merchants/profile.html:119 templates/merchants/profile.html:131
+#: templates/merchants/profile.html:143 templates/merchants/profile.html:273
+msgid "Not Provided"
+msgstr ""
+
+#: templates/merchants/profile.html:136
 msgid "Website (URL)"
 msgstr "Web - URL"
 
+#: templates/merchants/profile.html:155 templates/merchants/profile.html:289
 #: templates/merchants/settings.html:53
 msgid "Save Changes"
 msgstr "Uložit změny"
 
-#: templates/merchants/profile.html:128
-msgid "Private Owner Info"
-msgstr "Info o majiteli"
+#: templates/merchants/profile.html:165
+#, fuzzy
+msgid "Business Hours"
+msgstr "Obchody"
 
-#: templates/merchants/profile.html:128
-msgid "(for Transaction Notifications)"
-msgstr "Soukromé - pro potvrzení transakce"
-
-#: templates/merchants/profile.html:134 users/forms.py:40
-msgid "Name"
-msgstr "Jméno"
+#: templates/merchants/profile.html:181 templates/merchants/profile.html:195
+#: templates/merchants/profile.html:209 templates/merchants/profile.html:223
+#: templates/merchants/profile.html:237 templates/merchants/profile.html:251
+#: templates/merchants/profile.html:265 templates/profiles/main.html:277
+#: templates/profiles/main.html.py:291 templates/profiles/main.html:305
+#: templates/profiles/main.html.py:319 templates/profiles/main.html:333
+#: templates/profiles/main.html.py:347 templates/profiles/main.html:361
+msgid "(Not Provided)"
+msgstr ""
 
 #: templates/merchants/register.html:5
 msgid "Your Free Bitcoin ATM App | Register Merchant | CoinSafe"
@@ -1492,12 +2968,16 @@ msgid "Create Account"
 msgstr "Vytvořit účet"
 
 #: templates/merchants/register.html:45
+#, python-format
 msgid ""
 "\n"
 "           To register as an individual customer (not a business) please\n"
 "           <a href=\"%(rc_url)s\">click here</a>.\n"
 "         "
-msgstr "\n Pro registraci jako soukr. osoba (ne firma) prosím <a href=\"%(rc_url)s \">klikněte zde</a>."
+msgstr ""
+"\n"
+" Pro registraci jako soukr. osoba (ne firma) prosím <a href=\"%(rc_url)s "
+"\">klikněte zde</a>."
 
 #: templates/merchants/register_bitcoin.html:4
 msgid "Your Free Bitcoin ATM App | Register | CoinSafe"
@@ -1510,7 +2990,44 @@ msgid ""
 "Bitcoin wallet to your CoinSafe account <a href=\"#\" data-toggle=\"collapse"
 "\" data-target=\"#moreinfo\">(learn more)</a>.\n"
 "            "
-msgstr "\n Prosím potvrďte vaše heslo pro přístup do admin sekce. <a href=\"#\" data-toggle=\"collapse\" data-target=\"#moreinfo\">Více informací</a>."
+msgstr ""
+"\n"
+" Prosím potvrďte vaše heslo pro přístup do admin sekce. <a href=\"#\" data-"
+"toggle=\"collapse\" data-target=\"#moreinfo\">Více informací</a>."
+
+#: templates/merchants/register_bitcoin.html:36
+msgid ""
+"\n"
+"                This wallet will be used to automatically transfer funds to "
+"your customers whenever you sell them Bitcoin. \n"
+"                If you already have a Blockchain, Coinbase, or Bitstamp "
+"wallet, you can link it to your account by adding your API credentials "
+"below. \n"
+"                We also can automatically create a new Blockchain wallet for "
+"you (a good option if you are just giving us a try).\n"
+"              "
+msgstr ""
+
+#: templates/merchants/register_bitcoin.html:43
+msgid ""
+"\n"
+"                No funds will ever be moved from your wallet without your "
+"explicit permission (our app is and will continue to be free) and we take "
+"every precaution to secure this sensitive data. \n"
+"                That being said, we recommend that all of our users create a "
+"separate wallet to use with CoinSafe that holds a smaller amount of funds "
+"that they can top off whenever the balance gets low.\n"
+"              "
+msgstr ""
+
+#: templates/merchants/register_bitcoin.html:50
+#, python-format
+msgid ""
+"\n"
+"                If you have any questions, please don't hesitate to <a href="
+"\"%(contact_url)s\" target=\"_blank\">contact us</a>.\n"
+"              "
+msgstr ""
 
 #: templates/merchants/register_bitcoin.html:62
 msgid "Complete Registration"
@@ -1576,76 +3093,340 @@ msgstr "Zásady ochrany osobních údajů"
 msgid "Terms of Service"
 msgstr "Obchodní podmínky"
 
+#: templates/partials/admin_footer.html:6
 #: templates/partials/customer_footer.html:6
 msgid "Customers"
 msgstr "Zákazníci"
+
+#: templates/profiles/main.html:116
+#, fuzzy
+msgid "Edit Your Profile"
+msgstr "Nastavte si své vlastní ceny"
 
 #: templates/users/change_pw.html:17 templates/users/change_pw.html.py:25
 msgid "Change Password"
 msgstr "Změnit heslo"
 
+#: templates/users/request_new_password.html:4
+#, fuzzy
+msgid "Forgot Password"
+msgstr "Potvrdit heslo"
+
+#: templates/users/request_new_password.html:21
+#, fuzzy
+msgid "Request New Password"
+msgstr "Nové heslo"
+
+#: templates/users/request_new_password.html:34
+#, fuzzy
+msgid "Email Password Reset"
+msgstr "Hlavní heslo"
+
+#: templates/users/request_new_password.html:42
+#, fuzzy, python-format
+msgid ""
+"\n"
+"             To login please\n"
+"             <a href=\"%(login_url)s\">click here</a>.\n"
+"           "
+msgstr ""
+"\n"
+" Pro registraci jako soukr. osoba (ne firma) prosím <a href=\"%(rc_url)s "
+"\">klikněte zde</a>."
+
+#: templates/users/request_new_password.html:52
+#, python-format
+msgid ""
+"\n"
+"          Password reset email sent to <b>%(email_address)s</b>. Please "
+"check your email.\n"
+"        "
+msgstr ""
+
+#: templates/users/request_new_password.html:57
+#, fuzzy
+msgid ""
+"\n"
+"          Can't find it?\n"
+"          Our emails can sometimes take up to one minute to arrive.\n"
+"          Please check your spam folder for a message from "
+"<b>support@coinsafe.com</b>.\n"
+"        "
+msgstr ""
+"\n"
+" Zkontrolujte váš email a klikněte na odkaz, který zaktivuje API přístup. "
+"Pokud nemůžete email najít, zkontrolujte složku se spamy a najděte email od "
+"<b>%(bitstamp_email)s</b>."
+
+#: templates/users/set_new_password.html:4
+#, fuzzy
+msgid "Set New Password"
+msgstr "Nové heslo"
+
+#: templates/users/set_new_password.html:21
+#: templates/users/set_new_password.html:33
+#, fuzzy
+msgid "Set Password"
+msgstr "Nové heslo"
+
 #: users/forms.py:23
 msgid "Which Service Interests You Most?"
 msgstr "Které služby vás zajímají nejvíce?"
+
+#: users/forms.py:27
+msgid "Spend Cash to Buy Bitcoin"
+msgstr ""
 
 #: users/forms.py:28
 msgid "Sell Bitcoin to Receive Cash"
 msgstr "Směnit vaše BTC za hotovost"
 
-#: users/forms.py:35
+#: users/forms.py:35 users/forms.py:52
 msgid "Your Email"
 msgstr "Váš Email"
+
+#: users/forms.py:40
+msgid "Name"
+msgstr "Jméno"
 
 #: users/forms.py:44
 msgid "Message"
 msgstr "Zpráva"
 
-#: users/forms.py:54
+#: users/forms.py:55
+msgid "Be sure to enter the one you used when you created this account."
+msgstr ""
+
+#: users/forms.py:63
 msgid "Current Password"
 msgstr "Dosavadní heslo"
 
-#: users/forms.py:56
+#: users/forms.py:65
 msgid "Your existing password that you no longer want to use"
 msgstr "Vaše dosavadní heslo, které již nechcete používat."
 
-#: users/forms.py:61
+#: users/forms.py:70 users/forms.py:105
 msgid "New Password"
 msgstr "Nové heslo"
 
-#: users/forms.py:64
+#: users/forms.py:73 users/forms.py:108
 msgid "Please choose a new secure password"
 msgstr "Prosím zvolte nové bezpečné heslo"
 
-#: users/forms.py:69
+#: users/forms.py:78 users/forms.py:113
 msgid "Confirm New Password"
 msgstr "Potvrdit nové heslo"
 
-#: users/forms.py:80
+#: users/forms.py:89
 msgid "Sorry, that password is not correct"
 msgstr "Promiňte, toto heslo není správné"
 
-#: users/forms.py:85
+#: users/forms.py:94 users/forms.py:119
 msgid "Your new passwords did not match.  Please try again."
 msgstr "Vaše nové heslo se neshoduje, zkuste to znovu"
 
-#: users/forms.py:87
+#: users/forms.py:96
 msgid ""
 "Your old password matches your new password. Your password was not changed."
 msgstr "Vaše staré heslo se shoduje s novým heslem. Vaše heslo nebylo změněno."
 
-#: users/views.py:174
+#: users/views.py:61
+msgid ""
+"Sorry, that request was cancelled. Please contact us if that was not "
+"intentional."
+msgstr ""
+
+#: users/views.py:178
+#, python-format
+msgid "Bitcoin sending failed. The API returned the following error: %s"
+msgstr ""
+
+#: users/views.py:182
+#, python-format
 msgid "Success! Your bitcoin is being sent. A receipt will be emailed to %s"
 msgstr "Úspěch! Váš Bitcoin je poslán. Účtenka vám bude poslána na mail %s."
 
-#: users/views.py:225
+#: users/views.py:233
 msgid "Thanks! We'll email you when new businesses near you sign up."
-msgstr "Děkujeme! Dáme vám vědět jakmile se ve vaší blízkosti objeví další obchod."
+msgstr ""
+"Děkujeme! Dáme vám vědět jakmile se ve vaší blízkosti objeví další obchod."
 
-#: users/views.py:263
+#: users/views.py:271
 msgid "Message Received! We'll get back to you soon."
 msgstr "Zpráva přijata! Budeme se vám brzy věnovat."
 
-#: users/views.py:282
+#: users/views.py:290
 msgid "Your password has been changed."
 msgstr "Vaše heslo bylo změněno"
 
+#: users/views.py:304
+msgid ""
+"You are already logged in. You must <a href=\"/logout/\">logout</a> before "
+"you can reset your password."
+msgstr ""
+
+#: users/views.py:320
+msgid ""
+"Sorry, no user found with that email address. Please <a href=\"/contact/"
+"\">contact us</a> if this is a mistake."
+msgstr ""
+
+#: users/views.py:333 users/views.py:364
+msgid ""
+"You're already logged in. You must <a href=\"/logout/\">logout</a> before "
+"you can reset your password."
+msgstr ""
+
+#: users/views.py:339
+msgid ""
+"Sorry, that link is not valid. Please <a href=\"/contact/\">contact us</a> "
+"if this is a mistake."
+msgstr ""
+
+#: users/views.py:343 users/views.py:351
+msgid "Sorry, that link was already used. Please generate a new one."
+msgstr ""
+
+#: users/views.py:371
+msgid "Token cookie not found. Please generate a new link."
+msgstr ""
+
+#: users/views.py:376
+msgid "Token not found. Please generate a new link."
+msgstr ""
+
+#: users/views.py:380
+msgid "Token deleted. Please generate a new link."
+msgstr ""
+
+#: users/views.py:384
+msgid "Site error. Please generate a new link."
+msgstr ""
+
+#: users/views.py:388
+msgid "Time limit expired. Please generate a new link."
+msgstr ""
+
+#: users/views.py:419
+msgid ""
+"Your API credentials were unlinked from your CoinSafe account for safety, "
+"please link your wallet again in order to sell bitcoin to customers."
+msgstr ""
+
+#: users/views.py:428
+msgid "Password succesfully updated."
+msgstr ""
+
+#~ msgid "Your business hours have not been updated"
+#~ msgstr "Vaše otevírací doba nebyla aktualizována"
+
+#~ msgid ""
+#~ "Select a percent markup on market prices and know that you will make "
+#~ "money on all transactions."
+#~ msgstr ""
+#~ "Určete si přirážku nad tržní cenu a vydělávejte peníze na každé transakci"
+
+#~ msgid "Attract New Customers"
+#~ msgstr "Přilákejte nové zákazníky"
+
+#~ msgid ""
+#~ "Prime placement on the CoinSafe map will send more foot traffic into your "
+#~ "store."
+#~ msgstr "Umístění na CoinSafe mapě k vám přivede více zákazníků."
+
+#~ msgid "Simple to Use"
+#~ msgstr "Jednoduché použití"
+
+#~ msgid ""
+#~ "Mobile-optimized and user friendly, CoinSafe is designed so that even an "
+#~ "employee with no Bitcoin knowledge can operate it."
+#~ msgstr ""
+#~ "Optimalizováno pro mobily. Uživatelsky přátelské CoinSafe rozhraní "
+#~ "umožňuje obsluhu i člověku bez znalostí o Bitcoinu"
+
+#~ msgid "Works Anywhere In the World"
+#~ msgstr "Funguje kdekoliv na světě"
+
+#~ msgid ""
+#~ "From Argentina to Australia, CoinSafe works everywhere in the world with "
+#~ "the currency of your choice. More languages coming soon!"
+#~ msgstr ""
+#~ "Od Argentiny po Austrálii. CoinSafe funguje kdekoli na světě s měnou dle "
+#~ "vašeho výběru. Více jazyků již brzy!"
+
+#~ msgid "Sell or Spend Your Bitcoin Immediately"
+#~ msgstr "Prodejte nebo utraťe váš Bitcoin hned"
+
+#~ msgid ""
+#~ "If you don't want to hold bitcoin, you can set your prices so that you're "
+#~ "able to sell it right away for a profit."
+#~ msgstr ""
+#~ "Pokud nechcete Bitcoin držet, můžete nastavit ceny tak, aby jste Bitcoin "
+#~ "opět se ziskem prodali"
+
+#~ msgid "Get Your Money to a Safer Location"
+#~ msgstr "Dejte své peníze na bezpečnější místo"
+
+#~ msgid "Moving cash into bitcoins can minimize theft and reduce robberies."
+#~ msgstr "Převedení hotovosti na Bitcoin může pomoci snížit riziko krádeže."
+
+#~ msgid "List Your Business Today"
+#~ msgstr "Uveďte Váš obchod zdarma"
+
+#~ msgid "Consumers"
+#~ msgstr "Spotřebitelé"
+
+#~ msgid "Bitcoin <-> Cash"
+#~ msgstr "BTC <-> Hotovost"
+
+#~ msgid ""
+#~ "Dealing in cash means you don't need a bank account and there are no long "
+#~ "waiting periods. Exchange bitcoin and local currency in minutes!"
+#~ msgstr ""
+#~ "Obchodování v hotovosti znamená, že nepotřebujete bankovní účet a vše "
+#~ "probíhá rychle. Směňujte Bitcoin a hotovost v řádu minut!"
+
+#~ msgid "Transparent Pricing"
+#~ msgstr "Transparentní cena"
+
+#~ msgid ""
+#~ "Businesses publish their prices online so you can shop around for the "
+#~ "best rate. There are never any surprises when you get to the store."
+#~ msgstr ""
+#~ "Firmy zveřejňují jejich ceny on-line, tzn. nejlepší cenu si můžete "
+#~ "zjistit předem. Takže žádné překvapení při příchodu do obchodu."
+
+#~ msgid "No Messaging With Strangers"
+#~ msgstr "Žádné dopisování s lidmi, které neznáte"
+
+#~ msgid ""
+#~ "Businesses list their hours and location, so there is no need to arrange "
+#~ "meetings with people you don't know."
+#~ msgstr ""
+#~ "Obchody uvádějí svou provozní dobu a adresu, takže není třeba domlouvat "
+#~ "si schůzky s lidmi, které neznáte."
+
+#~ msgid "Businesses You Can Trust"
+#~ msgstr "Důvěryhodný obchod"
+
+#~ msgid ""
+#~ "Each business is rated by their users to ensure that the continue to "
+#~ "provide the best service."
+#~ msgstr ""
+#~ "Každý obchod je hodnocen jeho uživateli aby byl zajištěn co nejlepší "
+#~ "servis"
+
+#~ msgid "Get Notified of Nearby Locations"
+#~ msgstr "Nechte se informovat o nejbližších obchodech"
+
+#~ msgid "Confirm"
+#~ msgstr "Potvrdit"
+
+#~ msgid "State"
+#~ msgstr "Stát"
+
+#~ msgid "Private Owner Info"
+#~ msgstr "Info o majiteli"
+
+#~ msgid "(for Transaction Notifications)"
+#~ msgstr "Soukromé - pro potvrzení transakce"

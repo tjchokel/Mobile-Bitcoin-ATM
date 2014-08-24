@@ -20,7 +20,6 @@ urlpatterns = patterns('',
     url(r'^register-bitcoin/$', 'merchants.views.register_bitcoin', name='register_bitcoin'),
     url(r'^register-customer/$', 'users.views.register_customer', name='register_customer'),
 
-
     # Merchant Settings
     url(r'^merchant-settings/$', 'merchants.views.merchant_settings', name='merchant_settings'),
     url(r'^profile/$', 'merchants.views.merchant_profile', name='merchant_profile'),
@@ -38,7 +37,10 @@ urlpatterns = patterns('',
 
     # AJAX Calls
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
+    # In the app:
     url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
+    # Looking at the merchant profile (likely logged out):
+    url(r'^get-bitcoin-price/(?P<merchant_id>\w+)/?$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
     url(r'^get-deposit-address/$', 'bitcoins.views.get_next_deposit_address', name='get_next_deposit_address'),
     url(r'^customer-confirm-deposit/$', 'bitcoins.views.customer_confirm_deposit', name='customer_confirm_deposit'),
     url(r'^merchant-complete-deposit/$', 'bitcoins.views.merchant_complete_deposit', name='merchant_complete_deposit'),
@@ -78,7 +80,7 @@ urlpatterns = patterns('',
     # Logging Test
     url(r'^fail500/$', 'services.views.fail500', name='services500'),
 
-    # Short URLs
+    # Short URLs (this must be last for obvious reasons)
     url(r'^(?P<uri>[-\w]+)/$', 'profiles.views.merchant_site', name='merchant_site'),
 
 )

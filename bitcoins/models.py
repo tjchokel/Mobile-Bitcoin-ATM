@@ -120,7 +120,7 @@ class ForwardingAddress(models.Model):
     cancelled_at = models.DateTimeField(blank=True, null=True, db_index=True)
     destination_address = models.ForeignKey(DestinationAddress, blank=False, null=False)
     # technically, this is redundant through DestinationAddress
-    # but having it here makes for easier querying (especially before there is a destination address)
+    # but having it here makes for easier querying
     merchant = models.ForeignKey('merchants.Merchant', blank=False, null=False)
     shopper = models.ForeignKey('shoppers.Shopper', blank=True, null=True)
 

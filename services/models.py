@@ -134,6 +134,9 @@ class WebHook(models.Model):
     data_from_get = JSONField(blank=True, null=True)
     data_from_post = JSONField(blank=True, null=True)
 
+    # optional FKs
+    merchant = models.ForeignKey('merchants.Merchant', null=True, blank=True)
+
     def __str__(self):
         return '%s from %s' % (self.id, self.api_name)
 

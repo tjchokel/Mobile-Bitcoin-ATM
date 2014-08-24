@@ -83,7 +83,7 @@ def get_bitcoin_price(request, merchant_id=None):
 @csrf_exempt
 def process_bci_webhook(request, random_id):
     # Log webhook
-    WebHook.log_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
+    webhook = WebHook.log_webhook(request, WebHook.BCI_PAYMENT_FORWARDED)
 
     # parse webhook
     input_txn_hash = request.GET['input_transaction_hash']
@@ -92,6 +92,13 @@ def process_bci_webhook(request, random_id):
     num_confirmations = int(request.GET['confirmations'])
     input_address = request.GET['input_address']
     destination_address = request.GET['destination_address']
+
+    if input_address:
+        forwarding_obj = get_object_or_None(ForwardingAddress, b58_address=input_address)
+        if forwarding_obj:
+            # Tie webhook to merchant. Optional.
+            webhook.merchant = forwarding_obj.merchant
+            webhook.save()
 
     # These defensive checks should always be true
     assert is_valid_btc_address(input_address), input_address

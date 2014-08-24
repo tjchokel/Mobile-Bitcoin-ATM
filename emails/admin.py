@@ -13,7 +13,9 @@ class SentEmailAdmin(admin.ModelAdmin):
             'to_merchant',
             'body_template',
             'body_context',
-            'subject'
+            'subject',
+            'sent_via',
+            'btc_transaction',
             )
     raw_id_fields = ('to_merchant', )
 

@@ -142,9 +142,6 @@ def register_merchant(request):
                     currency_code=currency_code,
             )
 
-            # Send welcome email (it's really for later)
-            merchant.send_welcome_email()
-
             # login user
             user_to_login = authenticate(username=email, password=password)
             login(request, user_to_login)
@@ -166,13 +163,12 @@ def register_merchant(request):
     return {'form': form, 'user': user, 'form_valid': form_valid}
 
 
+@login_required
 @sensitive_variables('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
 @sensitive_post_parameters('cb_api_key', 'cb_secret_key', 'bs_api_key', 'bs_secret_key')
 @render_to('merchants/register_bitcoin.html')
 def register_bitcoin(request):
     user = request.user
-    if not user.is_authenticated():
-        return HttpResponseRedirect(reverse_lazy('register_merchant'))
     merchant = user.get_merchant()
     if not merchant:
         return HttpResponseRedirect(reverse_lazy('register_merchant'))
@@ -307,7 +303,7 @@ def merchant_profile(request):
             msg = _('Your image has been uploaded')
             messages.success(request, msg)
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))
-    doc_object = merchant.get_merchant_doc_obj()
+    doc_object = merchant.get_doc_obj()
     return {
         'user': user,
         'merchant': merchant,

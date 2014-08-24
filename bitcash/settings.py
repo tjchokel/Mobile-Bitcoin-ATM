@@ -203,11 +203,18 @@ BLOCKCYPHER_API_KEY = os.getenv('BLOCKCYPHER_API_KEY')
 
 SERVER_EMAIL = 'support@coinsafe.com'
 
+# For transactional messages:
 POSTMARK_SMTP_SERVER = 'smtp.postmarkapp.com'
 POSTMARK_SENDER = 'CoinSafe Support <support@coinsafe.com>'
 POSTMARK_TEST_MODE = os.getenv('POSTMARK_TEST_MODE', False)
 POSTMARK_API_KEY = os.getenv('POSTMARK_API_KEY')
 assert POSTMARK_API_KEY, 'Must have a Postmark API Key'
+
+# For marketing messages:
+SENDGRID_USERNAME = os.getenv('SENDGRID_USERNAME')
+SENDGRID_PASSWORD = os.getenv('SENDGRID_PASSWORD')
+assert SENDGRID_USERNAME, 'Must have a Sendgrid Username'
+assert SENDGRID_PASSWORD, 'Must have a Sendgrid Password'
 
 EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
 

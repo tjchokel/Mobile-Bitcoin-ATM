@@ -7,10 +7,16 @@ from urllib import urlencode
 import phonenumbers
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
 
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
 STANDARD_TX_FEE_IN_SATOSHIS = 10**4
+
+
+def dp(s):
+    " debug print "
+    print "%s %s" % (now(), s)
 
 
 def satoshis_to_btc(satoshis):

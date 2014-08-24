@@ -14,7 +14,7 @@ def merchant_site(request, uri):
     if merchant.user == request.user:
         is_users_profile = True
 
-    doc_object = merchant.get_merchant_doc_obj()
+    doc_object = merchant.get_doc_obj()
     hours_formatted = merchant.get_hours_formatted()
     hours_dict = merchant.get_hours_dict()
 

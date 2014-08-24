@@ -1,0 +1,17 @@
+<html><body>
+Hi {% firstof salutation 'there' %},
+<br /><br />
+Thanks for trying out CoinSafe.
+<br /><br />
+We'd love to send you new business, but unfortunately we can't include {{ store_name }} on our map because we don't know where it is.
+To add your address, please click this link:<br />
+<a href="{{ BASE_URL }}{{ profile_edit_uri }}">{{ BASE_URL }}{{ profile_edit_uri }}</a>
+<br /><br />
+If you prefer, you can just respond to this email with your full business address and I'll take care of it for you.
+<br /><br />
+Best,
+<br /><br />
+Michael
+<br /><br /><br />
+P.S. If you have any feedback on how we can make CoinSafe better for you, please let me know. Thanks!
+</body></html>

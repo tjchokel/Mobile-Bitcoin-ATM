@@ -1,10 +1,13 @@
 from django.template.loader import render_to_string
 
-from bitcash.settings import POSTMARK_SENDER, EMAIL_DEV_PREFIX, BASE_URL, ADMINS
+from bitcash.settings import (POSTMARK_SENDER, EMAIL_DEV_PREFIX, BASE_URL,
+        ADMINS, SENDGRID_USERNAME, SENDGRID_PASSWORD)
 
 from utils import split_email_header, cat_email_header, add_qs
 
+# Email sending libraries
 from postmark import PMMail
+import sendgrid
 
 import re
 
@@ -40,7 +43,7 @@ def append_qs(html, qs_dict, link_text):
 def send_and_log(subject, body_template, to_merchant=None, to_email=None,
         to_name=None, body_context={}, from_name=None, from_email=None,
         cc_name=None, cc_email=None, replyto_name=None, replyto_email=None,
-        btc_transaction=None):
+        btc_transaction=None, is_transactional=True):
     """
     Send and log an email
     """
@@ -95,7 +98,26 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
         pm_dict['reply_to'] = cat_email_header(replyto_name, replyto_email)
 
     # Make email object
-    pm = PMMail(**pm_dict)
+    if is_transactional:
+        # Postmark
+        pm = PMMail(**pm_dict)
+        sent_via = SentEmail.POSTMARK
+    else:
+        # Sendgrid
+        sent_via = SentEmail.SENDGRID
+
+        # Convert PM field names to SG field names
+        sg_dict = pm_dict.copy()
+        sg_dict['from_name'] = from_name
+        sg_dict['from_email'] = from_email
+        sg_dict['html'] = html_body
+        sg_dict['raise_errors'] = True
+
+        del sg_dict['sender']
+        del sg_dict['html_body']
+
+        sg = sendgrid.SendGridClient(SENDGRID_USERNAME, SENDGRID_PASSWORD)
+        message = sendgrid.Mail(**sg_dict)
 
     # Log everything
     se = SentEmail.objects.create(
@@ -109,11 +131,17 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
             body_template=body_template,
             body_context=body_context,
             subject=subject,
-            btc_transaction=btc_transaction
+            btc_transaction=btc_transaction,
+            sent_via=sent_via,
             )
 
     # Send email object
-    pm.send()
+    if is_transactional:
+        # Postmark
+        pm.send()
+    else:
+        # Sendrgrid
+        status, msg = sg.send(message)
 
     return se
 
@@ -141,5 +169,5 @@ def send_admin_email(subject, body_template, body_context):
     # Make email object
     pm = PMMail(**pm_dict)
 
-    # Send email object
+    # Send email object (no logging)
     return pm.send()

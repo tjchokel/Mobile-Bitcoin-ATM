@@ -33,6 +33,7 @@ class MerchantAdmin(admin.ModelAdmin):
 
     list_display = (
         'id',
+        'created_at',
         'business_name',
         'short_url',
         'currency_code',

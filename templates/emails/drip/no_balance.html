@@ -1,0 +1,27 @@
+<html><body>
+Hi {% firstof salutation 'there' %},
+<br /><br />
+Thanks for trying out CoinSafe.
+<br /><br />
+I noticed that you linked your CoinSafe account to a wallet with no balance.
+In order to sell bitcoin to customers at {{ store_name }}, you first need to have the inventory in your wallet.
+<br /><br />
+To fund your wallet, please click this link:<br />
+<a href="{{ BASE_URL }}{{ fund_wallet_uri }}">{{ BASE_URL }}{{ fund_wallet_uri }}</a>
+<br /><br />
+We currently support Coinbase, blockchain.info and Bitstamp wallets if you'd like to link a different wallet.
+<br /><br />
+While we highly recommend linking a wallet with a positive balance, this isn't required.
+You can still buy bitcoin (with cash) from customers with no bitcoin balance
+(in those cases they will send their bitcoin to your wallet).
+<br /><br />
+If you have any feedback on how we can make CoinSafe better for you, please let me know.
+<br /><br />
+Best,
+<br /><br />
+Michael
+<br /><br /><br />
+P.S. Want to show off that you accept bitcoin?
+We made some cool promotional materials you can print out and put in your store.
+Check out <a {# no email appended to link #} href="{{ BASE_URL }}{{ promotional_material_uri }}">our posters page</a>.
+</body></html>

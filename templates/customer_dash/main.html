@@ -268,9 +268,11 @@
         $('#id_amount').attr('type', 'number');
         olark('api.box.hide');
       }else{
-        var val_before_init = $('#id_amount').val().replace(/,/g, '');
+        var id_amount_before_init = $('#id_amount').val();
         $('#id_amount').autoNumeric('init', {pSign:'p', mDec: '0' });
-        $('#id_amount').autoNumeric('set', val_before_init);
+        if (id_amount_before_init) {
+          $('#id_amount').autoNumeric('set', id_amount_before_init.replace(/,/g, ''));
+        }
       }
       if( {{ show_buy_modal }} === true){
         $('#buy-bitcoin-modal').modal('show');

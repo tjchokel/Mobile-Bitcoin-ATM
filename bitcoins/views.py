@@ -97,7 +97,7 @@ def process_bci_webhook(request, random_id):
         forwarding_obj = get_object_or_None(ForwardingAddress, b58_address=input_address)
         if forwarding_obj:
             # Tie webhook to merchant. Optional.
-            webhook.merchant = forwarding_obj.destination_address.merchant
+            webhook.merchant = forwarding_obj.merchant
             webhook.save()
 
     # These defensive checks should always be true

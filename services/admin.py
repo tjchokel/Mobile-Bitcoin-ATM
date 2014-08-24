@@ -33,6 +33,7 @@ class WebHookAdmin(admin.ModelAdmin):
             'api_name',
             'hostname',
             'request_path',
+            'merchant',
             'uses_https',
             'data_from_get',
             'data_from_post',

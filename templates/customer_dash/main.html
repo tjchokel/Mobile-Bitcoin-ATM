@@ -224,8 +224,8 @@
 
     $("#id_amount").keyup(function(){
       // var unformatted_amount = $('#id_amount')
-      var entered_amount = $('#id_amount').val().replace(/,/g, '');
-      console.log(entered_amount);
+
+      var entered_amount = $('#id_amount').autoNumeric('get');
       if (entered_amount=="" || isNaN(entered_amount)){
         $('#id_amount').val("");
         $("#btc-amount").html('≈ '+0.00.toFixed(1) + ' mBTC');
@@ -268,7 +268,11 @@
         $('#id_amount').attr('type', 'number');
         olark('api.box.hide');
       }else{
+        var id_amount_before_init = $('#id_amount').val();
         $('#id_amount').autoNumeric('init', {pSign:'p', mDec: '0' });
+        if (id_amount_before_init) {
+          $('#id_amount').autoNumeric('set', id_amount_before_init.replace(/,/g, ''));
+        }
       }
       if( {{ show_buy_modal }} === true){
         $('#buy-bitcoin-modal').modal('show');
@@ -326,9 +330,10 @@
         return quantity_string[0] + Array(quantity_string.length).join("0");
       }
       $('#buy-bitcoin-modal').on('shown.bs.modal', function () {
-        if(!$('#id_amount').val()){
+        if(!$('#id_amount').autoNumeric('get')){
           {# Pre-seed to 50-100 mBTC (range due to rounding, will be closer to 100 mBTC) #}
-          $('#id_amount').val(approximate_rounding($('#buy-price').data().priceData/10));
+          var mbtc_to_seed = approximate_rounding($('#buy-price').data().priceData/10);
+          $('#id_amount').autoNumeric('set', mbtc_to_seed);
           $('#id_amount').trigger('keyup');
         }
         $('#id_amount').select();

@@ -85,7 +85,7 @@ class Command(BaseCommand):
                 ignored_at=None,
                 created_at__gt=min_signup_time,
                 created_at__lt=max_signup_time,
-                ).order_by('-created_at')
+                ).order_by('created_at')
 
         dp('%s merchant signups to try...' % recent_merchants.count())
         for recent_merchant in recent_merchants:
@@ -122,13 +122,26 @@ class Command(BaseCommand):
                 continue
 
             context_dict['promotional_material_uri'] = reverse('promotional_material')
+            context_dict['store_name'] = recent_merchant.business_name
+            context_dict['api_name'] = api_cred.get_credential_to_display()
+
             balance = api_cred.get_balance()
+            if balance is False:
+                # TODO: move this to a better URL when we have one
+                context_dict['api_cred_uri'] = reverse('merchant_profile')
+                body_template = 'drip/bad_api_credential.html'
+                subject = 'Your %s API Credentials Are No Longer Valid' % context_dict['api_name']
+                send_nag_email(
+                        subject=subject,
+                        body_template=body_template,
+                        incomplete_merchant=recent_merchant,
+                        context_dict=context_dict,
+                        )
+                continue
+
             if balance == 0:
-                context_dict = {
-                        'store_name': recent_merchant.business_name,
-                        # TODO: move this to a better URL when we have one
-                        'fund_wallet_uri': reverse('merchant_profile'),
-                        }
+                # TODO: move this to a better URL when we have one
+                context_dict['fund_wallet_uri'] = reverse('merchant_profile')
                 body_template = 'drip/no_balance.html'
                 subject = 'Fund Your Bitcoin ATM So You Can Sell Bitcoin to Customers'
                 send_nag_email(
@@ -144,7 +157,6 @@ class Command(BaseCommand):
             has_website = recent_merchant.has_website()
 
             context_dict['profile_uri'] = recent_merchant.get_profile_uri()
-            context_dict['store_name'] = recent_merchant.business_name
 
             if not has_phone:
                 # TODO: move this to a better URL when we have one
@@ -185,7 +197,7 @@ class Command(BaseCommand):
                         )
                 continue
 
-            # TODO: add link to us email (for those with websites)
+            # TODO: add link to us request (for those with websites)
 
             # None applicable
             msg = "Not contacting %s because they're all good!" % recent_merchant

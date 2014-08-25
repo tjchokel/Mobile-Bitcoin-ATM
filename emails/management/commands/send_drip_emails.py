@@ -60,7 +60,8 @@ def send_nag_email(body_template, incomplete_merchant, subject, context_dict={})
         return
 
     recent_time = now() - timedelta(hours=48)
-    num_recent_emails = SentEmail.objects.filter(sent_at__gt=recent_time).count()
+    num_recent_emails = SentEmail.objects.filter(sent_at__gt=recent_time,
+            to_merchant=incomplete_merchant).count()
     if num_recent_emails > 0:
         dp("Did NOT send %s to %s (recently contacted about something else)" % (
             bt_clean, incomplete_merchant))

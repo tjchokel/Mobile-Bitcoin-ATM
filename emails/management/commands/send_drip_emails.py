@@ -13,6 +13,8 @@ from datetime import timedelta
 
 from utils import dp
 
+import re
+
 
 def custom_confirm(body_template, incomplete_merchant):
     '''
@@ -38,14 +40,30 @@ def send_nag_email(body_template, incomplete_merchant, subject, context_dict={})
 
     bt_clean = body_template.split('/')[-1]
 
+    # Verify template fields are all good
+    template_content = open('templates/emails/'+body_template, 'r').read()
+    variables = re.findall(r'{{(.*?)}}', template_content)
+    # Trim whitespace and only take entries to the left of the first period (if applicable):
+    variables = set([x.strip().split('.')[0] for x in variables])
+    # Remove variable in all templates:
+    variables.remove('BASE_URL')
+    for variable in variables:
+        if variable not in context_dict:
+            raise Exception('Missing variable `%s` in `%s`' % (variable, body_template))
+
     sent_email = get_object_or_None(SentEmail, body_template=body_template,
             to_merchant=incomplete_merchant)
 
-    # TODO: check to be sure they haven't been sent a prev email in the last 48 hours
-
     if sent_email:
-        dp('%s already contacted about %s on %s' % (incomplete_merchant,
-            bt_clean, sent_email.sent_at))
+        dp("Did NOT send %s to %s (already sent on %s)" % (
+            bt_clean, incomplete_merchant, sent_email.sent_at))
+        return
+
+    recent_time = now() - timedelta(hours=48)
+    num_recent_emails = SentEmail.objects.filter(sent_at__gt=recent_time).count()
+    if num_recent_emails > 0:
+        dp("Did NOT send %s to %s (recently contacted about something else)" % (
+            bt_clean, incomplete_merchant))
         return
 
     if not custom_confirm(bt_clean, incomplete_merchant):

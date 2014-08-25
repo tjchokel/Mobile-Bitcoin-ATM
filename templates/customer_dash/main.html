@@ -223,10 +223,8 @@
     })();
 
     $("#id_amount").keyup(function(){
-      // var unformatted_amount = $('#id_amount')
       var entered_amount = $('#id_amount').val().replace(/,/g, '');
-      // var entered_amount = $('#id_amount').autoNumeric('get');
-
+    
       if (entered_amount=="" || isNaN(entered_amount)){
         $('#id_amount').val("");
         $("#btc-amount").html('≈ '+0.00.toFixed(1) + ' mBTC');
@@ -334,7 +332,7 @@
         if(!$('#id_amount').val()){
           {# Pre-seed to 50-100 mBTC (range due to rounding, will be closer to 100 mBTC) #}
           var mbtc_to_seed = approximate_rounding($('#buy-price').data().priceData/10);
-          $('#id_amount').val(mbtc_to_seed);
+          $('#id_amount').val(mbtc_to_seed); 
           $('#id_amount').trigger('keyup');
         }
         $('#id_amount').select();

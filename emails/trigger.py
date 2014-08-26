@@ -1,13 +1,13 @@
 from django.template.loader import render_to_string
 
 from bitcash.settings import (POSTMARK_SENDER, EMAIL_DEV_PREFIX, BASE_URL,
-        ADMINS, SENDGRID_USERNAME, SENDGRID_PASSWORD)
+        ADMINS, MAILGUN_API_KEY, MAILGUN_DOMAIN)
 
 from utils import split_email_header, cat_email_header, add_qs
 
 # Email sending libraries
 from postmark import PMMail
-import sendgrid
+import requests
 
 import re
 
@@ -37,6 +37,66 @@ def append_qs(html, qs_dict, link_text):
                 old_link_fragment = '<a href="%s"' % old_link
                 html = html.replace(old_link_fragment, new_link_fragment)
     return html
+
+
+def mailgun_send(subject, html_body, to_info, from_info, cc_info=None,
+        replyto_info=None, bcc_info=None):
+    data_dict = {
+            "from": from_info,
+            "to": to_info,
+            "subject": subject,
+            "html": html_body,
+            }
+    if cc_info:
+        data_dict['cc'] = cc_info
+    if bcc_info:
+        data_dict['bcc'] = bcc_info
+    if replyto_info:
+        data_dict['h:Reply-To'] = replyto_info
+
+    r = requests.post(
+        "https://api.mailgun.net/v2/%s/messages" % MAILGUN_DOMAIN,
+        auth=("api", MAILGUN_API_KEY),
+        data=data_dict,
+        )
+
+    # TODO: Log these in services.models.APICall
+
+    # Fail loudly if there is a problem
+    assert str(r.status_code).startswith('2'), '%s | %s' % (r.status_code. r.content)
+    return r
+
+
+def postmark_send(subject, html_body, to_info, from_info, cc_info=None,
+        replyto_info=None, bcc_info=None):
+    " Send email via postmark "
+    pm = PMMail(
+            sender=from_info,
+            to=to_info,
+            subject=subject,
+            html_body=html_body,
+            cc=cc_info,
+            bcc=bcc_info,
+            reply_to=replyto_info,
+            )
+    return pm.send()
+
+
+def test_mail_merge(body_template, context_dict):
+    """
+    Weak test to verify template fields are all in context_dict.
+
+    Used in cases where we don't want a mail merge failing siltently.
+    """
+    template_content = open('templates/emails/'+body_template, 'r').read()
+    variables = re.findall(r'{{(.*?)}}', template_content)
+    # Trim whitespace and only take entries to the left of the first period (if applicable):
+    variables = set([x.strip().split('.')[0] for x in variables])
+    # Remove variable in all templates:
+    variables.remove('BASE_URL')
+    for variable in variables:
+        if variable not in context_dict:
+            raise Exception('Missing variable `%s` in `%s`' % (variable, body_template))
 
 
 # TODO: create non-blocking queue system and move email sending to queue
@@ -77,47 +137,32 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
                 link_text=BASE_URL,
                 )
 
-    pm_dict = {
-                'sender': cat_email_header(from_name, from_email),
-                'to': cat_email_header(to_name, to_email),
-                'subject': subject,
-                'html_body': html_body,
-                }
+    send_dict = {
+            'html_body': html_body,
+            'from_info': cat_email_header(from_name, from_email),
+            'to_info': cat_email_header(to_name, to_email),
+            # These are initialized here but may be overwritten below:
+            'bcc_info': None,
+            'subject': subject,
+            }
+    if cc_email:
+        send_dict['cc_info'] = cat_email_header(cc_name, cc_email)
+    if replyto_email:
+        send_dict['replyto_info'] = cat_email_header(replyto_name, replyto_email)
 
     if EMAIL_DEV_PREFIX:
-        subject += ' [DEV]'
-        pm_dict['subject'] = subject
+        send_dict['subject'] += ' [DEV]'
     elif body_template != 'admin/contact_form.html':
         # BCC everything to self (except contact us form)
-        pm_dict['bcc'] = POSTMARK_SENDER
-
-    if cc_email:
-        pm_dict['cc'] = cat_email_header(cc_name, cc_email)
-
-    if replyto_email:
-        pm_dict['reply_to'] = cat_email_header(replyto_name, replyto_email)
+        send_dict['bcc_info'] = POSTMARK_SENDER
 
     # Make email object
     if is_transactional:
         # Postmark
-        pm = PMMail(**pm_dict)
         sent_via = SentEmail.POSTMARK
     else:
         # Sendgrid
-        sent_via = SentEmail.SENDGRID
-
-        # Convert PM field names to SG field names
-        sg_dict = pm_dict.copy()
-        sg_dict['from_name'] = from_name
-        sg_dict['from_email'] = from_email
-        sg_dict['html'] = html_body
-        sg_dict['raise_errors'] = True
-
-        del sg_dict['sender']
-        del sg_dict['html_body']
-
-        sg = sendgrid.SendGridClient(SENDGRID_USERNAME, SENDGRID_PASSWORD)
-        message = sendgrid.Mail(**sg_dict)
+        sent_via = SentEmail.MAILGUN
 
     # Log everything
     se = SentEmail.objects.create(
@@ -135,15 +180,10 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
             sent_via=sent_via,
             )
 
-    # Send email object
     if is_transactional:
-        # Postmark
-        pm.send()
+        postmark_send(**send_dict)
     else:
-        # Sendrgrid
-        status, msg = sg.send(message)
-        # Fail LOUDLY
-        assert str(status).startswith('2'), '%s | %s' % (status, msg)
+        mailgun_send(**send_dict)
 
     return se
 

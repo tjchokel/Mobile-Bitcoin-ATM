@@ -212,7 +212,9 @@ assert POSTMARK_API_KEY, 'Must have a Postmark API Key'
 
 # For marketing messages:
 MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
+MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN')
 assert MAILGUN_API_KEY, 'Must have a Mailgun API Key'
+assert MAILGUN_DOMAIN, 'Must have a Mailgun Domain'
 
 EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
 

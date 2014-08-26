@@ -211,10 +211,8 @@ POSTMARK_API_KEY = os.getenv('POSTMARK_API_KEY')
 assert POSTMARK_API_KEY, 'Must have a Postmark API Key'
 
 # For marketing messages:
-SENDGRID_USERNAME = os.getenv('SENDGRID_USERNAME')
-SENDGRID_PASSWORD = os.getenv('SENDGRID_PASSWORD')
-assert SENDGRID_USERNAME, 'Must have a Sendgrid Username'
-assert SENDGRID_PASSWORD, 'Must have a Sendgrid Password'
+MAILGUN_API_KEY = os.getenv('MAILGUN_API_KEY')
+assert MAILGUN_API_KEY, 'Must have a Mailgun API Key'
 
 EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
 

@@ -273,11 +273,11 @@ def merchant_settings(request):
                     dest_address=bitcoin_form.cleaned_data['btc_address'],
                     credential_used=None)
 
-            messages.success(request, _('Your bitcoin info has been updated'))
+            messages.success(request, _('Your settings have been updated'))
             return HttpResponseRedirect(reverse_lazy('merchant_settings'))
         else:
             show_bitcoin_form = 'true'
-            messages.warning(request, _('Your bitcoin info was not updated'))
+            messages.warning(request, _('Your settings were not updated'))
 
     return {
         'user': user,

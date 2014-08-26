@@ -142,6 +142,8 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
     else:
         # Sendrgrid
         status, msg = sg.send(message)
+        # Fail LOUDLY
+        assert str(status).startswith('2'), '%s | %s' % (status, msg)
 
     return se
 

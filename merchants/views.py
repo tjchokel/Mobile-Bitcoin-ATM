@@ -258,7 +258,7 @@ def merchant_settings(request):
     initial['max_mbtc_shopper_sale'] = merchant.max_mbtc_shopper_sale
     bitcoin_form = BitcoinInfoForm(initial=initial)
     show_bitcoin_form = 'false'
-    if request.POST:
+    if request.method == 'POST':
         bitcoin_form = BitcoinInfoForm(data=request.POST)
         if bitcoin_form.is_valid():
 
@@ -277,7 +277,7 @@ def merchant_settings(request):
             return HttpResponseRedirect(reverse_lazy('merchant_settings'))
         else:
             show_bitcoin_form = 'true'
-            messages.warning(request, _('Your settings were not updated'))
+            messages.warning(request, _('Your settings were not updated. See below.'))
 
     return {
         'user': user,
@@ -348,7 +348,7 @@ def merchant_profile(request):
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))
         else:
             show_merchant_form = 'true'
-            messages.warning(request, _('Your business info was not updated'))
+            messages.warning(request, _('Your business info was not updated. See below.'))
 
     doc_object = merchant.get_doc_obj()
     return {

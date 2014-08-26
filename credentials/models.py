@@ -63,6 +63,9 @@ class BaseCredential(PolymorphicModel):
     def get_login_link(self):
         raise Exception('Not Implemented')
 
+    def get_latest_balance(self):
+        return BaseBalance.objects.filter(credential=self).order_by('created_at').last()
+
     def get_status(self):
         if self.last_failed_at:
             return _('Invalid')

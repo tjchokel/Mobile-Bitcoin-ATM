@@ -1,5 +1,9 @@
 from django.contrib import admin
+from django.utils.timesince import timesince
+
 from merchants.models import Merchant, OpenTime, MerchantWebsite
+
+from utils import format_satoshis_with_units_rounded
 
 
 # https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#django.contrib.admin.ModelAdmin.list_filter
@@ -144,7 +148,15 @@ class MerchantAdmin(admin.ModelAdmin):
     def valid_credential(self, instance):
         api_cred = instance.get_valid_api_credential()
         if api_cred:
-            return '<a href="%s">%s</a>' % (api_cred.get_admin_uri(), api_cred.get_credential_to_display())
+            balance = api_cred.get_latest_balance()
+            if balance:
+                return '<a href="%s">%s (%s as of %s)</a>' % (
+                        api_cred.get_admin_uri(),
+                        api_cred.get_credential_to_display(),
+                        format_satoshis_with_units_rounded(balance.satoshis),
+                        timesince(balance.created_at))
+            else:
+                return '<a href="%s">%s</a>' % (api_cred.get_admin_uri(), api_cred.get_credential_to_display())
     valid_credential.allow_tags = True
 
     def short_url(self, instance):

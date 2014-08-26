@@ -1024,16 +1024,6 @@ class ShopperBTCPurchase(models.Model):
         else:
             return _('Waiting on Merchant Approval')
 
-    def get_txn_row_status(self):
-        if self.cancelled_at:
-            return _('This transaction was cancelled')
-        elif self.confirmed_by_merchant_at and self.funds_sent_at:
-            return _('Complete')
-        elif self.expires_at and self.expires_at < now():
-            return _('This transaction was cancelled')
-        else:
-            return _('Waiting on Merchant Approval')
-
     def get_transaction_url(self):
         if not self.base_sent_btc:
             return ''

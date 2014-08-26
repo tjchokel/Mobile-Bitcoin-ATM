@@ -38,11 +38,11 @@ class CredentialFilter(admin.SimpleListFilter):
         if self.value() == 'none':
             return queryset.filter(basecredential=None)
         if self.value() == 'some':
-            return queryset.filter(basecredential__isnull=False)
+            return queryset.filter(basecredential__isnull=False).distinct()
         if self.value() == 'some_valid':
-            return queryset.filter(basecredential__isnull=False, basecredential__last_failed_at=None)
+            return queryset.filter(basecredential__isnull=False, basecredential__last_failed_at=None).distinct()
         if self.value() == 'some_invalid':
-            return queryset.filter(basecredential__isnull=False, basecredential__last_failed_at__isnull=False)
+            return queryset.filter(basecredential__isnull=False, basecredential__last_failed_at__isnull=False).distinct()
 
 
 # https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#django.contrib.admin.ModelAdmin.list_filter

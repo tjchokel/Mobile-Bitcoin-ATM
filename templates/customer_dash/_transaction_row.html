@@ -1,11 +1,60 @@
 {% load i18n %}
 {% load humanize %}
+{% load app_extras %}
 <tr >
   <td colspan="6" class="hiddenRow" style="padding:0px;border-top:none;">
     <div class="accordian-body collapse panel panel-blue" id="row-{{transaction.id}}" style="width:90%;margin:auto;margin-bottom:10px;">
         <!-- <div class="panel-heading">Panel heading without title</div> -->
-        <div class="panel-body">
-            <table class="table get-started">
+        <div class="panel-body" style="text-align:center;">
+          
+          {{transaction.added_at}}<br/>
+          {% if transaction.is_btc_purchase %}
+            
+            {% blocktrans with btc=transaction.format_satoshis_amount shopper=transaction.get_shopper.get_transaction_table_string fiat=transaction.get_fiat_amount_formatted %}
+              You sold <b>{{btc}}</b> to <b>{{shopper}}</b> and received <b>{{fiat}}</b>
+            {% endblocktrans %}
+          {% else %}
+            {% if transaction.forwarding_address.paid_out_at %}
+              {% blocktrans with btc=transaction.format_satoshis_amount shopper=transaction.get_shopper.get_transaction_table_string fiat=transaction.get_fiat_amount_formatted %}
+                You received <b>{{btc}}</b> from <b>{{shopper}}</b> and paid out <b>{{fiat}}</b>
+              {% endblocktrans %}
+            {% else %}
+              {% if transaction.met_minimum_confirmation_at %}
+                {% blocktrans with btc=transaction.format_satoshis_amount shopper=transaction.get_shopper.get_transaction_table_string fiat=transaction.get_fiat_amount_formatted %}
+                  You received <b>{{btc}}</b> from <b>{{shopper}}</b>. Please pay them <b>{{fiat}}</b>.
+                {% endblocktrans %}
+              {% else %}
+                {% blocktrans with btc=transaction.format_satoshis_amount shopper=transaction.get_shopper.get_transaction_table_string conf_num=transaction.conf_num confs_needed=transaction.get_confs_needed %}
+                  A transaction of <b>{{btc}}</b> has been detected, but has only received <b>{{conf_num}}</b> of the recommended <b>{{confs_needed}}</b> confirmations. Please wait until this transaction has been confirmed before paying the customer.
+                {% endblocktrans %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+          <br/>
+          {% blocktrans with exchange_rate=transaction.get_exchange_rate_formatted %}
+            Bitcoin Price: {{exchange_rate}}
+          {% endblocktrans %}
+          <hr/>
+          
+
+          <span style="margin-left: auto; margin-right: auto; display: block;">
+            {% if transaction.has_transaction_url %}
+              <a class="btn btn-info btn-md" href="{{ transaction.get_transaction_url }}" target="_blank" style="margin-top: 5px;">
+                <i class="fa fa-external-link"></i>
+                {% trans "View Transaction" %}
+              </a>
+            {% endif %}
+            {% if transaction.credential %}
+              <a class="btn btn-info btn-md" href="{{ transaction.credential.get_login_link }}" target="_blank" style="margin-top: 5px;">
+                <i class="fa fa-external-link"></i>
+                {% blocktrans with wallet_name=transaction.credential.get_credential_to_display %}
+                  {{wallet_name}} Login
+                {% endblocktrans %}
+              </a>
+            {% endif %}
+          </span>
+
+            <!-- <table class="table get-started">
                 <tbody>
                     <tr>
                         <td style="text-align: left;">
@@ -16,7 +65,7 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
         </div>
     </div>
   </td>

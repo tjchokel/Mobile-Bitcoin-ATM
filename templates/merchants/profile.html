@@ -147,7 +147,7 @@
             </tbody>
           </table>
           <span class="hidden" id="merchant-info-edit">
-            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_merchant_info" %}" >
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.merchant_profile" %}" >
               {% load crispy_forms_tags %}
               {{ merchant_form|crispy }}
               {% csrf_token %}
@@ -293,43 +293,6 @@
         </div>
       </div>
 
-      {% comment %}
-      <div class="row">
-        <div class="col-sm-12">
-          <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Private Owner Info"%} <small>{% trans "(for Transaction Notifications)"%}</small></a>
-            <a href="#" onclick="editPersonalInfo();" id="personal-info-edit-button" style="float:right;">{% trans "Edit" %} <i class="fa fa-pencil-square-o"></i></a>
-          </h4>
-          <table id="personal-info-list" class="table">
-            <tbody>
-              <tr>
-                <td class="text-muted">{% trans "Name" %}</td>
-                <td align="right">{{user.full_name}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Email" %}</td>
-                <td align="right">{{user.email}}</td>
-              </tr>
-              <tr>
-                <td class="text-muted">{% trans "Phone Number" %}</td>
-                <td align="right">{{user.phone_num.as_international}}</td>
-              </tr>
-            </tbody>
-          </table>
-          <span class="hidden" id="personal-info-edit">
-            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_personal_info" %}" >
-              {% load crispy_forms_tags %}
-              {{ personal_form|crispy }}
-              {% csrf_token %}
-              <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">{% trans "Save Changes" %}</button>
-              </div>
-            </form>
-          </span>
-        </div>
-      </div>
-      {% endcomment %}
-
     </div>
   </div>
 </div>
@@ -341,16 +304,11 @@
 
 {% block extra_js %}
   <script>
-    function editPersonalInfo() {
-        $("#personal-info-list").toggleClass("show hidden");
-        $("#personal-info-edit").toggleClass("show hidden");
-        var edit_button = $("#personal-info-edit-button");
-        if (edit_button.text().replace(" ", "")=="Edit"){
-          edit_button.text("Cancel");
-        }else{
-          edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
-        }
-    }
+    $(document).ready(function(){
+      if( {{ show_merchant_form }} === true){
+        editMerchantInfo();
+      }
+    });
 
     function editHoursInfo() {
         $("#hours-info-list").toggleClass("show hidden");

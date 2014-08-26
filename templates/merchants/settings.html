@@ -45,7 +45,7 @@
             </tbody>
           </table>
           <span class="hidden" id="bitcoin-info-edit">
-            <form class="form-horizontal" method="post" action="{% url "merchants.views.edit_bitcoin_info" %}" >
+            <form class="form-horizontal" method="post" action="{% url "merchants.views.merchant_settings" %}" >
               {% load crispy_forms_tags %}
               {{ bitcoin_form|crispy }}
               {% csrf_token %}
@@ -67,6 +67,11 @@
 
 {% block extra_js %}
   <script>
+    $(document).ready(function(){
+      if( {{ show_bitcoin_form }} === true){
+        editBitcoinInfo();
+      }
+    });
     function editBitcoinInfo() {
         $("#bitcoin-info-list").toggleClass("show hidden");
         $("#bitcoin-info-edit").toggleClass("show hidden");

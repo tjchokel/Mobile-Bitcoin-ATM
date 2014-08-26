@@ -23,7 +23,7 @@ from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
 from merchants.forms import (LoginForm, MerchantRegistrationForm, BitcoinRegistrationForm,
-        BitcoinInfoForm, OwnerInfoForm, MerchantInfoForm, PasswordConfirmForm)
+        BitcoinInfoForm, MerchantInfoForm, PasswordConfirmForm)
 
 
 @sensitive_variables('password', )
@@ -257,11 +257,34 @@ def merchant_settings(request):
     initial['max_mbtc_shopper_purchase'] = merchant.max_mbtc_shopper_purchase
     initial['max_mbtc_shopper_sale'] = merchant.max_mbtc_shopper_sale
     bitcoin_form = BitcoinInfoForm(initial=initial)
+    show_bitcoin_form = 'false'
+    if request.POST:
+        bitcoin_form = BitcoinInfoForm(data=request.POST)
+        if bitcoin_form.is_valid():
+
+            merchant.currency_code = bitcoin_form.cleaned_data['currency_code']
+            merchant.max_mbtc_shopper_sale = bitcoin_form.cleaned_data['max_mbtc_shopper_sale']
+            merchant.max_mbtc_shopper_purchase = bitcoin_form.cleaned_data['max_mbtc_shopper_purchase']
+            # merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
+            merchant.cashin_markup_in_bps = bitcoin_form.cleaned_data['cashin_markup_in_bps'] * 100
+            merchant.cashout_markup_in_bps = bitcoin_form.cleaned_data['cashout_markup_in_bps'] * 100
+            merchant.save()
+            merchant.set_destination_address(
+                    dest_address=bitcoin_form.cleaned_data['btc_address'],
+                    credential_used=None)
+
+            messages.success(request, _('Your bitcoin info has been updated'))
+            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
+        else:
+            show_bitcoin_form = 'true'
+            messages.warning(request, _('Your bitcoin info was not updated'))
+
     return {
         'user': user,
         'merchant': merchant,
         'bitcoin_form': bitcoin_form,
         'dest_address': dest_address,
+        'show_bitcoin_form': show_bitcoin_form,
     }
 
 
@@ -294,7 +317,9 @@ def merchant_profile(request):
     hours_formatted = merchant.get_hours_formatted()
     hours_form_initial = merchant.get_hours_dict()
 
+    merchant_form = MerchantInfoForm(initial=initial)
     image_form = ImageUploadForm()
+    show_merchant_form = 'false'
     if request.method == 'POST':
         image_form = ImageUploadForm(request.POST, request.FILES)
         if image_form.is_valid():
@@ -303,17 +328,39 @@ def merchant_profile(request):
             msg = _('Your image has been uploaded')
             messages.success(request, msg)
             return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+
+        merchant_form = MerchantInfoForm(request.POST)
+        if merchant_form.is_valid():
+            merchant.business_name = merchant_form.cleaned_data['business_name']
+            merchant.address_1 = merchant_form.cleaned_data['address_1']
+            merchant.address_2 = merchant_form.cleaned_data['address_2']
+            merchant.city = merchant_form.cleaned_data['city']
+            merchant.state = merchant_form.cleaned_data['state']
+            merchant.country = merchant_form.cleaned_data['country']
+            merchant.zip_code = merchant_form.cleaned_data['zip_code']
+            merchant.phone_num = merchant_form.cleaned_data['phone_num']
+            merchant.save()
+
+            website = merchant_form.cleaned_data['website']
+            merchant.set_website(website)
+
+            messages.success(request, _('Your business info has been updated'))
+            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
+        else:
+            show_merchant_form = 'true'
+            messages.warning(request, _('Your business info was not updated'))
+
     doc_object = merchant.get_doc_obj()
     return {
         'user': user,
         'merchant': merchant,
         'transactions': transactions,
-        'personal_form': OwnerInfoForm(initial=initial),
-        'merchant_form': MerchantInfoForm(initial=initial),
+        'merchant_form': merchant_form,
         'biz_hours': hours_formatted,
         'image_form': image_form,
         'hours_form_initial': hours_form_initial,
         'doc_object': doc_object,
+        'show_merchant_form': show_merchant_form,
     }
 
 
@@ -330,29 +377,6 @@ def merchant_transactions(request):
         'merchant': merchant,
         'transactions': transactions,
     }
-
-
-@login_required
-def edit_personal_info(request):
-    user = request.user
-    if request.method == 'POST':
-        form = OwnerInfoForm(data=request.POST)
-        if form.is_valid():
-
-            user.full_name = form.cleaned_data['full_name']
-            user.phone_num = form.cleaned_data['phone_num']
-            user.phone_num_country = form.cleaned_data['phone_country']
-            user.email = form.cleaned_data['email']
-            user.username = form.cleaned_data['email']
-            user.save()
-
-            msg = _('Your profile has been updated')
-            messages.success(request, msg)
-            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
-
-    msg = _('Your profile was not updated')
-    messages.warning(request, msg)
-    return HttpResponseRedirect(reverse_lazy('merchant_profile'))
 
 
 @login_required
@@ -424,60 +448,6 @@ def edit_hours_info(request):
         msg = _('Your business hours have been updated')
         messages.success(request, msg)
     return HttpResponseRedirect(reverse_lazy('merchant_profile'))
-
-
-@login_required
-def edit_merchant_info(request):
-    user = request.user
-    merchant = user.get_merchant()
-    if request.method == 'POST' and merchant:
-        form = MerchantInfoForm(data=request.POST)
-        if form.is_valid():
-
-            merchant.business_name = form.cleaned_data['business_name']
-            merchant.address_1 = form.cleaned_data['address_1']
-            merchant.address_2 = form.cleaned_data['address_2']
-            merchant.city = form.cleaned_data['city']
-            merchant.state = form.cleaned_data['state']
-            merchant.country = form.cleaned_data['country']
-            merchant.zip_code = form.cleaned_data['zip_code']
-            merchant.phone_num = form.cleaned_data['phone_num']
-            merchant.save()
-
-            website = form.cleaned_data['website']
-            merchant.set_website(website)
-
-            messages.success(request, _('Your business info has been updated'))
-            return HttpResponseRedirect(reverse_lazy('merchant_profile'))
-
-    messages.warning(request, _('Your business info was not updated'))
-    return HttpResponseRedirect(reverse_lazy('merchant_profile'))
-
-
-@login_required
-def edit_bitcoin_info(request):
-    user = request.user
-    merchant = user.get_merchant()
-    if request.method == 'POST' and merchant:
-        form = BitcoinInfoForm(data=request.POST)
-        if form.is_valid():
-
-            merchant.currency_code = form.cleaned_data['currency_code']
-            merchant.max_mbtc_shopper_sale = form.cleaned_data['max_mbtc_shopper_sale']
-            merchant.max_mbtc_shopper_purchase = form.cleaned_data['max_mbtc_shopper_purchase']
-            # merchant.basis_points_markup = form.cleaned_data['btc_markup'] * 100
-            merchant.cashin_markup_in_bps = form.cleaned_data['cashin_markup_in_bps'] * 100
-            merchant.cashout_markup_in_bps = form.cleaned_data['cashout_markup_in_bps'] * 100
-            merchant.save()
-            merchant.set_destination_address(
-                    dest_address=form.cleaned_data['btc_address'],
-                    credential_used=None)
-
-            messages.success(request, _('Your bitcoin info has been updated'))
-            return HttpResponseRedirect(reverse_lazy('merchant_settings'))
-
-    messages.warning(request, _('Your bitcoin info was not updated'))
-    return HttpResponseRedirect(reverse_lazy('merchant_settings'))
 
 
 @login_required

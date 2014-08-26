@@ -113,7 +113,7 @@ class NeedsCoordinatesFilter(admin.SimpleListFilter):
         `self.value()`.
         """
         if self.value() == 'examine':
-            return queryset.filter(ignored_at=None, address_1__isnull=False, longitude_position=None)
+            return queryset.filter(ignored_at=None, address_1__isnull=False, longitude_position=None).exclude(address_1='')
         if self.value() == 'done':
             return queryset.filter(longitude_position__isnull=False)
         if self.value() == 'ignore':

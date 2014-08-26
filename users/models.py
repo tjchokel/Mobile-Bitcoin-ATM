@@ -30,6 +30,9 @@ class AuthUser(AbstractUser):
     phone_num_country = models.CharField(
         max_length=256, blank=True, null=True, db_index=True)
 
+    def get_admin_uri(self):
+        return reverse('admin:users_authuser_change', args=(self.id, ))
+
     def get_merchant(self):
         return self.merchant_set.last()
 

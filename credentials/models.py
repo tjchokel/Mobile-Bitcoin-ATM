@@ -1,6 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.utils.timezone import now
+from django.core.urlresolvers import reverse
 
 from bitcoins.BCAddressField import is_valid_btc_address
 
@@ -23,6 +24,10 @@ class BaseCredential(PolymorphicModel):
 
     def __str__(self):
         return '%s for %s' % (self.id, self.merchant.business_name)
+
+    def get_admin_uri(self):
+        # This takes you to the BaseCredential, you probably want the subclassed model
+        return reverse('admin:credentials_basecredential_change', args=(self.id, ))
 
     def mark_success(self):
         self.last_failed_at = None
@@ -57,6 +62,9 @@ class BaseCredential(PolymorphicModel):
 
     def get_login_link(self):
         raise Exception('Not Implemented')
+
+    def get_latest_balance(self):
+        return BaseBalance.objects.filter(credential=self).order_by('created_at').last()
 
     def get_status(self):
         if self.last_failed_at:

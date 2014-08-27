@@ -300,11 +300,13 @@
 
           poll_new_confirmations();
           set_time_since();
+          $('#id_name').select();
 
       {% elif current_address.customer_confirmed_deposit_at %}
 
           poll_new_deposits();
           set_time_since();
+          $('#id_name').select();
 
       {% elif buy_request %}
 

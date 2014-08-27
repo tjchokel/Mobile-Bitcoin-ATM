@@ -27,6 +27,7 @@ import json
 import requests
 
 from decimal import Decimal
+from django.db.models import Q
 
 
 class DestinationAddress(models.Model):
@@ -478,7 +479,7 @@ class BTCTransaction(models.Model):
         if self.forwarding_address.cancelled_at:
             return _('Transaction Cancelled')
         elif self.forwarding_address.paid_out_at:
-            return _('Cash Paid Out')
+            return _('Complete')
         elif self.met_minimum_confirmation_at:
             return _('BTC Received')
         else:
@@ -756,8 +757,23 @@ class BTCTransaction(models.Model):
             return ''
         return 'https://blockchain.info/tx/%s' % self.txn_hash
 
+    def has_transaction_url(self):
+        if self.destination_address:
+            return False
+        else:
+            return True
+
     def get_type(self):
         return _('Bought BTC')
+
+    def is_btc_purchase(self):
+        return False
+
+    def show_txn_row_status(self):
+        if not self.forwarding_address or self.forwarding_address.cancelled_at:
+            return True
+        else:
+            return False
 
     @staticmethod
     def get_btc_market_price(currency_code):
@@ -780,7 +796,9 @@ class ShopperBTCPurchaseManager(models.Manager):
         Addresses that have been revealed to users
         """
         return super(ShopperBTCPurchaseManager, self).get_query_set().filter(
-                cancelled_at=None, *args, **kwargs).order_by('-added_at')
+            Q(confirmed_by_merchant_at__isnull=False) | Q(expires_at__gt=now()),
+            cancelled_at=None,
+            *args, **kwargs).order_by('-added_at')
 
 
 class ShopperBTCPurchase(models.Model):
@@ -1016,5 +1034,14 @@ class ShopperBTCPurchase(models.Model):
         # Must be CB off blockchain, logic will change here when we support multiple off-blockchain options
         return "https://coinbase.com/accounts/"
 
+    def has_transaction_url(self):
+        if self.base_sent_btc:
+            return True
+        else:
+            return False
+
     def get_type(self):
         return _('Sold BTC')
+
+    def is_btc_purchase(self):
+        return True

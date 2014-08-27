@@ -141,7 +141,7 @@ class BCICredential(BaseCredential):
         r = requests.get(url=ADDRESS_URL)
 
         # Log the API call
-        APICall.objects.create(
+        api_call = APICall.objects.create(
             api_name=APICall.BLOCKCHAIN_WALLET_NEW_ADDRESS,
             url_hit=ADDRESS_URL,
             response_code=r.status_code,

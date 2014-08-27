@@ -235,7 +235,6 @@ def get_new_address(request, credential_id):
 
     user = request.user
     merchant = user.get_merchant()
-
     assert credential.merchant == merchant, 'potential hacker alert!'
 
     dict_response = {'new_address': credential.get_best_receiving_address()}

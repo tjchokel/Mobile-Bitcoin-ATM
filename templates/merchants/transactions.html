@@ -15,35 +15,35 @@
           <table class="table table-condensed" style="border-collapse:collapse;">
             <thead>
               <tr>
+                <th></th>
                 <th>{% trans "When" %}</th>
-                <th>{% trans "Type" %}</th>
-                <th>{% trans "Shopper" %}</th>
-                <th>{% trans "Bitcoin" %}</th>
-                <th>{% trans "Cash" %}</th>
-                <th>{% trans "Wallet" %}</th>
+                <th>{% trans "You Received" %}</th>
+                <th class="hidden-xs">{% trans "Customer Received" %}</th>
                 <th>{% trans "Status" %}</th>
               </tr>
             </thead>
           <tbody>
             {% if transactions %}
               {% for transaction in transactions %}
-                <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle">
-                  <td>{{transaction.added_at|naturaltime}}</td>
-                  <td>{{transaction.get_type}}</td>
-                  <td>{{ transaction.get_shopper.get_transaction_table_string }}</td>
-                  <td>{{transaction.format_satoshis_amount}}</td>
-                  <td>{{transaction.get_fiat_amount_formatted}}</td>
+                <tr data-toggle="collapse" data-target="#row-{{transaction.id}}" class="accordion-toggle" style="cursor: pointer;">
                   <td>
-                    {% if transaction.credential %}
-                    <a href="{{ transaction.credential.get_login_link }}" target="_blank">{{ transaction.credential.get_credential_to_display }}</a>
-                    {% else %}
-                      Bitcoin Network
-                    {% endif %}
+                    <i class="fa fa-plus-square-o text-blue" style="font-size: 18px;cursor: pointer;">
+                    </i>
                   </td>
+                  <td class="hidden-xs">{{transaction.added_at|date:"M d, Y"}}</td>
+                  <td class="hidden-sm hidden-md hidden-lg">{{transaction.added_at|date:"M d"}}</td>
+                  {% if transaction.is_btc_purchase %}
+                      <td>{{transaction.get_fiat_amount_formatted}}</td>
+                      <td class="hidden-xs">{{transaction.format_satoshis_amount}}</td>
+                  {% else %}
+                      <td>{{transaction.format_satoshis_amount}}</td>
+                      <td class="hidden-xs">{{transaction.get_fiat_amount_formatted}}</td>
+                  {% endif %}
                   <td>
                     <a href="{{ transaction.get_transaction_url }}" target="_blank">{{transaction.get_status|format_status_string}}</a>
                   </td>
                 </tr>
+                {% include "customer_dash/_transaction_row.html" %}
               {% endfor %}
             {% else %}
               <tr>

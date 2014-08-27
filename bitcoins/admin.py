@@ -78,6 +78,7 @@ class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
 
     list_display = (
         'id',
+        'added_at',
         'merchant',
         'shopper',
         'b58_address',

@@ -216,6 +216,8 @@ MAILGUN_DOMAIN = os.getenv('MAILGUN_DOMAIN', 'coinsafe.com')
 assert MAILGUN_API_KEY, 'Must have a Mailgun API Key'
 assert MAILGUN_DOMAIN, 'Must have a Mailgun Domain'
 
+BCC_DEBUG_ADDRESS = 'CoinSafeBCC@gmail.com'
+
 EMAIL_BACKEND = 'postmark.django_backend.EmailBackend'
 
 PLIVO_AUTH_TOKEN = os.getenv('PLIVO_AUTH_TOKEN')

@@ -53,3 +53,14 @@ def format_fiat_amount(amount, currency_symbol, currency_code=None):
         return "%s%s %s" % (currency_symbol, '{:,.2f}'.format(amount), currency_code)
     else:
         return "%s%s" % (currency_symbol, '{:,.2f}'.format(amount))
+
+
+@register.filter(name='remove_quotes')
+def remove_quotes(string):
+    """
+    Obscures the beginning of a string with *s and leaves
+    `trailing_chars_to_show` in plaintext.
+    """
+    string = string.replace("\"", "")
+    string = string.replace("\'", "")
+    return string

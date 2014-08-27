@@ -47,9 +47,17 @@ class BaseCredential(PolymorphicModel):
         Return True if status code valid, False otherwise
         """
         status_code_str = str(status_code)
-        if len(status_code_str.strip()) == 3 and status_code_str.startswith('2'):
+
+        # The first ~15,000 logged calls all had 3-digit status codes
+        assert len(status_code_str.strip()) == 3, status_code_str
+
+        if status_code_str.startswith('2'):
             self.mark_success()
             return True
+        elif status_code_str.startswith('5'):
+            # downtime, not good or bad
+            # Return failure but don't mark it as a failure
+            return False
         else:
             self.mark_failure()
             return False

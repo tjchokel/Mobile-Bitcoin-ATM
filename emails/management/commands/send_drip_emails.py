@@ -135,6 +135,11 @@ class Command(BaseCommand):
 
             balance = api_cred.get_balance()
             if balance is False:
+                if recent_merchant.get_valid_api_credential():
+                    # confirm that it wasn't just a connectivity issue
+                    # if the creds were rejected there will no longer be a valid api credential
+                    continue
+
                 # TODO: move this to a better URL when we have one
                 context_dict['api_cred_uri'] = reverse('merchant_profile')
                 body_template = 'drip/bad_api_credential.html'

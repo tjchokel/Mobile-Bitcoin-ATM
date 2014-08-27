@@ -5,11 +5,13 @@ from jsonfield import JSONField
 class SentEmail(models.Model):
 
     POSTMARK = 'PMK'
-    SENDGRID = 'SGD'
+    SENDGRID = 'SGD'  # DO NOT USE THIS, IT'S TERRIBLE
+    MAILGUN = 'MGN'
 
     SENDING_CHOICES = (
             (POSTMARK, 'Postmark'),
             (SENDGRID, 'Sendgrid'),
+            (MAILGUN, 'Mailgun'),
     )
 
     sent_at = models.DateTimeField(auto_now_add=True, db_index=True)

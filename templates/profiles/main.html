@@ -21,10 +21,6 @@
   <div class="row">
     <div class="col-sm-12">
       <p class="lead" style="padding-top:20px;">
-        <!-- <a href="#">USA (107)</a> > <a href="#">WA (3)</a> > <a href="#">Seattle (2)</a> > Mel's Diner 
-      </span>
-      <hr>
-      -->
     </div>
   </div>
   <div class="row ">
@@ -123,7 +119,12 @@
         <p class="show"></p>
       </div>
       <div class="map">
-        <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q={{ merchant.get_physical_address_qs|safe }}"></iframe>
+        {% if merchant.should_use_lat_long_on_map %}
+          <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q={{ merchant.latitude_position }},{{ merchant.longitude_position}}"></iframe>
+        {% else %}
+          <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBTbMUneYNU12f2MxWxtUgydBj3CQWRvak&q={{ merchant.get_physical_address_qs|safe }}"></iframe>
+        {% endif %}
+        }
       </div>
       <div class="bottom-15">
         <!-- <div class="modal fade" id="sendemail" tabindex="-1" role="dialog" aria-labelledby="sendemailtitle" aria-hidden="true">

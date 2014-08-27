@@ -6,14 +6,12 @@ from annoying.functions import get_object_or_None
 
 from merchants.models import Merchant
 from emails.models import SentEmail
-from emails.trigger import send_and_log
+from emails.trigger import send_and_log, test_mail_merge
 
 from optparse import make_option
 from datetime import timedelta
 
 from utils import dp
-
-import re
 
 
 def custom_confirm(body_template, incomplete_merchant):
@@ -38,18 +36,9 @@ def send_nag_email(body_template, incomplete_merchant, subject, context_dict={})
     from_name = 'Michael Flaxman'
     from_email = 'michael@coinsafe.com'
 
-    bt_clean = body_template.split('/')[-1]
+    test_mail_merge(body_template=body_template, context_dict=context_dict)
 
-    # Verify template fields are all good
-    template_content = open('templates/emails/'+body_template, 'r').read()
-    variables = re.findall(r'{{(.*?)}}', template_content)
-    # Trim whitespace and only take entries to the left of the first period (if applicable):
-    variables = set([x.strip().split('.')[0] for x in variables])
-    # Remove variable in all templates:
-    variables.remove('BASE_URL')
-    for variable in variables:
-        if variable not in context_dict:
-            raise Exception('Missing variable `%s` in `%s`' % (variable, body_template))
+    bt_clean = body_template.split('/')[-1]
 
     sent_email = get_object_or_None(SentEmail, body_template=body_template,
             to_merchant=incomplete_merchant)

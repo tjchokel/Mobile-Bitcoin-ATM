@@ -28,11 +28,8 @@ python-dateutil==2.2
 python-postmark==0.4.1
 raven==5.0.0
 requests==2.3.0
-sendgrid==1.0.1
 six==1.7.2
-smtpapi==0.1.2
 sqlparse==0.1.11
 static==1.0.2
 static3==0.5.1
-unittest2==0.5.1
 wsgiref==0.1.2

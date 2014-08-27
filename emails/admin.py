@@ -18,6 +18,8 @@ class SentEmailAdmin(admin.ModelAdmin):
             'btc_transaction',
             )
     raw_id_fields = ('to_merchant', )
+    search_fields = ['to_name', ]
+    list_filter = ('sent_via', 'body_template', )
 
     class Meta:
         model = SentEmail

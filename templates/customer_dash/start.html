@@ -38,7 +38,11 @@
                 {% blocktrans with merchant_name=merchant.business_name %}
                   Buy Bitcoin from {{ merchant_name }}
                 {% endblocktrans %}
-                <span style="color: #81D685; font-size: 42px;"><i class="fa fa-bitcoin"></i></span></h3>
+                <br/>
+                <span class="hidden-xs" style="color: #81D685; font-size: 42px;">
+                  <i class="fa fa-bitcoin"></i>
+                </span>
+              </h3>
             <div class="arrow"></div>
           </div>
           <div class="sceleton">
@@ -107,7 +111,11 @@
           {% blocktrans with merchant_name=merchant.business_name %}
             Sell Bitcoin to {{ merchant_name }}
           {% endblocktrans %}
-        <span style="color: #81D685; font-size: 42px;"> <i class="fa fa-money"></i></span></h3>
+          <br/>
+          <span class="hidden-xs" style="color: #81D685; font-size: 42px;">
+            <i class="fa fa-money"></i>
+          </span>
+        </h3>
       <div class="arrow"></div>
     </div>
 

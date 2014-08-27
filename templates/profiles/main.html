@@ -64,7 +64,7 @@
             <br/>
           {% endif %}
           {% if merchant.get_website_obj %}
-            <i class="fa fa-external-link"></i><a href="{{ merchant.get_website_obj.url}}" target="_blank">{{ merchant.get_website_obj.get_website_display }}</a>
+            <i class="fa fa-external-link"></i><a href="{{ merchant.get_website_obj.url}}" target="_blank" rel="nofollow">{{ merchant.get_website_obj.get_website_display }}</a>
             <br/>
           {% endif %}
         </div>

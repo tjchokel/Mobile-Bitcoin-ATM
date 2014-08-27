@@ -158,10 +158,8 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
 
     # Make email object
     if is_transactional:
-        # Postmark
         sent_via = SentEmail.POSTMARK
     else:
-        # Sendgrid
         sent_via = SentEmail.MAILGUN
 
     # Log everything

@@ -1,7 +1,7 @@
 from django.template.loader import render_to_string
 
 from bitcash.settings import (POSTMARK_SENDER, EMAIL_DEV_PREFIX, BASE_URL,
-        ADMINS, MAILGUN_API_KEY, MAILGUN_DOMAIN)
+        ADMINS, MAILGUN_API_KEY, MAILGUN_DOMAIN, BCC_DEBUG_ADDRESS)
 
 from utils import split_email_header, cat_email_header, add_qs
 
@@ -142,7 +142,7 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
             'from_info': cat_email_header(from_name, from_email),
             'to_info': cat_email_header(to_name, to_email),
             # These are initialized here but may be overwritten below:
-            'bcc_info': None,
+            'bcc_info': BCC_DEBUG_ADDRESS,
             'subject': subject,
             }
     if cc_email:
@@ -152,9 +152,10 @@ def send_and_log(subject, body_template, to_merchant=None, to_email=None,
 
     if EMAIL_DEV_PREFIX:
         send_dict['subject'] += ' [DEV]'
-    elif body_template != 'admin/contact_form.html':
-        # BCC everything to self (except contact us form)
-        send_dict['bcc_info'] = POSTMARK_SENDER
+    else:
+        if is_transactional and body_template != 'admin/contact_form.html':
+            # BCC support on transactional emails (except contact us form)
+            send_dict['bcc_info'] = POSTMARK_SENDER
 
     # Make email object
     if is_transactional:

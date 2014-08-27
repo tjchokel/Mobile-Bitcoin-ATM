@@ -46,6 +46,13 @@ class AuthUser(AbstractUser):
                 user_agent=request.META.get('HTTP_USER_AGENT'),
                 )
 
+    def get_profile_photo(self):
+        merchant = self.get_merchant()
+        if merchant:
+            doc_obj = merchant.get_doc_obj()
+            return doc_obj
+        return None
+
 
 class LoggedLogin(models.Model):
     login_at = models.DateTimeField(auto_now_add=True, db_index=True)

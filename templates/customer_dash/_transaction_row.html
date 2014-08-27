@@ -21,11 +21,13 @@
             {% else %}
               {% if transaction.met_minimum_confirmation_at %}
                 {% blocktrans with btc=transaction.format_satoshis_amount shopper=transaction.get_shopper.get_transaction_table_string fiat=transaction.get_fiat_amount_formatted %}
-                  You received <b>{{btc}}</b> from <b>{{shopper}}</b>. Please pay them <b>{{fiat}}</b>.
+                  You received <b>{{btc}}</b> from <b>{{shopper}}</b>. 
+                  Please pay them <b>{{fiat}}</b> right away.
                 {% endblocktrans %}
               {% else %}
                 {% blocktrans with btc=transaction.format_satoshis_amount shopper=transaction.get_shopper.get_transaction_table_string conf_num=transaction.conf_num confs_needed=transaction.get_confs_needed %}
-                  A transaction of <b>{{btc}}</b> has been detected, but has only received <b>{{conf_num}}</b> of the recommended <b>{{confs_needed}}</b> confirmations. Please wait until this transaction has been confirmed before paying the customer.
+                  A transaction of <b>{{btc}}</b> has been detected, but has only received <b>{{conf_num}}</b> of the recommended <b>{{confs_needed}}</b> confirmations. 
+                  Do not pay the customer until we notify you that this transaction has been confirmed.
                 {% endblocktrans %}
               {% endif %}
             {% endif %}

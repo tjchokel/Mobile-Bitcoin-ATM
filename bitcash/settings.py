@@ -227,7 +227,7 @@ assert PLIVO_AUTH_ID, 'Must have plivo API access'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/app/'
 
-MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/coinbase/', '/bitstamp/', '/blockchain/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']
+MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/wallet/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']
 MERCHANT_LOGIN_PW_URL = '/password/'
 
 CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']

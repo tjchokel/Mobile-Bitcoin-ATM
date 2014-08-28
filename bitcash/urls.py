@@ -26,32 +26,21 @@ urlpatterns = patterns('',
     url(r'^transactions/$', 'merchants.views.merchant_transactions', name='merchant_transactions'),
     url(r'^edit-hours-info/$', 'merchants.views.edit_hours_info', name='edit_hours_info'),
     url(r'^password/$', 'merchants.views.password_prompt', name='password_prompt'),
-
-    # API Partners
-    url(r'^coinbase/$', 'credentials.views.coinbase_creds', name='coinbase_creds'),
-    url(r'^bitstamp/$', 'credentials.views.bitstamp_creds', name='bitstamp_creds'),
-    url(r'^blockchain/$', 'credentials.views.blockchain_creds', name='blockchain_creds'),
+    url(r'^wallet/$', 'credentials.views.base_creds', name='base_creds'),
 
     # AJAX Calls
     url(r'^poll-deposits/$', 'bitcoins.views.poll_deposits', name='poll_deposits'),
-    # In the app:
-    url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
-    # Looking at the merchant profile (likely logged out):
-    url(r'^get-bitcoin-price/(?P<merchant_id>\w+)/?$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),
+    url(r'^get-bitcoin-price/$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),  # In the app
+    url(r'^get-bitcoin-price/(?P<merchant_id>\w+)/?$', 'bitcoins.views.get_bitcoin_price', name='get_bitcoin_price'),  # Looking at the merchant profile (likely logged out):
     url(r'^get-deposit-address/$', 'bitcoins.views.get_next_deposit_address', name='get_next_deposit_address'),
     url(r'^customer-confirm-deposit/$', 'bitcoins.views.customer_confirm_deposit', name='customer_confirm_deposit'),
     url(r'^merchant-complete-deposit/$', 'bitcoins.views.merchant_complete_deposit', name='merchant_complete_deposit'),
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
     url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
-    # API Partner AJAX Calls (TODO: DRY this out)
+    # API Partner AJAX Calls
     url(r'^get-new-address/(?P<credential_id>\w+)$', 'credentials.views.get_new_address', name='get_new_address'),
     url(r'^get-credential-balance/(?P<credential_id>\w+)$', 'credentials.views.get_credential_balance', name='get_credential_balance'),
-    url(r'^refresh-cb-credentials/$', 'credentials.views.refresh_cb_credentials', name='refresh_cb_credentials'),
-    url(r'^disable-cb-credentials/$', 'credentials.views.disable_cb_credentials', name='disable_cb_credentials'),
-    url(r'^refresh-bs-credentials/$', 'credentials.views.refresh_bs_credentials', name='refresh_bs_credentials'),
-    url(r'^disable-bs-credentials/$', 'credentials.views.disable_bs_credentials', name='disable_bs_credentials'),
-    url(r'^refresh-bci-credentials/$', 'credentials.views.refresh_bci_credentials', name='refresh_bci_credentials'),
-    url(r'^disable-bci-credentials/$', 'credentials.views.disable_bci_credentials', name='disable_bci_credentials'),
+    url(r'^refresh-credentials/$', 'credentials.views.refresh_credentials', name='refresh_credentials'),
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),

@@ -1,7 +1,6 @@
-from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from django.views.decorators.debug import sensitive_post_parameters
@@ -14,127 +13,89 @@ from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
-from credentials.forms import BlockchainAPIForm, CoinbaseAPIForm, BitstampAPIForm
-from utils import format_satoshis_with_units_rounded
+from credentials.forms import BitcoinCredentialsForm, SENSITIVE_CRED_PARAMS
 
 import json
 
 
-@sensitive_post_parameters('username', 'main_password', 'second_password', )
+def refresh_credentials(request):
+    pass
+
+
+@sensitive_post_parameters(SENSITIVE_CRED_PARAMS)
 @login_required
-@render_to('merchants/blockchain.html')
-def blockchain_creds(request):
+@render_to('merchants/wallet.html')
+def base_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_blockchain_credential()
-    balance = 0
-    if credential:
-        balance = credential.get_balance()
+    credential = merchant.get_valid_api_credential()
+    if False:
+        if credential:
+            credential.disabled_at = now()
+            credential.save()
+            messages.success(request, _('Your API Credentials Have Been Removed from Your Account'))
+        else:
+            messages.warning(request, _('No API Credential Found'))
 
-    form = BlockchainAPIForm()
-    if request.method == 'POST' and merchant:
-        form = BlockchainAPIForm(data=request.POST)
-        if form.is_valid():
-            credential, created = BCICredential.objects.get_or_create(
-                    merchant=merchant,
-                    username=form.cleaned_data['username'].strip(),
-                    main_password=form.cleaned_data['main_password'].strip(),
-                    second_password=form.cleaned_data['second_password'].strip(),
-            )
+    add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
+    if request.method == 'POST':
+        add_cred_form = BitcoinCredentialsForm(data=request.POST)
+        INVALID_MSG = _('Your API credentials are not valid. Please try again.')
+        if add_cred_form.is_valid():
+            exchange_choice = add_cred_form.cleaned_data['exchange_choice']
 
-            try:
-                credential.get_balance()
-                messages.success(request, _('Your Blockchain API info has been updated'))
-            except:
-                credential.mark_disabled()
-                messages.warning(request, _('Your Blockchain API credentials are not valid'))
+            credential = None
 
-            return HttpResponseRedirect(reverse_lazy('blockchain_creds'))
+            if exchange_choice == 'coinbase':
+                credential, created = CBSCredential.objects.get_or_create(
+                        merchant=merchant,
+                        api_key=add_cred_form.cleaned_data['cb_api_key'],
+                        api_secret=add_cred_form.cleaned_data['cb_secret_key'],
+                        )
+            if exchange_choice == 'blockchain':
+                credential, created = BCICredential.objects.get_or_create(
+                        merchant=merchant,
+                        username=add_cred_form.cleaned_data['bci_username'],
+                        main_password=add_cred_form.cleaned_data['bci_main_password'],
+                        second_password=add_cred_form.cleaned_data['bci_second_password'],
+                        )
+            if exchange_choice == 'bitstamp':
+                credential, created = BTSCredential.objects.get_or_create(
+                        merchant=merchant,
+                        customer_id=add_cred_form.cleaned_data['bs_customer_id'],
+                        api_key=add_cred_form.cleaned_data['bs_api_key'],
+                        api_secret=add_cred_form.cleaned_data['bs_secret_key'],
+                        )
+            if exchange_choice == 'selfmanaged':
+                # FIXME: implement
+                pass
 
-    return {
-        'user': user,
-        'merchant': merchant,
-        'form': form,
-        'credential': credential,
-        'balance': format_satoshis_with_units_rounded(balance),
-    }
-
-
-@sensitive_post_parameters('api_key', 'api_secret')
-@login_required
-@render_to('merchants/coinbase.html')
-def coinbase_creds(request):
-    user = request.user
-    merchant = user.get_merchant()
-    cb_credential = merchant.get_coinbase_credential()
-    balance = 0
-    if cb_credential:
-        balance = cb_credential.get_balance()
-    form = CoinbaseAPIForm()
-    if request.method == 'POST' and merchant:
-        form = CoinbaseAPIForm(data=request.POST)
-        if form.is_valid():
-            credential, created = CBSCredential.objects.get_or_create(
-                    merchant=merchant,
-                    api_key=form.cleaned_data['api_key'].strip(),
-                    api_secret=form.cleaned_data['api_secret'].strip(),
-                    )
-
-            try:
-                credential.get_balance()
-                messages.success(request, _('Your Coinbase API info has been updated'))
-            except:
-                credential.mark_disabled()
-                messages.warning(request, _('Your Coinbase API credentials are not valid'))
-
-            return HttpResponseRedirect(reverse_lazy('coinbase_creds'))
-
-    return {
-        'user': user,
-        'merchant': merchant,
-        'form': form,
-        'credential': cb_credential,
-        'balance': format_satoshis_with_units_rounded(balance),
-    }
-
-
-@sensitive_post_parameters('customer_id', 'api_key', 'api_secret')
-@login_required
-@render_to('merchants/bitstamp.html')
-def bitstamp_creds(request):
-    user = request.user
-    merchant = user.get_merchant()
-    credential = merchant.get_bitstamp_credential()
-    balance = 0
-    if credential:
-        balance = credential.get_balance()
-    form = BitstampAPIForm()
-    if request.method == 'POST' and merchant:
-        form = BitstampAPIForm(data=request.POST)
-        if form.is_valid():
-            credential, created = BTSCredential.objects.get_or_create(
-                    merchant=merchant,
-                    customer_id=form.cleaned_data['customer_id'].strip(),
-                    api_key=form.cleaned_data['api_key'].strip(),
-                    api_secret=form.cleaned_data['api_secret'].strip(),
-                    )
-
-            try:
-                credential.get_balance()
-                messages.success(request, _('Your Bitstamp API info has been updated'))
-            except:
-                credential.mark_disabled()
-                messages.warning(request, _('Your Bitstamp API credentials are not valid'))
-
-            return HttpResponseRedirect(reverse_lazy('bitstamp_creds'))
+            if credential:
+                try:
+                    balance = credential.get_balance()
+                    if balance is False:
+                        messages.warning(request, INVALID_MSG)
+                        credential.mark_disabled()
+                        pass
+                    # Get new address if API partner permits, otherwise get an existing one
+                    credential.get_best_receiving_address(set_as_merchant_address=True)
+                    # FIXME: mark all other credentials as invalid
+                    SUCCESS_MSG = _('Your API credentials were succesfully added.')
+                    messages.success(request, SUCCESS_MSG)
+                except:
+                    credential.mark_disabled()
+                    messages.warning(request, INVALID_MSG)
+            else:
+                # selfmanaged
+                INVALID_MSG = _('Your bitcoin address was updated. You can use this to buy bitcoin from customers, but if you want to buy bitcoin from customers you must link a hosted wallet to CoinSafe.')
+                messages.warning(request, INVALID_MSG)
 
     return {
-        'user': user,
-        'merchant': merchant,
-        'form': form,
-        'credential': credential,
-        'balance': format_satoshis_with_units_rounded(balance),
-    }
+            'credential': credential,
+            'add_cred_form': add_cred_form,
+            'merchant': merchant,
+            'dest_obj': merchant.get_destination_address,
+            }
 
 
 @login_required
@@ -196,36 +157,6 @@ def refresh_bs_credentials(request):
         messages.success(request, _('Your Bistamp API info has been refreshed'))
     else:
         messages.warning(request, _('Your Bistamp API info could not be validated'))
-    return HttpResponse("*ok*")
-
-
-@login_required
-def disable_bci_credentials(request):
-    user = request.user
-    merchant = user.get_merchant()
-    credential = merchant.get_blockchain_credential()
-    credential.disabled_at = now()
-    credential.save()
-    return HttpResponse("*ok*")
-
-
-@login_required
-def disable_cb_credentials(request):
-    user = request.user
-    merchant = user.get_merchant()
-    credential = merchant.get_coinbase_credential()
-    credential.disabled_at = now()
-    credential.save()
-    return HttpResponse("*ok*")
-
-
-@login_required
-def disable_bs_credentials(request):
-    user = request.user
-    merchant = user.get_merchant()
-    credential = merchant.get_bitstamp_credential()
-    credential.disabled_at = now()
-    credential.save()
     return HttpResponse("*ok*")
 
 

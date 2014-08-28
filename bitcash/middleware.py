@@ -3,7 +3,7 @@ from django.contrib import messages
 import json
 
 from bitcash.settings import MERCHANT_LOGIN_REQUIRED_PATHS, MERCHANT_LOGIN_PW_URL, LOGIN_URL
-
+from users.models import AuthUser
 from emails.trigger import add_qs
 
 
@@ -65,3 +65,15 @@ class AjaxMessaging(object):
                 response.content = json.dumps(content)
 
         return response
+
+
+# http://stackoverflow.com/questions/2242909/django-user-impersonation-by-admin
+class ImpersonateMiddleware(object):
+    def process_request(self, request):
+        if request.user.is_superuser and "__impersonate" in request.GET:
+            request.session['impersonate_username'] = request.GET["__impersonate"]
+        elif "__unimpersonate" in request.GET:
+            if 'impersonate_username' in request.session:
+                del request.session['impersonate_username']
+        if request.user.is_superuser and 'impersonate_username' in request.session:
+            request.user = AuthUser.objects.get(username=request.session['impersonate_username'])

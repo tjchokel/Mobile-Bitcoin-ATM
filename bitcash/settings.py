@@ -90,6 +90,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'bitcash.middleware.AjaxMessaging',
+    'bitcash.middleware.ImpersonateMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
     'bitcash.middleware.MerchantAdminSectionMiddleware',
 )

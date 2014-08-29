@@ -22,7 +22,7 @@ def refresh_credentials(request):
     pass
 
 
-@sensitive_post_parameters(SENSITIVE_CRED_PARAMS)
+@sensitive_post_parameters(*SENSITIVE_CRED_PARAMS)
 @login_required
 @render_to('merchants/wallet.html')
 def base_creds(request):

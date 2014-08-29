@@ -1,8 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from bitcoins.BCAddressField import is_valid_btc_address
-
 
 class BitcoinCredentialsForm(forms.Form):
 
@@ -14,7 +12,6 @@ class BitcoinCredentialsForm(forms.Form):
             ('coinbase', 'Coinbase'),
             ('blockchain', 'blockchain.info'),
             ('bitstamp', 'Bitstamp'),
-            ('selfmanaged', _('Self Managed')),
             ),
     )
 
@@ -82,15 +79,6 @@ class BitcoinCredentialsForm(forms.Form):
         widget=forms.PasswordInput(render_value=False),
     )
 
-    btc_address = forms.CharField(
-            label=_('Bitcoin Deposit Address'),
-            required=True,
-            min_length=27,
-            max_length=34,
-            help_text=_('The wallet address where you want your bitcoin sent'),
-            widget=forms.TextInput(),
-    )
-
     def clean_cb_api_key(self):
         exchange_choice = self.cleaned_data.get('exchange_choice')
         cb_api_key = self.cleaned_data.get('cb_api_key').strip()
@@ -148,17 +136,6 @@ class BitcoinCredentialsForm(forms.Form):
             msg = _('Please enter your Blockchain API key')
             raise forms.ValidationError(msg)
         return bci_main_password
-
-    def clean_btc_address(self):
-        address = self.cleaned_data.get('btc_address').strip()
-        exchange_choice = self.cleaned_data.get('exchange_choice')
-        if address and not is_valid_btc_address(address):
-            msg = _("Sorry, that's not a valid bitcoin address")
-            raise forms.ValidationError(msg)
-        if exchange_choice == 'selfmanaged' and not is_valid_btc_address(address):
-            msg = _("Please enter a valid bitcoin address")
-            raise forms.ValidationError(msg)
-        return address
 
 
 SENSITIVE_CRED_PARAMS = ('cb_api_key', 'cb_secret_key', 'bci_username', 'bci_main_password', 'bci_second_password', 'bs_customer_id', 'bs_api_key', 'bs_secret_key')

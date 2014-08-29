@@ -16,12 +16,6 @@
             <a style="color:#515151;" href="#">{% trans "Bitcoin Wallet" %}</a>
           </h4>
 
-          BTC Address for Buying Bitcoin: {{ dest_obj.b58_address }} 
-          {% if dest_obj.credential %}
-            (from {{ dest_obj.credential }})
-          {% else %}
-            (self managed)
-          {% endif %}
           {% if credential %}
 
             {% include "merchants/_delete_api_credentials_modal.html" %}
@@ -38,6 +32,7 @@
               <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
               {% trans "Add funds to this wallet" %}
             </a>
+            LINK TO DELETE CREDENTIALS
 
           {% else %}
 
@@ -115,8 +110,6 @@
       var CB_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "coinbase_instructions" %}', 'Coinbase']);
       var BS_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "bitstamp_instructions" %}', 'Bitstamp']);
       var BCI_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "blockchain_instructions" %}', 'Blockchain']);
-      {# FIXME: make this work #}
-      var SELFMANAGED_INSTRUCTIONS = '<div id="api_instructions"><p>Self Managed accounts cannot sell bitcoin to customers (<a href="#" data-toggle="modal" data-target="#sm-modal">learn more</a>).</p></div>'
 
       function hideAll() {
         $("#div_id_cb_api_key").addClass("hidden");
@@ -158,12 +151,6 @@
         $("#div_id_exchange_choice").after(BCI_INSTRUCTIONS);
       }
 
-      function selectSelfManaged() {
-        hideAll();
-        $("#div_id_btc_address").removeClass("hidden");
-        $("#div_id_exchange_choice").after(SELFMANAGED_INSTRUCTIONS);
-      }
-
       $("#id_exchange_choice_1, #id_exchange_choice_2, #id_exchange_choice_3, #id_exchange_choice_4").change(function(){
         var exchange_choice = $('input[name=exchange_choice]:checked').val();
         if (exchange_choice == 'coinbase') {
@@ -172,8 +159,6 @@
           selectBitstamp();
         }else if (exchange_choice == 'blockchain') {
           selectBlockchain();
-        }else if (exchange_choice == 'selfmanaged') {
-          selectSelfManaged();
         }
       });
 

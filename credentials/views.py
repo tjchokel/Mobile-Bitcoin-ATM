@@ -39,56 +39,60 @@ def base_creds(request):
 
     add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
     if request.method == 'POST':
-        add_cred_form = BitcoinCredentialsForm(data=request.POST)
-        INVALID_MSG = _('Your API credentials are not valid. Please try again.')
-        if add_cred_form.is_valid():
-            exchange_choice = add_cred_form.cleaned_data['exchange_choice']
+        if 'exchange_choice' in request.POST:
+            add_cred_form = BitcoinCredentialsForm(data=request.POST)
+            INVALID_MSG = _('Your API credentials are not valid. Please try again.')
+            if add_cred_form.is_valid():
+                exchange_choice = add_cred_form.cleaned_data['exchange_choice']
 
-            credential = None
+                credential = None
 
-            if exchange_choice == 'coinbase':
-                credential, created = CBSCredential.objects.get_or_create(
-                        merchant=merchant,
-                        api_key=add_cred_form.cleaned_data['cb_api_key'],
-                        api_secret=add_cred_form.cleaned_data['cb_secret_key'],
-                        )
-            if exchange_choice == 'blockchain':
-                credential, created = BCICredential.objects.get_or_create(
-                        merchant=merchant,
-                        username=add_cred_form.cleaned_data['bci_username'],
-                        main_password=add_cred_form.cleaned_data['bci_main_password'],
-                        second_password=add_cred_form.cleaned_data['bci_second_password'],
-                        )
-            if exchange_choice == 'bitstamp':
-                credential, created = BTSCredential.objects.get_or_create(
-                        merchant=merchant,
-                        customer_id=add_cred_form.cleaned_data['bs_customer_id'],
-                        api_key=add_cred_form.cleaned_data['bs_api_key'],
-                        api_secret=add_cred_form.cleaned_data['bs_secret_key'],
-                        )
-            if exchange_choice == 'selfmanaged':
-                # FIXME: implement
-                pass
+                if exchange_choice == 'coinbase':
+                    credential, created = CBSCredential.objects.get_or_create(
+                            merchant=merchant,
+                            api_key=add_cred_form.cleaned_data['cb_api_key'],
+                            api_secret=add_cred_form.cleaned_data['cb_secret_key'],
+                            )
+                if exchange_choice == 'blockchain':
+                    credential, created = BCICredential.objects.get_or_create(
+                            merchant=merchant,
+                            username=add_cred_form.cleaned_data['bci_username'],
+                            main_password=add_cred_form.cleaned_data['bci_main_password'],
+                            second_password=add_cred_form.cleaned_data['bci_second_password'],
+                            )
+                if exchange_choice == 'bitstamp':
+                    credential, created = BTSCredential.objects.get_or_create(
+                            merchant=merchant,
+                            customer_id=add_cred_form.cleaned_data['bs_customer_id'],
+                            api_key=add_cred_form.cleaned_data['bs_api_key'],
+                            api_secret=add_cred_form.cleaned_data['bs_secret_key'],
+                            )
+                if not created:
+                    credential.deleted_at = None
+                    credential.last_succeded_at = None
+                    credential.last_failed_at = None
+                    credential.save()
 
-            if credential:
                 try:
                     balance = credential.get_balance()
                     if balance is False:
                         messages.warning(request, INVALID_MSG)
-                        credential.mark_disabled()
-                        pass
+                        # This error will be caught by the try/except and not logged:
+                        raise Exception('Could Not Fetch Balance')
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)
+                    credential.mark_success()
                     # FIXME: mark all other credentials as invalid
-                    SUCCESS_MSG = _('Your API credentials were succesfully added.')
+                    SUCCESS_MSG = _('Your API credentials were succesfully added. Any bitcoin you buy will be sent to your %(credential_name)s account.' % {
+                        'credential_name': credential.get_credential_to_display()}
+                        )
                     messages.success(request, SUCCESS_MSG)
                 except:
                     credential.mark_disabled()
                     messages.warning(request, INVALID_MSG)
-            else:
-                # selfmanaged
-                INVALID_MSG = _('Your bitcoin address was updated. You can use this to buy bitcoin from customers, but if you want to buy bitcoin from customers you must link a hosted wallet to CoinSafe.')
-                messages.warning(request, INVALID_MSG)
+
+        elif 'delete_credentials' in request.POST:
+            pass
 
     return {
             'credential': credential,

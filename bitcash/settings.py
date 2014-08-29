@@ -229,8 +229,8 @@ PLIVO_AUTH_TOKEN = os.getenv('PLIVO_AUTH_TOKEN')
 PLIVO_AUTH_ID = os.getenv('PLIVO_AUTH_ID')
 assert PLIVO_AUTH_ID, 'Must have plivo API access'
 
-# LOGIN_URL = '/login/'
-LOGIN_URL = reverse_lazy('two_factor:login')
+LOGIN_URL = '/login/'
+# LOGIN_URL = reverse_lazy('two_factor:login')
 LOGIN_REDIRECT_URL = '/app/'
 
 MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/coinbase/', '/bitstamp/', '/blockchain/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']

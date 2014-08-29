@@ -76,4 +76,6 @@ class ImpersonateMiddleware(object):
             if 'impersonate_username' in request.session:
                 del request.session['impersonate_username']
         if request.user.is_superuser and 'impersonate_username' in request.session:
-            request.user = AuthUser.objects.get(username=request.session['impersonate_username'])
+            # only set the user if it is not the password prompt (let's you type admin password if you are impersonating)
+            if request.path_info != '/password/' or request.method != 'POST':
+                request.user = AuthUser.objects.get(username=request.session['impersonate_username'])

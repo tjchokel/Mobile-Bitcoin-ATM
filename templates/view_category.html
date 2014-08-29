@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Blog | CoinSafe{% endblock title %}
+<!-- {% block meta_content %}How to store your bitcoin the proper way. We walk you through the safest and most secure methods for putting your bitcoin in cold storage.{% endblock meta_content %} -->
+{% block content %}
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2 class="hl top-50">The CoinSafe Blog - {{category}}</h2>
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 blog-summary-list">
+      {% for post in posts %}
+        <div class="blog-summary"> 
+          <h4><a href="{{ post.get_absolute_url }}">{{post.title|safe}}</a></h4>
+          <ul class="text-muted list-inline" style="margin:0;">
+            <!-- <li><i class="fa fa-user"></i> <a href="profile.html">Administrator</a></li> -->
+            <li><i class="fa fa-calendar"></i> {{post.posted_at}}</li>
+          </ul>
+          <hr>
+          <p class="blog-text">
+            {{post.body|safe}}
+          </p>
+        </div>
+        {% if post.category %}
+          <p class="tags">
+            <a href="#">{{post.category}}</a>
+          </p>
+          <br/>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Recently Added</h3>
+        </div>
+        <div class="panel-body">
+          <div class="recent-blogs">
+            <ul> 
+              {% for post in posts %}
+                <li><a href="{{ post.get_absolute_url }}">{{post.title|safe}}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {% if category %}
+        <br/>
+        <!-- Tags -->
+        <h3 class="hl">Categories</h3>
+        <hr>
+        <p class="tags">
+          <a href="{{category.get_absolute_url}}">{{category}}</a>
+        </p>
+        <br />
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+

@@ -71,6 +71,11 @@ urlpatterns = patterns('',
     url(r'^jobs/', TemplateView.as_view(template_name='fixed_pages/jobs.html'), name='jobs'),
     url(r'^press/', TemplateView.as_view(template_name='fixed_pages/press.html'), name='press'),
 
+    # blog
+    url(r'^blog/view/(?P<slug>[^\.]+).html', 'blog.views.view_post', name='view_blog_post'),
+    url(r'^blog/category/(?P<slug>[^\.]+).html', 'blog.views.view_category', name='view_blog_category'),
+    url(r'^blog/', 'blog.views.blog_index', name='blog_index'),
+
     url(r'^admin/', include(admin.site.urls)),
     (r'^i18n/', include('django.conf.urls.i18n')),
 

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Blog | CoinSafe{% endblock title %}
+<!-- {% block meta_content %}How to store your bitcoin the proper way. We walk you through the safest and most secure methods for putting your bitcoin in cold storage.{% endblock meta_content %} -->
+{% block content %}
+<div class="section-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <!-- Remove the .animated class if you don't want things to move -->
+        <h1 class="animated slideInLeft"><span></span></h1>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2 class="hl top-50">The CoinSafe Blog</h2>
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 blog-summary-list">
+      <div class="blog-summary">
+          <h4><a href="blog-post.html">{{post.title|safe}}</a></h4>
+        <ul class="text-muted list-inline" style="margin:0;">
+          <!-- <li><i class="fa fa-user"></i> <a href="profile.html">Administrator</a></li> -->
+          <li><i class="fa fa-calendar"></i> {{post.posted_at}}</li>
+        </ul>
+        <hr>
+        <p class="blog-text">
+          {{post.body|safe}}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

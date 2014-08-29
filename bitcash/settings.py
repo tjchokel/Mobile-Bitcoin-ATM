@@ -79,6 +79,7 @@ INSTALLED_APPS = (
     'bitstamp_wallets',
     'blockchain_wallets',
     'profiles',
+    'blog',
 )
 
 MIDDLEWARE_CLASSES = (

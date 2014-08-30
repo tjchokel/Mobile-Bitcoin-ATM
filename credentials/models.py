@@ -9,7 +9,7 @@ from polymorphic import PolymorphicModel
 
 from countries import BFH_CURRENCY_DROPDOWN
 
-from utils import format_satoshis_with_units
+from utils import format_satoshis_with_units_rounded
 
 
 class BaseCredential(PolymorphicModel):
@@ -72,6 +72,7 @@ class BaseCredential(PolymorphicModel):
         raise Exception('Not Implemented')
 
     def get_latest_balance(self):
+        # These are by definition not real-time
         return BaseBalance.objects.filter(credential=self).order_by('created_at').last()
 
     def get_status(self):
@@ -88,7 +89,10 @@ class BaseBalance(PolymorphicModel):
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
 
     def __str__(self):
-        return '%s: %s' % (self.id, format_satoshis_with_units(self.satoshis))
+        return '%s: %s' % (self.id, format_satoshis_with_units_rounded(self.satoshis))
+
+    def get_btcs_with_units_rounded(self):
+        return format_satoshis_with_units_rounded(self.satoshis)
 
 
 class BaseSentBTC(PolymorphicModel):

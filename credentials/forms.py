@@ -2,6 +2,13 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 
+class DeleteCredentialForm(forms.Form):
+    credential_id = forms.CharField(
+        required=True,
+        widget=forms.HiddenInput(),
+        )
+
+
 class BitcoinCredentialsForm(forms.Form):
 
     exchange_choice = forms.ChoiceField(

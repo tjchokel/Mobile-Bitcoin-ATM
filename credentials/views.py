@@ -7,19 +7,20 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.shortcuts import get_object_or_404
 
 from annoying.decorators import render_to
+from annoying.functions import get_object_or_None
 
-from credentials.models import BaseCredential
+from credentials.models import BaseCredential, BaseAddressFromCredential
 from coinbase_wallets.models import CBSCredential
 from blockchain_wallets.models import BCICredential
 from bitstamp_wallets.models import BTSCredential
 
-from credentials.forms import BitcoinCredentialsForm, SENSITIVE_CRED_PARAMS
+from credentials.forms import BitcoinCredentialsForm, DeleteCredentialForm, SENSITIVE_CRED_PARAMS
+
+from utils import format_satoshis_with_units, format_satoshis_with_units_rounded
 
 import json
 
-
-def refresh_credentials(request):
-    pass
+from datetime import timedelta
 
 
 @sensitive_post_parameters(*SENSITIVE_CRED_PARAMS)
@@ -38,6 +39,10 @@ def base_creds(request):
             messages.warning(request, _('No API Credential Found'))
 
     add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
+    if credential:
+        del_cred_form = DeleteCredentialForm(initial={'credential_id': credential.id})
+    else:
+        del_cred_form = DeleteCredentialForm()
     if request.method == 'POST':
         if 'exchange_choice' in request.POST:
             add_cred_form = BitcoinCredentialsForm(data=request.POST)
@@ -91,77 +96,35 @@ def base_creds(request):
                     credential.mark_disabled()
                     messages.warning(request, INVALID_MSG)
 
-        elif 'delete_credentials' in request.POST:
-            pass
+        elif 'credential_id' in request.POST:
+            del_cred_form = DeleteCredentialForm(data=request.POST)
+            if del_cred_form.is_valid():
+                credential = get_object_or_None(BaseCredential, id=del_cred_form.cleaned_data['credential_id'])
+                # Fail loudly, this shouldn't be possible
+                assert credential, 'Hacker or Bug Alert'
+
+                assert credential.merchant == merchant, 'Hacker or Bug Alert'
+
+                # Disable any lingering credentials (to be cautious)
+                merchant.disable_all_credentials()
+
+                DEL_MSG = _('Your %(credential_name)s API credentials were removed. Please add new credentials in order to use CoinSafe.' % {
+                    'credential_name': credential.get_credential_to_display()})
+
+                credential = None
+                messages.info(request, DEL_MSG)
+
+            else:
+                # Fail loudly, this shouldn't be possible
+                assert False, 'Hacker or Bug Alert'
 
     return {
             'credential': credential,
             'add_cred_form': add_cred_form,
+            'del_cred_form': del_cred_form,
             'merchant': merchant,
             'dest_obj': merchant.get_destination_address,
             }
-
-
-@login_required
-def refresh_bci_credentials(request):
-    user = request.user
-    merchant = user.get_merchant()
-    credential = merchant.get_blockchain_credential()
-    success = False
-
-    try:
-        balance = credential.get_balance()
-        if balance is not False:
-            success = True
-    except:
-        pass
-
-    if success:
-        messages.success(request, _('Your Blockchain API info has been refreshed'))
-    else:
-        messages.warning(request, _('Your Blockchain API info could not be validated'))
-    return HttpResponse("*ok*")
-
-
-@login_required
-def refresh_cb_credentials(request):
-    user = request.user
-    merchant = user.get_merchant()
-    credential = merchant.get_coinbase_credential()
-    success = False
-
-    try:
-        balance = credential.get_balance()
-        if balance is not False:
-            success = True
-    except:
-        pass
-
-    if success:
-        messages.success(request, _('Your Coinbase API info has been refreshed'))
-    else:
-        messages.warning(request, _('Your Coinbase API info could not be validated'))
-    return HttpResponse("*ok*")
-
-
-@login_required
-def refresh_bs_credentials(request):
-    user = request.user
-    merchant = user.get_merchant()
-    credential = merchant.get_bitstamp_credential()
-    success = False
-    try:
-        balance = credential.get_balance()
-        if balance is not False:
-            success = True
-    except:
-        pass
-
-    if success:
-        messages.success(request, _('Your Bistamp API info has been refreshed'))
-    else:
-        messages.warning(request, _('Your Bistamp API info could not be validated'))
-    return HttpResponse("*ok*")
 
 
 @login_required
@@ -172,13 +135,22 @@ def get_new_address(request, credential_id):
     merchant = user.get_merchant()
     assert credential.merchant == merchant, 'potential hacker alert!'
 
-    dict_response = {'new_address': credential.get_best_receiving_address()}
+    recent_time = now() - timedelta(minutes=10)
+    base_address_objs = BaseAddressFromCredential.objects.filter(
+            credential=credential, created_at__gt=recent_time).order_by('-created_at')
+    if base_address_objs:
+        # Don't make API call for a new address unless it has been a while
+        best_address = base_address_objs[0].b58_address
+    else:
+        best_address = credential.get_best_receiving_address()
+
+    dict_response = {'new_address': best_address}
 
     return HttpResponse(json.dumps(dict_response), content_type='application/json')
 
 
 @login_required
-def get_credential_balance(request, credential_id):
+def get_current_balance(request, credential_id):
     credential = get_object_or_404(BaseCredential, id=credential_id)
 
     user = request.user
@@ -186,6 +158,15 @@ def get_credential_balance(request, credential_id):
 
     assert credential.merchant == merchant, 'potential hacker alert!'
 
-    dict_response = {'balance': credential.get_balance()}
+    satoshis = credential.get_balance()
+
+    if satoshis is False:
+        pass
+
+    dict_response = {
+            'satoshis': satoshis,
+            'fswu': format_satoshis_with_units(satoshis),
+            'fswur': format_satoshis_with_units_rounded(satoshis),
+            }
 
     return HttpResponse(json.dumps(dict_response), content_type='application/json')

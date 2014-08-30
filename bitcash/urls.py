@@ -39,8 +39,7 @@ urlpatterns = patterns('',
     url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
     # API Partner AJAX Calls
     url(r'^get-new-address/(?P<credential_id>\w+)$', 'credentials.views.get_new_address', name='get_new_address'),
-    url(r'^get-credential-balance/(?P<credential_id>\w+)$', 'credentials.views.get_credential_balance', name='get_credential_balance'),
-    url(r'^refresh-credentials/$', 'credentials.views.refresh_credentials', name='refresh_credentials'),
+    url(r'^get-current-balance/(?P<credential_id>\w+)$', 'credentials.views.get_current_balance', name='get_current_balance'),
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),

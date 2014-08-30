@@ -42,17 +42,17 @@
         </li>
         <li>
           {% if current_tab == 'transactions' %}
-            <a href="#" class="active"><i class="sign fa fa-bitcoin bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
+            <a href="#" class="active"><i class="sign fa fa-list bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
           {% else %}
-            <a href="{% url "merchants.views.merchant_transactions" %}"><i class="sign fa fa-bitcoin bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
+            <a href="{% url "merchants.views.merchant_transactions" %}"><i class="sign fa fa-list bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
           {% endif %}
         </li>
         <li>
           {# FIXME: new icon here #}
           {% if current_tab == 'credentials' %}
-            <a href="#" class="active"><i class="sign fa fa-gears bg-red"></i>{% trans "Bitcoin Wallet" %} <i class="fa fa-chevron-right pull-right"></i></a>
+            <a href="#" class="active"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %} <i class="fa fa-chevron-right pull-right"></i></a>
           {% else %}
-            <a href="{% url "credentials.views.base_creds" %}"><i class="sign fa fa-gears bg-red"></i>{% trans "Bitcoin Wallet" %} <i class="fa fa-chevron-right pull-right"></i></a>
+            <a href="{% url "credentials.views.base_creds" %}"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %} <i class="fa fa-chevron-right pull-right"></i></a>
           {% endif %}
         </li>
         <li>

@@ -5,10 +5,6 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from annoying.functions import get_object_or_None
 
-from coinbase_wallets.models import CBSCredential
-from blockchain_wallets.models import BCICredential
-from bitstamp_wallets.models import BTSCredential
-
 from phonenumber_field.modelfields import PhoneNumberField
 
 from bitcoins.models import DestinationAddress, ShopperBTCPurchase, BTCTransaction
@@ -65,11 +61,7 @@ class Merchant(models.Model):
         return self.destinationaddress_set.filter(retired_at__isnull=True)
 
     def get_destination_address(self):
-        destination_addresses = self.get_destination_addresses()
-        if destination_addresses:
-            return destination_addresses[0]
-        else:
-            return None
+        return self.get_destination_addresses().first()
 
     def has_destination_address(self):
         return bool(self.get_destination_address())
@@ -195,59 +187,11 @@ class Merchant(models.Model):
         return self.get_registration_percent_complete() == 100
 
     def has_valid_api_credential(self):
-        cb = self.has_valid_coinbase_credentials()
-        bs = self.has_valid_bitstamp_credentials()
-        bci = self.has_valid_blockchain_credentials()
-        return any([cb, bs, bci])
+        return bool(self.get_valid_api_credential())
 
     def get_valid_api_credential(self):
-        if self.has_valid_coinbase_credentials():
-            return self.get_coinbase_credential()
-        elif self.has_valid_bitstamp_credentials():
-            return self.get_bitstamp_credential()
-        elif self.has_valid_blockchain_credentials():
-            return self.get_blockchain_credential()
-        return None
-
-    def has_coinbase_credentials(self):
-        return bool(self.get_coinbase_credential())
-
-    def has_valid_coinbase_credentials(self):
-        credentials = self.get_coinbase_credential()
-        if credentials and not credentials.last_failed_at:
-            return True
-        else:
-            return False
-
-    def get_coinbase_credential(self):
-        return self.basecredential_set.instance_of(
-                CBSCredential).filter(disabled_at=None).last()
-
-    def get_bitstamp_credential(self):
-        return self.basecredential_set.instance_of(
-                BTSCredential).filter(disabled_at=None).last()
-
-    def get_blockchain_credential(self):
-        return self.basecredential_set.instance_of(
-                BCICredential).filter(disabled_at=None).last()
-
-    def has_blockchain_credentials(self):
-        return bool(self.get_blockchain_credential())
-
-    def has_valid_blockchain_credentials(self):
-        credentials = self.get_blockchain_credential()
-        if credentials and not credentials.last_failed_at:
-            return True
-        return False
-
-    def has_bitstamp_credentials(self):
-        return bool(self.get_bitstamp_credential())
-
-    def has_valid_bitstamp_credentials(self):
-        credentials = self.get_bitstamp_credential()
-        if credentials and not credentials.last_failed_at:
-            return True
-        return False
+        # there should be only 1 (or 0)
+        return self.basecredential_set.filter(disabled_at=None).last()
 
     def disable_all_credentials(self):
         " use this when reseting a user's password "
@@ -321,10 +265,8 @@ class Merchant(models.Model):
         return bool(self.get_hours())
 
     def get_website_obj(self):
-        websites = self.merchantwebsite_set.filter(deleted_at=None)
-        if websites:
-            return websites[0]
-        return None
+        # There should be only 1 (or 0), for now at least
+        return self.merchantwebsite_set.filter(deleted_at=None).last()
 
     def set_website(self, website_to_set):
         current_website_obj = self.get_website_obj()

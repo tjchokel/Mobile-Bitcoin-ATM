@@ -61,7 +61,11 @@ def customer_dashboard(request):
         msg = _('Sorry, that request was cancelled. Please contact us if that was not intentional.')
         return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
-    if merchant.has_valid_coinbase_credentials():
+    credential = merchant.get_valid_api_credential()
+
+    is_coinbase_credential = bool(credential.get_credential_abbrev() == 'CBS')
+
+    if is_coinbase_credential:
         buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, merchant=merchant)
     else:
         buy_form = NoEmailBuyBitcoinForm(merchant=merchant)
@@ -77,12 +81,12 @@ def customer_dashboard(request):
     if request.method == 'POST':
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
-            if merchant.has_valid_coinbase_credentials():
+            if is_coinbase_credential:
                 buy_form = BuyBitcoinForm(data=request.POST, merchant=merchant)
             else:
                 buy_form = NoEmailBuyBitcoinForm(data=request.POST, merchant=merchant)
             if buy_form.is_valid():
-                if merchant.has_valid_coinbase_credentials():
+                if is_coinbase_credential:
                     email_or_btc_address = buy_form.cleaned_data['email_or_btc_address']
                 else:
                     email_or_btc_address = None
@@ -94,7 +98,6 @@ def customer_dashboard(request):
                     email=email,
                 )
 
-                credential = merchant.get_valid_api_credential()
                 # if sending to email
                 if email_or_btc_address and email_or_btc_address == '1':
                     ShopperBTCPurchase.objects.create(

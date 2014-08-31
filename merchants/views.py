@@ -45,10 +45,11 @@ def login_request(request):
             if user_found:
                 user = authenticate(username=email, password=password)
                 if user:
+                    if user.is_staff:
+                        return HttpResponseRedirect(reverse_lazy('two_factor:login'))
                     login(request, user)
 
                     request.session['last_password_validation'] = now().ctime()
-
                     # Log the login
                     LoggedLogin.record_login(request)
 

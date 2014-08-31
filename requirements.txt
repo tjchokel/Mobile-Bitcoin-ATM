@@ -16,7 +16,7 @@ django-phonenumber-field==0.5
 django-polymorphic==0.5.5
 django-storages==1.1.8
 django-toolbelt==0.0.1
-django-two-factor-auth==0.5.0
+django-two-factor-auth==1.0.0-beta3
 gnureadline==6.3.3
 gunicorn==18.0
 ipython==2.1.0
@@ -29,6 +29,7 @@ pycrypto==2.6.1
 pystache==0.5.4
 python-dateutil==2.2
 python-postmark==0.4.1
+qrcode==4.0.4
 raven==5.0.0
 requests==2.3.0
 six==1.7.2

@@ -30,13 +30,6 @@ def base_creds(request):
     user = request.user
     merchant = user.get_merchant()
     credential = merchant.get_valid_api_credential()
-    if False:
-        if credential:
-            credential.disabled_at = now()
-            credential.save()
-            messages.success(request, _('Your API Credentials Have Been Removed from Your Account'))
-        else:
-            messages.warning(request, _('No API Credential Found'))
 
     add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
     if credential:

@@ -13,7 +13,7 @@
       <div class="row">
         <div class="col-sm-12">
           <h4 class="hl">
-            <a style="color:#515151;" href="#">{% trans "Bitcoin Wallet" %}</a>
+            {% trans "Bitcoin Wallet" %}
           </h4>
 
           {% if credential %}
@@ -125,12 +125,12 @@
               {% endif %}
               <li>
                 {% trans "Balance" %}: {{ credential.get_latest_balance.get_btcs_with_units_rounded }}
-                <a href="#" onclick="getCurrentBalance({{credential.id}});">
+                <a style="curosr:pointer;" onclick="getCurrentBalance({{credential.id}});">
                   <span id="refresh-span"><i class="fa fa-refresh"></i></span>
                 </a>
               </li>
               <li>
-                <a href="#" data-toggle="modal" data-target="#delete-credentials-modal">
+                <a style="curosr:pointer;" data-toggle="modal" data-target="#delete-credentials-modal">
                   {% trans "Delete" %} <i class="fa fa-trash-o"></i>
                 </a>
               </li>
@@ -151,7 +151,7 @@
 
             <p>
               {% blocktrans %}
-                In order to sell bitcoin to customers, you need to link a Bitcoin wallet to your CoinSafe account <a href="#" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
+                In order to sell bitcoin to customers, you need to link a Bitcoin wallet to your CoinSafe account <a style="curosr:pointer;" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
               {% endblocktrans %}
             </p>
 

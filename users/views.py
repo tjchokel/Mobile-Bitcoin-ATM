@@ -63,7 +63,10 @@ def customer_dashboard(request):
 
     credential = merchant.get_valid_api_credential()
 
-    is_coinbase_credential = bool(credential.get_credential_abbrev() == 'CBS')
+    is_coinbase_credential = False
+    if credential:
+        if credential.get_credential_abbrev() == 'CBS':
+            is_coinbase_credential = True
 
     if is_coinbase_credential:
         buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, merchant=merchant)

@@ -40,6 +40,7 @@ urlpatterns = patterns('',
     # API Partner AJAX Calls
     url(r'^get-new-address/(?P<credential_id>\w+)$', 'credentials.views.get_new_address', name='get_new_address'),
     url(r'^get-current-balance/(?P<credential_id>\w+)$', 'credentials.views.get_current_balance', name='get_current_balance'),
+    url(r'^refresh-credentials/(?P<credential_id>\w+)$', 'credentials.views.refresh_credentials', name='refresh_credentials'),
 
     # Inbound Webhooks
     url(r'^bci-webhook/(?P<random_id>\w+)$', 'bitcoins.views.process_bci_webhook', name='process_bci_webhook'),

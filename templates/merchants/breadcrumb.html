@@ -58,7 +58,14 @@
               {% endif %}
             </a>
           {% else %}
-            <a href="{% url "credentials.views.base_creds" %}"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %} <i class="fa fa-chevron-right pull-right"></i></a>
+            <a href="{% url "credentials.views.base_creds" %}"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %}
+              {% if merchant.has_valid_api_credential %}
+                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
+              {% else %}
+                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
+              {% endif %}
+            </a>
+
           {% endif %}
         </li>
         <li>

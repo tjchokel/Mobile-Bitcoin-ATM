@@ -29,7 +29,7 @@ from datetime import timedelta
 def base_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_valid_api_credential()
+    credential = merchant.get_lastest_api_credential()
 
     add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
     if credential:
@@ -154,7 +154,6 @@ def get_current_balance(request, credential_id):
     satoshis = credential.get_balance()
 
     if satoshis is False:
-        messages.warning(request, _('Your API credentials could not be refreshed'))
         pass
 
     dict_response = {
@@ -163,6 +162,28 @@ def get_current_balance(request, credential_id):
             'fswur': format_satoshis_with_units_rounded(satoshis),
             }
 
-    messages.success(request, _('Your API credentials have been refreshed'))
-
     return HttpResponse(json.dumps(dict_response), content_type='application/json')
+
+
+@login_required
+def refresh_credentials(request, credential_id):
+    credential = get_object_or_404(BaseCredential, id=credential_id)
+
+    user = request.user
+    merchant = user.get_merchant()
+    success = False
+
+    assert credential.merchant == merchant, 'potential hacker alert!'
+
+    try:
+        balance = credential.get_balance()
+        if balance is not False:
+            success = True
+    except:
+        pass
+
+    if success:
+        messages.success(request, _('Your API credentials have been refreshed'))
+    else:
+        messages.warning(request, _('Your API info could not be validated'))
+    return HttpResponse("*ok*")

@@ -118,9 +118,13 @@
                   {{credential.customer_id}}
                 {% endif %}
                 <br/><br/>
-                <a class="btn btn-info" style="cursor:pointer;" onclick="getCurrentBalance({{credential.id}});">
-                  <span id="refresh-span"> <i class="fa fa-refresh"></i></span>{% trans "Refresh" %}
+                
+                <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
+                  <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                  <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
+                  {% trans "Refresh" %}
                 </a>
+
                 <a class="btn btn-info" style="cursor:pointer;" href="{{ credential.get_login_link }}" target="_blank">
                   <i class="fa fa-external-link"></i>{% trans "Login" %}
                 </a>
@@ -143,7 +147,11 @@
                 </tr>
                 <tr>
                   <td class="text-muted">{% trans "Balance" %}</td>
-                  <td align="right">{{ credential.get_latest_balance.get_btcs_with_units_rounded }}</td>
+                  <td align="right" id="wallet-balance">
+                      <span class="balance-loader">
+                        <i class="fa fa-spinner fa-spin"></i>
+                      </span>
+                  </td>
                 </tr>
                 <tr>
                   <td class="text-muted">{% trans "Added" %}</td>
@@ -333,18 +341,47 @@
       }
     });
 
+    function refreshCredentials(credential_id) {
+      $("#refresh-button").toggleClass("active");
+      // $('#refresh-button').addClass("hidden");
+      $.ajax({
+          type: 'get',
+          url: '/refresh-credentials/'+credential_id,
+          success: function (data) {
+            console.log('SUCESS');
+            location.reload(true);
+            $('#refresh-loader').addClass("hidden");
+            $('#refresh-button').removeClass("hidden");
+            $("#refresh-button").toggleClass("active");
+
+          },
+          error: function(data) {
+            console.log('refreshCredentials Failed');
+            $('#refresh-loader').addClass("hidden");
+            $('#refresh-button').removeClass("hidden");
+            $("#refresh-button").toggleClass("active");
+            location.reload(true);
+          }
+        });
+    }
+
     function getCurrentBalance(credential_id) {
         {# TODO: Make the success handler render the updated page #}
-        $('#refresh-span').html('<span class="active has-spinner"><i class="fa fa-spinner fa-spin"></i></span>')
+
         $.ajax({
           type: 'get',
           url: '/get-current-balance/'+credential_id,
           success: function (data) {
-            location.reload(true);
+            console.log(data);
+            $(".price-loader").addClass("hidden");
+            $("#wallet-balance").html(data['fswur']);
+            // location.reload(true);
           },
           error: function(data) {
+            $(".price-loader").addClass("hidden");
+            console.log(data);
             console.log('getCurrentBalance Failed');
-            location.reload(true);
+            // location.reload(true);
           }
         });
     }
@@ -382,6 +419,9 @@
         $('#div_id_bci_second_password .asteriskField').remove();
 
         $('#id_cb_api_key').select();
+        {% if credential %}
+          getCurrentBalance({{credential.id}});
+        {% endif %}
 
     });
 

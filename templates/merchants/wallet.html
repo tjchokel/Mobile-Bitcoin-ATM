@@ -297,17 +297,14 @@
 
     function refreshCredentials(credential_id) {
       $("#refresh-button").toggleClass("active");
-      // $('#refresh-button').addClass("hidden");
       $.ajax({
           type: 'get',
           url: '/refresh-credentials/'+credential_id,
           success: function (data) {
-            console.log('SUCESS');
-            location.reload(true);
             $('#refresh-loader').addClass("hidden");
             $('#refresh-button').removeClass("hidden");
             $("#refresh-button").toggleClass("active");
-
+            location.reload(true);
           },
           error: function(data) {
             console.log('refreshCredentials Failed');
@@ -326,14 +323,12 @@
           type: 'get',
           url: '/get-current-balance/'+credential_id,
           success: function (data) {
-            console.log(data);
             $(".price-loader").addClass("hidden");
             $("#wallet-balance").html(data['fswur']);
             // location.reload(true);
           },
           error: function(data) {
             $(".price-loader").addClass("hidden");
-            console.log(data);
             console.log('getCurrentBalance Failed');
             // location.reload(true);
           }

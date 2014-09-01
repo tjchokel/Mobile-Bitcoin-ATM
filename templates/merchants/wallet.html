@@ -168,52 +168,6 @@
               </tbody>
             </table>
 
-
-            <!-- {% blocktrans with deposit_address=merchant.get_destination_address.b58_address credential_display=credential.get_credential_to_display %}
-                  Deposits will go to your {{ credential_display }} address: {{ deposit_address }}
-                {% endblocktrans %}
-
-            <p>
-              {% blocktrans with wallet_name=credential.get_credential_to_display %}
-                Your {{ wallet_name }} wallet:
-              {% endblocktrans %}
-            </p> -->
-
-            <!-- <ul>
-              <li>{% trans "Added" %}: {{credential.created_at|naturaltime}}</li>
-              <li>{% trans "Status" %}: {{credential.get_status|format_status_string}}</li>
-              {% if credential.get_credential_abbrev == 'CBS' %}
-                <li>{% trans "API Key" %}: {{credential.api_key|obscure_except_ending}}</li>
-                {# <li>{% trans "Secret Key" %}: {{credential.api_secret|obscure_except_ending}}</li>#}
-              {% elif credential.get_credential_abbrev == 'BCI' %}
-                <li>{% trans "Username" %}: {{credential.username|obscure_except_ending}}</li>
-                {#<li>{% trans "Main Password" %}: {{credential.main_password|obscure_except_ending}}</li>#}
-                {#<li>{% trans "Secondary Password" %}: {{credential.second_password|obscure_except_ending}}</li>#}
-              {% else %}
-                <li>{% trans "Customer ID" %}: {{credential.customer_id|obscure_except_ending}}</li>
-                {#<li>{% trans "blockchain.info" %}: {{credential.api_key|obscure_except_ending}}</li>#}
-                {#<li>{% trans "Bitstamp" %}: {{credential.api_secret|obscure_except_ending}}</li>#}
-              {% endif %}
-              <li>
-                {% trans "Balance" %}: {{ credential.get_latest_balance.get_btcs_with_units_rounded }}
-                <a style="curosr:pointer;" onclick="getCurrentBalance({{credential.id}});">
-                  <span id="refresh-span"><i class="fa fa-refresh"></i></span>
-                </a>
-              </li>
-              <li>
-                <a style="curosr:pointer;" data-toggle="modal" data-target="#delete-credentials-modal">
-                  {% trans "Delete" %} <i class="fa fa-trash-o"></i>
-                </a>
-              </li>
-              {% if merchant.get_destination_address.credential == credential %}
-              <li>
-                {% blocktrans with deposit_address=merchant.get_destination_address.b58_address credential_display=credential.get_credential_to_display %}
-                  Deposits will go to your {{ credential_display }} address: {{ deposit_address }}
-                {% endblocktrans %}
-              </li>
-              {% endif %}
-            </ul> -->
-
           {% else %}
 
             <p>

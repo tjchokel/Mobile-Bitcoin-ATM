@@ -71,6 +71,15 @@ class BaseCredential(PolymorphicModel):
     def get_login_link(self):
         raise Exception('Not Implemented')
 
+    def is_blockchain_credential(self):
+        return False
+
+    def is_coinbase_credential(self):
+        return False
+
+    def is_bitstamp_credential(self):
+        return False
+
     def get_latest_balance(self):
         # These are by definition not real-time
         return BaseBalance.objects.filter(credential=self).order_by('created_at').last()

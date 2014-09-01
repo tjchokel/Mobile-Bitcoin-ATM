@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load app_extras %}
+{% load staticfiles %}
 {% block content %}
 <div class="container">
     <!-- Profile Menu -->
@@ -15,7 +16,6 @@
           <h4 class="hl">
             {% trans "Bitcoin Wallet" %}
           </h4>
-
           {% if credential %}
 
             {# delete api credentials modal #}
@@ -102,13 +102,76 @@
               </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
 
+            {# wallet info #}
+            <div class="block-inverse">
+              <div class="head-inverse" style="text-align:center;font-size: 18px;font-weight: 300;">
+                {% if credential.is_blockchain_credential %}
+                  <img src='{% static "img/blockchain-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
+                  {{credential.username}}
+                {% endif %}
+                {% if credential.is_coinbase_credential %}
+                  <img src='{% static "img/coinbase-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
+                  {{credential.api_key}}
+                {% endif %}
+                {% if credential.is_bitstamp_credential %}
+                  <img src='{% static "img/bitstamp-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
+                  {{credential.customer_id}}
+                {% endif %}
+                <br/><br/>
+                <a class="btn btn-info" style="cursor:pointer;" onclick="getCurrentBalance({{credential.id}});">
+                  <span id="refresh-span"> <i class="fa fa-refresh"></i></span>{% trans "Refresh" %}
+                </a>
+                <a class="btn btn-info" style="cursor:pointer;" href="{{ credential.get_login_link }}" target="_blank">
+                  <i class="fa fa-external-link"></i>{% trans "Login" %}
+                </a>
+                <a class="btn-danger btn" style="cursor:pointer;" data-toggle="modal" data-target="#delete-credentials-modal">
+                  <i class="fa fa-trash-o"></i>{% trans "Delete" %}
+                </a>
+                <br/>
+                <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});" style="margin-top:10px;">
+                  <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                  <i class="fa fa-bitcoin"></i>{% trans "Add funds to this wallet" %}
+                </a>
+              </div>
+            </div>
+            <br/><br/>
+            <table id="bitcoin-info-list" class="table">
+              <tbody>
+                <tr>
+                  <td class="text-muted">{% trans "Status" %}</td>
+                  <td align="right">{{credential.get_status|format_status_string}}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Balance" %}</td>
+                  <td align="right">{{ credential.get_latest_balance.get_btcs_with_units_rounded }}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Added" %}</td>
+                  <td align="right">{{credential.created_at|naturaltime}}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">
+                    {% blocktrans with credential_display=credential.get_credential_to_display %}
+                      Your {{ credential_display }} address for deposits
+                    {% endblocktrans %}
+                  </td>
+                  <td align="right">{{merchant.get_destination_address.b58_address}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+
+            <!-- {% blocktrans with deposit_address=merchant.get_destination_address.b58_address credential_display=credential.get_credential_to_display %}
+                  Deposits will go to your {{ credential_display }} address: {{ deposit_address }}
+                {% endblocktrans %}
+
             <p>
               {% blocktrans with wallet_name=credential.get_credential_to_display %}
                 Your {{ wallet_name }} wallet:
               {% endblocktrans %}
-            </p>
+            </p> -->
 
-            <ul>
+            <!-- <ul>
               <li>{% trans "Added" %}: {{credential.created_at|naturaltime}}</li>
               <li>{% trans "Status" %}: {{credential.get_status|format_status_string}}</li>
               {% if credential.get_credential_abbrev == 'CBS' %}
@@ -141,11 +204,7 @@
                 {% endblocktrans %}
               </li>
               {% endif %}
-            </ul>
-            <a class="btn btn-info btn-lg has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});" style="margin-left: auto; margin-right: auto; display: block;">
-              <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-              {% trans "Add funds to this wallet" %}
-            </a>
+            </ul> -->
 
           {% else %}
 
@@ -187,7 +246,7 @@
               {{ add_cred_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">{% trans "Complete Registration" %}</button>
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Add Wallet" %}</button>
               </div>
             </form>
 

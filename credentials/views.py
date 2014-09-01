@@ -154,6 +154,7 @@ def get_current_balance(request, credential_id):
     satoshis = credential.get_balance()
 
     if satoshis is False:
+        messages.warning(request, _('Your API credentials could not be refreshed'))
         pass
 
     dict_response = {
@@ -161,5 +162,7 @@ def get_current_balance(request, credential_id):
             'fswu': format_satoshis_with_units(satoshis),
             'fswur': format_satoshis_with_units_rounded(satoshis),
             }
+
+    messages.success(request, _('Your API credentials have been refreshed'))
 
     return HttpResponse(json.dumps(dict_response), content_type='application/json')

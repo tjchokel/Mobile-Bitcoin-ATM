@@ -138,7 +138,7 @@ class ForwardingAddress(models.Model):
         return self.merchant.minimum_confirmations
 
     def get_all_forwarding_transactions(self):
-        return self.btctransaction_set.filter(destination_address__isnull=True).order_by('-id')
+        return self.btctransaction_set.filter(destination_address=None).order_by('-id')
 
     def get_first_forwarding_transaction(self):
         forwarding_txns = self.get_all_forwarding_transactions()
@@ -165,15 +165,15 @@ class ForwardingAddress(models.Model):
         return txn_group_list
 
     def all_transactions_complete(self):
-        transactions = self.btctransaction_set.filter(destination_address__isnull=True)
-        incomplete_transactions = transactions.filter(met_minimum_confirmation_at__isnull=True)
-        return (transactions.count() > 0 and incomplete_transactions.count() == 0)
+        transactions = self.btctransaction_set.filter(destination_address=None)
+        incomplete_transactions = [x for x in transactions if not x.is_confirmed()]
+        return (transactions and len(incomplete_transactions) == 0)
 
     def get_satoshis_and_fiat_transactions_total(self):
         transactions = self.get_all_forwarding_transactions()
         satoshis, fiat = 0, 0
         for txn in transactions:
-            if txn.met_minimum_confirmation_at:
+            if txn.is_confirmed():
                 satoshis += txn.satoshis
                 fiat += txn.fiat_amount
         return satoshis, fiat
@@ -270,13 +270,14 @@ class ForwardingAddress(models.Model):
                 destination_address=self.destination_address.b58_address,
                 txn_data=all_txn_data)
 
-        for address, satoshis, confirmations, txn_hash in txn_data:
+        for address, satoshis, confirmations, txn_hash, confidence in txn_data:
             if address == self.b58_address:
                 ForwardingAddress.handle_forwarding_txn(
                     input_address=address,
                     satoshis=satoshis,
                     num_confirmations=confirmations,
-                    input_txn_hash=txn_hash)
+                    input_txn_hash=txn_hash,
+                    confidence=confidence)
             else:
                 ForwardingAddress.handle_destination_txn(
                     forwarding_address=self.b58_address,
@@ -286,12 +287,16 @@ class ForwardingAddress(models.Model):
                     destination_txn_hash=txn_hash)
 
     @staticmethod
-    def handle_forwarding_txn(input_address, satoshis, num_confirmations, input_txn_hash):
+    def handle_forwarding_txn(input_address, satoshis, num_confirmations, input_txn_hash, confidence=0):
         """
         Abstracted helper function that can be used on API calls and webhook
 
         One day, this could support many different data sources for uptime.
+
+        confidence is a float between 0 and 1 and is (currently) only supported by blockcypher
         """
+
+        CONFIDENCE_THRESHOLD = .99
 
         fwd_txn = get_object_or_None(BTCTransaction, txn_hash=input_txn_hash)
 
@@ -316,9 +321,14 @@ class ForwardingAddress(models.Model):
                 fwd_txn.conf_num = num_confirmations
                 fwd_txn.save()
 
-                if fwd_txn.meets_minimum_confirmations() and not fwd_txn.met_minimum_confirmation_at:
+            if not fwd_txn.is_confirmed():
+                if confidence > CONFIDENCE_THRESHOLD or fwd_txn.meets_minimum_confirmations():
+
                     # Mark it as such
-                    fwd_txn.met_minimum_confirmation_at = now()
+                    if confidence > CONFIDENCE_THRESHOLD:
+                        fwd_txn.met_confidence_threshold_at = now()
+                    if fwd_txn.meets_minimum_confirmations():
+                        fwd_txn.met_minimum_confirmation_at = now()
                     fwd_txn.save()
 
                     # send out emails
@@ -353,18 +363,23 @@ class ForwardingAddress(models.Model):
             forwarding_obj.save()
 
             # Send out shopper/merchant emails
-            if fwd_txn.meets_minimum_confirmations():
-                # This shouldn't be the case, but it's a protection from things falling behind
+            if confidence > CONFIDENCE_THRESHOLD or fwd_txn.meets_minimum_confirmations():
+                # This was originally just a protection from things falling behind
+                # but is very possible (likely?) with blockcypher
 
                 # Mark it as such
-                fwd_txn.met_minimum_confirmation_at = now()
+                if confidence > CONFIDENCE_THRESHOLD:
+                    fwd_txn.met_confidence_threshold_at = now()
+                if fwd_txn.meets_minimum_confirmations():
+                    fwd_txn.met_minimum_confirmation_at = now()
                 fwd_txn.save()
 
                 # Send confirmed notifications only (no need to send newtx notifications)
                 fwd_txn.send_all_txconfirmed_notifications(force_resend=False)
             else:
-                # It's new *and* not yet confirmed, this is what we expect
-                fwd_txn.send_all_newtx_notifications(force_resend=False)
+                # It's new *and* not yet confirmed
+                # We hit this state when we ping too quickly or blockcypher is having issues
+                pass
 
         return fwd_txn
 
@@ -416,6 +431,16 @@ class ForwardingAddress(models.Model):
         return dest_txn
 
 
+class BTCTransactionManager(models.Manager):
+    def confirmed(self, *args, **kwargs):
+        """
+        Transactions that habe been marked as confirmed (in one of many ways)
+        """
+        return super(BTCTransactionManager, self).get_query_set().filter(
+            Q(met_minimum_confirmation_at__isnull=False) | Q(min_confirmations_overrode_at__isnull=False) | Q(met_confidence_threshold_at__isnull=False),
+            *args, **kwargs).order_by('-added_at')
+
+
 class BTCTransaction(models.Model):
     """
     Transactions that affect our users.
@@ -437,6 +462,8 @@ class BTCTransaction(models.Model):
     currency_code_when_created = models.CharField(max_length=5, blank=True, null=True, db_index=True)
     met_minimum_confirmation_at = models.DateTimeField(blank=True, null=True, db_index=True)
     min_confirmations_overrode_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    met_confidence_threshold_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    objects = BTCTransactionManager()
 
     def __str__(self):
         return '%s: %s' % (self.id, self.txn_hash)
@@ -447,9 +474,15 @@ class BTCTransaction(models.Model):
     def get_shopper(self):
         return self.forwarding_address.shopper
 
+    def is_confirmed(self):
+        return any([
+            self.met_minimum_confirmation_at,
+            self.min_confirmations_overrode_at,
+            self.met_confidence_threshold_at
+            ])
+
     def set_merchant_confirmation_override(self):
         self.min_confirmations_overrode_at = now()
-        self.met_minimum_confirmation_at = now()
         self.save()
 
     @classmethod
@@ -482,6 +515,10 @@ class BTCTransaction(models.Model):
             return _('Complete')
         elif self.met_minimum_confirmation_at:
             return _('BTC Received')
+        elif self.met_confidence_threshold_at:
+            return _('BTC Received')
+        elif self.min_confirmations_overrode_at:
+            return _('BTC Sent')
         else:
             msg = _('BTC Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)') % {
                     'conf_num': self.conf_num,
@@ -520,74 +557,6 @@ class BTCTransaction(models.Model):
     def get_total_confirmations_required(self):
         return self.get_merchant().minimum_confirmations
 
-    def send_shopper_newtx_email(self, force_resend=False):
-
-        BODY_TEMPLATE = 'shopper/cashout_newtx.html'
-        existing_newtx_email = get_object_or_None(SentEmail,
-                btc_transaction=self, body_template=BODY_TEMPLATE)
-
-        existing_confirmedtx_email = get_object_or_None(SentEmail,
-                btc_transaction=self,
-                body_template='shopper/cashout_txconfirmed.html')
-
-        if existing_newtx_email or existing_confirmedtx_email:
-            if not force_resend:
-                # Protection against double-sending
-                return
-
-        shopper = self.get_shopper()
-        if shopper and shopper.email:
-            merchant = self.get_merchant()
-            satoshis_formatted = self.format_satoshis_amount()
-            body_context = {
-                    'salutation': shopper.name,
-                    'satoshis_formatted': satoshis_formatted,
-                    'merchant_name': merchant.business_name,
-                    'exchange_rate_formatted': self.get_exchange_rate_formatted(),
-                    'fiat_amount_formatted': self.get_fiat_amount_formatted(),
-                    'time_range_in_minutes': self.get_time_range_in_minutes(),
-                    'confirmations_needed': merchant.minimum_confirmations,
-                    'notification_methods_formatted': shopper.get_notification_methods_formatted(),
-                    'tx_hash': self.txn_hash,
-                    }
-            return send_and_log(
-                    subject='%s Sent' % satoshis_formatted,
-                    body_template=BODY_TEMPLATE,
-                    to_merchant=None,
-                    to_email=shopper.email,
-                    to_name=shopper.name,
-                    body_context=body_context,
-                    btc_transaction=self,
-                    )
-
-    def send_shopper_newtx_sms(self, force_resend=False):
-
-        existing_newtx_sms = get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_NEW_TX)
-        existing_confirmedtx_sms = get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_TX_CONFIRMED)
-
-        if existing_newtx_sms or existing_confirmedtx_sms:
-            if not force_resend:
-                # Protection against double-sending
-                return
-
-        shopper = self.get_shopper()
-        if shopper and shopper.phone_num:
-            msg = _('You just sent %(btc_amount)s to %(business_name)s. You will receive %(fiat_amount_formatted)s when this transaction confirms in %(time_range_in_minutes)s mins.') % {
-                    'btc_amount': self.format_satoshis_amount(),
-                    'business_name': self.get_merchant().business_name,
-                    'fiat_amount_formatted': self.get_fiat_amount_formatted(),
-                    'time_range_in_minutes': self.get_time_range_in_minutes()
-                    }
-            return SentSMS.send_and_log(
-                    phone_num=shopper.phone_num,
-                    message=msg,
-                    to_user=None,
-                    to_merchant=None,
-                    to_shopper=shopper,
-                    message_type=SentSMS.SHOPPER_NEW_TX,
-                    btc_transaction=self,
-                    )
-
     def send_shopper_txconfirmed_email(self, force_resend=False):
 
         BODY_TEMPLATE = 'shopper/cashout_txconfirmed.html'
@@ -607,7 +576,10 @@ class BTCTransaction(models.Model):
                     'exchange_rate_formatted': self.get_exchange_rate_formatted(),
                     'fiat_amount_formatted': self.get_fiat_amount_formatted(),
                     'tx_hash': self.txn_hash,
-                    'review_link': '',
+                    # Verbose, but needed for future internationalizing of templates:
+                    'confirmed_via_blocks': bool(self.met_minimum_confirmation_at),
+                    'confirmed_via_confidence': bool(self.met_confidence_threshold_at),
+                    'confirmed_via_merchant': bool(self.min_confirmations_overrode_at),
                     }
             return send_and_log(
                     subject='%s Confirmed' % satoshis_formatted,
@@ -620,6 +592,11 @@ class BTCTransaction(models.Model):
                     )
 
     def send_shopper_txconfirmed_sms(self, force_resend=False):
+
+        # only send if TX is "old"
+        if now() - self.added_at < timedelta(minutes=5):
+            if not force_resend:
+                return
 
         if get_object_or_None(SentSMS, btc_transaction=self, message_type=SentSMS.SHOPPER_TX_CONFIRMED):
             if not force_resend:
@@ -661,6 +638,10 @@ class BTCTransaction(models.Model):
                 'fiat_amount_formatted': self.get_fiat_amount_formatted(),
                 'tx_hash': self.txn_hash,
                 'coinsafe_tx_uri': reverse('merchant_transactions'),
+                # Verbose, but needed for future internationalizing of templates:
+                'confirmed_via_blocks': bool(self.met_minimum_confirmation_at),
+                'confirmed_via_confidence': bool(self.met_confidence_threshold_at),
+                'confirmed_via_merchant': bool(self.min_confirmations_overrode_at),
                 }
         subject = '%s Received' % satoshis_formatted
         if shopper and shopper.name:
@@ -732,22 +713,6 @@ class BTCTransaction(models.Model):
             print 'Error was: %s' % e
         try:
             self.send_shopper_txconfirmed_sms(force_resend=False)
-        except Exception as e:
-            print 'Error was: %s' % e
-
-    def send_all_newtx_notifications(self, force_resend=False):
-        """
-        Send out all notifications, and continue to the next one in the event of an error.
-
-        TODO: better logging for these edge cases
-
-        """
-        try:
-            self.send_shopper_newtx_email(force_resend=False)
-        except Exception as e:
-            print 'Error was: %s' % e
-        try:
-            self.send_shopper_newtx_sms(force_resend=False)
         except Exception as e:
             print 'Error was: %s' % e
 

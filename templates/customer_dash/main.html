@@ -34,7 +34,8 @@
       {# timing vars #}
       var LAST_POLL_TIME = new Date();
       var NEW_DEPOSITS_TIMEOUT_MS = 10000; {# fast but has expontential backoff #}
-      var NEW_CONFS_TIMEOUT_MS = 30000; {# no backoff #}
+      var NEW_CONFS_TIMEOUT_MS = 4000; {# fast, but has (capped) exponential backoff #}
+      var NEW_CONFS_TIMEOUT_MAX_MS = 30000; {# cap, cannot be exceeded #}
 
       function poll_new_deposits() {
         console.log('poll new desposits');
@@ -47,7 +48,8 @@
                 $('#last-polled-time').html(time_since);
                 var deposits = data['txns']
                 if(deposits.length == 0){
-                  setTimeout(poll_new_deposits,NEW_DEPOSITS_TIMEOUT_MS*1.3);
+                  NEW_DEPOSITS_TIMEOUT_MS*=1.3;
+                  setTimeout(poll_new_deposits,NEW_DEPOSITS_TIMEOUT_MS);
                 }else{
                   location.reload(true);
                 }
@@ -68,8 +70,14 @@
                 $('#last-polled-time').html(time_since);
                 var txns = data['txns'];
                 var all_complete = data['all_complete'];
+                if (NEW_CONFS_TIMEOUT_MS>NEW_CONFS_TIMEOUT_MAX_MS){
+                  var NEW_CONFS_TIMEOUT_TO_USE_MS = NEW_CONFS_TIMEOUT_MAX_MS;
+                }else {
+                  NEW_CONFS_TIMEOUT_MS *= 1.2;
+                  var NEW_CONFS_TIMEOUT_TO_USE_MS = NEW_CONFS_TIMEOUT_MS;
+                }
                 if(txns.length == 0){
-                  setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_MS);
+                  setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_TO_USE_MS);
                 }else if(! all_complete){
                   var confs_needed = data['confs_needed'];
                   var txns = txns;
@@ -81,13 +89,13 @@
                     var conf_num_text = 'Pending ('+conf_num+' of '+confs_needed+' Confirms Needed)';
                     $('#tx-status-'+txn_hash).html(conf_num_text);
                   }
-                  setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_MS);
+                  setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_TO_USE_MS);
                 }else{
                   location.reload(true);
                 }
               },
               error: function(data) {
-                setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_MS);
+                setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_MAX_MS);
               }
           });
       }

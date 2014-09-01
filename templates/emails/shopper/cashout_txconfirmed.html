@@ -1,7 +1,14 @@
 {% extends "base_email.html" %}
 
 {% block content %}
-Your deposit of <b>{{ satoshis_formatted }}</b> has been confirmed!
+Your deposit of <b>{{ satoshis_formatted }}</b> has been
+  {% if confirmed_via_merchant %}
+    instantly confirmed by {{ merchant_name }}!
+  {% elif confrimed_via_blocks %}
+    confirmed by the bitcoin blockchain!
+  {% else %}
+    quickly confirmed by CoinSafe!
+  {% endif %}
 <br /><br />
 
 The exchange rate when you sent the bitcoin was <b>{{ exchange_rate_formatted }} / BTC </b> for a total value of <b>{{ fiat_amount_formatted }}</b>.
@@ -12,9 +19,13 @@ Please remind them politely if they haven't already noticed that the transaction
 <br /><br />
 
 You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see your transaction on the bitcoin blockchain here</a>.
-
-{% comment %}
-When you have some time, here's a link for you to review {{ merchant_name }}:<br />
-<a href="{{ BASE_URL }}{{ review_link }}">{{ BASE_URL }}{{ review_link }}</a>
-{% endcomment %}
 {% endblock content %}
+
+{% if not confirmed_via_merchant and not confrimed_via_blocks and confirmed_via_confidence %}
+  {% block ps %}
+    P.S. Wondering how we were able to confirm this transaction so quickly?
+    We use the math described in
+    <a {# no email appending #} href="http://www.tik.ee.ethz.ch/file/848064fa2e80f88a57aef43d7d5956c6/P2P2013_093.pdf">this academic paper</a>
+    to monitor the bitcoin network and predict when your bitcoin transaction has a very high probability of being confirmed.
+  {% endblock ps %}
+{% endif %}

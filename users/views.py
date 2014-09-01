@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
 
-from bitcoins.models import BTCTransaction, ShopperBTCPurchase
+from bitcoins.models import ShopperBTCPurchase
 from shoppers.models import Shopper
 from users.models import FutureShopper, AuthUser, EmailAuthToken, LoggedLogin
 from merchants.models import Merchant
@@ -135,19 +135,14 @@ def customer_dashboard(request):
                 forwarding_address_obj.save()
 
                 # Fetch existing TXs if they exist
-                existing_txns = BTCTransaction.objects.filter(
-                        forwarding_address=forwarding_address_obj,
-                        destination_address__isnull=True)
+                existing_txns = forwarding_address_obj.get_all_forwarding_transactions()
 
-                # If we have an TX then send a notification to the shopper
-                # They are probably unconfirmed but they may be confirmed by now
+                # If we have a confirmed TX then send a notification to the shopper
+                # (they were unable to receive a notification at confirmation time because we didn't yet have their info)
                 for existing_txn in existing_txns:
-                    if existing_txn.met_minimum_confirmation_at:
+                    if existing_txn.is_confirmed():
                         existing_txn.send_shopper_txconfirmed_email()
                         existing_txn.send_shopper_txconfirmed_sms()
-                    else:
-                        existing_txn.send_shopper_newtx_email()
-                        existing_txn.send_shopper_newtx_sms()
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
         # if submitting password confirmation form

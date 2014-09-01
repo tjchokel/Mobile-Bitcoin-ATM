@@ -48,8 +48,10 @@ def filter_bcypher_txns(forwarding_address, destination_address, txn_data):
 
     Return a list of the following form:
     (
-        (address, satoshis, confirmations, txn_hash, )
+        (address, satoshis, confirmations, txn_hash, confidence, )
     )
+
+    Note: confidence may be null
     '''
     address = txn_data['address']
 
@@ -74,6 +76,7 @@ def filter_bcypher_txns(forwarding_address, destination_address, txn_data):
             txn['value'],
             txn['confirmations'],
             txn['tx_hash'],
+            txn.get('confidence'),  # only exists for unconfirmed txns
             ))
 
     return txn_data_filtered

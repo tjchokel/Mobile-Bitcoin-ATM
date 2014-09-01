@@ -70,12 +70,12 @@ class AjaxMessaging(object):
 # http://stackoverflow.com/questions/2242909/django-user-impersonation-by-admin
 class ImpersonateMiddleware(object):
     def process_request(self, request):
-        if request.user.is_superuser and "__impersonate" in request.GET:
-            request.session['impersonate_username'] = request.GET["__impersonate"]
-        elif "__unimpersonate" in request.GET:
+        if request.user.is_superuser:
+            if "__impersonate" in request.GET:
+                request.session['impersonate_username'] = request.GET["__impersonate"]
             if 'impersonate_username' in request.session:
-                del request.session['impersonate_username']
-        if request.user.is_superuser and 'impersonate_username' in request.session:
-            # only set the user if it is not the password prompt (let's you type admin password if you are impersonating)
-            if request.path_info != '/password/' or request.method != 'POST':
-                request.user = AuthUser.objects.get(username=request.session['impersonate_username'])
+                if "__unimpersonate" in request.GET:
+                    del request.session['impersonate_username']
+                # only set the user if it is not the password prompt (let's you type admin password if you are impersonating)
+                elif request.path_info != '/password/' or request.method != 'POST':
+                    request.user = AuthUser.objects.get(username=request.session['impersonate_username'])

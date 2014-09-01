@@ -49,7 +49,7 @@
       <p class="lead text-center">
         {% trans "Please enter a name for this order. If you'd like a receipt, please include an email and/or phone number." %}
       </p>
-      <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
+      <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
           {% load crispy_forms_tags %}
           {{ shopper_form|crispy }}
           {% csrf_token %}

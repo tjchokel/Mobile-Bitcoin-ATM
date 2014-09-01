@@ -26,7 +26,7 @@
               {% endblocktrans %}
             </p>
 
-            <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
+            <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
               {% load crispy_forms_tags %}
               {{ override_confirmation_form|crispy }}
               {% csrf_token %}

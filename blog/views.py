@@ -20,6 +20,7 @@ def view_post(request, slug):
     return {
         'post': get_object_or_404(BlogPost, slug=slug),
         'categories': categories,
+        'posts': BlogPost.objects.all()[:5],
     }
 
 

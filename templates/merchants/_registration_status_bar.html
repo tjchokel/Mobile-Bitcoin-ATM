@@ -15,18 +15,13 @@
 </div>
 
 {% url 'merchants.views.merchant_profile' as profile_url %}
-{% url 'credentials.views.coinbase_creds' as coinbase_url %}
-{% url 'credentials.views.bitstamp_creds' as bitstamp_url %}
+{% url 'credentials.views.base_creds' as wallet_url %}
 {% if not merchant.address_1 %}
   {% blocktrans %}Next step: <a href="{{profile_url}}">List your business address</a>{% endblocktrans %}
+{% elif not merchant.has_valid_api_credential %}
+  {% blocktrans %}Next step: <a href="{{wallet_url}}">Attach a Bitcoin Wallet</a>{% endblocktrans %}
 {% elif not merchant.phone_num %}
   {% blocktrans %}Next step: <a href="{{profile_url}}">List your business phone number</a>{% endblocktrans %}
-{% elif not merchant.has_valid_api_credential %}
-  {% if merchant.has_coinbase_credentials %}
-    {% blocktrans %}Next step: <a href="{{coinbase_url}}">Check Your Coinbase Credentials</a>{% endblocktrans %}
-  {% elif merchant.has_bitstamp_credentials %}
-    {% blocktrans %}Next step: <a href="{{bitstamp_url}}">Check Your Bitstamp Credentials</a>{% endblocktrans %}
-  {% else %}
-    {% blocktrans %}Next step: <a href="{{coinbase_url}}">Attach An Exchange Account</a>{% endblocktrans %}
-  {% endif %}
+{% elif not merchant.has_website %}
+  {% blocktrans %}Next step: <a href="{{merchant_profile}}">List your business website</a>{% endblocktrans %}
 {% endif %}

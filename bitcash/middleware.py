@@ -9,6 +9,7 @@ from emails.trigger import add_qs
 
 class MerchantAdminSectionMiddleware(object):
     def process_request(self, request):
+
         if request.path in MERCHANT_LOGIN_REQUIRED_PATHS:
             # Pass redirection querystring to login page when about to login:
             if not request.user.is_authenticated():
@@ -26,6 +27,8 @@ class MerchantAdminSectionMiddleware(object):
                 redirect_url = '%s?next=%s' % (MERCHANT_LOGIN_PW_URL, request.path.strip('/'))
                 return HttpResponseRedirect(redirect_url)
         elif request.is_ajax():
+            return None
+        elif request.path == '/change-password':
             return None
         else:
             request.session['last_password_validation'] = None

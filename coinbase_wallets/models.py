@@ -29,6 +29,9 @@ class CBSCredential(BaseCredential):
     def get_login_link(self):
         return 'https://coinbase.com/signin'
 
+    def is_coinbase_credential(self):
+        return True
+
     def get_balance(self):
         """
         Return acount balance in satoshis

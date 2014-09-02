@@ -1,6 +1,7 @@
 from django import forms
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, URLValidator
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
 
 from bitcoins.BCAddressField import is_valid_btc_address
 from django.utils.safestring import mark_safe
@@ -429,6 +430,24 @@ class MerchantInfoForm(forms.Form):
 
     clean_phone_num = clean_phone_num
     clean_business_name = clean_business_name
+
+    def clean_website(self):
+        url = self.cleaned_data.get('website')
+
+        # append scheme if neccesary
+        if url and not url.startswith('http'):
+            url = 'http://%s' % url
+
+        # Validate URL http://stackoverflow.com/a/7160819/1754586
+        val = URLValidator()
+        try:
+            val(url)
+        except ValidationError, e:
+            # import pdb; pdb.set_trace()
+            # HACK
+            raise forms.ValidationError(e.messages[0])
+
+        return url
 
 
 class BitcoinInfoForm(forms.Form):

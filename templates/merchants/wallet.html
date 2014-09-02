@@ -191,7 +191,10 @@
                       Your {{ credential_display }} address for deposits
                     {% endblocktrans %}
                   </td>
-                  <td align="right">{{merchant.get_destination_address.b58_address | hide_long_string}}</td>
+                  
+                  <td align="right" class="hidden-sm hidden-md hidden-lg">{{merchant.get_destination_address.b58_address | hide_long_string}}</td>
+                  <td align="right" class="hidden-xs">{{merchant.get_destination_address.b58_address }}</td>
+                  </span>
                 </tr>
               </tbody>
             </table>

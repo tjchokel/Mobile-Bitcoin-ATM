@@ -353,7 +353,7 @@
           success: function (data) {
             $(".price-loader").addClass("hidden");
             // invalid credentials
-            if(data['satoshis'] == false){
+            if(data['satoshis'] === false){
               $("#wallet-balance").html('N/A');
               {% if not credential.last_failed_at %}
                 location.reload(true);

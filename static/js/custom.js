@@ -101,29 +101,29 @@ function timeUntil(date) {
     return mins_and_seconds;
 }
 
-function getTopOffAddress(credential_id) {
-    $("#fund-wallet-button").toggleClass("active");
-    $.ajax({
-      type: 'get',
-      url: '/get-new-address/'+credential_id,
-      success: function (data) {
-        $("#fund-wallet-button").toggleClass("active");
-        var address = data['new_address'];
-        console.log(data);
-        if (address){
-          $('#add-funds-modal').modal();
-          $("#current_address").html(address);
-          var src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=275x275";
-          $("#qr_code").attr("src", src);
-
-          $("#qr_code_span").slideDown(500);
+function hideLongString(string){
+    front_chars_to_show = 15;
+    string_len = string.length;
+    if (string_len <= front_chars_to_show){
+        return string;
+    }
+    var pre_string = "";
+    var post_string = "";
+    var i = 0;
+    while (i < string_len){
+        if (i < front_chars_to_show - 1){
+            pre_string += string.charAt(i);
+        }else{
+            post_string += string.charAt(i);
         }
-      },
-      error: function(data) {
-        $("#fund-wallet-button").toggleClass("active");
-        console.log('getTopOffAddress Failed');
-      }
-    });
+        i = i + 1;
+    }
+    html = '<a class="long-string-toggle" style="cursor:pointer;">';
+    html += pre_string;
+    html += '<span id="ellipsis">...</span><span id="post-string" style="display:none;">';
+    html += post_string;
+    html += '<span></a>';
+    return html;
 }
 
 $(document).ready(function(){
@@ -132,4 +132,8 @@ $(document).ready(function(){
         $('.alert').fadeOut('slow');
     }, ALERT_FADEOUT_TIME); // <-- time in milliseconds, 1000 =  1 sec
 
+    $(".long-string-toggle").click(function() {
+        $("#ellipsis").toggle();
+        $("#post-string").toggle();
+    })
 });

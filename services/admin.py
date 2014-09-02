@@ -18,6 +18,7 @@ class APICallAdmin(admin.ModelAdmin):
             )
     # https://coderwall.com/p/ppqusg
     raw_id_fields = ('merchant', 'credential', )
+    list_filter = ('api_name', 'response_code', )
 
     class Meta:
         model = APICall
@@ -38,6 +39,7 @@ class WebHookAdmin(admin.ModelAdmin):
             'data_from_get',
             'data_from_post',
             )
+    list_filter = ('api_name', 'uses_https', 'user_agent', )
 
     class Meta:
         model = WebHook

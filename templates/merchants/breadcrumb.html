@@ -6,32 +6,22 @@
     <h3 class="pull-right hidden-md hidden-lg">
       <div class="btn-group">
         {% if current_tab == 'transactions' %}
-          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Transactions <span class="caret"></span></button>
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">{% trans 'Transactions' %} <span class="caret"></span></button>
         {% endif %}
         {% if current_tab == 'settings' %}
-          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Settings <span class="caret"></span></button>
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">{% trans 'Settings' %} <span class="caret"></span></button>
+        {% endif %}
+        {% if current_tab == 'credentials' %}
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">{% trans 'Bitcoin Wallet' %} <span class="caret"></span></button>
         {% endif %}
         {% if current_tab == 'profile' %}
-          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Profile <span class="caret"></span></button>
-        {% endif %}
-        {% if current_tab == 'coinbase' %}
-          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Coinbase <span class="caret"></span></button>
-        {% endif %}
-        {% if current_tab == 'bitstamp' %}
-          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Bitstamp <span class="caret"></span></button>
-        {% endif %}
-        {% if current_tab == 'blockchain' %}
-          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">Blockchain <span class="caret"></span></button>
+          <button data-toggle="dropdown" class="btn dropdown-toggle" style="color:white;">{% trans 'Profile' %} <span class="caret"></span></button>
         {% endif %}
         <ul class="dropdown-menu">
             <li><a href="{% url "merchants.views.merchant_transactions" %}">Transactions</a></li>
             <li><a href="{% url "merchants.views.merchant_settings" %}">Settings</a></li>
+            <li><a href="{% url "credentials.views.base_creds" %}">Bitcoin Wallet</a></li>
             <li><a href="{% url "merchants.views.merchant_profile" %}">Profile</a></li>
-            <li role="presentation" class="divider"></li>
-            <li role="presentation" class="dropdown-header">API Partners</li>
-            <li><a href="{% url "credentials.views.coinbase_creds" %}">Coinbase</a></li>
-            <li><a href="{% url "credentials.views.bitstamp_creds" %}">Bitstamp</a></li>
-            <li><a href="{% url "credentials.views.blockchain_creds" %}">Blockchain</a></li>
           </ul>
       </div>
 
@@ -52,92 +42,40 @@
         </li>
         <li>
           {% if current_tab == 'transactions' %}
-            <a href="#" class="active"><i class="sign fa fa-bitcoin bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
+            <a href="#" class="active"><i class="sign fa fa-list bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
           {% else %}
-            <a href="{% url "merchants.views.merchant_transactions" %}"><i class="sign fa fa-bitcoin bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
+            <a href="{% url "merchants.views.merchant_transactions" %}"><i class="sign fa fa-list bg-amethyst"></i>{% trans "Transactions" %} <i class="fa fa-chevron-right pull-right"></i></a>  
           {% endif %}
         </li>
         <li>
-          {% if current_tab == 'settings' %}
+          {# FIXME: new icon here #}
+          {% if current_tab == 'credentials' %}
+            <a href="#" class="active"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %} 
+              {% if merchant.has_valid_api_credential %}
+                <i class="fa fa-check-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
+              {% else %}
+                <i class="fa fa-exclamation-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{% url "credentials.views.base_creds" %}"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %}
+              {% if merchant.has_valid_api_credential %}
+                <i class="fa fa-check-circle  pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
+              {% else %}
+                <i class="fa fa-exclamation-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
+              {% endif %}
+            </a>
+
+          {% endif %}
+        </li>
+        <li>
+          {% if current_tab == 'settings' or current_tab == 'change_pw' %}
             <a href="#" class="active"><i class="sign fa fa-gears bg-green"></i>{% trans "Settings" %} <i class="fa fa-chevron-right pull-right"></i></a>
           {% else %}
             <a href="{% url "merchants.views.merchant_settings" %}"><i class="sign fa fa-gears bg-green"></i>{% trans "Settings" %} <i class="fa fa-chevron-right pull-right"></i></a>
           {% endif %}
         </li>
       </ul>
-
-    </div>
-    <strong>{% trans "API Partners" %}</strong>
-    <div class="user-menu bottom-15">
-      <ul>
-        <li>
-          {% if current_tab == 'coinbase' %}
-            <a href="#" class="active">
-              <img src="{% static "img/coinbase-logo-full.png" %}" />
-              {% if merchant.has_valid_coinbase_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% endif %}
-            </a>
-          {% else %}
-            <a href="{% url "credentials.views.coinbase_creds" %}">
-              <img src="{% static "img/coinbase-logo-full.png" %}" />
-              {% if merchant.has_valid_coinbase_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% endif %}
-            </a>
-          {% endif %}
-        </li>
-
-        <li>
-          {% if current_tab == 'blockchain' %}
-            <a href="#" class="active">
-              <img src="{% static "img/blockchain-logo-full.png" %}" />
-              {% if merchant.has_valid_blockchain_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% endif %}
-            </a>
-          {% else %}
-            <a href="{% url "credentials.views.blockchain_creds" %}">
-              <img src="{% static "img/blockchain-logo-full.png" %}" />
-              {% if merchant.has_valid_blockchain_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% endif %}
-            </a>
-          {% endif %}
-        </li>
-
-        <li>
-          {% if current_tab == 'bitstamp' %}
-            <a href="#" class="active">
-              <img src="{% static "img/bitstamp-logo-full.png" %}" />
-              {% if merchant.has_valid_bitstamp_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% endif %}
-            </a>
-          {% else %}
-            <a href="{% url "credentials.views.bitstamp_creds" %}">
-              <img src="{% static "img/bitstamp-logo-full.png" %}" />
-              {% if merchant.has_valid_bitstamp_credentials %}
-                <i class="fa fa-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% else %}
-                <i class="fa fa-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-              {% endif %}
-            </a>
-          {% endif %}
-        </li>
-
-      </ul>
-
     </div>
     {% include "merchants/_registration_status_bar.html" %}
     <br/><br/>

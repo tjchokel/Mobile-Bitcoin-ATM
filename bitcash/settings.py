@@ -94,6 +94,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'bitcash.middleware.AjaxMessaging',
+    'bitcash.middleware.ImpersonateMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
     'bitcash.middleware.MerchantAdminSectionMiddleware',
     'django_otp.middleware.OTPMiddleware',
@@ -233,7 +234,7 @@ LOGIN_URL = '/login/'
 # LOGIN_URL = reverse_lazy('two_factor:login')
 LOGIN_REDIRECT_URL = '/app/'
 
-MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/coinbase/', '/bitstamp/', '/blockchain/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']
+MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/wallet/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']
 MERCHANT_LOGIN_PW_URL = '/password/'
 
 CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']

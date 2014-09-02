@@ -29,6 +29,9 @@ class BCICredential(BaseCredential):
     def get_login_link(self):
         return 'https://blockchain.info/wallet/%s' % self.username
 
+    def is_blockchain_credential(self):
+        return True
+
     def get_balance(self):
         """
         Return acount balance in satoshis

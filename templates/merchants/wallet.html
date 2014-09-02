@@ -1,0 +1,416 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load humanize %}
+{% load app_extras %}
+{% load staticfiles %}
+{% block content %}
+<div class="container">
+    <!-- Profile Menu -->
+    {% with current_tab='credentials' %}
+      {% include "merchants/breadcrumb.html" %}
+    {% endwith %}
+  <div class="col-sm-12 col-xs-12 col-md-9">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <h4 class="hl">
+            {% trans "Bitcoin Wallet" %}
+          </h4>
+          {% if credential %}
+
+            {# delete api credentials modal #}
+            <div class="modal fade" id="delete-credentials-modal" tabindex="-1" role="dialog" aria-labelledby="credential_delete_modal" aria-hidden="true" >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="credential_delete_modal">
+                      {% blocktrans with credential_display=credential.get_credential_to_display %}
+                        Delete {{ credential_display }} Credentials
+                      {% endblocktrans %}
+                    </h4>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <p class="lead text-center">
+                          {% blocktrans with credential_display=credential.get_credential_to_display %}
+                            Are you sure you want to remove your {{ credential_display }} API Credentials?
+                          {% endblocktrans %}
+                        </p>
+
+                        <form id="credential-form" class="form-horizontal" method="post" action="{% url "credentials.views.base_creds" %}" >
+                          {% load crispy_forms_tags %}
+                          {{ del_cred_form|crispy }}
+                          {% csrf_token %}
+                          <div class="button-wrapper">
+                            {% comment %}
+                            <span class="text-center" style="margin-left:auto; margin-right;auto;display:block;">
+                              <a class="btn btn-lg" data-dismiss="modal">{% trans "No" %}</a>
+                              <a class="btn btn-primary btn-lg" onClick="disableCredentials();">{% trans "Yes" %}</a>
+                            </span>
+                            {% endcomment %}
+                            <button data-dismiss="modal" class="btn btn-primary btn-lg">{% trans "No" %}</button>
+                            <button type="submit" class="btn btn-primary btn-lg">{% trans "Yes" %}</button>
+                          </div>
+                        </form>
+
+                      </div>
+                    </div>
+                    <br/>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            {# add funds modal #}
+            <div class="modal fade" id="add-funds-modal" tabindex="-1" role="dialog" aria-labelledby="top_off_modal" aria-hidden="true" >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="top_off_modal">
+                      {% blocktrans with credential_name=credential.get_credential_to_display %}
+                        Add funds to {{ credential_name }} Wallet
+                      {% endblocktrans %}
+                    </h4>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <p class="lead text-center">
+                          {% blocktrans %}
+                            To top off your wallet, send funds to your address:
+                          {% endblocktrans %}
+                          <span class="lead text-center text-green" id="current_address"></span>
+                          <div id="qr_code_span" style="display:none;">
+                              <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
+                          </div>
+                        </p>
+                        <p class="lead text-center">
+                          {% blocktrans with login_url=credential.get_login_link credential_name=credential.get_credential_to_display %}
+                            <a class="btn btn-primary btn-lg" href="{{ login_url }}" target="_blank">Login to {{ credential_name }}</a>
+                          {% endblocktrans %}
+                        </p>
+                      </div>
+                    </div>
+                    <br/>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+            {# wallet info #}
+            <div class="block-inverse">
+              <div class="head-inverse" style="text-align:center;font-size: 18px;font-weight: 300;">
+                {% if credential.is_blockchain_credential %}
+                  <img src='{% static "img/blockchain-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
+                  {{credential.username }}
+                {% endif %}
+                {% if credential.is_coinbase_credential %}
+                  <img src='{% static "img/coinbase-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
+                  {% trans "API Key:" %} {{credential.api_key}}
+                {% endif %}
+                {% if credential.is_bitstamp_credential %}
+                  <img src='{% static "img/bitstamp-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
+                  {{credential.customer_id}}
+                {% endif %}
+                <br/><br/>
+                
+                <span class="hidden-xs">
+                  {% if credential.last_failed_at %}
+                    <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
+                      {% trans "Refresh" %}
+                    </a>
+                  {% else %}
+                    <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});">
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <i class="fa fa-bitcoin"></i>{% trans "Add Funds" %}
+                    </a>
+                  {% endif %}
+
+                  <a class="btn btn-info" style="cursor:pointer;" href="{{ credential.get_login_link }}" target="_blank">
+                    <i class="fa fa-external-link"></i>{% trans "Login" %}
+                  </a>
+                  <a class="btn-danger btn" style="cursor:pointer;" data-toggle="modal" data-target="#delete-credentials-modal">
+                    <i class="fa fa-trash-o"></i>{% trans "Delete" %}
+                  </a>
+                </span>
+                <span class="hidden-sm hidden-md hidden-lg">
+                  {% if credential.last_failed_at %}
+                    <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
+                      {% trans "Refresh" %}
+                    </a>
+                  {% else %}
+                    <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});">
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <i class="fa fa-bitcoin"></i>{% trans "Add Funds" %}
+                    </a>
+                  {% endif %}
+                  <br/>
+                  <a class="btn btn-info" style="cursor:pointer; margin-top: 10px;" href="{{ credential.get_login_link }}" target="_blank">
+                    <i class="fa fa-external-link"></i>{% trans "Login" %}
+                  </a>
+                  <br/>
+                  <a class="btn-danger btn" style="cursor:pointer; margin-top: 10px;" data-toggle="modal" data-target="#delete-credentials-modal">
+                    <i class="fa fa-trash-o"></i>{% trans "Delete" %}
+                  </a>
+                </span>
+                <br/>
+                
+              </div>
+            </div>
+            <br/><br/>
+            <table id="bitcoin-info-list" class="table">
+              <tbody>
+                <tr>
+                  <td class="text-muted">{% trans "Status" %}</td>
+                  <td align="right">{{credential.get_status|format_status_string}}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Balance" %}</td>
+                  <td align="right" id="wallet-balance">
+                      <span class="balance-loader">
+                        <i class="fa fa-spinner fa-spin"></i>
+                      </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-muted">{% trans "Added" %}</td>
+                  <td align="right">{{credential.created_at|naturaltime}}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">
+                    {% blocktrans with credential_display=credential.get_credential_to_display %}
+                      Your {{ credential_display }} address for deposits
+                    {% endblocktrans %}
+                  </td>
+                  
+                  <td align="right" class="hidden-sm hidden-md hidden-lg">{{merchant.get_destination_address.b58_address | hide_long_string}}</td>
+                  <td align="right" class="hidden-xs">{{merchant.get_destination_address.b58_address }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          {% else %}
+
+            <p>
+              {% blocktrans %}
+                In order to sell bitcoin to customers, you need to link a Bitcoin wallet to your CoinSafe account <a style="curosr:pointer;" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
+              {% endblocktrans %}
+            </p>
+
+            <div id="moreinfo" class="collapse">
+              <p>
+                {% blocktrans %}
+                  This wallet will be used to automatically transfer funds to your customers whenever you sell them Bitcoin.
+                  If you already have a Blockchain, Coinbase, or Bitstamp wallet, you can link it to your account by adding your API credentials below.
+                  We also can automatically create a new Blockchain wallet for you (a good option if you are just giving us a try).
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  No funds will ever be moved from your wallet without your explicit permission, and we take every precaution to secure this sensitive data.
+                  That being said, we recommend that all of our users create a separate wallet to use with CoinSafe that holds a smaller amount of funds that they can top off whenever the balance gets low.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% blocktrans %}
+                  Our app is and will continue to be free.
+                {% endblocktrans %}
+              </p>
+              <p>
+                {% url 'contact' as contact_url %}
+                {% blocktrans %}
+                  If you have any questions, please don't hesitate to <a href="{{contact_url}}" target="_blank">contact us</a>.
+                {% endblocktrans %}
+              </p>
+            </div>
+
+            <form id="credential-form" class="form-horizontal" method="post" action="{% url "credentials.views.base_creds" %}" >
+              {% load crispy_forms_tags %}
+              {{ add_cred_form|crispy }}
+              {% csrf_token %}
+              <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Link Wallet" %}</button>
+              </div>
+            </form>
+
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+{% endblock content %}
+
+{% block admin_footer %}
+  {% include "partials/admin_footer.html" %}
+{% endblock admin_footer %}
+
+{% block extra_js %}
+
+  <script>
+
+    {# http://stackoverflow.com/a/1408373/1754586 #}
+    String.prototype.supplant = function (o) {
+      return this.replace(/{([^{}]*)}/g,
+        function (a, b) {
+            var r = o[b];
+            return typeof r === 'string' || typeof r === 'number' ? r : a;
+        }
+      );
+    };
+
+    var BASE_INSTRUCTIONS = '<div id="api_instructions"><p><a target="_blank" href="{0}">Click here for {1} API instructions</a></p></div>';
+    var CB_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "coinbase_instructions" %}', 'Coinbase']);
+    var BS_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "bitstamp_instructions" %}', 'Bitstamp']);
+    var BCI_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "blockchain_instructions" %}', 'Blockchain']);
+
+    function hideAll() {
+      $("#div_id_cb_api_key").addClass("hidden");
+      $("#div_id_cb_secret_key").addClass("hidden");
+
+      $("#div_id_bs_api_key").addClass("hidden");
+      $("#div_id_bs_secret_key").addClass("hidden");
+      $("#div_id_bs_customer_id").addClass("hidden");
+
+      $("#div_id_bci_main_password").addClass("hidden");
+      $("#div_id_bci_second_password").addClass("hidden");
+      $("#div_id_bci_username").addClass("hidden");
+
+      $('#div_id_btc_address').addClass('hidden');
+
+      $("#api_instructions").remove();
+    }
+
+    function selectCoinbase() {
+      hideAll();
+      $("#div_id_cb_api_key").removeClass("hidden");
+      $("#div_id_cb_secret_key").removeClass("hidden");
+      $("#div_id_exchange_choice").after(CB_INSTRUCTIONS);
+    }
+
+    function selectBitstamp() {
+      hideAll();
+      $("#div_id_bs_api_key").removeClass("hidden");
+      $("#div_id_bs_secret_key").removeClass("hidden");
+      $("#div_id_bs_customer_id").removeClass("hidden");
+      $("#div_id_exchange_choice").after(BS_INSTRUCTIONS);
+    }
+
+    function selectBlockchain() {
+      hideAll();
+      $("#div_id_bci_main_password").removeClass("hidden");
+      $("#div_id_bci_second_password").removeClass("hidden");
+      $("#div_id_bci_username").removeClass("hidden");
+      $("#div_id_exchange_choice").after(BCI_INSTRUCTIONS);
+    }
+
+    $("#id_exchange_choice_1, #id_exchange_choice_2, #id_exchange_choice_3, #id_exchange_choice_4").change(function(){
+      var exchange_choice = $('input[name=exchange_choice]:checked').val();
+      if (exchange_choice == 'coinbase') {
+        selectCoinbase();
+      }else if (exchange_choice == 'bitstamp'){
+        selectBitstamp();
+      }else if (exchange_choice == 'blockchain') {
+        selectBlockchain();
+      }
+    });
+
+    function refreshCredentials(credential_id) {
+      $("#refresh-button").toggleClass("active");
+      $.ajax({
+          type: 'get',
+          url: '/refresh-credentials/'+credential_id,
+          success: function (data) {
+            $('#refresh-loader').addClass("hidden");
+            $('#refresh-button').removeClass("hidden");
+            $("#refresh-button").toggleClass("active");
+            location.reload(true);
+          },
+          error: function(data) {
+            console.log('refreshCredentials Failed');
+            $('#refresh-loader').addClass("hidden");
+            $('#refresh-button').removeClass("hidden");
+            $("#refresh-button").toggleClass("active");
+            location.reload(true);
+          }
+        });
+    }
+
+    function getCurrentBalance(credential_id) {
+        {# TODO: Make the success handler render the updated page #}
+
+        $.ajax({
+          type: 'get',
+          url: '/get-current-balance/'+credential_id,
+          success: function (data) {
+            $(".price-loader").addClass("hidden");
+            // invalid credentials
+            if(data['satoshis'] === false){
+              $("#wallet-balance").html('N/A');
+              {% if not credential.last_failed_at %}
+                location.reload(true);
+              {% endif %}
+            }else{
+              $("#wallet-balance").html(data['fswur']);
+              {% if credential.last_failed_at %}
+                location.reload(true);
+              {% endif %}
+            }
+          },
+          error: function(data) {
+            $(".price-loader").addClass("hidden");
+          }
+        });
+    }
+
+    function getTopOffAddress(credential_id) {
+        $("#fund-wallet-button").toggleClass("active");
+        $.ajax({
+          type: 'get',
+          url: '/get-new-address/'+credential_id,
+          success: function (data) {
+            $("#fund-wallet-button").toggleClass("active");
+            var address = data['new_address'];
+            console.log(data);
+            if (address){
+              $('#add-funds-modal').modal();
+              $("#current_address").html(address);
+              var src="//chart.googleapis.com/chart?cht=qr&chl=bitcoin%3A"+address+"&choe=UTF-8&chs=275x275";
+              $("#qr_code").attr("src", src);
+
+              $("#qr_code_span").slideDown(500);
+            }
+          },
+          error: function(data) {
+            $("#fund-wallet-button").toggleClass("active");
+            console.log('getTopOffAddress Failed');
+          }
+        });
+    }
+
+    $(document).ready(function(){
+        selectCoinbase();
+        var required_asterisk = '<span class="asteriskField">*</span>';
+        $('label:not(.requiredField):not(.radio)').append(required_asterisk);
+        // blockchain second password not required 
+        $('#div_id_bci_second_password .asteriskField').remove();
+
+        $('#id_cb_api_key').select();
+        {% if credential %}
+          getCurrentBalance({{credential.id}});
+        {% endif %}
+
+    });
+
+  </script>
+{% endblock extra_js %}

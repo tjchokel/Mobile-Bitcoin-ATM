@@ -15,55 +15,63 @@
   </div>
 </div>
 <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        <h2 class="hl top-50">{% trans "Bitcoin Settings" %}</h2>
-        <hr>
-      </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <h2 class="hl top-50">{% trans "Bitcoin Settings" %}</h2>
+      <hr>
     </div>
-    <div class="col-md-8 col-md-offset-2">
-        {% with current_step=1 %}
-             {% include "merchants/_registration_breadcrumb.html" %}
-        {% endwith %}
-          <p>
-            {% blocktrans %}
-              In order to sell bitcoin to customers, you need to link a Bitcoin wallet to your CoinSafe account <a href="#" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
-            {% endblocktrans %}
-          </p>
+  </div>
 
-          <div id="moreinfo" class="collapse">
-            <p>
-              {% blocktrans %}
-                This wallet will be used to automatically transfer funds to your customers whenever you sell them Bitcoin. 
-                If you already have a Blockchain, Coinbase, or Bitstamp wallet, you can link it to your account by adding your API credentials below. 
-                We also can automatically create a new Blockchain wallet for you (a good option if you are just giving us a try).
-              {% endblocktrans %}
-            </p>
-            <p>
-              {% blocktrans %}
-                No funds will ever be moved from your wallet without your explicit permission (our app is and will continue to be free) and we take every precaution to secure this sensitive data. 
-                That being said, we recommend that all of our users create a separate wallet to use with CoinSafe that holds a smaller amount of funds that they can top off whenever the balance gets low.
-              {% endblocktrans %}
-            </p>
-            <p>
-              {% url 'contact' as contact_url %}
-              {% blocktrans %}
-                If you have any questions, please don't hesitate to <a href="{{contact_url}}" target="_blank">contact us</a>.
-              {% endblocktrans %}
-            </p>
-          </div>
+  <div class="col-md-8 col-md-offset-2">
+    {% with current_step=1 %}
+       {% include "merchants/_registration_breadcrumb.html" %}
+    {% endwith %}
+    <p>
+      {% blocktrans %}
+        In order to sell bitcoin to customers, you need to link a Bitcoin wallet to your CoinSafe account <a href="#" data-toggle="collapse" data-target="#moreinfo">(learn more)</a>.
+      {% endblocktrans %}
+    </p>
 
-
-         <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
-             {% load crispy_forms_tags %}
-             {{ form|crispy }}
-             {% csrf_token %}
-             <div class="button-wrapper">
-               <button type="submit" class="btn btn-primary btn-lg">{% trans "Complete Registration" %}</button>
-             </div>
-         </form>
-      </div>
+    <div id="moreinfo" class="collapse">
+      <p>
+        {% blocktrans %}
+          This wallet will be used to automatically transfer funds to your customers whenever you sell them Bitcoin.
+          If you already have a Blockchain, Coinbase, or Bitstamp wallet, you can link it to your account by adding your API credentials below.
+          We also can automatically create a new Blockchain wallet for you (a good option if you are just giving us a try).
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% blocktrans %}
+          No funds will ever be moved from your wallet without your explicit permission, and we take every precaution to secure this sensitive data.
+          That being said, we recommend that all of our users create a separate wallet to use with CoinSafe that holds a smaller amount of funds that they can top off whenever the balance gets low.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% blocktrans %}
+          Our app is and will continue to be free.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% url 'contact' as contact_url %}
+        {% blocktrans %}
+          If you have any questions, please don't hesitate to <a href="{{contact_url}}" target="_blank">contact us</a>.
+        {% endblocktrans %}
+      </p>
     </div>
+
+    <form class="form-horizontal" method="post" action="{% url "merchants.views.register_bitcoin" %}" >
+      {% load crispy_forms_tags %}
+      {{ form|crispy }}
+      {% csrf_token %}
+      <div class="button-wrapper">
+        <button type="submit" class="btn btn-primary btn-lg">{% trans "Complete Registration" %}</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
 {% endblock content %}
 
 

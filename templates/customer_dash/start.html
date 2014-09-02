@@ -13,11 +13,7 @@
           <span id="fiat-amt"></span> <span class="currency-code"></span>
         </span>
         <span class="price-loader">
-          <a class="active has-spinner">
-            <span class="spinner">
-              <i class="fa fa-spinner fa-spin"></i>
-            </span>
-          </a>
+          <i class="fa fa-spinner fa-spin"></i>
         </span>
       </span>
     </h3>
@@ -54,9 +50,7 @@
                 <span class="text-muted">(+</span><span class="buy-percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
               </span>
               <span class="active has-spinner price-loader">
-                <span class="spinner">
-                  <i class="fa fa-spinner fa-spin"></i>
-                </span>
+                <i class="fa fa-spinner fa-spin"></i>
               </span>
             </h5>
 
@@ -92,8 +86,7 @@
               </tbody>
             </table>
           {% endwith %}
-          <a class="btn btn-primary btn-lg has-spinner" id="buy-bitcoin-button" onclick="buyBitcoinModal();">
-            <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+          <a class="btn btn-primary btn-lg" id="buy-bitcoin-button" onclick="buyBitcoinModal();">
             {% trans "Buy Bitcoin with Cash" %}
           </a>
           </div>
@@ -128,9 +121,7 @@
           <span class="text-muted">(-</span><span class="sell-percent-markup text-muted" style="font-size:24px;"></span><span class="text-muted">%)</span>
         </span>
         <span class="active has-spinner price-loader">
-          <span class="spinner">
-            <i class="fa fa-spinner fa-spin"></i>
-          </span>
+          <i class="fa fa-spinner fa-spin"></i>
         </span>
       </h5>
 

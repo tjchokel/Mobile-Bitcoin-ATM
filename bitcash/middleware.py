@@ -3,12 +3,13 @@ from django.contrib import messages
 import json
 
 from bitcash.settings import MERCHANT_LOGIN_REQUIRED_PATHS, MERCHANT_LOGIN_PW_URL, LOGIN_URL
-
+from users.models import AuthUser
 from emails.trigger import add_qs
 
 
 class MerchantAdminSectionMiddleware(object):
     def process_request(self, request):
+
         if request.path in MERCHANT_LOGIN_REQUIRED_PATHS:
             # Pass redirection querystring to login page when about to login:
             if not request.user.is_authenticated():
@@ -26,6 +27,8 @@ class MerchantAdminSectionMiddleware(object):
                 redirect_url = '%s?next=%s' % (MERCHANT_LOGIN_PW_URL, request.path.strip('/'))
                 return HttpResponseRedirect(redirect_url)
         elif request.is_ajax():
+            return None
+        elif request.path == '/change-password':
             return None
         else:
             request.session['last_password_validation'] = None
@@ -65,3 +68,17 @@ class AjaxMessaging(object):
                 response.content = json.dumps(content)
 
         return response
+
+
+# http://stackoverflow.com/questions/2242909/django-user-impersonation-by-admin
+class ImpersonateMiddleware(object):
+    def process_request(self, request):
+        if request.user.is_superuser:
+            if "__impersonate" in request.GET:
+                request.session['impersonate_username'] = request.GET["__impersonate"]
+            if 'impersonate_username' in request.session:
+                if "__unimpersonate" in request.GET:
+                    del request.session['impersonate_username']
+                # only set the user if it is not the password prompt (let's you type admin password if you are impersonating)
+                elif request.path_info != '/password/' or request.method != 'POST':
+                    request.user = AuthUser.objects.get(username=request.session['impersonate_username'])

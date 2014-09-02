@@ -23,10 +23,6 @@
                 <td align="right">{{merchant.get_currency_code_display}}</td>
               </tr>
               <tr>
-                <td class="text-muted">{% trans "Your BTC Address" %}</td>
-                <td align="right">{{dest_address.b58_address}}</td>
-              </tr>
-              <tr>
                 <td class="text-muted">{% trans "Percent Markup When Selling Bitcoin" %}</td>
                 <td align="right">{{merchant.get_cashin_percent_markup}}%</td>
               </tr>
@@ -54,6 +50,7 @@
               </div>
             </form>
           </span>
+          <p><a href="{% url 'change_password' %}">{% trans "Change Password" %}</a></p>
         </div>
       </div>
     </div>
@@ -67,11 +64,6 @@
 
 {% block extra_js %}
   <script>
-    $(document).ready(function(){
-      if( {{ show_bitcoin_form }} === true){
-        editBitcoinInfo();
-      }
-    });
     function editBitcoinInfo() {
         $("#bitcoin-info-list").toggleClass("show hidden");
         $("#bitcoin-info-edit").toggleClass("show hidden");
@@ -82,5 +74,10 @@
           edit_button.html('Edit <i class="fa fa-pencil-square-o"></i>');
         }
     }
+    $(document).ready(function(){
+      if( {{ show_bitcoin_form }} === true){
+        editBitcoinInfo();
+      }
+    });
   </script>
 {% endblock %}

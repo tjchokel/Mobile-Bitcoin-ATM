@@ -13,10 +13,18 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.DateTimeField')(db_index=True, null=True, blank=True),
                       keep_default=False)
 
+        # Adding field 'BTCTransaction.blockcypher_preference'
+        db.add_column(u'bitcoins_btctransaction', 'blockcypher_preference',
+                      self.gf('django.db.models.fields.CharField')(db_index=True, max_length=6, null=True, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
         # Deleting field 'BTCTransaction.met_confidence_threshold_at'
         db.delete_column(u'bitcoins_btctransaction', 'met_confidence_threshold_at')
+
+        # Deleting field 'BTCTransaction.blockcypher_preference'
+        db.delete_column(u'bitcoins_btctransaction', 'blockcypher_preference')
 
 
     models = {
@@ -36,6 +44,7 @@ class Migration(SchemaMigration):
         u'bitcoins.btctransaction': {
             'Meta': {'object_name': 'BTCTransaction'},
             'added_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'blockcypher_preference': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '6', 'null': 'True', 'blank': 'True'}),
             'conf_num': ('django.db.models.fields.PositiveSmallIntegerField', [], {'db_index': 'True'}),
             'currency_code_when_created': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '5', 'null': 'True', 'blank': 'True'}),
             'destination_address': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['bitcoins.DestinationAddress']", 'null': 'True', 'blank': 'True'}),

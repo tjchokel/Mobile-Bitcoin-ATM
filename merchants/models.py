@@ -467,6 +467,12 @@ class Merchant(models.Model):
                 "max_mbtc_sale_formatted": self.get_max_mbtc_sale_formatted(),
                 }
 
+    def should_use_lat_long_on_map(self):
+        # For USA, the addresses are usually good enough. Otherwise I think we should use the lat/long
+        if self.latitude_position and self.longitude_position and self.country != 'USA':
+            return True
+        return False
+
 
 class OpenTime(models.Model):
     # http://stackoverflow.com/a/12217171/1754586

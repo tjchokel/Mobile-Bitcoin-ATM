@@ -68,5 +68,5 @@ urlpatterns = patterns('',
 
     # Short URLs (this must be last for obvious reasons)
     url(r'^(?P<uri>[-\w]+)/$', 'profiles.views.merchant_site', name='merchant_site'),
-
+    url(r'', include('two_factor.urls', 'two_factor')),
 )

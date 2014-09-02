@@ -67,7 +67,7 @@ def get_bitcoin_price(request, merchant_id=None):
         merchant = get_object_or_None(Merchant, id=merchant_id)
     else:
         user = request.user
-        if user.is_authenticated:
+        if user.is_authenticated():
             merchant = user.get_merchant()
 
     if merchant:

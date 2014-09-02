@@ -81,3 +81,14 @@ def hide_long_string(string, front_chars_to_show=6):
         i += 1
 
     return mark_safe(u'<a class="long-string-toggle" style="cursor:pointer;">%s<span id="ellipsis">...</span><span id="post-string" style="display:none;">%s<span></a>' % (pre_string, post_string))
+
+
+@register.filter(name='remove_quotes')
+def remove_quotes(string):
+    """
+    Obscures the beginning of a string with *s and leaves
+    `trailing_chars_to_show` in plaintext.
+    """
+    string = string.replace("\"", "")
+    string = string.replace("\'", "")
+    return string

@@ -45,10 +45,11 @@ def login_request(request):
             if user_found:
                 user = authenticate(username=email, password=password)
                 if user:
+                    if user.is_staff:
+                        return HttpResponseRedirect(reverse_lazy('two_factor:login'))
                     login(request, user)
 
                     request.session['last_password_validation'] = now().ctime()
-
                     # Log the login
                     LoggedLogin.record_login(request)
 
@@ -450,7 +451,8 @@ def password_prompt(request):
     user = request.user
     merchant = user.get_merchant()
     if not merchant or not merchant.has_finished_registration():
-        return HttpResponseRedirect(reverse_lazy('register_router'))
+        if not request.user.is_superuser:
+            return HttpResponseRedirect(reverse_lazy('register_router'))
 
     initial = None
     if request.method == 'GET':

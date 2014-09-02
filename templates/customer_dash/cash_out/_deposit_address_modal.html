@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load app_extras %}
 <div class="modal fade" id="deposit-address-modal" tabindex="-1" role="dialog" aria-labelledby="cashoutmodal" aria-hidden="true" data-backdrop="static" >
   <div class="modal-dialog">
     <div class="modal-content">
@@ -21,21 +22,21 @@
               <br/>
             </p>
 
-            <p class="lead text-center text-green" id="current_address"></p>
+            <p class="lead text-center text-green hidden-sm hidden-md hidden-lg" id="current_address_xs"></p>
+            <p class="lead text-center text-green hidden-xs" id="current_address"></p>
 
-              <div id="qr_code_span" style="display:none;">
-                <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
+            <div id="qr_code_span" style="display:none;">
+              <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
 
-                <form class="form-horizontal" method="post" action="{% url "customer_confirm_deposit" %}" >
-                  {% csrf_token %}
-                  <div class="button-wrapper">
-                    <button type="submit" class="btn btn-primary btn-lg">{% trans "The Bitcoin Has Been Sent" %}</button>
-                  </div>
-                </form>
+              <form class="form-horizontal" method="post" action="{% url "customer_confirm_deposit" %}" >
+                {% csrf_token %}
+                <div class="button-wrapper">
+                  <button type="submit" class="btn btn-primary btn-lg">{% trans "The Bitcoin Has Been Sent" %}</button>
+                </div>
+              </form>
 
 
-              </div>
-            </span>
+            </div>
           </div>
         </div>
         <br/>

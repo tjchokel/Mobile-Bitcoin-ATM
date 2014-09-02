@@ -107,7 +107,7 @@
               <div class="head-inverse" style="text-align:center;font-size: 18px;font-weight: 300;">
                 {% if credential.is_blockchain_credential %}
                   <img src='{% static "img/blockchain-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
-                  {{credential.username}}
+                  {{credential.username }}
                 {% endif %}
                 {% if credential.is_coinbase_credential %}
                   <img src='{% static "img/coinbase-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
@@ -119,25 +119,49 @@
                 {% endif %}
                 <br/><br/>
                 
-                {% if credential.last_failed_at %}
-                  <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
-                    <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                    <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
-                    {% trans "Refresh" %}
-                  </a>
-                {% else %}
-                  <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});">
-                    <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                    <i class="fa fa-bitcoin"></i>{% trans "Add Funds" %}
-                  </a>
-                {% endif %}
+                <span class="hidden-xs">
+                  {% if credential.last_failed_at %}
+                    <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
+                      {% trans "Refresh" %}
+                    </a>
+                  {% else %}
+                    <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});">
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <i class="fa fa-bitcoin"></i>{% trans "Add Funds" %}
+                    </a>
+                  {% endif %}
 
-                <a class="btn btn-info" style="cursor:pointer;" href="{{ credential.get_login_link }}" target="_blank">
-                  <i class="fa fa-external-link"></i>{% trans "Login" %}
-                </a>
-                <a class="btn-danger btn" style="cursor:pointer;" data-toggle="modal" data-target="#delete-credentials-modal">
-                  <i class="fa fa-trash-o"></i>{% trans "Delete" %}
-                </a>
+                  <a class="btn btn-info" style="cursor:pointer;" href="{{ credential.get_login_link }}" target="_blank">
+                    <i class="fa fa-external-link"></i>{% trans "Login" %}
+                  </a>
+                  <a class="btn-danger btn" style="cursor:pointer;" data-toggle="modal" data-target="#delete-credentials-modal">
+                    <i class="fa fa-trash-o"></i>{% trans "Delete" %}
+                  </a>
+                </span>
+                <span class="hidden-sm hidden-md hidden-lg">
+                  {% if credential.last_failed_at %}
+                    <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
+                      {% trans "Refresh" %}
+                    </a>
+                  {% else %}
+                    <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});">
+                      <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                      <i class="fa fa-bitcoin"></i>{% trans "Add Funds" %}
+                    </a>
+                  {% endif %}
+                  <br/>
+                  <a class="btn btn-info" style="cursor:pointer; margin-top: 10px;" href="{{ credential.get_login_link }}" target="_blank">
+                    <i class="fa fa-external-link"></i>{% trans "Login" %}
+                  </a>
+                  <br/>
+                  <a class="btn-danger btn" style="cursor:pointer; margin-top: 10px;" data-toggle="modal" data-target="#delete-credentials-modal">
+                    <i class="fa fa-trash-o"></i>{% trans "Delete" %}
+                  </a>
+                </span>
                 <br/>
                 
               </div>
@@ -167,7 +191,7 @@
                       Your {{ credential_display }} address for deposits
                     {% endblocktrans %}
                   </td>
-                  <td align="right">{{merchant.get_destination_address.b58_address}}</td>
+                  <td align="right">{{merchant.get_destination_address.b58_address | hide_long_string}}</td>
                 </tr>
               </tbody>
             </table>

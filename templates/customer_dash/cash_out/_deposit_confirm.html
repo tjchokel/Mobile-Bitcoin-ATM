@@ -2,15 +2,18 @@
 <div class="container">
   <div class="page-header">
       <h3 class="pull-left hl">{{merchant.business_name}}</h3>
+
       {% if shopper %}
         <h3 class="pull-right hl" id="last-polled" style="color: #72a53b; float:right;">
           {% trans "Last Updated" %}: <span id='last-polled-time'>0</span> {% trans "seconds ago" %}
         </h3>
       {% endif %}
+
       <div class="clearfix"></div>
   </div>
 
   <div class="row">
+
     {% if not transactions %}
       <form class="form-horizontal" method="post" action="{% url "cancel_address" %}" >
         <p class="lead text-center">
@@ -23,6 +26,47 @@
         </p>
       </form>
     {% endif %}
+
+    {# Status Table #}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>{% trans "Action" %}</th>
+          <th>{% trans "Status" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{% trans "Detected" %}</td>
+          <td>
+            <a href="{{ current_address.get_bci_url }}" target="_blank">{% if transactions %}{{ transactions_total_sfwu }}{% else %}{% trans "No" %}{% endif %}</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Confirmed</td>
+          <td>
+            {% if transactions %}
+              {% if True %}
+                {% trans "Yes" %}
+              {% else %}
+                {% trans "Explanation Here" %}
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>{% trans "Customer Name" %}</td>
+          <td>
+            {% if shopper %}
+              {{ shopper.name }}
+            {% else %}
+              {% trans "Enter Below" %}
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
     {% if shopper %}
       <div class="col-sm-12">
         <br/>
@@ -36,19 +80,60 @@
       <p class="lead text-center text-red">
         {% trans "Cashier: <b>do not pay out cash</b> until CoinSafe notifies you that the customer's transaction has been confirmed by the bitcoin network." %}
       </p>
+
       {% if transactions %}
         <div style="text-align:center;">
           <a class="btn btn-warning btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
             {% trans "Override Required Confirmations" %}
           </a>
         </div>
-        {% include "customer_dash/cash_out/_override_confirmations_modal.html" %}
+
+        <div class="modal fade" id="override-confirmations-modal" tabindex="-1" role="dialog" aria-labelledby="cashinmodal" aria-hidden="true" >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="cashinmodal">
+                  {% trans "Override Required Confirmations" %}
+                </h4>
+                <div class="clearfix"></div>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-sm-12">
+
+                    <p class="">
+                      {% blocktrans %}
+                        A transaction has been detected, but it has not yet been confirmed by the Bitcoin network.
+                        It is possible (though very rare) for an unconfirmed transaction to later be undone via a
+                        <a href="https://en.bitcoin.it/wiki/Double-spending" target="_blank">Double Spend Attack</a>,
+                        so we recommend you wait for the transaction to confirm.
+                        This usually takes 10 minutes on average, but can sometimes take up to twice that long.
+
+                        If this is a small amount of funds for you or if you are sure this customer isn't a malicious attacker,
+                        you can mark the transaction as complete now by entering your password below.
+                      {% endblocktrans %}
+                    </p>
+
+                    <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
+                      {% load crispy_forms_tags %}
+                      {{ override_confirmation_form|crispy }}
+                      {% csrf_token %}
+                      <div class="button-wrapper">
+                        <button type="submit" class="btn btn-warning btn-lg" id="submit-button">{% trans "Override Required Confirmations" %}</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <br/>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
       {% endif %}
 
     {% else %}
-      <p class="lead text-center">
-        {% trans "Please enter a name for this order. If you'd like a receipt, please include an email and/or phone number." %}
-      </p>
       <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
           {% load crispy_forms_tags %}
           {{ shopper_form|crispy }}
@@ -58,5 +143,6 @@
           </div>
       </form>
     {% endif %}
+
   </div>
 </div>

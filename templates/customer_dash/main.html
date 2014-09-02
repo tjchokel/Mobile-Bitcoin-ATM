@@ -10,7 +10,7 @@
 {% block content %}
 
   {% if transactions or current_address.customer_confirmed_deposit_at %}
-    {% if current_address.all_transactions_complete and shopper %}
+    {% if current_address.all_transactions_confirmed and shopper %}
       {% include "customer_dash/cash_out/_deposit_complete.html" %}
     {% else %}
       {% include "customer_dash/cash_out/_deposit_confirm.html" %}
@@ -304,11 +304,20 @@
 
       $("#id_btc_address").after('<a class="btn btn-info btn-med" id="scan-qr-code" style="margin-left: 5px;" onclick="scanQrCode();"><i class="fa fa-camera"></i> QR Code</a>');
 
-      {% if transactions and not current_address.all_transactions_complete %}
+      {% if transactions %}
+
+        {% if current_address.all_transactions_confirmed %}
+
+          {# TX confirms before receipt entereed. This was an edge case before blockcypher but now is common. #}
+          $('#id_name').select();
+
+        {% else %}
 
           poll_new_confirmations();
           set_time_since();
           $('#id_name').select();
+
+        {% endif %}
 
       {% elif current_address.customer_confirmed_deposit_at %}
 
@@ -330,23 +339,24 @@
           poll_new_deposits();
         })
 
+        {# pre-seed cash-in modal #}
+        function approximate_rounding(quantity) {
+          {# Function used to pre-seed the local currency entry field #}
+          quantity_string = Math.round(quantity).toString()
+          return quantity_string[0] + Array(quantity_string.length).join("0");
+        }
+        $('#buy-bitcoin-modal').on('shown.bs.modal', function () {
+          if(!$('#id_amount').val()){
+            {# Pre-seed to 50-100 mBTC (range due to rounding, will be closer to 100 mBTC) #}
+            var mbtc_to_seed = approximate_rounding($('#buy-price').data().priceData/10);
+            $('#id_amount').val(mbtc_to_seed); 
+            $('#id_amount').trigger('keyup');
+          }
+          $('#id_amount').select();
+        })
+
       {% endif %}
 
-      {# pre-seed cash-in modal #}
-      function approximate_rounding(quantity) {
-        {# Function used to pre-seed the local currency entry field #}
-        quantity_string = Math.round(quantity).toString()
-        return quantity_string[0] + Array(quantity_string.length).join("0");
-      }
-      $('#buy-bitcoin-modal').on('shown.bs.modal', function () {
-        if(!$('#id_amount').val()){
-          {# Pre-seed to 50-100 mBTC (range due to rounding, will be closer to 100 mBTC) #}
-          var mbtc_to_seed = approximate_rounding($('#buy-price').data().priceData/10);
-          $('#id_amount').val(mbtc_to_seed); 
-          $('#id_amount').trigger('keyup');
-        }
-        $('#id_amount').select();
-      })
 
     });
 

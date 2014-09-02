@@ -111,7 +111,7 @@
                 {% endif %}
                 {% if credential.is_coinbase_credential %}
                   <img src='{% static "img/coinbase-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
-                  {{credential.api_key}}
+                  {% trans "API Key:" %} {{credential.api_key}}
                 {% endif %}
                 {% if credential.is_bitstamp_credential %}
                   <img src='{% static "img/bitstamp-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
@@ -119,11 +119,18 @@
                 {% endif %}
                 <br/><br/>
                 
-                <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
-                  <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                  <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
-                  {% trans "Refresh" %}
-                </a>
+                {% if credential.last_failed_at %}
+                  <a class="btn btn-info has-spinner" style="cursor:pointer;" onclick="refreshCredentials({{credential.id}});" id='refresh-button'>
+                    <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                    <span id="refresh-span"> <i class="fa fa-refresh"></i></span>
+                    {% trans "Refresh" %}
+                  </a>
+                {% else %}
+                  <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});">
+                    <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
+                    <i class="fa fa-bitcoin"></i>{% trans "Add Funds" %}
+                  </a>
+                {% endif %}
 
                 <a class="btn btn-info" style="cursor:pointer;" href="{{ credential.get_login_link }}" target="_blank">
                   <i class="fa fa-external-link"></i>{% trans "Login" %}
@@ -132,10 +139,7 @@
                   <i class="fa fa-trash-o"></i>{% trans "Delete" %}
                 </a>
                 <br/>
-                <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});" style="margin-top:10px;">
-                  <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                  <i class="fa fa-bitcoin"></i>{% trans "Add funds to this wallet" %}
-                </a>
+                
               </div>
             </div>
             <br/><br/>
@@ -208,7 +212,7 @@
               {{ add_cred_form|crispy }}
               {% csrf_token %}
               <div class="button-wrapper">
-                <button type="submit" class="btn btn-primary btn-lg">{% trans "Add Wallet" %}</button>
+                <button type="submit" class="btn btn-primary btn-lg">{% trans "Link Wallet" %}</button>
               </div>
             </form>
 
@@ -324,13 +328,21 @@
           url: '/get-current-balance/'+credential_id,
           success: function (data) {
             $(".price-loader").addClass("hidden");
-            $("#wallet-balance").html(data['fswur']);
-            // location.reload(true);
+            // invalid credentials
+            if(data['satoshis'] == false){
+              $("#wallet-balance").html('N/A');
+              {% if not credential.last_failed_at %}
+                location.reload(true);
+              {% endif %}
+            }else{
+              $("#wallet-balance").html(data['fswur']);
+              {% if credential.last_failed_at %}
+                location.reload(true);
+              {% endif %}
+            }
           },
           error: function(data) {
             $(".price-loader").addClass("hidden");
-            console.log('getCurrentBalance Failed');
-            // location.reload(true);
           }
         });
     }

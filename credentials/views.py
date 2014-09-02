@@ -183,7 +183,7 @@ def refresh_credentials(request, credential_id):
         pass
 
     if success:
-        messages.success(request, _('Your API credentials have been refreshed'))
+        messages.success(request, _('Your API credentials are valid'))
     else:
         messages.warning(request, _('Your API info could not be validated'))
     return HttpResponse("*ok*")

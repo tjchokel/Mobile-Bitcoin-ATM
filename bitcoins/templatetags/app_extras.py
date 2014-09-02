@@ -55,6 +55,34 @@ def format_fiat_amount(amount, currency_symbol, currency_code=None):
         return "%s%s" % (currency_symbol, '{:,.2f}'.format(amount))
 
 
+@register.filter(name='hide_long_string')
+def hide_long_string(string, front_chars_to_show=6):
+    """
+    Hides long string by default and lets you toggle it open to show more
+    Useful for btc addresses on small screens
+    """
+    if not string:
+        return ""
+
+    string_len = len(string)
+
+    if string_len <= front_chars_to_show:
+        # Less to hide than exists
+        return string
+
+    pre_string = ""
+    post_string = ""
+    i = 0
+    while i < string_len:
+        if i < front_chars_to_show - 1:
+            pre_string += string[i]
+        else:
+            post_string += string[i]
+        i += 1
+
+    return mark_safe(u'<a class="long-string-toggle" style="cursor:pointer;">%s<span id="ellipsis">...</span><span id="post-string" style="display:none;">%s<span></a>' % (pre_string, post_string))
+
+
 @register.filter(name='remove_quotes')
 def remove_quotes(string):
     """

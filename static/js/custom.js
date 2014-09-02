@@ -101,10 +101,39 @@ function timeUntil(date) {
     return mins_and_seconds;
 }
 
+function hideLongString(string){
+    front_chars_to_show = 15;
+    string_len = string.length;
+    if (string_len <= front_chars_to_show){
+        return string;
+    }
+    var pre_string = "";
+    var post_string = "";
+    var i = 0;
+    while (i < string_len){
+        if (i < front_chars_to_show - 1){
+            pre_string += string.charAt(i);
+        }else{
+            post_string += string.charAt(i);
+        }
+        i = i + 1;
+    }
+    html = '<a class="long-string-toggle" style="cursor:pointer;">';
+    html += pre_string;
+    html += '<span id="ellipsis">...</span><span id="post-string" style="display:none;">';
+    html += post_string;
+    html += '<span></a>';
+    return html;
+}
+
 $(document).ready(function(){
     // messages timeout for 10 sec 
     setTimeout(function() {
         $('.alert').fadeOut('slow');
     }, ALERT_FADEOUT_TIME); // <-- time in milliseconds, 1000 =  1 sec
 
+    $(".long-string-toggle").click(function() {
+        $("#ellipsis").toggle();
+        $("#post-string").toggle();
+    })
 });

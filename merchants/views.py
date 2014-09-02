@@ -45,10 +45,11 @@ def login_request(request):
             if user_found:
                 user = authenticate(username=email, password=password)
                 if user:
+                    if user.is_staff:
+                        return HttpResponseRedirect(reverse_lazy('two_factor:login'))
                     login(request, user)
 
                     request.session['last_password_validation'] = now().ctime()
-
                     # Log the login
                     LoggedLogin.record_login(request)
 
@@ -247,11 +248,9 @@ def merchant_settings(request):
     merchant = user.get_merchant()
     if not merchant or not merchant.has_finished_registration():
         return HttpResponseRedirect(reverse_lazy('register_router'))
-    dest_address = merchant.get_destination_address()
     initial = {}
 
     initial['currency_code'] = merchant.currency_code
-    initial['btc_address'] = dest_address.b58_address
     initial['cashout_markup_in_bps'] = merchant.get_cashout_percent_markup()
     initial['cashin_markup_in_bps'] = merchant.get_cashin_percent_markup()
     initial['max_mbtc_shopper_purchase'] = merchant.max_mbtc_shopper_purchase
@@ -269,9 +268,6 @@ def merchant_settings(request):
             merchant.cashin_markup_in_bps = bitcoin_form.cleaned_data['cashin_markup_in_bps'] * 100
             merchant.cashout_markup_in_bps = bitcoin_form.cleaned_data['cashout_markup_in_bps'] * 100
             merchant.save()
-            merchant.set_destination_address(
-                    dest_address=bitcoin_form.cleaned_data['btc_address'],
-                    credential_used=None)
 
             messages.success(request, _('Your settings have been updated'))
             return HttpResponseRedirect(reverse_lazy('merchant_settings'))
@@ -283,7 +279,6 @@ def merchant_settings(request):
         'user': user,
         'merchant': merchant,
         'bitcoin_form': bitcoin_form,
-        'dest_address': dest_address,
         'show_bitcoin_form': show_bitcoin_form,
     }
 
@@ -456,7 +451,8 @@ def password_prompt(request):
     user = request.user
     merchant = user.get_merchant()
     if not merchant or not merchant.has_finished_registration():
-        return HttpResponseRedirect(reverse_lazy('register_router'))
+        if not request.user.is_superuser:
+            return HttpResponseRedirect(reverse_lazy('register_router'))
 
     initial = None
     if request.method == 'GET':

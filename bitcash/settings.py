@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 import re
-
+from django.core.urlresolvers import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -80,6 +80,10 @@ INSTALLED_APPS = (
     'blockchain_wallets',
     'profiles',
     'blog',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -91,8 +95,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'bitcash.middleware.AjaxMessaging',
+    'bitcash.middleware.ImpersonateMiddleware',
     'django.middleware.common.BrokenLinkEmailsMiddleware',
     'bitcash.middleware.MerchantAdminSectionMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -226,9 +232,10 @@ PLIVO_AUTH_ID = os.getenv('PLIVO_AUTH_ID')
 assert PLIVO_AUTH_ID, 'Must have plivo API access'
 
 LOGIN_URL = '/login/'
+# LOGIN_URL = reverse_lazy('two_factor:login')
 LOGIN_REDIRECT_URL = '/app/'
 
-MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/coinbase/', '/bitstamp/', '/blockchain/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']
+MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/wallet/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']
 MERCHANT_LOGIN_PW_URL = '/password/'
 
 CAPITAL_CONTROL_COUNTRIES = ['ARS', 'VEF']

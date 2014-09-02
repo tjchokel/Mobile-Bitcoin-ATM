@@ -9,7 +9,7 @@ from polymorphic import PolymorphicModel
 
 from countries import BFH_CURRENCY_DROPDOWN
 
-from utils import format_satoshis_with_units
+from utils import format_satoshis_with_units_rounded
 
 
 class BaseCredential(PolymorphicModel):
@@ -47,9 +47,17 @@ class BaseCredential(PolymorphicModel):
         Return True if status code valid, False otherwise
         """
         status_code_str = str(status_code)
-        if len(status_code_str.strip()) == 3 and status_code_str.startswith('2'):
+
+        # The first ~15,000 logged calls all had 3-digit status codes
+        assert len(status_code_str.strip()) == 3, status_code_str
+
+        if status_code_str.startswith('2'):
             self.mark_success()
             return True
+        elif status_code_str.startswith('5'):
+            # downtime, not good or bad
+            # Return failure but don't mark it as a failure
+            return False
         else:
             self.mark_failure()
             return False
@@ -63,7 +71,17 @@ class BaseCredential(PolymorphicModel):
     def get_login_link(self):
         raise Exception('Not Implemented')
 
+    def is_blockchain_credential(self):
+        return False
+
+    def is_coinbase_credential(self):
+        return False
+
+    def is_bitstamp_credential(self):
+        return False
+
     def get_latest_balance(self):
+        # These are by definition not real-time
         return BaseBalance.objects.filter(credential=self).order_by('created_at').last()
 
     def get_status(self):
@@ -80,7 +98,10 @@ class BaseBalance(PolymorphicModel):
     satoshis = models.BigIntegerField(blank=False, null=False, db_index=True)
 
     def __str__(self):
-        return '%s: %s' % (self.id, format_satoshis_with_units(self.satoshis))
+        return '%s: %s' % (self.id, format_satoshis_with_units_rounded(self.satoshis))
+
+    def get_btcs_with_units_rounded(self):
+        return format_satoshis_with_units_rounded(self.satoshis)
 
 
 class BaseSentBTC(PolymorphicModel):

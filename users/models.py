@@ -6,7 +6,6 @@ from django.utils.timezone import now
 from emails.trigger import send_and_log
 
 from phonenumber_field.modelfields import PhoneNumberField
-
 from utils import get_client_ip, simple_csprng
 from countries import ALL_COUNTRIES
 

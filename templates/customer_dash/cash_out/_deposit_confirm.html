@@ -27,66 +27,40 @@
       </form>
     {% endif %}
 
-    {# Status Table #}
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>{% trans "Action" %}</th>
-          <th>{% trans "Status" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{% trans "Detected" %}</td>
-          <td>
-            <a href="{{ current_address.get_bci_url }}" target="_blank">{% if transactions %}{{ transactions_total_sfwu }}{% else %}{% trans "No" %}{% endif %}</a>
-          </td>
-        </tr>
-        <tr>
-          <td>Confirmed</td>
-          <td>
-            {% if transactions %}
-              {% if True %}
-                {% trans "Yes" %}
-              {% else %}
-                {% trans "Explanation Here" %}
-              {% endif %}
-            {% endif %}
-          </td>
-        </tr>
-        <tr>
-          <td>{% trans "Customer Name" %}</td>
-          <td>
-            {% if shopper %}
-              {{ shopper.name }}
-            {% else %}
-              {% trans "Enter Below" %}
-            {% endif %}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
     {% if shopper %}
-      <div class="col-sm-12">
-        <br/>
-          <h3><i class="fa fa-map-marker"></i>{% trans "Transaction" %}</h3>
-          {% include "customer_dash/cash_out/_deposit_dash_table.html" %}
-          <hr>
+
+      {# Status Table #}
+      <h4>{% trans "Transaction Status" %}</h4>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td>{% trans "Detected" %}</td>
+              <td>
+                <a href="{{ current_address.get_bci_addr_url }}" target="_blank">{% if txn_group_payload.total_satoshis %}{{ txn_group_payload.total_sfwu }}{% else %}{% trans "No" %}{% endif %}</a>
+              </td>
+            </tr>
+            {% if transactions %}
+              <tr>
+                <td>{% trans "Confirmed" %}</td>
+                <td id="confirmation-text">{{ txn_group_payload.conf_string }}</td>
+              </tr>
+            {% endif %}
+            <tr>
+              <td>{% trans "Receipt Info" %}</td>
+              <td>
+                  {% if shopper.name %}
+                    {{ shopper.name }} ({{ shopper.email }})
+                  {% else %}
+                    {{ shopper.email }}
+                  {% endif %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      </div>
-      <br/>
-      <br />
-      <p class="lead text-center text-red">
-        {% trans "Cashier: <b>do not pay out cash</b> until CoinSafe notifies you that the customer's transaction has been confirmed by the bitcoin network." %}
-      </p>
 
       {% if transactions %}
-        <div style="text-align:center;">
-          <a class="btn btn-warning btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
-            {% trans "Override Required Confirmations" %}
-          </a>
-        </div>
 
         <div class="modal fade" id="override-confirmations-modal" tabindex="-1" role="dialog" aria-labelledby="cashinmodal" aria-hidden="true" >
           <div class="modal-dialog">
@@ -131,17 +105,31 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        <p class="lead text-center text-red">
+          {% trans "Cashier: <b>do not pay out cash</b> until CoinSafe notifies you that the customer's transaction has been confirmed by the bitcoin network." %}
+        </p>
+
+        <div style="text-align:center;">
+          <a class="btn btn-warning btn-lg" id="override-confirmations" onclick="overrideConfirmationsModal();">
+            {% trans "Override Required Confirmations" %}
+          </a>
+        </div>
+
       {% endif %}
 
     {% else %}
-      <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
-          {% load crispy_forms_tags %}
-          {{ shopper_form|crispy }}
-          {% csrf_token %}
-          <div class="button-wrapper">
-            <button type="submit" class="btn btn-primary btn-lg">{% trans "Send Receipt" %}</button>
-          </div>
-      </form>
+      <h4>{% trans "Receipt Info" %}</h4>
+      <div class="col-sm-12">
+        <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
+            {% load crispy_forms_tags %}
+            {{ shopper_form|crispy }}
+            {% csrf_token %}
+            <div class="button-wrapper">
+              <button type="submit" class="btn btn-primary btn-lg">{% trans "Save Receipt Info" %}</button>
+            </div>
+        </form>
+      </div>
+
     {% endif %}
 
   </div>

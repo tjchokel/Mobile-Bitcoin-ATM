@@ -24,9 +24,7 @@ from django.core.urlresolvers import reverse_lazy
 
 @login_required
 def poll_deposits(request):
-    txns_grouped = []
-    all_complete = False
-    confs_needed = 6
+    txn_group_payload = {}
     merchant = request.user.get_merchant()
     forwarding_obj = merchant.get_latest_forwarding_obj()
     if forwarding_obj:
@@ -43,19 +41,22 @@ def poll_deposits(request):
                         body_template='poll_deposits_apicall.html',
                         body_context=body_context,
                         )
+
         # annoying:
         forwarding_obj = ForwardingAddress.objects.get(b58_address=forwarding_obj.b58_address)
 
-        confs_needed = forwarding_obj.get_confs_needed()
-        txns_grouped = forwarding_obj.get_and_group_all_transactions()
-        if forwarding_obj.all_transactions_confirmed():
-            all_complete = True
+        txn_group_payload = forwarding_obj.get_txn_group_payload()
 
     json_dict = {
-            'txns': txns_grouped,
-            'all_complete': all_complete,
-            'confs_needed': confs_needed,
+            'txns': txn_group_payload.get('txn_list', []),
+            'all_complete': txn_group_payload.get('all_confirmed', False),
+            'total_satoshis': txn_group_payload.get('total_satoshis', 0),
+            'total_sfwu': txn_group_payload.get('total_sfwu', ''),
+            'conf_string': txn_group_payload.get('conf_string', ''),
+            'conf_delay_str': txn_group_payload.get('conf_delay_str', ''),
+            'confs_needed': txn_group_payload.get('confs_needed', 1),
             }
+
     json_response = json.dumps(json_dict, cls=DjangoJSONEncoder)
     return HttpResponse(json_response, content_type='application/json')
 

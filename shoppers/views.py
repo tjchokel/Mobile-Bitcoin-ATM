@@ -14,8 +14,6 @@ from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBit
 
 from emails.trigger import send_admin_email
 
-from utils import format_satoshis_with_units
-
 
 @sensitive_variables('password', 'password_form')
 @sensitive_post_parameters('password', )
@@ -169,14 +167,17 @@ def customer_dashboard(request):
                 else:
                     show_override_confirmations_modal = 'true'
 
-    transactions_total_sfwu = format_satoshis_with_units(sum([x.satoshis for x in transactions]))
+    if forwarding_address_obj:
+        txn_group_payload = forwarding_address_obj.get_txn_group_payload()
+    else:
+        txn_group_payload = None
 
     return {
         'user': user,
         'merchant': merchant,
         'current_address': forwarding_address_obj,
         'transactions': transactions,
-        'transactions_total_sfwu': transactions_total_sfwu,
+        'txn_group_payload': txn_group_payload,
         'shopper': shopper,
         'buy_request': btc_purchase_request,
         'password_form': password_form,

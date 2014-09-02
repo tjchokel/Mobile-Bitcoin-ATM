@@ -16,26 +16,25 @@
           <div class="col-sm-12">
             <p class="lead text-center">
               {% blocktrans with min_btc_formatted=merchant.get_min_mbtc_purchase_formatted max_btc_formatted=merchant.get_max_mbtc_purchase_formatted %}
-                Customer: send 1 mBTC - {{ max_btc_formatted }} to this address:
+                Customer: send up to {{ max_btc_formatted }} to this address:
               {% endblocktrans %}
               <br/>
             </p>
 
             <p class="lead text-center text-green" id="current_address"></p>
 
-              <div id="qr_code_span" style="display:none;">
-                <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
+            <div id="qr_code_span" style="display:none;">
+              <img id="qr_code" style="margin-left: auto; margin-right: auto; display: block;" src="#"/>
 
-                <form class="form-horizontal" method="post" action="{% url "customer_confirm_deposit" %}" >
-                  {% csrf_token %}
-                  <div class="button-wrapper">
-                    <button type="submit" class="btn btn-primary btn-lg">{% trans "The Bitcoin Has Been Sent" %}</button>
-                  </div>
-                </form>
+              <form class="form-horizontal" method="post" action="{% url "customer_confirm_deposit" %}" >
+                {% csrf_token %}
+                <div class="button-wrapper">
+                  <button type="submit" class="btn btn-primary btn-lg">{% trans "The Bitcoin Has Been Sent" %}</button>
+                </div>
+              </form>
 
+            </div>
 
-              </div>
-            </span>
           </div>
         </div>
         <br/>

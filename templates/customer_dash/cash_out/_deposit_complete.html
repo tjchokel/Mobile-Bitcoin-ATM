@@ -7,14 +7,14 @@
         </h3>
       <div class="clearfix"></div>
   </div>
-  <span id='predeposit' style="text-align: center; margin-top: 50px;">
+  <span style="text-align: center; margin-top: 50px;">
     <div class="row">
+
       <div class="col-sm-12">
         <p class="lead text-center">
           <i class="fa fa-check-circle" style="color: #81D685;"></i>
             {% blocktrans with mbtc=current_address.get_btc_transactions_total_formatted shopper_name=shopper.name b58_address=current_address.b58_address %}
-              The deposit of <b>{{mbtc}}</b> made by {{shopper_name}} has been received
-              (<a href="https://blockchain.info/address/{{ b58_address }}" target="_blank">verify</a>).
+              The deposit of <b>{{mbtc}}</b> made by {{shopper_name}} has been received.
             {% endblocktrans %}
 
             <br/><br />

@@ -68,27 +68,31 @@
                 LAST_POLL_TIME = new Date();
                 var time_since = timeSince(LAST_POLL_TIME);
                 $('#last-polled-time').html(time_since);
-                var txns = data['txns'];
-                var all_complete = data['all_complete'];
+
+                // Set retry time:
                 if (NEW_CONFS_TIMEOUT_MS>NEW_CONFS_TIMEOUT_MAX_MS){
                   var NEW_CONFS_TIMEOUT_TO_USE_MS = NEW_CONFS_TIMEOUT_MAX_MS;
                 }else {
                   NEW_CONFS_TIMEOUT_MS *= 1.2;
                   var NEW_CONFS_TIMEOUT_TO_USE_MS = NEW_CONFS_TIMEOUT_MS;
                 }
+
+                var txns = data['txns'];
+                var all_complete = data['all_complete'];
+
                 if(txns.length == 0){
                   setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_TO_USE_MS);
                 }else if(! all_complete){
-                  var confs_needed = data['confs_needed'];
                   var txns = txns;
                   var txns_length = txns.length;
-                  for (var i = 0; i < txns_length; i++) {
-                    var txn = txns[i];
-                    var conf_num = txn['forwarding_conf_num']
-                    var txn_hash = txn['forwarding_txn_hash']
-                    var conf_num_text = 'Pending ('+conf_num+' of '+confs_needed+' Confirms Needed)';
-                    $('#tx-status-'+txn_hash).html(conf_num_text);
-                  }
+                  var total_satoshis = data['total_satoshis'];
+                  var total_sfwu = data['total_sfwu'];
+
+                  // Data if BC fails
+                  var confs_needed = data['confs_needed'];
+
+                  $('#confirmation-text').html(data['conf_string']);
+
                   setTimeout(poll_new_confirmations,NEW_CONFS_TIMEOUT_TO_USE_MS);
                 }else{
                   location.reload(true);
@@ -308,24 +312,30 @@
 
         {% if current_address.all_transactions_confirmed %}
 
-          {# TX confirms before receipt entereed. This was an edge case before blockcypher but now is common. #}
+          {# Putting this here in case TX confirms before receipt entereed. This was an edge case before blockcypher but now is common. #}
           $('#id_name').select();
 
         {% else %}
 
+          {# unconfirmed tx #}
+
+          $('#id_name').select();
           poll_new_confirmations();
           set_time_since();
-          $('#id_name').select();
 
         {% endif %}
 
       {% elif current_address.customer_confirmed_deposit_at %}
 
-          poll_new_deposits();
-          set_time_since();
-          $('#id_name').select();
+        {# no TX but customer said they sent BTC #}
+
+        $('#id_name').select();
+        poll_new_deposits();
+        set_time_since();
 
       {% elif buy_request %}
+
+        {# cash in #}
 
         set_expires_at_time();
         $('#confirm-purchase-modal').on('shown.bs.modal', function () {
@@ -333,6 +343,8 @@
         })
 
       {% else %}
+
+        {# start page #}
 
         getBtcPrice();
         $('#deposit-address-modal').on('shown.bs.modal', function () {

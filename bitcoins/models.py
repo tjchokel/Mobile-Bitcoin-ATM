@@ -131,6 +131,9 @@ class ForwardingAddress(models.Model):
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
 
+    def get_bci_url(self):
+        return 'https://blockchain.info/address/%s' % self.b58_address
+
     def get_transaction(self):
         return self.btctransaction_set.last()
 
@@ -164,7 +167,7 @@ class ForwardingAddress(models.Model):
 
         return txn_group_list
 
-    def all_transactions_complete(self):
+    def all_transactions_confirmed(self):
         transactions = self.btctransaction_set.filter(destination_address=None)
         incomplete_transactions = [x for x in transactions if not x.is_confirmed()]
         return (transactions and len(incomplete_transactions) == 0)

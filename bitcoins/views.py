@@ -48,7 +48,7 @@ def poll_deposits(request):
 
         confs_needed = forwarding_obj.get_confs_needed()
         txns_grouped = forwarding_obj.get_and_group_all_transactions()
-        if forwarding_obj.all_transactions_complete():
+        if forwarding_obj.all_transactions_confirmed():
             all_complete = True
 
     json_dict = {
@@ -155,7 +155,7 @@ def merchant_complete_deposit(request):
         merchant = user.get_merchant()
         forwarding_obj = merchant.get_latest_forwarding_obj()
 
-        if forwarding_obj.all_transactions_complete():
+        if forwarding_obj.all_transactions_confirmed():
             forwarding_obj.paid_out_at = now()
             forwarding_obj.save()
 

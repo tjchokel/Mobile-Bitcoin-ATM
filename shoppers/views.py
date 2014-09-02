@@ -14,6 +14,8 @@ from shoppers.forms import ShopperInformationForm, BuyBitcoinForm, NoEmailBuyBit
 
 from emails.trigger import send_admin_email
 
+from utils import format_satoshis_with_units
+
 
 @sensitive_variables('password', 'password_form')
 @sensitive_post_parameters('password', )
@@ -41,7 +43,7 @@ def customer_dashboard(request):
     else:
         buy_form = NoEmailBuyBitcoinForm(merchant=merchant)
     password_form = ConfirmPasswordForm(user=user)
-    shopper_form = ShopperInformationForm(initial={'phone_country': merchant.country})
+    shopper_form = ShopperInformationForm()
     override_confirmation_form = ConfirmPasswordForm(user=user)
     show_buy_modal, show_confirm_purchase_modal, show_override_confirmations_modal = 'false', 'false', 'false'
     if forwarding_address_obj:
@@ -97,13 +99,11 @@ def customer_dashboard(request):
 
                 name = shopper_form.cleaned_data['name']
                 email = shopper_form.cleaned_data['email']
-                phone_num = shopper_form.cleaned_data['phone_num']
 
                 # Create shopper object
                 shopper = Shopper.objects.create(
                     name=name,
                     email=email,
-                    phone_num=phone_num,
                 )
 
                 forwarding_address_obj.shopper = shopper
@@ -117,7 +117,6 @@ def customer_dashboard(request):
                 for existing_txn in existing_txns:
                     if existing_txn.is_confirmed():
                         existing_txn.send_shopper_txconfirmed_email()
-                        existing_txn.send_shopper_txconfirmed_sms()
 
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
         # if submitting password confirmation form
@@ -170,11 +169,14 @@ def customer_dashboard(request):
                 else:
                     show_override_confirmations_modal = 'true'
 
+    transactions_total_sfwu = format_satoshis_with_units(sum([x.satoshis for x in transactions]))
+
     return {
         'user': user,
         'merchant': merchant,
         'current_address': forwarding_address_obj,
         'transactions': transactions,
+        'transactions_total_sfwu': transactions_total_sfwu,
         'shopper': shopper,
         'buy_request': btc_purchase_request,
         'password_form': password_form,

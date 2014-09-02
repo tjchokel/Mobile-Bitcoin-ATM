@@ -58,10 +58,9 @@ def format_fiat_amount(amount, currency_symbol, currency_code=None):
 @register.filter(name='hide_long_string')
 def hide_long_string(string, front_chars_to_show=6):
     """
-    Obscures the beginning of a string with *s and leaves
-    `trailing_chars_to_show` in plaintext.
+    Hides long string by default and lets you toggle it open to show more
+    Useful for btc addresses on small screens
     """
-    print string
     if not string:
         return ""
 

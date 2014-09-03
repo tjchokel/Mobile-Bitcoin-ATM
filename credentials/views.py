@@ -185,5 +185,5 @@ def refresh_credentials(request, credential_id):
     if success:
         messages.success(request, _('Your API credentials are valid'))
     else:
-        messages.warning(request, _('Your API info could not be validated'))
+        messages.warning(request, _('Your API credentials appear to be invalid'))
     return HttpResponse("*ok*")

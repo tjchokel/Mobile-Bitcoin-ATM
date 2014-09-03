@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 import re
-from django.core.urlresolvers import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 PROJECT_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -108,7 +107,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
-    'django.core.context_processors.request'
+    'django.core.context_processors.request',
+    'bitcash.context_processors.credential_status',
 )
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
@@ -231,7 +231,6 @@ PLIVO_AUTH_ID = os.getenv('PLIVO_AUTH_ID')
 assert PLIVO_AUTH_ID, 'Must have plivo API access'
 
 LOGIN_URL = '/login/'
-# LOGIN_URL = reverse_lazy('two_factor:login')
 LOGIN_REDIRECT_URL = '/app/'
 
 MERCHANT_LOGIN_REQUIRED_PATHS = ['/transactions/', '/merchant-settings/', '/profile/', '/wallet/', '/edit-personal-info/', '/edit-hours-info/', '/edit-merchant-info/', '/edit-btc-info/']

@@ -2,7 +2,31 @@
 {% load i18n %}
 <div class="container">
   <div class="page-header">
+
+    {% if not has_cred or not cred_appears_usable %}
+      {% if not has_cred %}
+        <div id="no-wallet" class="alert alert-danger" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
+          {% url 'base_creds' as wallet_url %}
+          {% blocktrans %}
+            <strong>No Linked Bitcoin Wallet!</strong>
+            Please <a href="{{ wallet_url }}">add API credentials</a> so you can sell bitcoin to customers.
+          {% endblocktrans %}
+        </div>
+      {% else %}
+        <div id="no-wallet" class="alert alert-danger" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
+          {% url 'base_creds' as wallet_url %}
+          {% blocktrans %}
+            <strong>Invalid API Credentials!</strong>
+            Please <a href="{{ wallet_url }}">update your API credentials</a> so you can sell bitcoin to customers.
+          {% endblocktrans %}
+        </div>
+      {% endif %}
+    {% endif %}
+
     <h3 class="pull-left hl">{% trans "Admin" %}</h3>
+
     <h3 class="pull-right hidden-md hidden-lg">
       <div class="btn-group">
         {% if current_tab == 'transactions' %}
@@ -48,10 +72,9 @@
           {% endif %}
         </li>
         <li>
-          {# FIXME: new icon here #}
           {% if current_tab == 'credentials' %}
             <a href="#" class="active"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %} 
-              {% if merchant.has_valid_api_credential %}
+              {% if cred_appears_usable %}
                 <i class="fa fa-check-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
                 <i class="fa fa-exclamation-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
@@ -59,7 +82,7 @@
             </a>
           {% else %}
             <a href="{% url "credentials.views.base_creds" %}"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %}
-              {% if merchant.has_valid_api_credential %}
+              {% if cred_appears_usable %}
                 <i class="fa fa-check-circle  pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
                 <i class="fa fa-exclamation-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>

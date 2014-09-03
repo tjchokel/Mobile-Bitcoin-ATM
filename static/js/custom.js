@@ -1,4 +1,4 @@
-var ALERT_FADEOUT_TIME = 25000;
+var ALERT_FADEOUT_TIME = 10000;
 $(document).ajaxComplete(function(e, xhr, settings) {
     var contentType = xhr.getResponseHeader("Content-Type");
     if (contentType == "application/javascript" || contentType == "application/json") {
@@ -33,7 +33,7 @@ function addMessage(text, extra_tags) {
     $("#messages").append(message);
     $(".page-tip").slideDown();
     setTimeout(function() {
-        $('.alert').fadeOut('slow');
+        $('.alert').not('.nofadeout').fadeOut('slow');
     }, ALERT_FADEOUT_TIME);
 }
 
@@ -129,7 +129,7 @@ function hideLongString(string){
 $(document).ready(function(){
     // messages timeout for 10 sec 
     setTimeout(function() {
-        $('.alert').fadeOut('slow');
+        $('.alert').not('.nofadeout').fadeOut('slow');
     }, ALERT_FADEOUT_TIME); // <-- time in milliseconds, 1000 =  1 sec
 
     $(".long-string-toggle").click(function() {

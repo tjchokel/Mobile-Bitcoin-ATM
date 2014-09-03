@@ -14,13 +14,12 @@ from emails.models import SentEmail
 
 from emails.trigger import send_and_log
 
-from countries import BFHCurrenciesList
-
 from bitcash.settings import BASE_URL, CAPITAL_CONTROL_COUNTRIES
 
 from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
-        format_num_for_printing, btc_to_satoshis)
+        format_num_for_printing, btc_to_satoshis, get_currency_symbol,
+        format_fiat_amount)
 
 from datetime import timedelta
 import json
@@ -158,7 +157,6 @@ class ForwardingAddress(models.Model):
 
         txn_list = []
 
-        total_satoshis = 0
         all_confirmed = True
         # loop through forwarding txns
         for fwd_txn in self.get_all_forwarding_transactions():
@@ -173,31 +171,39 @@ class ForwardingAddress(models.Model):
                     'fiat_amount': fwd_txn.fiat_amount,
                     'currency_code': fwd_txn.currency_code_when_created,
                     'confs_needed': fwd_txn.get_confs_needed(),
+                    'fiat_amount_formatted': fwd_txn.get_fiat_amount_formatted(),
+                    'fiat_amount': fwd_txn.fiat_amount,
                     # DISGUSTING HACK:
-                    'conf_str': unicode(fwd_txn.get_confirmation_str()),
+                    'conf_str': unicode(fwd_txn.get_status()),
                     'conf_delay_str': unicode(fwd_txn.get_conf_delay_str()),
                     }
-            print 'CONF_STR', txn_dict['conf_str']
             txn_list.append(txn_dict)
-            total_satoshis += fwd_txn.satoshis
             if not is_confirmed:
                 all_confirmed = False
+
+        total_satoshis = sum([x['satoshis'] for x in txn_list])
 
         if len(txn_list) == 0:
             conf_str = None
             conf_delay_str = None
             confs_needed = self.merchant.minimum_confirmations
+            total_fiat_amount_formatted = None
         elif len(txn_list) == 1:
             conf_str = txn_list[0]['conf_str']
             conf_delay_str = txn_list[0]['conf_delay_str']
             confs_needed = txn_list[0]['confs_needed']
+            total_fiat_amount_formatted = txn_list[0]['fiat_amount_formatted']
         else:
             confs_needed = self.merchant.minimum_confirmations
             if all_confirmed:
-                conf_str = _('Confirmed')
+                conf_str = _('Confirmed (Multiple Transactions Detected)')
             else:
-                conf_str = _('Not Confirmed')
+                conf_str = _('Not Confirmed (Multiple Transactions Detected)')
             conf_delay_str = _('10-20 Minutes (Multiple Transactions Detected)')
+            total_fiat_amount = [x['fiat_amount'] for x in txn_list]
+            total_fiat_amount_formatted = format_fiat_amount(
+                    fiat_amount=total_fiat_amount,
+                    currency_code=txn_list[0]['currency_code'])
 
         return {
                 'txn_list': txn_list,
@@ -207,6 +213,7 @@ class ForwardingAddress(models.Model):
                 'conf_delay_str': conf_delay_str,
                 'all_confirmed': all_confirmed,
                 'confs_needed': confs_needed,
+                'total_fiat_amount_formatted': total_fiat_amount_formatted,
                 }
 
     def all_transactions_confirmed(self):
@@ -234,9 +241,10 @@ class ForwardingAddress(models.Model):
 
     def get_fiat_transactions_total_formatted(self):
         ' Assumes that all deposits to a forwarding address use the same currency '
-        return '%s%s %s' % (self.merchant.get_currency_symbol(),
-                self.get_fiat_transactions_total(),
-                self.get_first_forwarding_transaction().currency_code_when_created)
+        return format_fiat_amount(
+                fiat_amount=self.get_fiat_transactions_total(),
+                currency_code=self.get_first_forwarding_transaction().currency_code_when_created
+                )
 
     def activity_check_due(self):
         """
@@ -527,16 +535,6 @@ class BTCTransaction(models.Model):
             self.met_confidence_threshold_at
             ])
 
-    def get_confirmation_str(self):
-        if self.met_minimum_confirmation_at:
-            return _('Confirmed by Bitcoin Blockchain')
-        elif self.met_confidence_threshold_at:
-            return _('Confirmed by CoinSafe')
-        elif self.min_confirmations_overrode_at:
-            return _('Confirmed by Cashier')
-        else:
-            return _('Not Confirmed')
-
     def get_conf_delay_str(self):
         if self.is_confirmed():
             return ''
@@ -568,14 +566,11 @@ class BTCTransaction(models.Model):
                 destination_address__isnull=False)
 
     def calculate_exchange_rate(self):
-        return format_num_for_printing(float(self.fiat_amount) / satoshis_to_btc(self.satoshis), 2)
+        return float(self.fiat_amount) / satoshis_to_btc(self.satoshis)
 
     def get_exchange_rate_formatted(self):
-        return '%s%s %s' % (
-                self.get_currency_symbol(),
-                self.calculate_exchange_rate(),
-                self.currency_code_when_created
-                )
+        return format_fiat_amount(fiat_amount=self.calculate_exchange_rate(),
+                currency_code=self.currency_code_when_created)
 
     def get_status(self):
         if self.forwarding_address.cancelled_at:
@@ -597,7 +592,7 @@ class BTCTransaction(models.Model):
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
-            return BFHCurrenciesList[self.currency_code_when_created]['symbol'].decode('utf-8')
+            return get_currency_symbol(self.currency_code_when_created)
         else:
             return '$'
 
@@ -614,8 +609,8 @@ class BTCTransaction(models.Model):
         return (self.conf_num >= self.get_confs_needed())
 
     def get_fiat_amount_formatted(self):
-        return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,
-                self.currency_code_when_created)
+        return format_fiat_amount(fiat_amount=self.fiat_amount,
+                currency_code=self.currency_code_when_created)
 
     def get_time_range_in_minutes(self):
         additional_confs_needed = self.get_total_confirmations_required() - self.conf_num
@@ -1030,23 +1025,20 @@ class ShopperBTCPurchase(models.Model):
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:
-            return BFHCurrenciesList[self.currency_code_when_created]['symbol'].decode('utf-8')
+            return get_currency_symbol(self.currency_code_when_created)
         else:
             return '$'
 
     def get_fiat_amount_formatted(self):
-        return '%s%s %s' % (self.get_currency_symbol(), self.fiat_amount,
-                self.currency_code_when_created)
+        return format_fiat_amount(fiat_amount=self.fiat_amount,
+                currency_code=self.currency_code_when_created)
 
     def calculate_exchange_rate(self):
-        return format_num_for_printing(float(self.fiat_amount) / satoshis_to_btc(self.satoshis), 2)
+        return float(self.fiat_amount) / satoshis_to_btc(self.satoshis)
 
     def get_exchange_rate_formatted(self):
-        return '%s%s %s' % (
-                self.get_currency_symbol(),
-                self.calculate_exchange_rate(),
-                self.currency_code_when_created
-                )
+        return format_fiat_amount(fiat_amount=self.calculate_exchange_rate(),
+                currency_code=self.currency_code_when_created)
 
     def get_status(self):
         if self.cancelled_at:

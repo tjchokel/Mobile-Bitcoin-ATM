@@ -434,6 +434,9 @@ class MerchantInfoForm(forms.Form):
     def clean_website(self):
         url = self.cleaned_data.get('website')
 
+        if not url:
+            return url
+
         # append scheme if neccesary
         if url and not url.startswith('http'):
             url = 'http://%s' % url

@@ -459,15 +459,6 @@ class BitcoinInfoForm(forms.Form):
         widget=forms.Select(),
     )
 
-    btc_address = forms.CharField(
-            label=_('Bitcoin Deposit Address'),
-            required=True,
-            min_length=27,
-            max_length=34,
-            help_text=_('The wallet address where you want your bitcoin sent'),
-            widget=forms.TextInput(),
-    )
-
     cashin_markup_in_bps = forms.DecimalField(
             label=_('Percent Markup When Selling Bitcoin'),
             required=True,
@@ -502,13 +493,6 @@ class BitcoinInfoForm(forms.Form):
         super(BitcoinInfoForm, self).__init__(*args, **kwargs)
         if kwargs and 'initial' in kwargs and 'currency_code' in kwargs['initial']:
             self.fields['currency_code'].widget.attrs['data-currency'] = kwargs['initial']['currency_code']
-
-    def clean_btc_address(self):
-        address = self.cleaned_data.get('btc_address')
-        if not is_valid_btc_address(address):
-            msg = _("Sorry, that's not a valid bitcoin address")
-            raise forms.ValidationError(msg)
-        return address
 
 
 class PasswordConfirmForm(forms.Form):

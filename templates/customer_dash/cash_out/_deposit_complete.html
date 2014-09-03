@@ -13,8 +13,8 @@
       <div class="col-sm-12">
         <p class="lead text-center">
           <i class="fa fa-check-circle" style="color: #81D685;"></i>
-            {% blocktrans with mbtc=current_address.get_btc_transactions_total_formatted shopper_name=shopper.name b58_address=current_address.b58_address %}
-              The deposit of <b>{{mbtc}}</b> made by {{shopper_name}} has been received.
+            {% blocktrans with mbtc=current_address.get_btc_transactions_total_formatted shopper_name=shopper.name bci_addr_url=current_address.get_bci_addr_url %}
+              The deposit of <b><a href="{{ bci_addr_url }}" target="_blank">{{mbtc}}</a></b> made by {{shopper_name}} has been received.
             {% endblocktrans %}
 
             <br/><br />

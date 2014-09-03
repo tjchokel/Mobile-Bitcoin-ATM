@@ -40,22 +40,30 @@
                 <a href="{{ current_address.get_bci_addr_url }}" target="_blank">{% if txn_group_payload.total_satoshis %}{{ txn_group_payload.total_sfwu }}{% else %}{% trans "No" %}{% endif %}</a>
               </td>
             </tr>
-            {% if transactions %}
-              <tr>
-                <td>{% trans "Confirmed" %}</td>
-                <td id="confirmation-text">{{ txn_group_payload.conf_string }}</td>
-              </tr>
-            {% endif %}
             <tr>
-              <td>{% trans "Exchange Rate" %}</td>
+              <td>{% trans "Cash to Recieve" %}</td>
               <td>
                 {% if transactions %}
-                  <b>{{ fiat_amt }}</b> {% trans "(locked in)" %}
+                  <b>{{ txn_group_payload.total_fiat_amount_formatted }}</b>
                 {% else %}
-                  {% trans "Locked When Bitcoin Sent" %}
+                  {% trans "Calculated When Bitcoin Received" %}
                 {% endif %}
               </td>
             </tr>
+            {% if transactions %}
+              <tr>
+                <td>{% trans "Status" %}</td>
+                <td id="confirmation-text">
+                  {{ txn_group_payload.conf_str }}
+                </td>
+              </tr>
+              <tr>
+                <td>Expected Wait Time</td>
+                <td id="confirmation-delay-text">
+                  {{ txn_group_payload.conf_delay_str }}
+                </td>
+              </tr>
+            {% endif %}
             <tr>
               <td>{% trans "Receipt Info" %}</td>
               <td>

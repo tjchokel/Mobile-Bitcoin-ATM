@@ -193,7 +193,7 @@ class Merchant(models.Model):
 
     def get_latest_api_credential(self):
         # Note, this ignores the last_failed_at field
-        return self.basecredential_set.filter(disabled_at=None).last()
+        return self.basecredential_set.filter(disabled_at=None).order_by('created_at').last()
 
     def disable_all_credentials(self):
         " use this when reseting a user's password "

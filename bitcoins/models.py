@@ -362,7 +362,8 @@ class ForwardingAddress(models.Model):
 
             # Record the activity
             fwd_txn.last_activity_check_at = now()
-            fwd_txn.blockcypher_preference = preference  # may be no change
+            if preference:
+                fwd_txn.blockcypher_preference = preference  # may be no change
             fwd_txn.save()
 
             if num_confirmations < fwd_txn.conf_num:
@@ -545,7 +546,11 @@ class BTCTransaction(models.Model):
         if self.is_confirmed():
             return ''
         if not self.blockcypher_preference:
-            return _('10-20 mins')
+            if now() - self.added_at < timedelta(seconds=10):
+                # brand new transaction
+                return _('Calculating...')
+            else:
+                return _('10-20 mins')
         elif self.blockcypher_preference == 'high':
             return _('Less Than a Minute')
         elif self.blockcypher_preference == 'medium':

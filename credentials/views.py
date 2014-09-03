@@ -114,6 +114,9 @@ def base_creds(request):
                 # Redirect on success to handle edge cases
                 return HttpResponseRedirect(reverse_lazy('base_creds'))
 
+            else:
+                raise Exception('Invalid Delete Credential: should not be possible')
+
         else:
             raise Exception('Logic Fail: users post not understood')
 

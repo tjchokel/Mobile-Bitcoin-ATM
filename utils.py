@@ -9,6 +9,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 
+from countries import BFHCurrenciesList
+
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
 STANDARD_TX_FEE_IN_SATOSHIS = 10**4
@@ -17,6 +19,19 @@ STANDARD_TX_FEE_IN_SATOSHIS = 10**4
 def dp(s):
     " debug print "
     print "%s %s" % (now(), s)
+
+
+def get_currency_symbol(currency_code):
+    if currency_code in BFHCurrenciesList:
+        return BFHCurrenciesList[currency_code]['symbol'].decode('utf-8')
+    else:
+        return '$'
+
+
+def get_currency_name(currency_code):
+    if currency_code in BFHCurrenciesList:
+        return BFHCurrenciesList[currency_code]['label']
+    return ''
 
 
 def satoshis_to_btc(satoshis):

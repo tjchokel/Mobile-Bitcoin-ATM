@@ -15,9 +15,9 @@ from bitcash.settings import BASE_URL
 
 from utils import (format_satoshis_with_units, mbtc_to_satoshis,
         satoshis_to_btc, format_fiat_amount, format_url_for_display,
-        uri_to_url)
+        uri_to_url, get_currency_symbol, get_currency_name)
 
-from countries import BFHCurrenciesList, ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
+from countries import ALL_COUNTRIES, BFH_CURRENCY_DROPDOWN
 
 from unidecode import unidecode
 
@@ -160,13 +160,10 @@ class Merchant(models.Model):
             return self.basis_points_markup / 100.00
 
     def get_currency_symbol(self):
-        if self.currency_code:
-            return BFHCurrenciesList[self.currency_code]['symbol'].decode('utf-8')
-        else:
-            return '$'
+        return get_currency_symbol(self.currency_code)
 
     def get_currency_name(self):
-        return BFHCurrenciesList[self.currency_code]['label']
+        return get_currency_name(self.currency_code)
 
     def get_registration_percent_complete(self):
         percent_complete = 50

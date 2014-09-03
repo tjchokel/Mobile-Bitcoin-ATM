@@ -296,6 +296,7 @@
       $("#div_id_cb_api_key").removeClass("hidden");
       $("#div_id_cb_secret_key").removeClass("hidden");
       $("#div_id_exchange_choice").after(CB_INSTRUCTIONS);
+      $('#id_cb_api_key').select();
     }
 
     function selectBitstamp() {
@@ -304,6 +305,7 @@
       $("#div_id_bs_secret_key").removeClass("hidden");
       $("#div_id_bs_customer_id").removeClass("hidden");
       $("#div_id_exchange_choice").after(BS_INSTRUCTIONS);
+      $('#id_bs_customer_id').select();
     }
 
     function selectBlockchain() {
@@ -312,6 +314,7 @@
       $("#div_id_bci_second_password").removeClass("hidden");
       $("#div_id_bci_username").removeClass("hidden");
       $("#div_id_exchange_choice").after(BCI_INSTRUCTIONS);
+      $('#id_bci_username').select();
     }
 
     $("#id_exchange_choice_1, #id_exchange_choice_2, #id_exchange_choice_3, #id_exchange_choice_4").change(function(){
@@ -405,7 +408,6 @@
         // blockchain second password not required 
         $('#div_id_bci_second_password .asteriskField').remove();
 
-        $('#id_cb_api_key').select();
         {% if credential %}
           getCurrentBalance({{credential.id}});
         {% endif %}

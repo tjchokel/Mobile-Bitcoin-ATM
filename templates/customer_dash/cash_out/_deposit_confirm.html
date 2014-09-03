@@ -47,6 +47,16 @@
               </tr>
             {% endif %}
             <tr>
+              <td>{% trans "Exchange Rate" %}</td>
+              <td>
+                {% if transactions %}
+                  <b>{{ fiat_amt }}</b> {% trans "(locked in)" %}
+                {% else %}
+                  {% trans "Locked When Bitcoin Sent" %}
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
               <td>{% trans "Receipt Info" %}</td>
               <td>
                   {% if shopper.name %}
@@ -118,7 +128,10 @@
       {% endif %}
 
     {% else %}
-      <h4>{% trans "Receipt Info" %}</h4>
+      <p class="lead text-center">
+        {% trans "Please enter a name for this order:" %}
+      </p>
+
       <div class="col-sm-12">
         <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
             {% load crispy_forms_tags %}

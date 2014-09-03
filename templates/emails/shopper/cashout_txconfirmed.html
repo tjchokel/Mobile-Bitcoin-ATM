@@ -1,13 +1,13 @@
 {% extends "base_email.html" %}
 
 {% block content %}
-Your deposit of <b>{{ satoshis_formatted }}</b> has been
+Your deposit of <b>{{ satoshis_formatted }}</b> has been confirmed by
   {% if confirmed_via_merchant %}
-    instantly confirmed by {{ merchant_name }}!
+    {{ merchant_name }}!
   {% elif confrimed_via_blocks %}
-    confirmed by the bitcoin blockchain!
+    the bitcoin blockchain!
   {% else %}
-    quickly confirmed by CoinSafe!
+    CoinSafe!
   {% endif %}
 <br /><br />
 

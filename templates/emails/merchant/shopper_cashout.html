@@ -1,13 +1,13 @@
 {% extends "base_email.html" %}
 
 {% block content %}
-A deposit of <b>{{ satoshis_formatted }}</b> {% if shopper_name %}from {{ shopper_name }}{% endif %} has been
+A deposit of <b>{{ satoshis_formatted }}</b> {% if shopper_name %}from {{ shopper_name }}{% endif %} has been confirmed by
   {% if confirmed_via_merchant %}
-    instantly confirmed by your cashier.
+    your cashier.
   {% elif confrimed_via_blocks %}
-    confirmed by the bitcoin blockchain.
+    the bitcoin blockchain.
   {% else %}
-    quickly confirmed by CoinSafe.
+    CoinSafe.
   {% endif %}
 The exchange rate when the bitcoin was sent was {{ exchange_rate_formatted }} / BTC for a total value of <b>{{ fiat_amount_formatted }}</b>.
 Please pay {% firstof shopper_name 'the customer' %} immediately.

@@ -19,7 +19,7 @@
                 You received <b>{{btc}}</b> from <b>{{shopper}}</b> and paid out <b>{{fiat}}</b>
               {% endblocktrans %}
             {% else %}
-              {% if transaction.met_minimum_confirmation_at %}
+              {% if transaction.is_confirmed %}
                 {% blocktrans with btc=transaction.format_satoshis_amount shopper=transaction.get_shopper.get_transaction_table_string fiat=transaction.get_fiat_amount_formatted %}
                   You received <b>{{btc}}</b> from <b>{{shopper}}</b> but have not yet indicated you paid them. 
                   Please pay them <b>{{fiat}}</b> right away.

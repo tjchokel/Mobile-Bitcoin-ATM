@@ -1,10 +1,27 @@
 {% extends "base_email.html" %}
 
 {% block content %}
-A deposit of <b>{{ satoshis_formatted }}</b> {% if shopper_name %}from {{ shopper_name }}{% endif %} has been confirmed.
+A deposit of <b>{{ satoshis_formatted }}</b> {% if shopper_name %}from {{ shopper_name }}{% endif %} has been confirmed by
+  {% if confirmed_via_merchant %}
+    your cashier.
+  {% elif confrimed_via_blocks %}
+    the bitcoin blockchain.
+  {% else %}
+    CoinSafe.
+  {% endif %}
 The exchange rate when the bitcoin was sent was {{ exchange_rate_formatted }} / BTC for a total value of <b>{{ fiat_amount_formatted }}</b>.
 Please pay {% firstof shopper_name 'the customer' %} immediately.
 <br /><br />
 
 You can <a href="https://blockchain.info/tx/{{ tx_hash }}">see this transaction on the bitcoin blockchain here</a>, as well as in <a href="{{ BASE_URL }}{{ coinsafe_tx_uri }}">in your dashboard on CoinSafe</a>.
 {% endblock content %}
+
+{% if not confirmed_via_merchant and not confrimed_via_blocks and confirmed_via_confidence %}
+  {% block ps %}
+    P.S. Wondering how we were able to confirm this transaction so quickly?
+    We use the math described in
+    <a {# no email appending #} href="http://www.tik.ee.ethz.ch/file/848064fa2e80f88a57aef43d7d5956c6/P2P2013_093.pdf">this academic paper</a>
+    to monitor the bitcoin network and predict when this transaction has a very high probability of being confirmed.
+    In the unlikely event you are ever the victim of a double-spend attack, we will reimburese the transaction to make you whole.
+  {% endblock ps %}
+{% endif %}

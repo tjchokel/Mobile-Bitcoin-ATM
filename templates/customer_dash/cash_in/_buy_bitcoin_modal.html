@@ -30,7 +30,7 @@
             <p class="lead text-center hidden" id="step_3">3. Pay the business and have them confirm their password
             </p>
 
-            <form class="form-horizontal" method="post" action="{% url "users.views.customer_dashboard" %}" >
+            <form class="form-horizontal" method="post" action="{% url "customer_dashboard" %}" >
               {% load crispy_forms_tags %}
               {{ buy_form|crispy }}
               {% csrf_token %}

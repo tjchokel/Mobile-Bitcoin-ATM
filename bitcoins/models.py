@@ -582,7 +582,15 @@ class BTCTransaction(models.Model):
         if self.forwarding_address.cancelled_at:
             return _('Transaction Cancelled')
         elif self.forwarding_address.paid_out_at:
-            return _('Complete')
+            # More detail then just "complete"
+            if self.met_minimum_confirmation_at:
+                return _('Complete')
+            elif self.met_confidence_threshold_at:
+                return _('Complete (Confirmed by CoinSafe)')
+            elif self.min_confirmations_overrode_at:
+                return _('Complete (Confirmed by Cashier)')
+            else:
+                return _('Complete')
         elif self.met_minimum_confirmation_at:
             return _('BTC Received')
         elif self.met_confidence_threshold_at:

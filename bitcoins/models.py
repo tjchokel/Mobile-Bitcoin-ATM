@@ -18,8 +18,7 @@ from bitcash.settings import BASE_URL, CAPITAL_CONTROL_COUNTRIES
 
 from utils import (uri_to_url, simple_random_generator, satoshis_to_btc,
         satoshis_to_mbtc, format_mbtc, format_satoshis_with_units,
-        format_num_for_printing, btc_to_satoshis, get_currency_symbol,
-        format_fiat_amount)
+        btc_to_satoshis, get_currency_symbol, format_fiat_amount)
 
 from datetime import timedelta
 import json
@@ -166,6 +165,7 @@ class ForwardingAddress(models.Model):
                     'satoshis_fwu': format_satoshis_with_units(fwd_txn.satoshis),
                     'txn_hash': fwd_txn.txn_hash,
                     'is_confirmed': is_confirmed,
+                    'confirmed_by': fwd_txn.txn_confirmed_by(),
                     'bc_pref': fwd_txn.blockcypher_preference,
                     'conf_num': fwd_txn.conf_num,
                     'fiat_amount': fwd_txn.fiat_amount,
@@ -184,21 +184,25 @@ class ForwardingAddress(models.Model):
         total_satoshis = sum([x['satoshis'] for x in txn_list])
 
         if len(txn_list) == 0:
-            conf_str = None
-            conf_delay_str = None
+            conf_str = ''
+            conf_delay_str = ''
             confs_needed = self.merchant.minimum_confirmations
-            total_fiat_amount_formatted = None
+            total_fiat_amount_formatted = ''
+            confirmed_by = ''
         elif len(txn_list) == 1:
             conf_str = txn_list[0]['conf_str']
             conf_delay_str = txn_list[0]['conf_delay_str']
             confs_needed = txn_list[0]['confs_needed']
             total_fiat_amount_formatted = txn_list[0]['fiat_amount_formatted']
+            confirmed_by = txn_list[0]['confirmed_by']
         else:
             confs_needed = self.merchant.minimum_confirmations
             if all_confirmed:
                 conf_str = _('Confirmed (Multiple Transactions Detected)')
+                confirmed_by = 'CoinSafe'
             else:
                 conf_str = _('Not Confirmed (Multiple Transactions Detected)')
+                confirmed_by = ''
             conf_delay_str = _('10-20 Minutes (Multiple Transactions Detected)')
             total_fiat_amount = [x['fiat_amount'] for x in txn_list]
             total_fiat_amount_formatted = format_fiat_amount(
@@ -215,6 +219,7 @@ class ForwardingAddress(models.Model):
                 'all_confirmed': all_confirmed,
                 'confs_needed': confs_needed,
                 'total_fiat_amount_formatted': total_fiat_amount_formatted,
+                'all_txns_confirmed_by': confirmed_by,
                 }
 
     def all_transactions_confirmed(self):
@@ -590,6 +595,20 @@ class BTCTransaction(models.Model):
                     'confs_needed': self.get_confs_needed(),
                     }
             return _(msg)
+
+    def txn_confirmed_by(self):
+        """
+        To be used in a sentence:
+
+        This transactions was confirmed by ________
+        """
+        if self.met_minimum_confirmation_at:
+            return _('the bitcoin blockchain')
+        elif self.met_confidence_threshold_at:
+            return 'CoinSafe'
+        elif self.min_confirmations_overrode_at:
+            return _('the cashier')
+        return ''
 
     def get_currency_symbol(self):
         if self.currency_code_when_created:

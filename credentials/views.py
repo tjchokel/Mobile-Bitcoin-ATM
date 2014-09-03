@@ -30,7 +30,7 @@ from datetime import timedelta
 def base_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_lastest_api_credential()
+    credential = merchant.get_latest_api_credential()
 
     add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
     del_cred_form = None
@@ -73,25 +73,19 @@ def base_creds(request):
                     credential.save()
 
                 try:
-                    balance = credential.get_balance()
-                    if balance is False:
-                        messages.warning(request, INVALID_MSG)
-                        # This error will be caught by the try/except and not logged:
-                        raise Exception('Could Not Fetch Balance')
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)
-                    credential.mark_success()
-                    # FIXME: mark all other credentials as invalid
                     SUCCESS_MSG = _('Your %(credential_name)s API credentials were succesfully added. Any bitcoin you buy will be sent to this account.' % {
                         'credential_name': credential.get_credential_to_display()}
                         )
                     messages.success(request, SUCCESS_MSG)
 
-                    # Redirect on success to handle edge cases
-                    return HttpResponseRedirect(reverse_lazy('base_creds'))
                 except:
                     credential.mark_disabled()
                     messages.warning(request, INVALID_MSG)
+
+                # Redirect on success to handle edge cases
+                return HttpResponseRedirect(reverse_lazy('base_creds'))
 
         elif 'credential_id' in request.POST:
             del_cred_form = DeleteCredentialForm(data=request.POST)

@@ -194,7 +194,7 @@ class Merchant(models.Model):
         # Note, this only returns credentials that don't have 'last_failed_at' set
         return self.basecredential_set.filter(disabled_at=None, last_failed_at=None).last()
 
-    def get_lastest_api_credential(self):
+    def get_latest_api_credential(self):
         # Note, this ignores the last_failed_at field
         return self.basecredential_set.filter(disabled_at=None).last()
 

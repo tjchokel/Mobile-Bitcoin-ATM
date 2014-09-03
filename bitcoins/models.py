@@ -207,6 +207,7 @@ class ForwardingAddress(models.Model):
 
         return {
                 'txn_list': txn_list,
+                'txn_list_cnt': len(txn_list),
                 'total_satoshis': total_satoshis,
                 'total_sfwu': format_satoshis_with_units(total_satoshis),
                 'conf_str': conf_str,
@@ -539,11 +540,11 @@ class BTCTransaction(models.Model):
         if self.is_confirmed():
             return ''
         if not self.blockcypher_preference:
-            return _('In 10-20 mins')
+            return _('10-20 mins')
         elif self.blockcypher_preference == 'high':
-            return _('Very Soon')
+            return _('Less Than a Minute')
         elif self.blockcypher_preference == 'medium':
-            return _('Within Minutes')
+            return _('A Few Minutes')
         elif self.blockcypher_preference == 'low':
             return _('Low Transaction Fee! Transaction May Take a While.')
         raise Exception("Logic error. This shouldn't be possible.")
@@ -584,7 +585,7 @@ class BTCTransaction(models.Model):
         elif self.min_confirmations_overrode_at:
             return _('BTC Sent')
         else:
-            msg = _('BTC Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)') % {
+            msg = _('Pending (%(conf_num)s of %(confs_needed)s Confirms Needed)') % {
                     'conf_num': self.conf_num,
                     'confs_needed': self.get_confs_needed(),
                     }

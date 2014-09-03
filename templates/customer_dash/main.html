@@ -316,6 +316,8 @@
 
       {% if transactions %}
 
+        {# useful for debug #}
+        console.log('Current Address: {{ current_address.b58_address }}');
         {% if current_address.all_transactions_confirmed %}
 
           {# Putting this here in case TX confirms before receipt entereed. This was an edge case before blockcypher but now is common. #}

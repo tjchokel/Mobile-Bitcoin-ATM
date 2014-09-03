@@ -38,7 +38,7 @@ def customer_dashboard(request):
 
     credential = merchant.get_valid_api_credential()
 
-    if credential.is_coinbase_credential():
+    if credential and credential.is_coinbase_credential():
         buy_form = BuyBitcoinForm(initial={'email_or_btc_address': '1'}, merchant=merchant)
     else:
         buy_form = NoEmailBuyBitcoinForm(merchant=merchant)
@@ -54,7 +54,7 @@ def customer_dashboard(request):
     if request.method == 'POST':
         # if submitting a buy bitcoin form
         if 'amount' in request.POST:
-            if credential.is_coinbase_credential():
+            if credential and credential.is_coinbase_credential():
                 buy_form = BuyBitcoinForm(data=request.POST, merchant=merchant)
             else:
                 buy_form = NoEmailBuyBitcoinForm(data=request.POST, merchant=merchant)

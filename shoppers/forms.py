@@ -1,12 +1,11 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from countries import COUNTRY_DROPDOWN
 from decimal import Decimal
 
 from bitcoins.BCAddressField import is_valid_btc_address
 from bitcoins.models import BTCTransaction
 
-from utils import clean_phone_num, STANDARD_TX_FEE_IN_SATOSHIS, mbtc_to_satoshis
+from utils import STANDARD_TX_FEE_IN_SATOSHIS, mbtc_to_satoshis
 
 from unidecode import unidecode
 
@@ -24,21 +23,6 @@ class ShopperInformationForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
     )
-
-    phone_country = forms.ChoiceField(
-        label=_('Country'),
-        required=False,
-        choices=COUNTRY_DROPDOWN,
-        widget=forms.Select(attrs={'data-country': 'USA'}),
-    )
-
-    phone_num = forms.CharField(
-        label=_('Customer Mobile Phone'),
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'bfh-phone', 'data-country': 'id_phone_country'}),
-    )
-
-    clean_phone_num = clean_phone_num
 
     def clean_name(self):
         return unidecode(self.cleaned_data['name'])

@@ -17,7 +17,7 @@
           <div class="col-sm-12">
             <p class="lead text-center">
               {% blocktrans with min_btc_formatted=merchant.get_min_mbtc_purchase_formatted max_btc_formatted=merchant.get_max_mbtc_purchase_formatted %}
-                Customer: send 1 mBTC - {{ max_btc_formatted }} to this address:
+                Customer: send up to {{ max_btc_formatted }} to this address:
               {% endblocktrans %}
               <br/>
             </p>
@@ -35,8 +35,8 @@
                 </div>
               </form>
 
-
             </div>
+
           </div>
         </div>
         <br/>

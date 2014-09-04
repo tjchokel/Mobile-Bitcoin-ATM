@@ -61,6 +61,7 @@ class BTCTransactionAdmin(admin.ModelAdmin):
         'currency_code_when_created',
         'met_minimum_confirmation_at',
         'min_confirmations_overrode_at',
+        'met_confidence_threshold_at',
     )
     raw_id_fields = ('forwarding_address', 'destination_address', )
 

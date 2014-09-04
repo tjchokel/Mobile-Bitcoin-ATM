@@ -136,7 +136,7 @@
                 <td class="text-muted">{% trans "Website (URL)" %}</td>
                 {% if merchant.get_website_obj %}
                   <td align="right">
-                    {{merchant.get_website_obj.url }}
+                    {{ merchant.get_website_obj.get_website_display }}
                   </td>
                 {% else %}
                   <td align="right">

@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.utils.timezone import now
 from django.views.decorators.debug import sensitive_post_parameters
 from django.shortcuts import get_object_or_404
+from django.core.urlresolvers import reverse_lazy
 
 from annoying.decorators import render_to
 from annoying.functions import get_object_or_None
@@ -29,13 +30,13 @@ from datetime import timedelta
 def base_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_lastest_api_credential()
+    credential = merchant.get_latest_api_credential()
 
     add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
+    del_cred_form = None
     if credential:
         del_cred_form = DeleteCredentialForm(initial={'credential_id': credential.id})
-    else:
-        del_cred_form = DeleteCredentialForm()
+
     if request.method == 'POST':
         if 'exchange_choice' in request.POST:
             add_cred_form = BitcoinCredentialsForm(data=request.POST)
@@ -72,31 +73,28 @@ def base_creds(request):
                     credential.save()
 
                 try:
-                    balance = credential.get_balance()
-                    if balance is False:
-                        messages.warning(request, INVALID_MSG)
-                        # This error will be caught by the try/except and not logged:
-                        raise Exception('Could Not Fetch Balance')
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)
-                    credential.mark_success()
-                    # FIXME: mark all other credentials as invalid
-                    SUCCESS_MSG = _('Your API credentials were succesfully added. Any bitcoin you buy will be sent to your %(credential_name)s account.' % {
+                    SUCCESS_MSG = _('Your %(credential_name)s API credentials were succesfully added. Any bitcoin you buy will be sent to this account.' % {
                         'credential_name': credential.get_credential_to_display()}
                         )
                     messages.success(request, SUCCESS_MSG)
+
                 except:
                     credential.mark_disabled()
                     messages.warning(request, INVALID_MSG)
+
+                # Redirect on success to handle edge cases
+                return HttpResponseRedirect(reverse_lazy('base_creds'))
 
         elif 'credential_id' in request.POST:
             del_cred_form = DeleteCredentialForm(data=request.POST)
             if del_cred_form.is_valid():
                 credential = get_object_or_None(BaseCredential, id=del_cred_form.cleaned_data['credential_id'])
                 # Fail loudly, this shouldn't be possible
-                assert credential, 'Hacker or Bug Alert'
+                assert credential, 'Hacker or Bug Alert: credential missing'
 
-                assert credential.merchant == merchant, 'Hacker or Bug Alert'
+                assert credential.merchant == merchant, 'Hacker or Bug Alert: credential not beloning to merchant'
 
                 # Disable any lingering credentials (to be cautious)
                 merchant.disable_all_credentials()
@@ -107,9 +105,14 @@ def base_creds(request):
                 credential = None
                 messages.info(request, DEL_MSG)
 
+                # Redirect on success to handle edge cases
+                return HttpResponseRedirect(reverse_lazy('base_creds'))
+
             else:
-                # Fail loudly, this shouldn't be possible
-                assert False, 'Hacker or Bug Alert'
+                raise Exception('Invalid Delete Credential: should not be possible')
+
+        else:
+            raise Exception('Logic Fail: users post not understood')
 
     return {
             'credential': credential,

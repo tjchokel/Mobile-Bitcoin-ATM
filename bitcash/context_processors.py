@@ -9,7 +9,7 @@ def credential_status(request):
     if user.is_authenticated():
         merchant = user.get_merchant()
         if merchant:
-            credential = merchant.get_lastest_api_credential()
+            credential = merchant.get_latest_api_credential()
             if credential:
                 has_cred = True
                 cred_appears_usable = credential.appears_usable()

@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^set-new-password/?$', 'users.views.set_new_password', name='set_new_password'),
     url(r'^change-password/?$', 'users.views.change_password', name='change_password'),
 
-    url(r'^app/$', 'users.views.customer_dashboard', name='customer_dashboard'),
+    url(r'^app/$', 'shoppers.views.customer_dashboard', name='customer_dashboard'),
 
     url(r'^register/$', 'merchants.views.register_router', name='register_router'),
     url(r'^register-merchant/$', 'merchants.views.register_merchant', name='register_merchant'),

@@ -9,6 +9,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 
+from countries import BFHCurrenciesList
+
 SATOSHIS_PER_BTC = 10**8
 SATOSHIS_PER_MILLIBITCOIN = 10**5
 STANDARD_TX_FEE_IN_SATOSHIS = 10**4
@@ -68,15 +70,31 @@ def format_mbtc_rounded(mbtc):
     return format_num_for_printing(mbtc, 2)
 
 
-def format_fiat_amount(amount, currency_symbol, currency_code=None):
+def get_currency_symbol(currency_code):
+    if currency_code in BFHCurrenciesList:
+        return BFHCurrenciesList[currency_code]['symbol'].decode('utf-8')
+    else:
+        return '$'
+
+
+def get_currency_name(currency_code):
+    if currency_code in BFHCurrenciesList:
+        return BFHCurrenciesList[currency_code]['label']
+    return ''
+
+
+def format_fiat_amount(fiat_amount, currency_symbol=None, currency_code=None):
     """
     Utility function for printing
     """
-    if amount > 10000:
+    if fiat_amount > 10000:
         # No decimal places for large numbers
-        amount_formatted = '%s' % '{:,.0f}'.format(round(amount, 0))
+        amount_formatted = '%s' % '{:,.0f}'.format(round(fiat_amount, 0))
     else:
-        amount_formatted = '%s' % '{:,.2f}'.format(amount)
+        amount_formatted = '%s' % '{:,.2f}'.format(fiat_amount)
+
+    if currency_code and not currency_symbol:
+        currency_symbol = get_currency_symbol(currency_code)
 
     if currency_code:
         return "%s%s %s" % (currency_symbol, amount_formatted, currency_code)

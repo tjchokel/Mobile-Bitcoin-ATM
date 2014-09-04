@@ -9,7 +9,7 @@ from annoying.decorators import render_to
 def blog_index(request):
     categories = Category.objects.all()
     return {
-        'posts': BlogPost.objects.all()[:5],
+        'posts': BlogPost.objects.all().order_by('posted_at')[:5],
         'categories': categories,
     }
 
@@ -20,7 +20,7 @@ def view_post(request, slug):
     return {
         'post': get_object_or_404(BlogPost, slug=slug),
         'categories': categories,
-        'posts': BlogPost.objects.all()[:5],
+        'posts': BlogPost.objects.all().order_by('posted_at')[:5],
     }
 
 
@@ -30,6 +30,6 @@ def view_category(request, slug):
     categories = Category.objects.all()
     return {
         'category': category,
-        'posts': BlogPost.objects.filter(category=category)[:5],
+        'posts': BlogPost.objects.filter(category=category).order_by('posted_at')[:5],
         'categories': categories,
     }

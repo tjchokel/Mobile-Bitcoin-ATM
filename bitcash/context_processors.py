@@ -18,8 +18,10 @@ def credential_status(request):
                     if latest_balance.satoshis > 0:
                         cred_appears_funded = True
 
+    # tcp = template context processor, added to prevent namespace colloisions
     return {
-            'has_cred': has_cred,
-            'cred_appears_usable': cred_appears_usable,
-            'cred_appears_funded': cred_appears_funded,
+            'tcp__has_cred': has_cred,
+            'tcp__cred_appears_usable': cred_appears_usable,
+            'tcp__cred_appears_funded': cred_appears_funded,
+            'tcp__request_path': request.path_info,
             }

@@ -6,21 +6,18 @@
         <a href="#" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">{% trans "Customers" %}</a>
       </li>
       <li style="width:50%">
-        {% if merchant.finished_registration %}
-          <a href="{% url "merchant_transactions" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+          <a
+            href="{% if not tcp__cred_appears_funded %}{% url 'base_creds' %}{% elif merchant.finished_registration %}{% url 'merchant_transaction' %}{% else %}{% url 'merchant_profile' %}{% endif %}"
+            style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;"
+          >
             {% trans "Admin" %}
-            {% if not cred_appears_funded %}
-              <i class="fa fa-exclamation-circle text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
+            {% if not tcp__cred_appears_usable or not tcp__cred_appears_funded %}
+              <i
+                class="fa fa-exclamation-circle {% if not tcp__cred_appears_usable %}text-red{% else %}text-yellow{% endif %}"
+                style="margin-top: 13px; margin-left:0; padding-right: 0px;"
+              ></i>
             {% endif %}
           </a>
-        {% else %}
-          <a href="{% url "merchant_profile" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-            {% trans "Admin" %}
-            {% if not cred_appears_funded %}
-              <i class="fa fa-exclamation-circle text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
-            {% endif %}
-          </a>
-        {% endif %}
       </li>
     </ul>
   </div>

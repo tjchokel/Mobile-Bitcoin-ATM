@@ -142,15 +142,19 @@
           <div class="row">
             <div class="col-sm-12" id="messages">
               {% for message in messages %}
-                <div class=
-                  {% if 'warning' in message.tags %}
-                    "alert alert-danger"
-                  {% elif 'success' in message.tags %}
-                    "alert alert-success"
-                  {% else %}
-                    "alert alert-info"
+                <div class="
+                  {% if 'nofadeout' in message.tags %}
+                    {# Don't dissappear after some number of seconds #}
+                    nofadeout
                   {% endif %}
-                >
+                  {% if 'warning' in message.tags %}
+                    alert alert-danger
+                  {% elif 'success' in message.tags %}
+                    alert alert-success
+                  {% else %}
+                    alert alert-info
+                  {% endif %}
+                ">
                 {# http://stackoverflow.com/a/10124845 #}
                 {% if 'safe' in message.tags %}
                   {{ message|safe }}

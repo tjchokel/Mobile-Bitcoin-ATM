@@ -78,6 +78,7 @@ INSTALLED_APPS = (
     'bitstamp_wallets',
     'blockchain_wallets',
     'profiles',
+    'blog',
     'django_otp',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',

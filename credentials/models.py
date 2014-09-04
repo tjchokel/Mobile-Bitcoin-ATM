@@ -43,10 +43,10 @@ class BaseCredential(PolymorphicModel):
         return self.save()
 
     def appears_usable(self):
-        if self.last_failed_at is None:
-            return True
-        else:
+        if self.last_failed_at or self.disabled_at:
             return False
+        else:
+            return True
 
     def handle_status_code(self, status_code):
         """

@@ -21,7 +21,7 @@
           Please <a href="{{ wallet_url }}">update your API credentials</a> so you can sell bitcoin to customers.
         {% endblocktrans %}
       </div>
-    {% elif not appears_to_have_btc %}
+    {% elif not cred_appears_funded %}
       <div id="no-wallet" class="alert alert-warning nofadeout" role="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
         {% url 'base_creds' as wallet_url %}
@@ -81,7 +81,7 @@
         <li>
           {% if current_tab == 'credentials' %}
             <a href="#" class="active"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %} 
-              {% if cred_appears_usable and appears_to_have_btc %}
+              {% if cred_appears_usable and cred_appears_funded %}
                 <i class="fa fa-check-circle pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
                 <i class="fa fa-exclamation-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
@@ -89,7 +89,7 @@
             </a>
           {% else %}
             <a href="{% url "credentials.views.base_creds" %}"><i class="sign fa fa-bitcoin bg-red"></i>{% trans "Bitcoin Wallet" %}
-              {% if cred_appears_usable and appears_to_have_btc %}
+              {% if cred_appears_usable and cred_appears_funded %}
                 <i class="fa fa-check-circle  pull-right text-green" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
               {% else %}
                 <i class="fa fa-exclamation-circle pull-right text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>

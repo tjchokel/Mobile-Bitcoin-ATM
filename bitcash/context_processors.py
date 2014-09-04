@@ -3,7 +3,7 @@ def credential_status(request):
 
     has_cred = False
     cred_appears_usable = None
-    appears_to_have_btc = False
+    cred_appears_funded = False
 
     user = request.user
     if user.is_authenticated():
@@ -16,10 +16,10 @@ def credential_status(request):
                 latest_balance = credential.get_latest_balance()
                 if latest_balance:
                     if latest_balance.satoshis > 0:
-                        appears_to_have_btc = True
+                        cred_appears_funded = True
 
     return {
             'has_cred': has_cred,
             'cred_appears_usable': cred_appears_usable,
-            'appears_to_have_btc': appears_to_have_btc,
+            'cred_appears_funded': cred_appears_funded,
             }

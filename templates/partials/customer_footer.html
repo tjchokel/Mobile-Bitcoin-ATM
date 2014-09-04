@@ -9,14 +9,14 @@
         {% if merchant.finished_registration %}
           <a href="{% url "merchant_transactions" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
             {% trans "Admin" %}
-            {% if not cred_appears_to_have_btc %}
+            {% if not cred_appears_funded %}
               <i class="fa fa-exclamation-circle text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
             {% endif %}
           </a>
         {% else %}
           <a href="{% url "merchant_profile" %}" style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
             {% trans "Admin" %}
-            {% if not appears_to_have_btc %}
+            {% if not cred_appears_funded %}
               <i class="fa fa-exclamation-circle text-red" style="margin-top: 13px; margin-left:0; padding-right: 0px;"></i>
             {% endif %}
           </a>

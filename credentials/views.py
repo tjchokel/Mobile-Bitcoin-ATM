@@ -75,6 +75,10 @@ def base_creds(request):
                 try:
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)
+                    satoshis = credential.get_balance()
+                    if satoshis is False:
+                        raise Exception('No Balance Permissions: used to toggle this as a failure below')
+
                     SUCCESS_MSG = _('Your %(credential_name)s API credentials were succesfully added. Any bitcoin you buy will be sent to this account.' % {
                         'credential_name': credential.get_credential_to_display()}
                         )

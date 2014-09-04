@@ -3,6 +3,7 @@ from blog.models import BlogPost, Category
 
 
 class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ['id', 'posted_at', 'slug', 'title', 'category']
     prepopulated_fields = {'slug': ('title',)}
 
 

@@ -86,7 +86,7 @@ class Command(BaseCommand):
     def handle(self, verbose, *args, **kwargs):
         dp("Starting command...")
 
-        min_signup_time = now() - timedelta(days=30)
+        min_signup_time = now() - timedelta(days=180)
         max_signup_time = now() - timedelta(hours=3)
 
         recent_merchants = Merchant.objects.filter(
@@ -129,9 +129,11 @@ class Command(BaseCommand):
                         )
                 continue
 
-            context_dict['promotional_material_uri'] = reverse('promotional_material')
-            context_dict['store_name'] = recent_merchant.business_name
-            context_dict['api_name'] = api_cred.get_credential_to_display()
+            context_dict = {
+                    'promotional_material_uri': reverse('promotional_material'),
+                    'store_name': recent_merchant.business_name,
+                    'api_name': api_cred.get_credential_to_display(),
+                    }
 
             balance = api_cred.get_balance()
             if balance is False:

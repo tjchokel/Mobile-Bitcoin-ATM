@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container">
     <!-- Profile Menu -->
-    {% with current_tab='credentials' %}
+    {% with current_tab='credentials' credential_id=credential.id%}
       {% include "merchants/breadcrumb.html" %}
     {% endwith %}
   <div class="col-sm-12 col-xs-12 col-md-9">
@@ -380,6 +380,9 @@
 
     function getTopOffAddress(credential_id) {
         $("#fund-wallet-button").toggleClass("active");
+        if (! credential_id){
+          credential_id = {{credential.id}};
+        }
         $.ajax({
           type: 'get',
           url: '/get-new-address/'+credential_id,

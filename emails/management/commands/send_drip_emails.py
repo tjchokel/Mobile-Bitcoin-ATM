@@ -178,7 +178,7 @@ class Command(BaseCommand):
                 context_dict['add_phone_uri'] = reverse('merchant_profile')
 
                 body_template = 'drip/no_phone.html'
-                subject = "What Is the Phone Number at %s?" % recent_merchant.business_name
+                subject = "What is the Phone Number at %s?" % recent_merchant.business_name
                 send_nag_email(
                         subject=subject,
                         body_template=body_template,

@@ -98,6 +98,7 @@ class Command(BaseCommand):
         dp('%s merchant signups to try...' % recent_merchants.count())
         for recent_merchant in recent_merchants:
 
+            # FIXME: handle case of bad creds
             api_cred = recent_merchant.get_valid_api_credential()
             if not api_cred:
                 context_dict = {

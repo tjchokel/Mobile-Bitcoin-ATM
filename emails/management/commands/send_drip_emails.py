@@ -98,22 +98,27 @@ class Command(BaseCommand):
         dp('%s merchant signups to try...' % recent_merchants.count())
         for recent_merchant in recent_merchants:
 
-            # FIXME: handle case of bad creds
-            api_cred = recent_merchant.get_valid_api_credential()
-            if not api_cred:
-                context_dict = {
-                        'store_name': recent_merchant.business_name,
-                        'finish_register_uri': reverse('register_bitcoin'),
-                        }
-                body_template = 'drip/no_credentials.html'
-                subject = 'Your Bitcoin ATM is Almost Ready'
-                send_nag_email(
-                        subject=subject,
-                        body_template=body_template,
-                        incomplete_merchant=recent_merchant,
-                        context_dict=context_dict,
-                        )
-                continue
+            api_cred = recent_merchant.get_api_credential()
+            if not api_cred.appears_usable():
+
+                if now() - recent_merchant.created_at < timedelta(hours=72):
+                    # They're a new signup
+                    context_dict = {
+                            'store_name': recent_merchant.business_name,
+                            'finish_register_uri': reverse('register_bitcoin'),
+                            }
+                    body_template = 'drip/no_credentials.html'
+                    subject = 'Your Bitcoin ATM is Almost Ready'
+                    send_nag_email(
+                            subject=subject,
+                            body_template=body_template,
+                            incomplete_merchant=recent_merchant,
+                            context_dict=context_dict,
+                            )
+                    continue
+                else:
+                    # FIXME: handle case of bad creds for existing users
+                    continue
 
             if not recent_merchant.address_1:
                 context_dict = {

@@ -229,9 +229,15 @@ def register_bitcoin(request):
                             main_password=form.cleaned_data['bci_main_password'],
                             second_password=form.cleaned_data['bci_second_password'],
                             )
+                else:
+                    raise Exception('Logic Fail. Unknown Exchange Choice')
                 try:
                     # Get new address if API partner permits, otherwise get an existing one
                     credential.get_best_receiving_address(set_as_merchant_address=True)
+                    satoshis = credential.get_balance()
+                    if satoshis is False:
+                        raise Exception('No Balance Permissions: used to toggle this as a failure below')
+
                     messages.success(request, SUCCESS_MSG)
                     return HttpResponseRedirect(DASHBOARD_URI)
                 except:

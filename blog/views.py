@@ -1,11 +1,13 @@
-from django.shortcuts import render
-from blog.models import BlogPost, Category
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponsePermanentRedirect
+from django.core.urlresolvers import reverse
 
 from annoying.decorators import render_to
 
+from blog.models import BlogPost, Category
 
-@render_to('blog_index.html')
+
+@render_to('blog/blog_index.html')
 def blog_index(request):
     categories = Category.objects.all()
     return {
@@ -14,7 +16,7 @@ def blog_index(request):
     }
 
 
-@render_to('view_post.html')
+@render_to('blog/view_post.html')
 def view_post(request, slug):
     categories = Category.objects.all()
     return {
@@ -24,7 +26,7 @@ def view_post(request, slug):
     }
 
 
-@render_to('view_category.html')
+@render_to('blog/view_category.html')
 def view_category(request, slug):
     category = get_object_or_404(Category, slug=slug)
     categories = Category.objects.all()
@@ -33,3 +35,8 @@ def view_category(request, slug):
         'posts': BlogPost.objects.filter(category=category).order_by('-posted_at')[:5],
         'categories': categories,
     }
+
+
+def cold_storage_guide(request):
+    " Migrate old static page to new blog stuff "
+    return HttpResponsePermanentRedirect(reverse('view_blog_post', kwargs={'slug': 'cold-storage-guide'}))

@@ -41,6 +41,9 @@ class DestinationAddress(models.Model):
     def __str__(self):
         return '%s: %s' % (self.id, self.b58_address)
 
+    def get_bci_addr_url(self):
+        return 'https://blockchain.info/address/%s' % self.b58_address
+
     def get_available_forwarding_obj(self):
         """
         Get existing forwarding address from DB (if showable to a new shopper),

@@ -94,9 +94,9 @@
       var BS_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "bitstamp_instructions" %}', 'Bitstamp']);
       var BCI_INSTRUCTIONS = BASE_INSTRUCTIONS.supplant(['{% url "blockchain_instructions" %}', 'Blockchain']);
 
-      function selectCoinbase() {
-        $("#div_id_cb_api_key").removeClass("hidden");
-        $("#div_id_cb_secret_key").removeClass("hidden");
+      function hideAll() {
+        $("#div_id_cb_api_key").addClass("hidden");
+        $("#div_id_cb_secret_key").addClass("hidden");
 
         $("#div_id_bs_api_key").addClass("hidden");
         $("#div_id_bs_secret_key").addClass("hidden");
@@ -106,67 +106,43 @@
         $("#div_id_bci_second_password").addClass("hidden");
         $("#div_id_bci_username").addClass("hidden");
 
-        $("#div_id_btc_address").addClass("hidden");
+        $('#div_id_btc_address').addClass('hidden');
 
         $("#api_instructions").remove();
+      }
+
+      function selectCoinbase() {
+        hideAll()
+        $("#div_id_cb_api_key").removeClass("hidden");
+        $("#div_id_cb_secret_key").removeClass("hidden");
         $("#div_id_exchange_choice").after(CB_INSTRUCTIONS);
+        $('#id_cb_api_key').select();
       }
 
       function selectBitstamp() {
-        $("#div_id_cb_api_key").addClass("hidden");
-        $("#div_id_cb_secret_key").addClass("hidden");
-
+        hideAll()
         $("#div_id_bs_api_key").removeClass("hidden");
         $("#div_id_bs_secret_key").removeClass("hidden");
         $("#div_id_bs_customer_id").removeClass("hidden");
-
-        $("#div_id_bci_main_password").addClass("hidden");
-        $("#div_id_bci_second_password").addClass("hidden");
-        $("#div_id_bci_username").addClass("hidden");
-
-        $("#div_id_btc_address").addClass("hidden");
-
-        $("#api_instructions").remove();
         $("#div_id_exchange_choice").after(BS_INSTRUCTIONS);
+        $('#id_bs_customer_id').select();
       }
 
       function selectBlockchain() {
-        $("#div_id_cb_api_key").addClass("hidden");
-        $("#div_id_cb_secret_key").addClass("hidden");
-
-        $("#div_id_bs_api_key").addClass("hidden");
-        $("#div_id_bs_secret_key").addClass("hidden");
-        $("#div_id_bs_customer_id").addClass("hidden");
-
+        hideAll()
         $("#div_id_bci_main_password").removeClass("hidden");
         $("#div_id_bci_second_password").removeClass("hidden");
         $("#div_id_bci_username").removeClass("hidden");
-
-        $("#div_id_btc_address").addClass("hidden");
-
-        $("#api_instructions").remove();
         $("#div_id_exchange_choice").after(BCI_INSTRUCTIONS);
+        $('#id_bci_username').select();
       }
 
       function selectNewWallet() {
-        $("#div_id_cb_api_key").addClass("hidden");
-        $("#div_id_cb_secret_key").addClass("hidden");
-
-        $("#div_id_bs_api_key").addClass("hidden");
-        $("#div_id_bs_secret_key").addClass("hidden");
-        $("#div_id_bs_customer_id").addClass("hidden");
-
-        $("#div_id_bci_main_password").addClass("hidden");
-        $("#div_id_bci_second_password").addClass("hidden");
-        $("#div_id_bci_username").addClass("hidden");
-
-        $("#div_id_btc_address").addClass("hidden");
-        $("#div_id_exchange_choice").addClass("hidden");
-
+        hideAll()
         $("#div_id_new_blockchain_password").removeClass("hidden");
         $("#div_id_new_blockchain_password_confirm").removeClass("hidden");
-
-        $("#api_instructions").remove();
+        $("#div_id_exchange_choice").addClass("hidden");
+        $("#pass1").select();
       }
 
       function selectExistingWallet() {
@@ -212,7 +188,6 @@
           }else {
             selectExistingWallet();
           }
-          $("#pass1").focus();
           $('#pass2').after('<span id="pw_message"></span>');
           $('#pass2').keyup(function () {
 

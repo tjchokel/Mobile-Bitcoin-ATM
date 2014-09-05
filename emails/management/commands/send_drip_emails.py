@@ -14,14 +14,14 @@ from datetime import timedelta
 from utils import dp
 
 
-def custom_confirm(body_template, incomplete_merchant):
+def custom_confirm(body_template, merchant):
     '''
     Helper function to confirm an action. Defaults to Yes.
 
     Return True if response is affirmative, False if response is negative.
     '''
     confirm = raw_input('Send %s to %s (%s)? [Y/n]: ' % (body_template,
-        incomplete_merchant, incomplete_merchant.user.email))
+        merchant, merchant.user.email))
 
     if confirm.lower().startswith('n'):
         # N/n/No/no/etc
@@ -29,7 +29,7 @@ def custom_confirm(body_template, incomplete_merchant):
     return True
 
 
-def send_nag_email(body_template, incomplete_merchant, subject, context_dict={}):
+def send_nag_email(body_template, merchant, subject, context_dict={}):
     ''' Returns true if we should send and false otherwise '''
 
     # TODO: abstract this
@@ -41,29 +41,29 @@ def send_nag_email(body_template, incomplete_merchant, subject, context_dict={})
     bt_clean = body_template.split('/')[-1]
 
     sent_email = get_object_or_None(SentEmail, body_template=body_template,
-            to_merchant=incomplete_merchant)
+            to_merchant=merchant)
 
     if sent_email:
         dp("Did NOT send %s to %s (already sent on %s)" % (
-            bt_clean, incomplete_merchant, sent_email.sent_at))
+            bt_clean, merchant, sent_email.sent_at))
         return
 
     recent_time = now() - timedelta(hours=48)
     num_recent_emails = SentEmail.objects.filter(sent_at__gt=recent_time,
-            to_merchant=incomplete_merchant).count()
+            to_merchant=merchant).count()
     if num_recent_emails > 0:
         dp("Did NOT send %s to %s (recently contacted about something else)" % (
-            bt_clean, incomplete_merchant))
+            bt_clean, merchant))
         return
 
-    if not custom_confirm(bt_clean, incomplete_merchant):
-        dp("Did NOT send %s to %s" % (bt_clean, incomplete_merchant))
+    if not custom_confirm(bt_clean, merchant):
+        dp("Did NOT send %s to %s" % (bt_clean, merchant))
         return
 
-    dp('Sending %s to %s...' % (bt_clean, incomplete_merchant))
+    dp('Sending %s to %s...' % (bt_clean, merchant))
     return send_and_log(
             subject=subject,
-            to_merchant=incomplete_merchant,
+            to_merchant=merchant,
             body_template=body_template,
             body_context=context_dict,
             from_name=from_name,
@@ -89,30 +89,30 @@ class Command(BaseCommand):
         min_signup_time = now() - timedelta(days=180)
         max_signup_time = now() - timedelta(hours=3)
 
-        recent_merchants = Merchant.objects.filter(
+        merchants = Merchant.objects.filter(
                 ignored_at=None,
                 created_at__gt=min_signup_time,
                 created_at__lt=max_signup_time,
                 ).order_by('created_at')
 
-        dp('%s merchant signups to try...' % recent_merchants.count())
-        for recent_merchant in recent_merchants:
+        dp('%s merchant signups to try...' % merchants.count())
+        for merchant in merchants:
 
-            api_cred = recent_merchant.get_valid_api_credential()
+            api_cred = merchant.get_valid_api_credential()
 
             if not api_cred:
                 # no cred (or disabled cred)
 
-                context_dict = {'store_name': recent_merchant.business_name}
+                context_dict = {'store_name': merchant.business_name}
 
-                if recent_merchant.has_finished_registration():
+                if merchant.has_finished_registration():
                     # They never had creds (old signup) or had and deleted them
                     context_dict['wallet_uri'] = reverse('base_creds')
                     body_template = 'drip/removed_credentials.html'
                     send_nag_email(
                             subject='Please Link Your Bitcoin Wallet to Your ATM',
                             body_template=body_template,
-                            incomplete_merchant=recent_merchant,
+                            merchant=merchant,
                             context_dict=context_dict,
                             )
                     continue
@@ -123,29 +123,29 @@ class Command(BaseCommand):
                     send_nag_email(
                             subject='Your Bitcoin ATM is Almost Ready',
                             body_template=body_template,
-                            incomplete_merchant=recent_merchant,
+                            merchant=merchant,
                             context_dict=context_dict,
                             )
                     continue
 
-            if not recent_merchant.address_1:
+            if not merchant.address_1:
                 context_dict = {
-                        'store_name': recent_merchant.business_name,
+                        'store_name': merchant.business_name,
                         'profile_edit_uri': reverse('merchant_profile'),
                         }
                 body_template = 'drip/no_address.html'
-                subject = "Where is %s?" % (recent_merchant.business_name)
+                subject = "Where is %s?" % (merchant.business_name)
                 send_nag_email(
                         subject=subject,
                         body_template=body_template,
-                        incomplete_merchant=recent_merchant,
+                        merchant=merchant,
                         context_dict=context_dict,
                         )
                 continue
 
             context_dict = {
                     'promotional_material_uri': reverse('promotional_material'),
-                    'store_name': recent_merchant.business_name,
+                    'store_name': merchant.business_name,
                     'api_name': api_cred.get_credential_to_display(),
                     }
 
@@ -158,7 +158,7 @@ class Command(BaseCommand):
                 if updated_balance is False:
                     # TODO: let this run in automation
                     raw_input('%s (api cred %s) DISABLED! Confirm this is not a bug!' % (
-                            recent_merchant, api_cred))
+                            merchant, api_cred))
                     continue
                     context_dict['api_cred_uri'] = reverse('base_creds')
                     body_template = 'drip/bad_api_credential.html'
@@ -166,7 +166,7 @@ class Command(BaseCommand):
                     send_nag_email(
                             subject=subject,
                             body_template=body_template,
-                            incomplete_merchant=recent_merchant,
+                            merchant=merchant,
                             context_dict=context_dict,
                             )
                     continue
@@ -178,26 +178,26 @@ class Command(BaseCommand):
                     send_nag_email(
                             subject=subject,
                             body_template=body_template,
-                            incomplete_merchant=recent_merchant,
+                            merchant=merchant,
                             context_dict=context_dict,
                             )
                     continue
 
-            has_phone = bool(recent_merchant.phone_num)
-            has_logo = recent_merchant.has_doc_obj()
-            has_website = recent_merchant.has_website()
+            has_phone = bool(merchant.phone_num)
+            has_logo = merchant.has_doc_obj()
+            has_website = merchant.has_website()
 
-            context_dict['profile_uri'] = recent_merchant.get_profile_uri()
+            context_dict['profile_uri'] = merchant.get_profile_uri()
 
             if not has_phone:
                 context_dict['add_phone_uri'] = reverse('merchant_profile')
 
                 body_template = 'drip/no_phone.html'
-                subject = "What is the Phone Number at %s?" % recent_merchant.business_name
+                subject = "What is the Phone Number at %s?" % merchant.business_name
                 send_nag_email(
                         subject=subject,
                         body_template=body_template,
-                        incomplete_merchant=recent_merchant,
+                        merchant=merchant,
                         context_dict=context_dict,
                         )
                 continue
@@ -206,22 +206,22 @@ class Command(BaseCommand):
                 context_dict['add_logo_uri'] = reverse('merchant_profile')
 
                 body_template = 'drip/no_logo.html'
-                subject = "Does %s Have a Logo?" % recent_merchant.business_name
+                subject = "Does %s Have a Logo?" % merchant.business_name
                 send_nag_email(
                         subject=subject,
                         body_template=body_template,
-                        incomplete_merchant=recent_merchant,
+                        merchant=merchant,
                         context_dict=context_dict,
                         )
                 continue
 
             if not has_website:
                 body_template = 'drip/no_website.html'
-                subject = "Does %s Have a Website?" % recent_merchant.business_name
+                subject = "Does %s Have a Website?" % merchant.business_name
                 send_nag_email(
                         subject=subject,
                         body_template=body_template,
-                        incomplete_merchant=recent_merchant,
+                        merchant=merchant,
                         context_dict=context_dict,
                         )
                 continue
@@ -229,7 +229,7 @@ class Command(BaseCommand):
             # TODO: add link to us request (for those with websites)
 
             # None applicable
-            msg = "Not contacting %s because they're all good!" % recent_merchant
+            msg = "Not contacting %s because they're all good!" % merchant
             dp(msg)
 
         dp('All done!')

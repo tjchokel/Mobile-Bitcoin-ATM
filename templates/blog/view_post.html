@@ -41,20 +41,22 @@
     </div>
 
     <div class="col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Recently Added</h3>
-        </div>
-        <div class="panel-body">
-          <div class="recent-blogs">
-            <ul> 
-              {% for post in posts %}
-                <li><a href="{{ post.get_absolute_url }}">{{post.title|safe}}</a></li>
-              {% endfor %}
-            </ul>
+      {% if posts|length > 4 %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Recently Added</h3>
+          </div>
+          <div class="panel-body">
+            <div class="recent-blogs">
+              <ul> 
+                {% for post in posts %}
+                  <li><a href="{{ post.get_absolute_url }}">{{post.title|safe}}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      {% endif %}
       {% if categories %}
         <br/>
         <!-- Tags -->

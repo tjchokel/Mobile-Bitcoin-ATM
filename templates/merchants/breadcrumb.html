@@ -39,7 +39,7 @@
           <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
           {% blocktrans %}
             <strong>No BTC in Your Wallet.</strong>
-            Please fund your wallet so you can sell bitcoin to customers.
+            Please <a onclick="getTopOffAddress();" style="cursor:pointer;">add funds</a> to your wallet so you can sell bitcoin to customers.
           {% endblocktrans %}
         </div>
       {% endif %}

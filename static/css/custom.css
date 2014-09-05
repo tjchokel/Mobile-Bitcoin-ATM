@@ -853,6 +853,9 @@ img.img-about {
     table.dashboard-instructions-table td {
         padding-left: 25% !important;
     }
+    footer {
+        height: 435px;
+    }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) { /* for md devices */
@@ -862,10 +865,16 @@ img.img-about {
     table.dashboard-instructions-table td {
         padding-left: 15% !important;
     }
+    footer {
+        height: 435px;
+    }
 }
 @media (min-width: 768px) and (max-width: 991px) { /* for sm devices */
     .gallery-list > li .gallery-thumbnail {
         max-height: 160px;
+    }
+    footer {
+        height: 435px;
     }
 }
 @media (max-width: 767px) {
@@ -875,6 +884,9 @@ img.img-about {
     table.dashboard-instructions-table td {
         padding-left: 25% !important;
     }
+    footer {
+        height: 600px;
+    }
 }
 @media (max-width: 499px) { /* for xs devices */
     .gallery-list > li .gallery-thumbnail {
@@ -882,6 +894,9 @@ img.img-about {
     }
     table.dashboard-instructions-table td {
         padding-left: 0% !important;
+    }
+    footer {
+        height: 600px;
     }
 }
 
@@ -992,11 +1007,11 @@ a.carousel-arrow-next {
 footer {
     /*margin-top: 60px;
     padding: 20px 0;*/
-    height: 155px;
     background: #3E7A8C;
     color: white;
     font-weight: 300;
 }
+
 .push {
     height: 155px; /* .push must be the same height as .footer */
 }

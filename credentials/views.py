@@ -30,7 +30,7 @@ from datetime import timedelta
 def base_creds(request):
     user = request.user
     merchant = user.get_merchant()
-    credential = merchant.get_latest_api_credential()
+    credential = merchant.get_api_credential()
 
     add_cred_form = BitcoinCredentialsForm(initial={'exchange_choice': 'coinbase'})
     del_cred_form = None
@@ -47,30 +47,27 @@ def base_creds(request):
                 credential = None
 
                 if exchange_choice == 'coinbase':
-                    credential, created = CBSCredential.objects.get_or_create(
+                    credential = CBSCredential.objects.create(
                             merchant=merchant,
                             api_key=add_cred_form.cleaned_data['cb_api_key'],
                             api_secret=add_cred_form.cleaned_data['cb_secret_key'],
                             )
-                if exchange_choice == 'blockchain':
-                    credential, created = BCICredential.objects.get_or_create(
+                elif exchange_choice == 'blockchain':
+                    credential = BCICredential.objects.create(
                             merchant=merchant,
                             username=add_cred_form.cleaned_data['bci_username'],
                             main_password=add_cred_form.cleaned_data['bci_main_password'],
                             second_password=add_cred_form.cleaned_data['bci_second_password'],
                             )
-                if exchange_choice == 'bitstamp':
-                    credential, created = BTSCredential.objects.get_or_create(
+                elif exchange_choice == 'bitstamp':
+                    credential = BTSCredential.objects.create(
                             merchant=merchant,
                             customer_id=add_cred_form.cleaned_data['bs_customer_id'],
                             api_key=add_cred_form.cleaned_data['bs_api_key'],
                             api_secret=add_cred_form.cleaned_data['bs_secret_key'],
                             )
-                if not created:
-                    credential.deleted_at = None
-                    credential.last_succeded_at = None
-                    credential.last_failed_at = None
-                    credential.save()
+                else:
+                    raise Exception('Logic Fail. Unknown Exchange Choice')
 
                 try:
                     # Get new address if API partner permits, otherwise get an existing one

@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils.timesince import timesince
 
 from merchants.models import Merchant, OpenTime, MerchantWebsite
 
@@ -145,19 +144,31 @@ class MerchantAdmin(admin.ModelAdmin):
         return instance.get_website_obj()
     website.allow_tags = True
 
-    def valid_credential(self, instance):
-        api_cred = instance.get_valid_api_credential()
+    def api_credential(self, instance):
+        # TODO: show total # of creds as well
+        api_cred = instance.get_api_credential()
         if api_cred:
-            balance = api_cred.get_latest_balance()
-            if balance:
-                return '<a href="%s">%s (%s as of %s)</a>' % (
+            if api_cred.appears_usable():
+                curr_balance = api_cred.get_latest_balance()
+                max_balance = api_cred.get_highest_balance()
+                return '<a href="%s">%s with %s (max was %s)</a>' % (
                         api_cred.get_admin_uri(),
                         api_cred.get_credential_to_display(),
-                        format_satoshis_with_units_rounded(balance.satoshis),
-                        timesince(balance.created_at))
+                        format_satoshis_with_units_rounded(curr_balance.satoshis),
+                        format_satoshis_with_units_rounded(max_balance.satoshis),
+                        )
             else:
-                return '<a href="%s">%s</a>' % (api_cred.get_admin_uri(), api_cred.get_credential_to_display())
-    valid_credential.allow_tags = True
+                highest_balance = api_cred.get_highest_balance()
+                if highest_balance:
+                    max_fswur = format_satoshis_with_units_rounded(max_balance.satoshis)
+                else:
+                    max_fswur = '0 mBTC'
+                return '<a href="%s">%s inactive (max was %s)</a>' % (
+                        api_cred.get_admin_uri(),
+                        api_cred.get_credential_to_display(),
+                        max_fswur,
+                        )
+    api_credential.allow_tags = True
 
     def short_url(self, instance):
         short_url_obj = instance.get_short_url_obj()
@@ -180,7 +191,7 @@ class MerchantAdmin(admin.ModelAdmin):
         'short_url',
         'user_email',
         'phone_num',
-        'valid_credential',
+        'api_credential',
         'currency_code',
         'country',
         'state',

@@ -26,14 +26,14 @@ class BitcoinCredentialsForm(forms.Form):
         label=_('Coinbase API Key'),
         required=False,
         min_length=5,
-        max_length=256,
+        max_length=128,
         widget=forms.TextInput(),
     )
 
     cb_secret_key = forms.CharField(
         label=_('Coinbase Secret Key'),
         min_length=5,
-        max_length=50,
+        max_length=256,
         required=False,
         widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )
@@ -42,7 +42,7 @@ class BitcoinCredentialsForm(forms.Form):
         label=_('Bitstamp Customer ID'),
         required=False,
         min_length=5,
-        max_length=256,
+        max_length=32,
         widget=forms.TextInput(),
     )
 
@@ -50,14 +50,14 @@ class BitcoinCredentialsForm(forms.Form):
         label=_('Bitstamp API Key'),
         required=False,
         min_length=5,
-        max_length=256,
+        max_length=64,
         widget=forms.TextInput(),
     )
 
     bs_secret_key = forms.CharField(
         label=_('Bitstamp Secret Key'),
         min_length=5,
-        max_length=50,
+        max_length=128,
         required=False,
         widget=forms.TextInput(attrs={'autocomplete': 'off'}),
     )
@@ -66,7 +66,7 @@ class BitcoinCredentialsForm(forms.Form):
         label=_('Blockchain Username (Wallet Identifier)'),
         required=False,
         min_length=5,
-        max_length=256,
+        max_length=256,  # in case of URLs, gets reduced in clean method below
         widget=forms.TextInput(),
     )
 
@@ -74,7 +74,7 @@ class BitcoinCredentialsForm(forms.Form):
         label=_('Blockchain Main Password'),
         required=False,
         min_length=5,
-        max_length=256,
+        max_length=128,
         widget=forms.PasswordInput(render_value=False),
     )
 
@@ -82,7 +82,7 @@ class BitcoinCredentialsForm(forms.Form):
         label=_('Blockchain Second Password'),
         required=False,
         min_length=5,
-        max_length=256,
+        max_length=128,
         widget=forms.PasswordInput(render_value=False),
     )
 
@@ -134,6 +134,9 @@ class BitcoinCredentialsForm(forms.Form):
             raise forms.ValidationError(msg)
         if bci_username.startswith('https://blockchain.info/wallet/'):
             bci_username = bci_username.lstrip('https://blockchain.info/wallet/')
+        if len(bci_username) > 64:
+            msg = _("Sorry, that doesn't look like a valid Blockchain username")
+            raise forms.ValidationError(msg)
         return bci_username
 
     def clean_bci_main_password(self):

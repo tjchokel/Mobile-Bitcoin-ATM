@@ -229,7 +229,7 @@ def set_new_password(request):
 
                 merchant = user.get_merchant()
                 if merchant:
-                    api_cred = merchant.get_valid_api_credential()
+                    api_cred = merchant.get_api_credential()
                     if api_cred:
                         try:
                             if api_cred.get_balance() > SATOSHIS_PER_BTC:

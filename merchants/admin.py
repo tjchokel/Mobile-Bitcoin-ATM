@@ -144,31 +144,38 @@ class MerchantAdmin(admin.ModelAdmin):
         return instance.get_website_obj()
     website.allow_tags = True
 
-    def api_credential(self, instance):
-        # TODO: show total # of creds as well
+    def current_api_credential(self, instance):
         api_cred = instance.get_api_credential()
         if api_cred:
-            if api_cred.appears_usable():
-                curr_balance = api_cred.get_latest_balance()
-                max_balance = api_cred.get_highest_balance()
-                return '<a href="%s">%s with %s (max was %s)</a>' % (
-                        api_cred.get_admin_uri(),
-                        api_cred.get_credential_to_display(),
-                        format_satoshis_with_units_rounded(curr_balance.satoshis),
-                        format_satoshis_with_units_rounded(max_balance.satoshis),
-                        )
+            curr_balance = api_cred.get_latest_balance()
+            if curr_balance:
+                balance_fswur = format_satoshis_with_units_rounded(curr_balance.satoshis)
             else:
-                highest_balance = api_cred.get_highest_balance()
-                if highest_balance:
-                    max_fswur = format_satoshis_with_units_rounded(max_balance.satoshis)
-                else:
-                    max_fswur = '0 mBTC'
-                return '<a href="%s">%s inactive (max was %s)</a>' % (
-                        api_cred.get_admin_uri(),
-                        api_cred.get_credential_to_display(),
-                        max_fswur,
-                        )
-    api_credential.allow_tags = True
+                balance_fswur = '0 mBTC'
+            if api_cred.appears_usable():
+                inactive_str = ''
+            else:
+                inactive_str = ' - INACTIVE'
+            return '<a href="%s">%s with %s%s</a>' % (
+                    api_cred.get_admin_uri(),
+                    api_cred.get_credential_to_display(),
+                    balance_fswur,
+                    inactive_str,
+                    )
+    current_api_credential.allow_tags = True
+
+    def api_summary(self, instance):
+        api_creds = instance.basecredential_set.all()
+        entries = [x.satoshis for x in [api_cred.get_highest_balance() for api_cred in api_creds] if x]
+        if entries:
+            max_fswur = format_satoshis_with_units_rounded(max(entries))
+        else:
+            max_fswur = '0 mBTC'
+        return '%s creds (max was %s)</a>' % (
+                api_creds.count(),
+                max_fswur,
+                )
+    api_summary.allow_tags = True
 
     def short_url(self, instance):
         short_url_obj = instance.get_short_url_obj()
@@ -191,7 +198,8 @@ class MerchantAdmin(admin.ModelAdmin):
         'short_url',
         'user_email',
         'phone_num',
-        'api_credential',
+        'current_api_credential',
+        'api_summary',
         'currency_code',
         'country',
         'state',

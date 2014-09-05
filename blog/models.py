@@ -10,6 +10,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     slug = models.SlugField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     body = models.TextField(blank=False, null=False)
+    meta_description = models.TextField(blank=True, null=True, help_text='For SERP and social sharing. No quotation marks please.')
     posted_at = models.DateField(db_index=True, auto_now_add=True)
     category = models.ForeignKey('blog.Category', blank=True, null=True)
 

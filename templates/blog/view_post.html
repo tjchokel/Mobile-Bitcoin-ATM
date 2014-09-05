@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Blog | CoinSafe{% endblock title %}
-<!-- {% block meta_content %}How to store your bitcoin the proper way. We walk you through the safest and most secure methods for putting your bitcoin in cold storage.{% endblock meta_content %} -->
+{% block title %}{{ post.title }} | CoinSafe{% endblock title %}
+{% block meta_content %}{% firstof post.meta_description '' %}{% endblock meta_content %}
 {% block content %}
 <div class="section-header">
   <div class="container">

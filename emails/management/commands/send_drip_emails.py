@@ -98,26 +98,34 @@ class Command(BaseCommand):
         dp('%s merchant signups to try...' % recent_merchants.count())
         for recent_merchant in recent_merchants:
 
-            api_cred = recent_merchant.get_api_credential()
-            if not api_cred.appears_usable():
+            api_cred = recent_merchant.get_valid_api_credential()
 
-                if now() - recent_merchant.created_at < timedelta(hours=72):
-                    # They're a new signup
-                    context_dict = {
-                            'store_name': recent_merchant.business_name,
-                            'finish_register_uri': reverse('register_bitcoin'),
-                            }
-                    body_template = 'drip/no_credentials.html'
-                    subject = 'Your Bitcoin ATM is Almost Ready'
+            if not api_cred:
+                # no cred (or disabled cred)
+
+                context_dict = {'store_name': recent_merchant.business_name}
+
+                if recent_merchant.has_finished_registration():
+                    # They never had creds (old signup) or had and deleted them
+                    context_dict['wallet_uri'] = reverse('base_creds')
+                    body_template = 'drip/removed_credentials.html'
                     send_nag_email(
-                            subject=subject,
+                            subject='Please Link Your Bitcoin Wallet to Your ATM',
                             body_template=body_template,
                             incomplete_merchant=recent_merchant,
                             context_dict=context_dict,
                             )
                     continue
                 else:
-                    # FIXME: handle case of bad creds for existing users
+                    # They're a new signup who never added creds
+                    context_dict['finish_register_uri'] = reverse('register_bitcoin')
+                    body_template = 'drip/no_credentials.html'
+                    send_nag_email(
+                            subject='Your Bitcoin ATM is Almost Ready',
+                            body_template=body_template,
+                            incomplete_merchant=recent_merchant,
+                            context_dict=context_dict,
+                            )
                     continue
 
             if not recent_merchant.address_1:
@@ -141,37 +149,39 @@ class Command(BaseCommand):
                     'api_name': api_cred.get_credential_to_display(),
                     }
 
-            balance = api_cred.get_balance()
-            if balance is False:
-                if recent_merchant.get_valid_api_credential():
-                    # confirm that it wasn't just a connectivity issue
-                    # if the creds were rejected there will no longer be a valid api credential
+            # Don't check that credentials are still valid (removed because BCI was throwing up cloudflare)
+            balance_obj = api_cred.get_latest_balance()
+
+            if not balance_obj or balance_obj.satoshis == 0:
+                # check current balance
+                updated_balance = api_cred.get_balance()
+                if updated_balance is False:
+                    # TODO: let this run in automation
+                    raw_input('%s (api cred %s) DISABLED! Confirm this is not a bug!' % (
+                            recent_merchant, api_cred))
+                    continue
+                    context_dict['api_cred_uri'] = reverse('base_creds')
+                    body_template = 'drip/bad_api_credential.html'
+                    subject = 'Your %s API Credentials Are No Longer Valid' % context_dict['api_name']
+                    send_nag_email(
+                            subject=subject,
+                            body_template=body_template,
+                            incomplete_merchant=recent_merchant,
+                            context_dict=context_dict,
+                            )
                     continue
 
-                # TODO: move this to a better URL when we have one
-                context_dict['api_cred_uri'] = reverse('merchant_profile')
-                body_template = 'drip/bad_api_credential.html'
-                subject = 'Your %s API Credentials Are No Longer Valid' % context_dict['api_name']
-                send_nag_email(
-                        subject=subject,
-                        body_template=body_template,
-                        incomplete_merchant=recent_merchant,
-                        context_dict=context_dict,
-                        )
-                continue
-
-            if balance == 0:
-                # TODO: move this to a better URL when we have one
-                context_dict['fund_wallet_uri'] = reverse('merchant_profile')
-                body_template = 'drip/no_balance.html'
-                subject = 'Fund Your Bitcoin ATM So You Can Sell Bitcoin to Customers'
-                send_nag_email(
-                        subject=subject,
-                        body_template=body_template,
-                        incomplete_merchant=recent_merchant,
-                        context_dict=context_dict,
-                        )
-                continue
+                if updated_balance == 0:
+                    context_dict['fund_wallet_uri'] = reverse('base_creds')
+                    body_template = 'drip/no_balance.html'
+                    subject = 'Fund Your Bitcoin ATM So You Can Sell Bitcoin to Customers'
+                    send_nag_email(
+                            subject=subject,
+                            body_template=body_template,
+                            incomplete_merchant=recent_merchant,
+                            context_dict=context_dict,
+                            )
+                    continue
 
             has_phone = bool(recent_merchant.phone_num)
             has_logo = recent_merchant.has_doc_obj()
@@ -180,7 +190,6 @@ class Command(BaseCommand):
             context_dict['profile_uri'] = recent_merchant.get_profile_uri()
 
             if not has_phone:
-                # TODO: move this to a better URL when we have one
                 context_dict['add_phone_uri'] = reverse('merchant_profile')
 
                 body_template = 'drip/no_phone.html'
@@ -194,7 +203,6 @@ class Command(BaseCommand):
                 continue
 
             if not has_logo:
-                # TODO: move this to a better URL when we have one
                 context_dict['add_logo_uri'] = reverse('merchant_profile')
 
                 body_template = 'drip/no_logo.html'

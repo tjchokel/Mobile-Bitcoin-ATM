@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}The Ultimate Bitcoin Cold Storage Guide | CoinSafe{% endblock title %}
-{% block meta_content %}How to store your bitcoin the proper way. We walk you through the safest and most secure methods for putting your bitcoin in cold storage.{% endblock meta_content %}
+{% block title %}{{ post.title }} | CoinSafe{% endblock title %}
+{% block meta_content %}{% firstof post.meta_description '' %}{% endblock meta_content %}
 {% block content %}
 <div class="section-header">
   <div class="container">
@@ -14,21 +14,41 @@
 </div>
 <div class="container">
   <div class="row">
-    <div class="col-sm-8">
-      <!-- Blog Post -->
-      <h1>The Ultimate Bitcoin Cold Storage Guide</h1>
+    <div class="col-sm-12">
+      <h2 class="hl top-50"><a href="{% url "blog_index" %}">The CoinSafe Blog</a></h2>
       <hr>
-        {% block main_section %}{% endblock main_section %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 blog-summary-list">
+      <div class="blog-summary">
+          <h4><a href="{{ post.get_uri }}">{{post.title|safe}}</a></h4>
+        <ul class="text-muted list-inline" style="margin:0;">
+          <!-- <li><i class="fa fa-user"></i> <a href="profile.html">Administrator</a></li> -->
+          <li><i class="fa fa-calendar"></i> {{post.posted_at}}</li>
+        </ul>
+        <hr>
+        <p class="blog-text">
+          {{post.body|safe}}
+        </p>
+      </div>
+      {% if post.category %}
+        <p class="tags">
+          <a href="{{post.category.get_uri}}">{{post.category}}</a>
+        </p>
+        <br/>
+      {% endif %}
     </div>
 
     <div class="col-sm-4">
+
       <!-- Social Links -->
       <h3 class="hl">Share</h3>
       <hr>
       <div class="social-icons social-icons-default">
 
         <!-- Facebook Like/Share -->
-        <div class="fb-like" data-href="https://www.coinsafe.com/cold-storage-guide/" data-layout="button" data-action="like" data-show-faces="true" data-share="true"></div>
+        <div class="fb-like" data-href="{{ post.get_url }}" data-layout="button" data-action="like" data-show-faces="true" data-share="true"></div>
 
         <div id="fb-root"></div>
         <script>(function(d, s, id) {
@@ -59,10 +79,41 @@
         </script>
 
       </div>
+
+      {% if posts|length > 3 %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Recently Added</h3>
+          </div>
+          <div class="panel-body">
+            <div class="recent-blogs">
+              <ul> 
+                {% for post in posts %}
+                  <li><a href="{{ post.get_uri }}">{{post.title|safe}}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      {% if categories %}
+        <br/>
+        <!-- Tags -->
+        <h3 class="hl">Categories</h3>
+        <hr>
+        <p class="tags">
+          {% for category in categories %}
+            <a href="{{category.get_uri}}">{{category}}</a>
+          {% endfor %}
+        </p>
+        <br />
+      {% endif %}
     </div>
 
   </div>
 </div>
 
 {% endblock content %}
-
+{% block static_page_footer %}
+  {% include "partials/_static_page_footer.html" %}
+{% endblock static_page_footer %}

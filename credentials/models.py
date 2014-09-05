@@ -88,11 +88,11 @@ class BaseCredential(PolymorphicModel):
 
     def get_latest_balance(self):
         # These are historical
-        return BaseBalance.objects.filter(credential=self).order_by('created_at').last()
+        return self.basebalance_set.order_by('created_at').last()
 
     def get_highest_balance(self):
         # These are historical
-        return BaseBalance.objects.filter(credential=self).order_by('satoshis').last()
+        return self.basebalance_set.order_by('satoshis').last()
 
     def get_status(self):
         if self.last_failed_at:

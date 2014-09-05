@@ -81,12 +81,13 @@ def base_creds(request):
                         )
                     messages.success(request, SUCCESS_MSG)
 
+                    # Redirect on success to handle edge cases
+                    return HttpResponseRedirect(reverse_lazy('base_creds'))
+
                 except:
                     credential.mark_disabled()
+                    credential = None
                     messages.warning(request, INVALID_MSG)
-
-            # Redirect to handle edge cases
-            return HttpResponseRedirect(reverse_lazy('base_creds'))
 
         elif 'credential_id' in request.POST:
             del_cred_form = DeleteCredentialForm(data=request.POST)

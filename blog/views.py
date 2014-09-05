@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponsePermanentRedirect
 from django.core.urlresolvers import reverse
 
 from annoying.decorators import render_to
@@ -39,4 +39,4 @@ def view_category(request, slug):
 
 def cold_storage_guide(request):
     " Migrate old static page to new blog stuff "
-    return HttpResponseRedirect(reverse('view_blog_post', kwargs={'slug': 'cold-storage-guide'}))
+    return HttpResponsePermanentRedirect(reverse('view_blog_post', kwargs={'slug': 'cold-storage-guide'}))

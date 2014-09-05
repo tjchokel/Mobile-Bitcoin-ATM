@@ -3,32 +3,46 @@
 <div class="container">
   <div class="page-header">
 
-    {% if not tcp__has_cred %}
-      <div id="no-wallet" class="alert alert-danger nofadeout hidden-xs" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
-        {% url 'base_creds' as wallet_url %}
-        {% blocktrans %}
-          <strong>No Linked Bitcoin Wallet!</strong>
-          Please <a href="{{ wallet_url }}">add API credentials</a> so you can sell bitcoin to customers.
-        {% endblocktrans %}
-      </div>
-    {% elif not tcp__cred_appears_usable %}
-      <div id="no-wallet" class="alert alert-danger nofadeout hidden-xs" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
-        {% url 'base_creds' as wallet_url %}
-        {% blocktrans %}
-          <strong>Invalid API Credentials!</strong>
-          Please <a href="{{ wallet_url }}">update your API credentials</a> so you can sell bitcoin to customers.
-        {% endblocktrans %}
-      </div>
-    {% elif not tcp__cred_appears_funded and tcp__request_path == '/wallet/' %}
-      <div id="no-wallet" class="alert alert-warning nofadeout hidden-sm hidden-xs" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
-        {% blocktrans %}
-          <strong>No BTC in Your Wallet.</strong>
-          Please fund your wallet so you can sell bitcoin to customers.
-        {% endblocktrans %}
-      </div>
+    {% if tcp__request_path != '/password/' %}
+      {% if not tcp__has_cred %}
+        <div id="no-wallet" class="alert alert-danger nofadeout hidden-xs" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
+          {% url 'base_creds' as wallet_url %}
+          <strong>{% trans "No Linked Bitcoin Wallet!" %}</strong>
+          {% if tcp__request_path == '/wallet/' %}
+            {% blocktrans %}
+              Please add API credentials so you can sell bitcoin to customers.
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans %}
+              Please <a href="{{ wallet_url }}">add API credentials</a> so you can sell bitcoin to customers.
+            {% endblocktrans %}
+          {% endif %}
+        </div>
+      {% elif not tcp__cred_appears_usable %}
+        <div id="no-wallet" class="alert alert-danger nofadeout hidden-xs" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
+          {% url 'base_creds' as wallet_url %}
+          <strong>{% trans "Invalid API Credentials!" %}</strong>
+          {% if tcp__request_path == '/wallet/' %}
+            {% blocktrans %}
+              Please update your API credentials so you can sell bitcoin to customers.
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans %}
+              Please <a href="{{ wallet_url }}">update your API credentials</a> so you can sell bitcoin to customers.
+            {% endblocktrans %}
+          {% endif %}
+        </div>
+      {% elif not tcp__cred_appears_funded and tcp__request_path == '/wallet/' %}
+        <div id="no-wallet" class="alert alert-warning nofadeout hidden-sm hidden-xs" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span></button>
+          {% blocktrans %}
+            <strong>No BTC in Your Wallet.</strong>
+            Please fund your wallet so you can sell bitcoin to customers.
+          {% endblocktrans %}
+        </div>
+      {% endif %}
     {% endif %}
 
     <h3 class="pull-left hl">{% trans "Admin" %}</h3>

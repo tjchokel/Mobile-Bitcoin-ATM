@@ -7,7 +7,7 @@
       </li>
       <li style="width:50%">
           <a
-            href="{% if not tcp__cred_appears_funded %}{% url 'base_creds' %}{% elif merchant.finished_registration %}{% url 'merchant_transactions' %}{% else %}{% url 'merchant_profile' %}{% endif %}"
+            href="{% if not tcp__cred_appears_funded or not tcp__cred_appears_usable %}{% url 'base_creds' %}{% elif merchant.finished_registration %}{% url 'merchant_transactions' %}{% else %}{% url 'merchant_profile' %}{% endif %}"
             style="text-align: center;font-size: 20px; border-top-left-radius: 10px; border-top-right-radius: 10px;"
           >
             {% trans "Admin" %}

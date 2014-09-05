@@ -107,15 +107,18 @@
               <div class="head-inverse" style="text-align:center;font-size: 18px;font-weight: 300;">
                 {% if credential.is_blockchain_credential %}
                   <img src='{% static "img/blockchain-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
-                  {{credential.username }}
+                  {% trans "Username:" %}
+                  {{ credential.username }}
                 {% endif %}
                 {% if credential.is_coinbase_credential %}
                   <img src='{% static "img/coinbase-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
-                  {% trans "API Key:" %} {{credential.api_key}}
+                  API Key: {# no trans tag, they don't internationalize #}
+                  {{ credential.api_key }}
                 {% endif %}
                 {% if credential.is_bitstamp_credential %}
                   <img src='{% static "img/bitstamp-logo-full.png" %}' style="margin-left:auto; margin-right:auto; display:block;padding-bottom: 5px;">
-                  {{credential.customer_id}}
+                  {% trans "Customer ID:" %}
+                  {{ credential.customer_id }}
                 {% endif %}
                 <br/><br/>
                 
@@ -186,14 +189,13 @@
                   <td align="right">{{credential.created_at|naturaltime}}</td>
                 </tr>
                 <tr>
-                  <td class="text-muted">
-                    {% blocktrans with credential_display=credential.get_credential_to_display %}
-                      Your {{ credential_display }} address for deposits
-                    {% endblocktrans %}
+                  <td class="text-muted">{% trans "BTC address:" %}</td>
+                  <td align="right" class="hidden-sm hidden-md hidden-lg">
+                    <a href="{{ merchant.get_destination_address.get_bci_addr_url }}" target="_blank">{{ merchant.get_destination_address.b58_address|truncatechars:12 }}</a>
                   </td>
-                  
-                  <td align="right" class="hidden-sm hidden-md hidden-lg">{{merchant.get_destination_address.b58_address | hide_long_string}}</td>
-                  <td align="right" class="hidden-xs">{{merchant.get_destination_address.b58_address }}</td>
+                  <td align="right" class="hidden-xs">
+                    <a href="{{ merchant.get_destination_address.get_bci_addr_url }}" target="_blank">{{ merchant.get_destination_address.b58_address }}</a>
+                  </td>
                 </tr>
               </tbody>
             </table>

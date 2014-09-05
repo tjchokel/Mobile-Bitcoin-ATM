@@ -51,7 +51,7 @@ def clean_amount(self):
         raise forms.ValidationError(msg)
 
     # Check if amount exceeds available balance
-    credential = merchant.get_valid_api_credential()
+    credential = merchant.get_api_credential()
     if credential:
         balance = credential.get_balance()
         if balance is False:

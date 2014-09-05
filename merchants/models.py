@@ -183,17 +183,19 @@ class Merchant(models.Model):
     def finished_registration(self):
         return self.get_registration_percent_complete() == 100
 
-    def has_valid_api_credential(self):
-        return bool(self.get_valid_api_credential())
-
-    def get_valid_api_credential(self):
-        # there should be only 1 (or 0)
-        # Note, this only returns credentials that don't have 'last_failed_at' set
-        return self.basecredential_set.filter(disabled_at=None, last_failed_at=None).last()
-
-    def get_latest_api_credential(self):
+    def get_api_credential(self):
         # Note, this ignores the last_failed_at field
         return self.basecredential_set.filter(disabled_at=None).order_by('created_at').last()
+
+    def get_valid_api_credential(self):
+        api_cred = self.get_api_credential()
+        if api_cred and not api_cred.last_failed_at:
+            return api_cred
+        else:
+            return None
+
+    def has_valid_api_credential(self):
+        return bool(self.get_valid_api_credential())
 
     def disable_all_credentials(self):
         " use this when reseting a user's password "

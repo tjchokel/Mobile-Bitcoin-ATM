@@ -1,6 +1,10 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 
+from bitcash.settings import BASE_URL
+
+from utils import uri_to_url
+
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
@@ -12,8 +16,11 @@ class BlogPost(models.Model):
     def __unicode__(self):
         return '%s' % self.title
 
-    def get_absolute_url(self):
-        return reverse('view_blog_post', None, { self.slug })
+    def get_uri(self):
+        return reverse('view_blog_post', None, {self.slug})
+
+    def get_url(self):
+        return uri_to_url(BASE_URL, self.get_uri())
 
 
 class Category(models.Model):
@@ -23,6 +30,8 @@ class Category(models.Model):
     def __unicode__(self):
         return '%s' % self.title
 
-    def get_absolute_url(self):
-        return reverse('view_blog_category', None, { self.slug })
-        # return reverse('view_blog_category', None, { 'slug': self.slug })
+    def get_uri(self):
+        return reverse('view_blog_category', None, {self.slug})
+
+    def get_url(self):
+        return uri_to_url(BASE_URL, self.get_uri())

@@ -24,9 +24,9 @@
       {% for post in posts %}
         <div class="blog-summary">
           {% if forloop.first %}
-            <h4 class="new-story"><a href="{{ post.get_absolute_url }}">{{post.title|safe}}</a></h4>
+            <h4 class="new-story"><a href="{{ post.get_url }}">{{post.title|safe}}</a></h4>
           {% else %}
-            <h4><a href="{{ post.get_absolute_url }}">{{post.title|safe}}</a></h4>
+            <h4><a href="{{ post.get_url }}">{{post.title|safe}}</a></h4>
           {% endif %}
           <ul class="text-muted list-inline" style="margin:0;">
             <!-- <li><i class="fa fa-user"></i> <a href="profile.html">Administrator</a></li> -->
@@ -39,7 +39,7 @@
         </div>
         {% if post.category %}
           <p class="tags">
-            <a href="{{post.category.get_absolute_url}}">{{post.category}}</a>
+            <a href="{{post.category.get_url}}">{{post.category}}</a>
           </p>
           <br/>
         {% endif %}
@@ -54,7 +54,7 @@
           <div class="recent-blogs">
             <ul> 
               {% for post in posts %}
-                <li><a href="{{ post.get_absolute_url }}">{{post.title|safe}}</a></li>
+                <li><a href="{{ post.get_url }}">{{post.title|safe}}</a></li>
               {% endfor %}
             </ul>
           </div>
@@ -67,7 +67,7 @@
         <hr>
         <p class="tags">
           {% for category in categories %}
-            <a href="{{category.get_absolute_url}}">{{category}}</a>
+            <a href="{{category.get_url}}">{{category}}</a>
           {% endfor %}
         </p>
         <br />

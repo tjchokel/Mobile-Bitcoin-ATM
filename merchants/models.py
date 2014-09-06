@@ -183,6 +183,21 @@ class Merchant(models.Model):
     def finished_registration(self):
         return self.get_registration_percent_complete() == 100
 
+    def get_all_api_creds(self):
+        # includes disabled and failing creds, rarely used
+        return self.basecredential_set.all()
+
+    def get_all_balances(self):
+        # includes disabled and failing creds, rarely used
+        return [x for x in [api_cred.get_highest_balance() for api_cred in self.get_all_api_creds()] if x]
+
+    def get_highest_balance_obj(self):
+        balance_objs = self.get_all_balances()
+        if balance_objs:
+            return sorted(balance_objs, key=lambda x: x.satoshis, reverse=True)[0]
+        else:
+            return None
+
     def get_api_credential(self):
         # Note, this ignores the last_failed_at field
         return self.basecredential_set.filter(disabled_at=None).order_by('created_at').last()

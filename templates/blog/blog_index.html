@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Blog | CoinSafe{% endblock title %}
-<!-- {% block meta_content %}How to store your bitcoin the proper way. We walk you through the safest and most secure methods for putting your bitcoin in cold storage.{% endblock meta_content %} -->
+{% load i18n %}
+{% block title %}{% trans "Blog" %}{% endblock title %}
+
 {% block content %}
 <div class="section-header">
   <div class="container">
@@ -77,52 +78,10 @@
 
   </div>
 </div>
-  
-
-  <!-- <div class="row">
-    <div class="col-sm-8">
-      <h1>The Ultimate Bitcoin Cold Storage Guide</h1>
-      <hr>
-        {% block main_section %}{% endblock main_section %}
-    </div>
-
-    <div class="col-sm-4">
-      <h3 class="hl">Share</h3>
-      <hr>
-      <div class="social-icons social-icons-default">
-
-        <div class="fb-like" data-href="https://www.coinsafe.com/cold-storage-guide/" data-layout="button" data-action="like" data-show-faces="true" data-share="true"></div>
-
-        <div id="fb-root"></div>
-        <script>(function(d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
-          if (d.getElementById(id)) return;
-          js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-          fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));</script>
-        <br />
-
-        <a href="https://twitter.com/share" class="twitter-share-button" data-via="coinsafe">Tweet</a>
-        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-        <br />
-        <br />
-
-        <script type="text/javascript">
-          (function() {
-            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-            po.src = 'https://apis.google.com/js/platform.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-          })();
-        </script>
-
-      </div>
-    </div>
-
-  </div> -->
 </div>
 
 {% endblock content %}
+
 {% block static_page_footer %}
   {% include "partials/_static_page_footer.html" %}
 {% endblock static_page_footer %}

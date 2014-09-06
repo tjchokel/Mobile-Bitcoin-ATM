@@ -1,23 +1,30 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+
+{% load i18n %}
+{% block title %}{% trans "404 Error" %}{% endblock title %}
+
 {% block content %}
 <div class="wrapper">
-	<div class="not-found">
-	  <div class="container">
-		<div class="row">
-		  <div class="col-sm-12">
-		    <div class="digits">
-		      4<i class="fa fa-meh-o animated flipInX" id="smile"></i>4
-		    </div>
-			<h1>The page you are trying to reach could not be not found</h1>
-      <br />
-			<h4 style="text-align:center">
-        If this keeps happening, please <a href="{% url "contact" %}">contact us</a> so we can fix it.
-        Sorry about that!
-      </h4>
-		  </div>
-		</div>
-	  </div>
-	</div>
+  <div class="not-found">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="digits">
+            4<i class="fa fa-meh-o animated flipInX" id="smile"></i>4
+          </div>
+          <h1>{% trans "The page you are trying to reach could not be not found" %}</h1>
+        <br />
+        <h4 style="text-align:center">
+          {% url "contact" as contact_url %}
+          {% blocktrans %}
+            If this keeps happening, please <a href="{{ contact_url }}">contact us</a> so we can fix it.
+            Sorry about that!
+          {% endblocktrans %}
+        </h4>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

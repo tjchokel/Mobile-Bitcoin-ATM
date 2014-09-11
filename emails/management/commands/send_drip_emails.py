@@ -108,6 +108,7 @@ class Command(BaseCommand):
                 if merchant.has_finished_registration():
                     # They never had creds (old signup) or had and deleted them
                     context_dict['wallet_uri'] = reverse('base_creds')
+                    context_dict['promotional_material_uri'] = reverse('promotional_material')
                     body_template = 'drip/removed_credentials.html'
                     send_nag_email(
                             subject='Please Link Your Bitcoin Wallet to Your ATM',

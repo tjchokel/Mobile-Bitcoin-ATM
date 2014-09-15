@@ -6,11 +6,11 @@ Last change:    04/01/2014
 -------------------------------------------------------------------*/
 
 html, body {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+    font-family: "Raleway",Helvetica,Arial,sans-serif;
     height: 100%;
 }
-h1, h2, h3, h4, h5, h6 {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+h1, h2, h3, h4, h5, h6, .rale {
+    font-family: "Raleway",Helvetica,Arial,sans-serif;
 }
 h1.hl, h2.hl, h3.hl, h4.hl, h5.hl, h6.hl {
     color: #515151;
@@ -96,24 +96,16 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 /* ===== Showcase ===== */
 
 #wrap {
-    height: 480px;
-    background: url(../img/background-phone.png);
-    background-size: cover;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg3.jpg', sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg3.jpg', sizingMethod='scale')";
-    background-position: center;
     border-bottom: 1px solid #eee;
     border-top: 1px solid #f5f5f5;
     color: #fff;
+    position:relative;
+    background:#2D3B48 url('../img/dotmap.png') center no-repeat;
+    margin-top:20px;
 }
 #wrap h1 {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
-    font-weight: 100;
-    font-size: 40px;
-    margin-top: 130px;
-    margin-left: -30px;
-    text-shadow: 1px 1px 3px #666;
-    filter: Shadow(Color=#666666, Direction=45, Strength=3);
+    font-size: 4em;
+    margin-top:130px;
 }
 .showcase {
     position: relative;
@@ -192,6 +184,17 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 .fourth {
     -webkit-animation-duration: 1.9s;
     -moz-animation-duration: 1.9s;
+}
+
+/* Video play button */
+.video-play-btn {
+    cursor:pointer;
+    background:transparent url("../img/play-button.png") center no-repeat;
+    display:block;
+    width:216px;
+    height:125px;
+    padding-top:100px;
+    margin:0 auto;
 }
 
 /* ===== Services ===== */
@@ -1555,11 +1558,7 @@ table {
 }
 
 .sign-up-box {
-    padding: 1em;
-    margin-top: 230px;
-    background: #515151;
-    background: rgba(0, 0, 0, 0.65);
-    border-radius: 10px;
+    padding:2em;
 }
 .sign-up-box .input-group{
     display: block;
@@ -1621,7 +1620,6 @@ i.fa {
 }
 
 .page-tip #messages .alert{
-    text-align:center;
     margin-top:15px;
 }
 

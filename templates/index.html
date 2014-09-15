@@ -8,26 +8,28 @@
 {% block content %}
     <!-- <div class="container"> -->
 <div id="wrap" style="position:relative;">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-5 col-sm-5">
-        <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
-      </div>
-      <div class="col-sm-4 col-sm-offset-3 sign-up-box">
-        <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="padding-right: 5px;padding-left:5px;width: 100%;">{% trans "List Your Business for Free" %}</a>
-      </div>
+  <div class="container text-center">
+      
+      <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
+
+      <p style="font-size:1.2em;">Tagline tag line Tagline tag line Tagline tag line Tagline tag line Tagline tag line</p>
+      
       {% include "_play_video_modal.html" %}
-    </div>
-  </div>
-  <a style="cursor: pointer;position:absolute;top:50%;left:50%;margin-top:-18px;margin-left:-104px;" onclick="$('#play-video-modal').modal();">
-    <img src="{%static "img/play-button.png" %}"/>
-  </a>
-  <a style="cursor: pointer;" onclick="$('#play-video-modal').modal();">
-    <p class="text-center" style="color:black;position:absolute;top:50%;left:50%;margin-top:70px;margin-left:-62px;font-weight:normal;margin-bottom: 20px;font-size: 21px;line-height: 1.4;">
-      {% trans "Watch Video" %}
+  
+      <p>
+        <span class="video-play-btn" onclick="$('#play-video-modal').modal();">
+<!--           <img src="{%static "img/play-button.png" %}" alt="Play Video" title="Play Video"> -->
+          {% trans "Watch Video" %}
+        </span>
+      </p>
+    
+
+    <p class="sign-up-box">
+      <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
     </p>
-  </a>
+  </div>
 </div>
+
 <div class="divider-bar">
   <div class="container">
     <h3 class="green-color" style="text-align:center;">{% trans "Become The Neighborhood Bitcoin Trading Post" %}</h3>

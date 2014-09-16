@@ -20,6 +20,9 @@ h1.hl, h2.hl, h3.hl, h4.hl, h5.hl, h6.hl {
 h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
     text-transform: none;
 }
+hr {
+    border-top:1px solid #ccc;
+}
 
 /* ===== Sticky Footer Trick ===== */
 
@@ -93,12 +96,28 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
   background-color: #515151;
 }
 
+/* Color utilities */
+.bg-dark-blue {
+    background:#2D3B48;
+    color:#fff;
+}
+.bg-light-blue {
+    background:#79858C;
+}
+.bg-light-tan {
+    background:#EBEBE3;
+}
+.bg-dark-tan {
+    background:#D3DAC8;
+}
+.bg-dark-green {
+    background:#A8CD5B;
+}
+
 /* ===== Showcase ===== */
 
 #wrap {
-    border-bottom: 1px solid #eee;
-    border-top: 1px solid #f5f5f5;
-    color: #fff;
+    color:#fff;
     position:relative;
     background:#2D3B48 url('../img/dotmap.png') center no-repeat;
     margin-top:20px;
@@ -198,27 +217,38 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 }
 
 /* Home page sections */
+.home-section {
+    padding:36px 0 16px;
+}
 .section-title {
     font-size:2.6em;
     text-align:center;
     position:relative;
-    margin:1em;
+    margin:0 36px 36px 36px;
 }
 .section-title:after {
     content: " ";
     border-bottom: 2px solid #2a3b48;
     display: block;
     width: 4em;
-    margin: 0.8em auto;
+    margin: 20px auto;
 }
 
 /* What is coinsafe section */
 .what-is-coinsafe {
-    background:#EBEBE3;
     font-size:1.2em;
 }
 .what-is-coinsafe .feature-list li {
     margin:1em 0;
+}
+
+/* Testimonial section */
+.testimonials .quote {
+    padding:16px 2em 0;
+    font-size:2.6em;
+}
+.testimonials .quote-credit {
+    font-size:1.4em;
 }
 
 /* ===== Services ===== */

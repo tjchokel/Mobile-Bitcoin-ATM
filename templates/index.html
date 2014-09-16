@@ -6,8 +6,9 @@
 {% block title %}{% trans "Your Free Bitcoin ATM App" %}{% endblock title %}
 
 {% block content %}
-    <!-- <div class="container"> -->
-<div id="wrap" style="position:relative;">
+
+{# Showcase section #}
+<div id="wrap" class="container-fluid" style="position:relative;">
   <div class="container text-center">
       
       <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
@@ -17,20 +18,17 @@
       {% include "_play_video_modal.html" %}
   
       <p>
-        <span class="video-play-btn" onclick="$('#play-video-modal').modal();">
-<!--           <img src="{%static "img/play-button.png" %}" alt="Play Video" title="Play Video"> -->
-          {% trans "Watch Video" %}
-        </span>
+        <span class="video-play-btn" onclick="$('#play-video-modal').modal();">{% trans "Watch Video" %}</span>
       </p>
     
-
     <p class="sign-up-box">
       <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
     </p>
   </div>
 </div>
 
-<div class="what-is-coinsafe">
+{# What is CoinSafe section #}
+<div class="container-fluid bg-light-tan home-section what-is-coinsafe">
   <div class="container">
     <h3 class="section-title">{% trans "What is CoinSafe?" %}</h3>
     <div class="row">
@@ -62,70 +60,62 @@
   </div>
 </div>
 
-<div class="container-fluid">
+{# Map section #}
+<div class="container-fluid home-section">
   <div class="container">
     <h3 class="section-title">{% trans "Find a Merchant Near You" %}</h3>
  
-    <div id="map_wrapper" style="height: 350px;">
+    <div id="map_wrapper" style="height: 350px;margin-bottom:36px;">
         <div id="map_canvas" class="mapping" style="width: 100%; height: 100%;"></div>
     </div>
 
-    <p class="text-center lead" style="margin:30px;">
+    <p class="text-center lead">
       {% trans "Can't find a seller in your area?" %}
-      <a href="/register-merchant/" class="btn btn-primary btn-md" style="margin: -3px 10px 0;">{% trans "Sign Up For Notifications" %}</a>
+      <a href="{% url 'register_customer' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
     </p>
+
   </div>
 </div>
 
 
-
-
-<!-- <div class="row" style="">
-  <div class="col-lg-6 col-md-6" style="border:1px; border-color:#2a3b48; border-style: solid;"> 
-    <img src="{%static "img/shop2.png" %}" width="100%" height="100%" style="opacity:0.3;"/>
-    <div id="merchant-text" style="position:absolute;width:100%;bottom:55%;">
-      <h2 style="text-align:center;"> Businesses</h2>
-      <br/>
-      <ul style="padding-left:25%;">
-        <li><h4>Set Your Own Prices</h4></li>
-        <li><h4>Attract New Customers</h4></li>
-        <li><h4>Simple to Use</h4></li>
-      </ul>
-    </div>
-  </div>
-  <div class="col-lg-6 col-md-6" style="border:1px; border-left:0px; border-color:#2a3b48; border-style: solid;"> 
-    <img src="{%static "img/money2.png" %}" width="100%" height="100%" style="opacity:0.3;"/>
-  </div>
-</div> -->
-
-
-<div class="divider-bar">
+{# Press section #}
+<div class="container-fluid home-section bg-light-tan">
   <div class="container">
-    <p class="lead text-center" style="padding-top:20px;">
-      {% blocktrans %}
-        "Now every physical store in the world can become a Bitcoin ATM with no new hardware"
-      {% endblocktrans%}
-      <br/>
-      -Erik Voorhees, Serial entrepreneur and Bitcoin advocate
-    </p>
-    <br/>
-    <a href="{% url 'press' %}">
-      <div class="row">
-        <div class="col-md-4">
+  
+    <div class="row">
+      <div class="col-md-4">
+        <a href="{% url 'press' %}">
           <img src="{%static "img/press_logos/techcrunch_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block;">
-        </div>
-        <div class="col-md-4">
-          <img src="{%static "img/press_logos/wsj_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block;">
-        </div>
-        <div class="col-md-4">
-          <img src="{%static "img/press_logos/coindesk_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block; margin-top:20px;">
-        </div>
+        </a>
       </div>
-    </a>
-    <br/><br/><br/>
+      <div class="col-md-4">
+        <a href="{% url 'press' %}">
+         <img src="{%static "img/press_logos/wsj_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block;">
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="{% url 'press' %}">
+          <img src="{%static "img/press_logos/coindesk_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block; margin-top:20px;">
+        </a>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="testimonials">
+      <p class="text-center quote">
+        <q>{% trans "Now every physical store in the world can become a Bitcoin ATM with no new hardware" %}</q>
+      </p>
+      <p class="lead text-right">
+        <span class="quote-credit">-Erik Voorhees,</span><br> 
+        Serial entrepreneur and Bitcoin advocate
+      </p>
+    </div>
 
   </div>
 </div>
+
+
 {% endblock content %}
 {% block static_page_footer %}
   {% include "partials/_static_page_footer.html" %}

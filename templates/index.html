@@ -8,12 +8,15 @@
 {% block content %}
 
 {# Showcase section #}
-<div id="wrap" class="container-fluid" style="position:relative;">
-  <div class="container text-center">
-      
-      <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
+<div id="wrap" class="container-fluid bg-dark-blue" style="position:relative;">
 
-      <p style="font-size:1.2em;">Tagline tag line Tagline tag line Tagline tag line Tagline tag line Tagline tag line</p>
+  <div id="mapWrap"></div>
+
+  <div class="container text-center">
+    <div class="foreground">
+
+      <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
+      <h4>Tagline tag line Tagline tag line Tagline tag line Tagline tag line Tagline tag line</h4>
       
       {% include "_play_video_modal.html" %}
   
@@ -21,10 +24,12 @@
         <span class="video-play-btn" onclick="$('#play-video-modal').modal();">{% trans "Watch Video" %}</span>
       </p>
     
-    <p class="sign-up-box">
-      <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
-    </p>
+      <p class="sign-up-box">
+        <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
+      </p>
+    </div>
   </div>
+
 </div>
 
 {# What is CoinSafe section #}
@@ -114,7 +119,6 @@
 
   </div>
 </div>
-
 
 {% endblock content %}
 {% block static_page_footer %}
@@ -212,4 +216,6 @@
     });
 
   </script>
+
+  <script src="{% static "js/dotmap.js" %}"></script>
 {% endblock %}

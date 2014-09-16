@@ -117,14 +117,16 @@ hr {
 /* ===== Showcase ===== */
 
 #wrap {
-    color:#fff;
     position:relative;
-    background:#2D3B48 url('../img/dotmap.png') center no-repeat;
-    margin-top:20px;
+    margin-top:50px;
 }
-#wrap h1 {
+#wrap .foreground {
+    z-index:1;
+    position:relative;
+    padding:60px 0;
+}
+#wrap .tagline {
     font-size: 4em;
-    margin-top:130px;
 }
 .showcase {
     position: relative;
@@ -205,6 +207,25 @@ hr {
     -moz-animation-duration: 1.9s;
 }
 
+/* SVG map on homepage */
+#mapWrap {
+    margin:0 auto;
+    width:1178px;
+    height:558px;
+    max-width:1200px;
+    position:absolute;
+    z-index:0;
+    left:50%;
+    margin: 0 0 0 -589px;
+}
+#mapWrap #map-svg {
+    width:100%;
+    height:100%;
+}
+#mapWrap.no-svg-map {
+    background:transparent url('../img/dotmap.png') center no-repeat;
+}
+
 /* Video play button */
 .video-play-btn {
     cursor:pointer;
@@ -237,6 +258,8 @@ hr {
 /* What is coinsafe section */
 .what-is-coinsafe {
     font-size:1.2em;
+    position:relative;
+    z-index:1;
 }
 .what-is-coinsafe .feature-list li {
     margin:1em 0;

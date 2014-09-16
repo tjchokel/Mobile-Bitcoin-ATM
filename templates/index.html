@@ -30,22 +30,54 @@
   </div>
 </div>
 
-<div class="divider-bar">
+<div class="what-is-coinsafe">
   <div class="container">
-    <h3 class="green-color" style="text-align:center;">{% trans "Become The Neighborhood Bitcoin Trading Post" %}</h3>
-    <p class="lead text-center">
-      {% blocktrans %}
-        CoinSafe makes it easy for merchants around the world to buy and sell bitcoin at their store locations.
-        With our easy to use mobile software and exchange partnerships, you can make money and attract new customers to your local business.
-      {% endblocktrans%}
+    <h3 class="section-title">{% trans "What is CoinSafe?" %}</h3>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="well">
+          <img class="img-circle img-responsive" src="http://placekitten.com/300/300" alt="Generic placeholder image" style="margin:0 auto;">
+          <h2 class=" text-center">{% trans "For Merchants" %}</h2>
+          <p>{% trans "Our easy to use software makes it easy to turn your store into the neighborhood bitcoin trading post" %}</p>
+          <ul class="feature-list">
+            <li>{% trans "Set your own prices and earn money buying and selling bitcoin with you customers" %}</li>
+            <li>{% trans "Drive new customers into your store" %}</li>
+            <li>{% trans "Simple, secure, and easy to use - you don't need to understand bitcoin to use our app" %}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="well">
+          <img class="img-circle img-responsive" src="http://placekitten.com/300/300" alt="Generic placeholder image" style="margin:0 auto;">
+          <h2 class=" text-center">{% trans "For Customers" %}</h2>
+          <p>{% trans "Find a CoinSafe location near you to buy or sell bitcoin" %}</p>
+          <ul class="feature-list">
+            <li>{% trans "Simple and fast - exchanging bitcoin is as easy as buying your morning coffee" %}</li>
+            <li>{% trans "Buy with cash, sell for cash - get access to bitcoin without needing a bank account" %}</li>
+            <li>{% trans "Stores you can trust - dealing with an established business means no more meeting withs sketchy strangers" %}</li>
+          </ul>
+        </div>
+      </div>
+    </div><!-- /.row -->
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="container">
+    <h3 class="section-title">{% trans "Find a Merchant Near You" %}</h3>
+ 
+    <div id="map_wrapper" style="height: 350px;">
+        <div id="map_canvas" class="mapping" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <p class="text-center lead" style="margin:30px;">
+      {% trans "Can't find a seller in your area?" %}
+      <a href="/register-merchant/" class="btn btn-primary btn-md" style="margin: -3px 10px 0;">{% trans "Sign Up For Notifications" %}</a>
     </p>
   </div>
 </div>
 
 
-<div id="map_wrapper" style="height: 350px;">
-    <div id="map_canvas" class="mapping" style="width: 100%; height: 100%;"></div>
-</div>
 
 
 <!-- <div class="row" style="">

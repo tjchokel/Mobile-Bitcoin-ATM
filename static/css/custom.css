@@ -1120,6 +1120,10 @@ footer .headline h3{
     color: #81D685;
     text-decoration: none;
 }
+.social {
+    margin:20px auto;
+    width:160px;
+}
 .social ul {
     background: #3E7A8C;
     color: white;
@@ -1133,30 +1137,24 @@ footer .headline h3{
     list-style-type: none;
     width: 28px;
     height: 28px;
-    background: #eee;
+    background: #D3DAC8;
     margin: 0 5px 5px 0;
     text-align: center;
     line-height: 28px;
+    -webkit-transition: background 200ms ease-in-out;
+    -moz-transition: background 200ms ease-in-out;
+    -ms-transition: background 200ms ease-in-out;
+    -o-transition: background 200ms ease-in-out;
+    transition: background 200ms ease-in-out;
+}
+.social li:last-child {
+    margin-right:0;
 }
 .social li:hover {
-    background: none;
-}
-.social li, .social li:hover {
-    transition: background 0.1s;
-    -webkit-transition: background 0.1s;
-    -moz-transition: background 0.1s;
+    background: #79858C;
 }
 .social li a {
-    color: #3E7A8C;
-
-}
-.social li:hover a {
-    color: #fff;
-}
-.social li a, .social li:hover a {
-    transition: color 0.1s;
-    -webkit-transition: color 0.1s;
-    -moz-transition: color 0.1s;
+    color: #2D3B48;
 }
 footer .hl-btn-default {
     color: #fff;
@@ -1683,9 +1681,9 @@ table {
 .submitted-message {
     color: #00B4FF;
 }
-i.fa {
+/*i.fa {
     padding-right: 5px;
-}
+}*/
 .main_content {
     padding-top: 60px;
 }

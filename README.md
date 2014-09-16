@@ -1,9 +1,10 @@
 # Initial Setup Instructions #
 
 ## Install Some Stuff ##
-- Follow the instructions [here](http://docs.python-guide.org/en/latest/starting/install/osx/) to install [Homebrew](http://brew.sh/) and then (re)install python and virtualenv.
+- Follow the instructions [here](http://docs.python-guide.org/en/latest/starting/install/osx/) to install [Homebrew](http://brew.sh/) and then (re)install python.
+- If for some reason the step above does not install pip and virtualenv, follow the instructions [here](https://pip.pypa.io/en/latest/installing.html#python-os-support) to get pip and then install virtualenv using pip install virtualenv.
 - Install ngrok with `brew install ngrok` (thanks Homebrew!)
-- Install the latest stable version of postgres 9 [here](http://www.enterprisedb.com/products-services-training/pgdownload#osx)
+- Install the latest stable version of postgres 9. We recommend using Postgresapp for mac, available [here](http://postgresapp.com/).
 
 ## Configure Some Stuff ##
 - Create an ssh key if you don't already have one with `$ ssh-keygen -t rsa`

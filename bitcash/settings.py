@@ -112,8 +112,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'bitcash.context_processors.credential_status',
 )
 
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
-
 AUTH_USER_MODEL = 'users.AuthUser'
 
 
@@ -134,9 +132,11 @@ else:
 
 if SITE_DOMAIN == PRODUCTION_DOMAIN:
     EMAIL_DEV_PREFIX = False
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False
 else:
     EMAIL_DEV_PREFIX = True
     # Enable debug toolbar on local and staging
+    DEBUG_TOOLBAR_PATCH_SETTINGS = True
     MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware',) + MIDDLEWARE_CLASSES
     INSTALLED_APPS += ('debug_toolbar', )
 

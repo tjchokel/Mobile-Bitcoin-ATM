@@ -10,7 +10,9 @@
 {# Showcase section #}
 <div id="wrap" class="container-fluid bg-dark-blue" style="position:relative;">
 
-  <div id="mapWrap"></div>
+  <div class="container" style="position:relative;">
+    <div id="mapWrap"></div>
+  </div>
 
   <div class="container text-center">
     <div class="foreground">
@@ -18,15 +20,10 @@
       <h1 class="tagline">{% trans "A Bitcoin ATM That Runs on Your Phone." %}</h1>
       <h4>{% trans "Turn Your Store Into The Neighborhood Bitcoin Trading Post" %}</h4>
       
-      {% include "_play_video_modal.html" %}
-  
-      <!-- <p>
-        <span class="video-play-btn" onclick="$('#play-video-modal').modal();">{% trans "Watch Video" %}</span>
-      </p> -->
-    
       <p class="sign-up-box">
         <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
       </p>
+      
     </div>
   </div>
 
@@ -52,6 +49,8 @@
  -->      </div>
     </div>
   </div>
+
+  {% include "_play_video_modal.html" %}
 
   <hr class="featurette-break">
 

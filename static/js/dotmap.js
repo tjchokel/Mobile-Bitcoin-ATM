@@ -96,7 +96,7 @@ var map = {
 			}
 			
 			//Join our circles and put them in the #mapWrap with the proper svg wrapper
-			mapEl.innerHTML = '\<svg version="1.1" id="map-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"\>\<g\>'+map.finalMap.join("")+'\</g\>\</svg\>';
+			mapEl.innerHTML = '\<svg version="1.1" id="map-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"  viewBox="0, 0, 1178, 558" preserveAspectRatio="xMidYMid slice" \>\<g\>'+map.finalMap.join("")+'\</g\>\</svg\>';
 			mapEl.className = mapEl.className + " svg-map";
 
 			//Call the citylight function at the frequency in the config

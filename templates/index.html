@@ -20,9 +20,9 @@
       
       {% include "_play_video_modal.html" %}
   
-      <p>
+      <!-- <p>
         <span class="video-play-btn" onclick="$('#play-video-modal').modal();">{% trans "Watch Video" %}</span>
-      </p>
+      </p> -->
     
       <p class="sign-up-box">
         <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
@@ -32,38 +32,66 @@
 
 </div>
 
+
 {# What is CoinSafe section #}
 <div class="container-fluid bg-light-tan home-section what-is-coinsafe">
+
   <div class="container">
     <h3 class="section-title">{% trans "What is CoinSafe?" %}</h3>
-    <div class="row">
-      <div class="col-lg-6">
-        <div class="well">
-          <img class="img-circle img-responsive" src="http://placekitten.com/300/300" alt="Generic placeholder image" style="margin:0 auto;">
-          <h2 class=" text-center">{% trans "For Merchants" %}</h2>
+  </div>
+
+  <div class="container">
+    <div class="row" style="padding:30px 0;">
+      <div class="col-md-6">
+        <p><img class="img-responsive" src="{% static "img/videoscrn.jpg" %}" alt="Generic placeholder image" style="margin:0 auto;cursor:pointer;" onclick="$('#play-video-modal').modal();"></p>
+      </div>
+      <div class="col-md-6">
+          <h2 style="margin-top:70px;">{% trans "Overall General What is" %}</h2>
+          <p>{% trans "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." %}</p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="container">
+    <div class="row" style="padding:30px 0;">
+      <div class="col-md-6">
+          <h2>{% trans "For Merchants" %}</h2>
           <p>{% trans "Our easy to use software makes it easy to turn your store into the neighborhood bitcoin trading post" %}</p>
           <ul class="feature-list">
             <li>{% trans "Set your own prices and earn money buying and selling bitcoin with you customers" %}</li>
             <li>{% trans "Drive new customers into your store" %}</li>
             <li>{% trans "Simple, secure, and easy to use - you don't need to understand bitcoin to use our app" %}</li>
           </ul>
-        </div>
       </div>
-      <div class="col-lg-6">
-        <div class="well">
-          <img class="img-circle img-responsive" src="http://placekitten.com/300/300" alt="Generic placeholder image" style="margin:0 auto;">
-          <h2 class=" text-center">{% trans "For Customers" %}</h2>
-          <p>{% trans "Find a CoinSafe location near you to buy or sell bitcoin" %}</p>
-          <ul class="feature-list">
-            <li>{% trans "Simple and fast - exchanging bitcoin is as easy as buying your morning coffee" %}</li>
-            <li>{% trans "Buy with cash, sell for cash - get access to bitcoin without needing a bank account" %}</li>
-            <li>{% trans "Stores you can trust - dealing with an established business means no more meeting withs sketchy strangers" %}</li>
-          </ul>
-        </div>
+      <div class="col-md-6">
+        <p><img class="img-responsive" src="{% static "img/devices.png" %}" alt="Generic placeholder image" style="margin:0 auto;"></p>
       </div>
-    </div><!-- /.row -->
+    </div>
   </div>
+
+  <hr>
+
+  <div class="container">
+    <div class="row" style="padding:30px 0;">
+      <div class="col-md-6">
+        <p><img class="img-responsive" src="{% static "img/videoscrn.jpg" %}" alt="Generic placeholder image" style="margin:0 auto;"></p>
+      </div>
+      <div class="col-md-6">
+        <h2>{% trans "For Customers" %}</h2>
+        <p>{% trans "Find a CoinSafe location near you to buy or sell bitcoin" %}</p>
+        <ul class="feature-list">
+          <li>{% trans "Simple and fast - exchanging bitcoin is as easy as buying your morning coffee" %}</li>
+          <li>{% trans "Buy with cash, sell for cash - get access to bitcoin without needing a bank account" %}</li>
+          <li>{% trans "Stores you can trust - dealing with an established business means no more meeting withs sketchy strangers" %}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
 </div>
+
 
 {# Map section #}
 <div class="container-fluid home-section">

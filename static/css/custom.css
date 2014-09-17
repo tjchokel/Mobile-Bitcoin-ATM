@@ -229,14 +229,16 @@ hr {
     position:relative;
     margin:0 36px 36px 36px;
 }
-.section-title:after {
+.section-title:after, hr.featurette-break {
     content: " ";
     border-bottom: 2px solid #2a3b48;
     display: block;
-    width: 4em;
+    width: 180px;
     margin: 20px auto;
 }
-
+hr.featurette-break {
+    margin:36px auto;
+}
 /* What is coinsafe section */
 .what-is-coinsafe {
     font-size:1.2em;

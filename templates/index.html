@@ -15,8 +15,8 @@
   <div class="container text-center">
     <div class="foreground">
 
-      <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
-      <h4>Tagline tag line Tagline tag line Tagline tag line Tagline tag line Tagline tag line</h4>
+      <h1 class="tagline">{% trans "A Bitcoin ATM That Runs on Your Phone." %}</h1>
+      <h4>{% trans "Turn Your Store Into The Neighborhood Bitcoin Trading Post" %}</h4>
       
       {% include "_play_video_modal.html" %}
   
@@ -46,8 +46,8 @@
         <p><img class="img-responsive" src="{% static "img/videoscrn.jpg" %}" alt="Generic placeholder image" style="margin:0 auto;cursor:pointer;" onclick="$('#play-video-modal').modal();"></p>
       </div>
       <div class="col-md-6">
-          <h2 style="margin-top:70px;">{% trans "Overall General What is" %}</h2>
-          <p>{% trans "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." %}</p>
+          <h3 style="margin-top:70px;">{% trans "A Network Of Bitcoin Exchanges" %}</h3>
+          <p>{% trans "CoinSafe makes it easy for merchants around the world to buy and sell bitcoin at their store locations. With our intuitive mobile software and exchange partnerships, we help local businesses attract new customers by offering their own Bitcoin ATM service." %}</p>
 <!--           <p><button type="button" class="btn btn-primary btn-md">Watch the Video</button></p>
  -->      </div>
     </div>
@@ -59,8 +59,8 @@
     <div class="row">
       
       <div class="col-md-6">
-        <h2 style="margin-top:70px;">{% trans "Some More What is" %}</h2>
-          <p>{% trans "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." %}</p>
+        <h2 style="margin-top:70px;">{% trans "The Easiest Way to Buy and Sell Bitcoin" %}</h2>
+          <p>{% trans "Buy and sell bitcoin for cash instantly in the comfort of your local neighborhood store - no more messaging with strangers, linking bank accounts, or long waiting periods." %}</p>
       </div>
 
       <div class="col-md-6">
@@ -79,8 +79,10 @@
       </div>
 
       <div class="col-md-6">
-          <h2 style="margin-top:70px;">{% trans "And Some More What is" %}</h2>
-          <p>{% trans "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." %}</p>
+          <h2 style="margin-top:70px;">
+            {% trans "An App that Makes Selling Bitcoin as Simple as Selling Coffee" %}
+          </h2>
+          <p>{% trans "Our easy-to-use software requires no special knowledge or hardware to operate, and supports over 160 currencies. Simply sign up, set your prices, and rest easy knowing you will earn a small profit on every transaction." %}</p>
       </div>
   
     </div>
@@ -99,8 +101,8 @@
     </div>
 
     <p class="text-center lead">
-      {% trans "Can't find a seller in your area?" %}
-      <a href="{% url 'register_customer' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
+      {% trans "Can't Find a Merchant in Your Area?" %}
+      <a href="{% url 'register_customer' %}" class="btn btn-primary btn-lg">{% trans "Get Notified When One Is Available" %}</a>
     </p>
 
   </div>

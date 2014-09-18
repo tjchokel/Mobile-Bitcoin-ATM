@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from shoppers.models import Shopper
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class ShopperAdmin(admin.ModelAdmin):
+
+class ShopperAdmin(ReadOnlyModelAdmin):
 
     list_display = (
         'id',

@@ -1,8 +1,12 @@
 from django.contrib import admin
 
+from bitcash.custom import ReadOnlyModelAdmin
+
 from merchants.models import Merchant, OpenTime, MerchantWebsite
 
 from utils import format_satoshis_with_units_rounded
+
+from bitcash.custom import ReadOnlyModelAdmin
 
 
 # https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#django.contrib.admin.ModelAdmin.list_filter
@@ -125,7 +129,7 @@ def set_latitude_longitude(modeladmin, request, queryset):
 set_latitude_longitude.short_description = "Set Latitiude and Longitude"
 
 
-class MerchantAdmin(admin.ModelAdmin):
+class MerchantAdmin(ReadOnlyModelAdmin):
 
     def owner_name(self, instance):
         return instance.user.full_name
@@ -220,7 +224,7 @@ class MerchantAdmin(admin.ModelAdmin):
 admin.site.register(Merchant, MerchantAdmin)
 
 
-class OpenTimeAdmin(admin.ModelAdmin):
+class OpenTimeAdmin(ReadOnlyModelAdmin):
 
     list_display = ('id', 'merchant', 'weekday', 'from_time', 'to_time', 'is_closed_this_day')
     raw_id_fields = ('merchant', )
@@ -231,7 +235,7 @@ class OpenTimeAdmin(admin.ModelAdmin):
 admin.site.register(OpenTime, OpenTimeAdmin)
 
 
-class MerchantWebsiteAdmin(admin.ModelAdmin):
+class MerchantWebsiteAdmin(ReadOnlyModelAdmin):
 
     list_display = ('id', 'merchant', 'url', 'deleted_at', )
     raw_id_fields = ('merchant', )

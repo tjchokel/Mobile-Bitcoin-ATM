@@ -40,15 +40,15 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <p>
           <a href="javascript:void(0);" onclick="$('#play-video-modal').modal();" title="{% trans "Play Video" %}">
             <img class="img-responsive img-featurette" src="{% static "img/videoplaceholder.jpg" %}" alt="{% trans "Play Video" %}">
           </a>
         </p>
       </div>
-      <div class="col-md-6">
-          <h3 style="margin-top:70px;">{% trans "A Network Of Bitcoin Exchanges" %}</h3>
+      <div class="col-sm-6 featurette-1">
+          <h2>{% trans "A Network Of Bitcoin Exchanges" %}</h2>
           <p>{% trans "CoinSafe makes it easy for merchants around the world to buy and sell bitcoin at their store locations. With our intuitive mobile software and exchange partnerships, we help local businesses attract new customers by offering their own Bitcoin ATM service." %}</p>
       </div>
     </div>
@@ -59,12 +59,12 @@
   <div class="container">
     <div class="row">
       
-      <div class="col-md-6">
-        <h2 style="margin-top:130px;">{% trans "The Easiest Way to Buy and Sell Bitcoin" %}</h2>
+      <div class="col-sm-6 featurette-2">
+          <h2>{% trans "The Easiest Way to Buy and Sell Bitcoin" %}</h2>
           <p>{% trans "Buy and sell bitcoin for cash instantly in the comfort of your local neighborhood store - no more messaging with strangers, linking bank accounts, or long waiting periods." %}</p>
       </div>
 
-      <div class="col-md-6 text-center">
+      <div class="col-sm-6 text-center">
         <p><img class="img-responsive img-featurette" src="{% static "img/exchange.png" %}" alt="Convert cash into bitcoin and bitcoin into cash"></p>
       </div>
     </div>
@@ -75,14 +75,12 @@
   <div class="container">
     <div class="row">
 
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <p><img class="img-responsive img-featurette" src="{% static "img/devices.png" %}" alt="CoinSafe works on any internet-connected device"></p>
       </div>
 
-      <div class="col-md-6">
-          <h2 style="margin-top:70px;">
-            {% trans "An App that Makes Selling Bitcoin as Simple as Selling Coffee" %}
-          </h2>
+      <div class="col-sm-6 featurette-3">
+          <h2>{% trans "An App that Makes Selling Bitcoin as Simple as Selling Coffee" %}</h2>
           <p>{% trans "Our easy-to-use software requires no special knowledge or hardware to operate, and supports over 160 currencies. Simply sign up, set your prices, and rest easy knowing you will earn a small profit on every transaction." %}</p>
       </div>
   
@@ -115,19 +113,19 @@
   <div class="container">
   
     <div class="row">
-      <div class="col-md-4 text-center">
-        <a href="{% url 'press' %}">
-          <img src="{%static "img/press_logos/techcrunch_homepage.png" %}" class="press-logo">
+      <div class="col-sm-4 text-center">
+        <a href="{% url 'press' %}"> 
+          <img src="{%static "img/press_logos/techcrunch_homepage.png" %}" class="press-logo img-responsive">
         </a>
       </div>
-      <div class="col-md-4 text-center">
+      <div class="col-sm-4 text-center">
         <a href="{% url 'press' %}">
-         <img src="{%static "img/press_logos/wsj_homepage.png" %}" class="press-logo">
+         <img src="{%static "img/press_logos/wsj_homepage.png" %}" class="press-logo img-responsive">
         </a>
       </div>
-      <div class="col-md-4 text-center">
+      <div class="col-sm-4 text-center">
         <a href="{% url 'press' %}">
-          <img src="{%static "img/press_logos/coindesk_homepage.png" %}" class="press-logo" style="margin-top:30px;">
+          <img src="{%static "img/press_logos/coindesk_homepage.png" %}" class="press-logo img-responsive" style="margin-top:30px;">
         </a>
       </div>
     </div>

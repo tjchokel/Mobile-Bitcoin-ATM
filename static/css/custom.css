@@ -6,11 +6,11 @@ Last change:    04/01/2014
 -------------------------------------------------------------------*/
 
 html, body {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+    font-family: "Raleway",Helvetica,Arial,sans-serif;
     height: 100%;
 }
-h1, h2, h3, h4, h5, h6 {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+h1, h2, h3, h4, h5, h6, .rale {
+    font-family: "Raleway",Helvetica,Arial,sans-serif;
 }
 h1.hl, h2.hl, h3.hl, h4.hl, h5.hl, h6.hl {
     color: #515151;
@@ -19,6 +19,9 @@ h1.hl, h2.hl, h3.hl, h4.hl, h5.hl, h6.hl {
 }
 h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
     text-transform: none;
+}
+hr {
+    border-top:1px solid #ccc;
 }
 
 /* ===== Sticky Footer Trick ===== */
@@ -96,24 +99,16 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 /* ===== Showcase ===== */
 
 #wrap {
-    height: 480px;
-    background: url(../img/background-phone.png);
-    background-size: cover;
-    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg3.jpg', sizingMethod='scale');
-    -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../img/bg3.jpg', sizingMethod='scale')";
-    background-position: center;
-    border-bottom: 1px solid #eee;
-    border-top: 1px solid #f5f5f5;
-    color: #fff;
+    position:relative;
+    margin-top:50px;
 }
-#wrap h1 {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
-    font-weight: 100;
-    font-size: 40px;
-    margin-top: 130px;
-    margin-left: -30px;
-    text-shadow: 1px 1px 3px #666;
-    filter: Shadow(Color=#666666, Direction=45, Strength=3);
+#wrap .foreground {
+    z-index:1;
+    position:relative;
+    padding:135px 0;
+}
+#wrap .tagline {
+    font-size: 4em;
 }
 .showcase {
     position: relative;
@@ -192,6 +187,74 @@ h1.hl small, h2.hl small, h3.hl small, h4.hl small, h5.hl small, h6.hl small {
 .fourth {
     -webkit-animation-duration: 1.9s;
     -moz-animation-duration: 1.9s;
+}
+
+/* SVG map on homepage */
+#mapWrap {
+    margin:0 auto;
+    max-width:1178px;
+    max-height:558px;
+    width:100%;
+    height:100%;
+    position:absolute;
+    z-index:0;
+}
+#mapWrap.no-svg-map {
+    background:transparent url('../img/dotmap.png') center no-repeat;
+}
+#mapWrap #map-svg {
+    width:100%;
+    height:auto;
+}
+/* Home page sections */
+.home-section {
+    padding:36px 0 16px;
+}
+.section-title {
+    font-size:2.6em;
+    text-align:center;
+    position:relative;
+    margin:0 36px 36px 36px;
+}
+.section-title:after, hr.featurette-break {
+    content: " ";
+    border-bottom: 2px solid #2a3b48;
+    display: block;
+    width: 180px;
+    margin: 20px auto;
+}
+hr.featurette-break {
+    margin:36px auto;
+}
+/* What is coinsafe section */
+.what-is-coinsafe {
+    font-size:1.2em;
+    position:relative;
+    z-index:1;
+}
+.what-is-coinsafe .feature-list li {
+    margin:1em 0;
+}
+.img-featurette {
+    margin:20px auto;
+}
+.featurette-1 {
+    padding-top:80px;
+}
+.featurette-2 {
+    padding-top:130px;
+}
+.featurette-3 {
+    padding-top:70px;
+}
+
+/* Testimonial section */
+.testimonials .quote {
+    padding:16px 1em 0;
+    font-size:2.6em;
+}
+.testimonials .quote-credit {
+    font-size:1.4em;
 }
 
 /* ===== Services ===== */
@@ -868,6 +931,19 @@ img.img-about {
     footer {
         height: 435px;
     }
+    /* Homepage showcase */
+    #wrap .foreground {
+        padding:60px 0;
+    }
+    .featurette-1 {
+      padding-top:40px;
+    }
+    .featurette-2 {
+        padding-top:90px;
+    }
+    .featurette-3 {
+        padding-top:20px;
+    }
 }
 @media (min-width: 768px) and (max-width: 991px) { /* for sm devices */
     .gallery-list > li .gallery-thumbnail {
@@ -875,6 +951,13 @@ img.img-about {
     }
     footer {
         height: 435px;
+    }
+    /* Homepage showcase */
+    #wrap .foreground {
+        padding:20px 0;
+    }
+    .featurette-1, .featurette-2, .featurette-3 {
+      padding-top:0;
     }
 }
 @media (max-width: 767px) {
@@ -886,6 +969,16 @@ img.img-about {
     }
     footer {
         height: 600px;
+    }
+    /* Homepage showcase */
+    #wrap .foreground {
+        padding:10px 0;
+    }
+    #mapWrap {
+        padding-top:60px;
+    }
+    .featurette-1, .featurette-2, .featurette-3 {
+      padding-top:0;
     }
 }
 @media (max-width: 499px) { /* for xs devices */
@@ -1016,10 +1109,10 @@ footer {
     height: 155px; /* .push must be the same height as .footer */
 }
 footer a {
-    color: #81D685;
+    color: #A8CD5B;
 }
 footer a:hover {
-    color: #81D685;
+    color: #D3DAC8;
     text-decoration: none;
 }
 footer .headline {
@@ -1040,6 +1133,10 @@ footer .headline h3{
     color: #81D685;
     text-decoration: none;
 }
+.social {
+    margin:20px auto;
+    width:160px;
+}
 .social ul {
     background: #3E7A8C;
     color: white;
@@ -1053,30 +1150,24 @@ footer .headline h3{
     list-style-type: none;
     width: 28px;
     height: 28px;
-    background: #eee;
+    background: #D3DAC8;
     margin: 0 5px 5px 0;
     text-align: center;
     line-height: 28px;
+    -webkit-transition: background 200ms ease-in-out;
+    -moz-transition: background 200ms ease-in-out;
+    -ms-transition: background 200ms ease-in-out;
+    -o-transition: background 200ms ease-in-out;
+    transition: background 200ms ease-in-out;
+}
+.social li:last-child {
+    margin-right:0;
 }
 .social li:hover {
-    background: none;
-}
-.social li, .social li:hover {
-    transition: background 0.1s;
-    -webkit-transition: background 0.1s;
-    -moz-transition: background 0.1s;
+    background: #79858C;
 }
 .social li a {
-    color: #3E7A8C;
-
-}
-.social li:hover a {
-    color: #fff;
-}
-.social li a, .social li:hover a {
-    transition: color 0.1s;
-    -webkit-transition: color 0.1s;
-    -moz-transition: color 0.1s;
+    color: #2D3B48;
 }
 footer .hl-btn-default {
     color: #fff;
@@ -1322,6 +1413,24 @@ table {
     background-color: #9B59B6;
 }
 
+/* Color utilities (new theme) */
+.bg-dark-blue {
+    background:#2D3B48;
+    color:#fff;
+}
+.bg-light-blue {
+    background:#79858C;
+}
+.bg-light-tan {
+    background:#EBEBE3;
+}
+.bg-dark-tan {
+    background:#D3DAC8;
+}
+.bg-dark-green {
+    background:#A8CD5B;
+}
+
 /* ===== Scroll to Top ===== */
 
 .scrolltotop {
@@ -1555,11 +1664,7 @@ table {
 }
 
 .sign-up-box {
-    padding: 1em;
-    margin-top: 230px;
-    background: #515151;
-    background: rgba(0, 0, 0, 0.65);
-    border-radius: 10px;
+    padding:2em;
 }
 .sign-up-box .input-group{
     display: block;
@@ -1572,8 +1677,8 @@ table {
 }
 
 .btn {
-    background-color:#49c3ab;
-    border-color:#49c3ab;
+    background-color:#A8CD5B;
+    border-color:#A8CD5B;
 }
 
 .btn-info {
@@ -1599,7 +1704,7 @@ table {
 }
 
 .divider-bar {
-    background: #f5f5f5;
+/*  background: #f5f5f5;*/
     border-bottom: 1px solid #dedede;
     padding: 5px 0;
 }
@@ -1607,9 +1712,9 @@ table {
 .submitted-message {
     color: #00B4FF;
 }
-i.fa {
+/*i.fa {
     padding-right: 5px;
-}
+}*/
 .main_content {
     padding-top: 60px;
 }
@@ -1621,7 +1726,6 @@ i.fa {
 }
 
 .page-tip #messages .alert{
-    text-align:center;
     margin-top:15px;
 }
 

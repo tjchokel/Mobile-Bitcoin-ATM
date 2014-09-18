@@ -6,92 +6,145 @@
 {% block title %}{% trans "Your Free Bitcoin ATM App" %}{% endblock title %}
 
 {% block content %}
-    <!-- <div class="container"> -->
-<div id="wrap" style="position:relative;">
+
+{# Showcase section #}
+<div id="wrap" class="container-fluid bg-dark-blue" style="position:relative;">
+
+  <div class="container" style="position:relative;">
+    <div id="mapWrap"></div>
+  </div>
+
+  <div class="container text-center">
+    <div class="foreground">
+
+      <h1 class="tagline">{% trans "A Bitcoin ATM That Runs on Your Phone." %}</h1>
+      <h4>{% trans "Turn Your Store Into The Neighborhood Bitcoin Trading Post" %}</h4>
+      
+      <p class="sign-up-box">
+        <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+{% include "_play_video_modal.html" %}
+
+{# What is CoinSafe section #}
+<div class="container-fluid bg-light-tan home-section what-is-coinsafe">
+
+  <div class="container">
+    <h3 class="section-title">{% trans "What is CoinSafe?" %}</h3>
+  </div>
+
   <div class="container">
     <div class="row">
-      <div class="col-md-5 col-sm-5">
-        <h1 class="tagline">{% trans "Turn Your Phone Into a Bitcoin ATM" %}</h1>
+      <div class="col-sm-6">
+        <p>
+          <a href="javascript:void(0);" onclick="$('#play-video-modal').modal();" title="{% trans "Play Video" %}">
+            <img class="img-responsive img-featurette" src="{% static "img/videoplaceholder.jpg" %}" alt="{% trans "Play Video" %}">
+          </a>
+        </p>
       </div>
-      <div class="col-sm-4 col-sm-offset-3 sign-up-box">
-        <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg" style="padding-right: 5px;padding-left:5px;width: 100%;">{% trans "List Your Business for Free" %}</a>
+      <div class="col-sm-6 featurette-1">
+          <h2>{% trans "A Network Of Bitcoin Exchanges" %}</h2>
+          <p>{% trans "CoinSafe makes it easy for merchants around the world to buy and sell bitcoin at their store locations. With our intuitive mobile software and exchange partnerships, we help local businesses attract new customers by offering their own Bitcoin ATM service." %}</p>
       </div>
-      {% include "_play_video_modal.html" %}
     </div>
   </div>
-  <a style="cursor: pointer;position:absolute;top:50%;left:50%;margin-top:-18px;margin-left:-104px;" onclick="$('#play-video-modal').modal();">
-    <img src="{%static "img/play-button.png" %}"/>
-  </a>
-  <a style="cursor: pointer;" onclick="$('#play-video-modal').modal();">
-    <p class="text-center" style="color:black;position:absolute;top:50%;left:50%;margin-top:70px;margin-left:-62px;font-weight:normal;margin-bottom: 20px;font-size: 21px;line-height: 1.4;">
-      {% trans "Watch Video" %}
-    </p>
-  </a>
-</div>
-<div class="divider-bar">
+
+  <hr class="featurette-break">
+
   <div class="container">
-    <h3 class="green-color" style="text-align:center;">{% trans "Become The Neighborhood Bitcoin Trading Post" %}</h3>
-    <p class="lead text-center">
-      {% blocktrans %}
-        CoinSafe makes it easy for merchants around the world to buy and sell bitcoin at their store locations.
-        With our easy to use mobile software and exchange partnerships, you can make money and attract new customers to your local business.
-      {% endblocktrans%}
-    </p>
-  </div>
-</div>
+    <div class="row">
+      
+      <div class="col-sm-6 featurette-2">
+          <h2>{% trans "The Easiest Way to Buy and Sell Bitcoin" %}</h2>
+          <p>{% trans "Buy and sell bitcoin for cash instantly in the comfort of your local neighborhood store - no more messaging with strangers, linking bank accounts, or long waiting periods." %}</p>
+      </div>
 
-
-<div id="map_wrapper" style="height: 350px;">
-    <div id="map_canvas" class="mapping" style="width: 100%; height: 100%;"></div>
-</div>
-
-
-<!-- <div class="row" style="">
-  <div class="col-lg-6 col-md-6" style="border:1px; border-color:#2a3b48; border-style: solid;"> 
-    <img src="{%static "img/shop2.png" %}" width="100%" height="100%" style="opacity:0.3;"/>
-    <div id="merchant-text" style="position:absolute;width:100%;bottom:55%;">
-      <h2 style="text-align:center;"> Businesses</h2>
-      <br/>
-      <ul style="padding-left:25%;">
-        <li><h4>Set Your Own Prices</h4></li>
-        <li><h4>Attract New Customers</h4></li>
-        <li><h4>Simple to Use</h4></li>
-      </ul>
+      <div class="col-sm-6 text-center">
+        <p><img class="img-responsive img-featurette" src="{% static "img/exchange.png" %}" alt="Convert cash into bitcoin and bitcoin into cash"></p>
+      </div>
     </div>
   </div>
-  <div class="col-lg-6 col-md-6" style="border:1px; border-left:0px; border-color:#2a3b48; border-style: solid;"> 
-    <img src="{%static "img/money2.png" %}" width="100%" height="100%" style="opacity:0.3;"/>
-  </div>
-</div> -->
 
+  <hr class="featurette-break">
 
-<div class="divider-bar">
   <div class="container">
-    <p class="lead text-center" style="padding-top:20px;">
-      {% blocktrans %}
-        "Now every physical store in the world can become a Bitcoin ATM with no new hardware"
-      {% endblocktrans%}
-      <br/>
-      -Erik Voorhees, Serial entrepreneur and Bitcoin advocate
-    </p>
-    <br/>
-    <a href="{% url 'press' %}">
-      <div class="row">
-        <div class="col-md-4">
-          <img src="{%static "img/press_logos/techcrunch_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block;">
-        </div>
-        <div class="col-md-4">
-          <img src="{%static "img/press_logos/wsj_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block;">
-        </div>
-        <div class="col-md-4">
-          <img src="{%static "img/press_logos/coindesk_homepage.png" %}" style="margin-left: auto; margin-right: auto; display: block; margin-top:20px;">
-        </div>
+    <div class="row">
+
+      <div class="col-sm-6">
+        <p><img class="img-responsive img-featurette" src="{% static "img/devices.png" %}" alt="CoinSafe works on any internet-connected device"></p>
       </div>
-    </a>
-    <br/><br/><br/>
+
+      <div class="col-sm-6 featurette-3">
+          <h2>{% trans "An App that Makes Selling Bitcoin as Simple as Selling Coffee" %}</h2>
+          <p>{% trans "Our easy-to-use software requires no special knowledge or hardware to operate, and supports over 160 currencies. Simply sign up, set your prices, and rest easy knowing you will earn a small profit on every transaction." %}</p>
+      </div>
+  
+    </div>
+  </div>
+
+</div>
+
+
+{# Map section #}
+<div class="container-fluid home-section">
+  <div class="container">
+    <h3 class="section-title">{% trans "Find a Merchant Near You" %}</h3>
+ 
+    <div id="map_wrapper" style="height: 350px;margin-bottom:36px;">
+        <div id="map_canvas" class="mapping" style="width: 100%; height: 100%;"></div>
+    </div>
+
+    <p class="text-center lead">
+      {% trans "Can't Find a Merchant in Your Area?" %}
+      <a href="{% url 'register_customer' %}" class="btn btn-primary btn-lg">{% trans "Get Notified When One Is Available" %}</a>
+    </p>
 
   </div>
 </div>
+
+
+{# Press section #}
+<div class="container-fluid home-section bg-light-tan">
+  <div class="container">
+  
+    <div class="row">
+      <div class="col-sm-4 text-center">
+        <a href="{% url 'press' %}"> 
+          <img src="{%static "img/press_logos/techcrunch_homepage.png" %}" class="press-logo img-responsive">
+        </a>
+      </div>
+      <div class="col-sm-4 text-center">
+        <a href="{% url 'press' %}">
+         <img src="{%static "img/press_logos/wsj_homepage.png" %}" class="press-logo img-responsive">
+        </a>
+      </div>
+      <div class="col-sm-4 text-center">
+        <a href="{% url 'press' %}">
+          <img src="{%static "img/press_logos/coindesk_homepage.png" %}" class="press-logo img-responsive" style="margin-top:30px;">
+        </a>
+      </div>
+    </div>
+
+    <hr class="featurette-break">
+
+    <div class="testimonials">
+      <p class="text-center quote">
+        <q>{% trans "Now every physical store in the world can become a Bitcoin ATM with no new hardware" %}</q>
+      </p>
+      <p class="lead text-right">
+        <span class="quote-credit">-Erik Voorhees,</span><br> 
+        Serial entrepreneur and Bitcoin advocate
+      </p>
+    </div>
+
+  </div>
+</div>
+
 {% endblock content %}
 {% block static_page_footer %}
   {% include "partials/_static_page_footer.html" %}
@@ -188,4 +241,6 @@
     });
 
   </script>
+
+  <script src="{% static "js/dotmap.js" %}"></script>
 {% endblock %}

@@ -1253,6 +1253,9 @@ li.account p{
 .signup .popover {
     min-width: 200px;
 }
+.ui-autocomplete-loading {
+    background: white url("../img/ui-anim_basic_16x16.gif") right 1em center no-repeat;
+}
 
 /* ===== Site search ===== */
 

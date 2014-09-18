@@ -252,10 +252,7 @@
       document.body.appendChild(script);
 
       $.getJSON('https://freegeoip.net/json/', function(data) {
-          var response = data;
-          console.log(data);
-          var country3 = country2_to_country3[response["country_code"]];
-          console.log('after');
+          var country3 = country2_to_country3[data["country_code"]];
           $('#id_country').val(country3);
       });
 
@@ -267,7 +264,6 @@
               var autocomplete_url = "city-autocomplete/"+request.term;
               autocomplete_url += "/";
               autocomplete_url += country2;
-              console.log(autocomplete_url);
               $.ajax({
                 url: autocomplete_url,
                 data: {
@@ -275,9 +271,6 @@
                 },
                 success: function( data ) {
                   var parsed = JSON.parse(data['cities']);
-                  console.log('after');
-                  console.log(parsed);
-                  
                   response( parsed );
                 }
               });

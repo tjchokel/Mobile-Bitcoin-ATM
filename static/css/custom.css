@@ -203,17 +203,6 @@ hr {
     background:transparent url('../img/dotmap.png') center no-repeat;
 }
 
-/* Video play button */
-.video-play-btn {
-    cursor:pointer;
-    background:transparent url("../img/play-button.png") center no-repeat;
-    display:block;
-    width:216px;
-    height:125px;
-    padding-top:100px;
-    margin:0 auto;
-}
-
 /* Home page sections */
 .home-section {
     padding:36px 0 16px;
@@ -242,6 +231,9 @@ hr.featurette-break {
 }
 .what-is-coinsafe .feature-list li {
     margin:1em 0;
+}
+.img-featurette {
+    margin:20px auto;
 }
 
 /* Testimonial section */

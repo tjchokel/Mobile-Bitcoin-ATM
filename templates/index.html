@@ -23,12 +23,13 @@
       <p class="sign-up-box">
         <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
       </p>
-      
+
     </div>
   </div>
 
 </div>
 
+{% include "_play_video_modal.html" %}
 
 {# What is CoinSafe section #}
 <div class="container-fluid bg-light-tan home-section what-is-coinsafe">
@@ -40,17 +41,18 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6">
-        <p><img class="img-responsive" src="{% static "img/videoscrn.jpg" %}" alt="Generic placeholder image" style="margin:0 auto;cursor:pointer;" onclick="$('#play-video-modal').modal();"></p>
+        <p>
+          <a href="javascript:void(0);" onclick="$('#play-video-modal').modal();" title="{% trans "Play Video" %}">
+            <img class="img-responsive img-featurette" src="{% static "img/videoplaceholder.jpg" %}" alt="{% trans "Play Video" %}">
+          </a>
+        </p>
       </div>
       <div class="col-md-6">
           <h3 style="margin-top:70px;">{% trans "A Network Of Bitcoin Exchanges" %}</h3>
           <p>{% trans "CoinSafe makes it easy for merchants around the world to buy and sell bitcoin at their store locations. With our intuitive mobile software and exchange partnerships, we help local businesses attract new customers by offering their own Bitcoin ATM service." %}</p>
-<!--           <p><button type="button" class="btn btn-primary btn-md">Watch the Video</button></p>
- -->      </div>
+      </div>
     </div>
   </div>
-
-  {% include "_play_video_modal.html" %}
 
   <hr class="featurette-break">
 
@@ -58,12 +60,12 @@
     <div class="row">
       
       <div class="col-md-6">
-        <h2 style="margin-top:70px;">{% trans "The Easiest Way to Buy and Sell Bitcoin" %}</h2>
+        <h2 style="margin-top:130px;">{% trans "The Easiest Way to Buy and Sell Bitcoin" %}</h2>
           <p>{% trans "Buy and sell bitcoin for cash instantly in the comfort of your local neighborhood store - no more messaging with strangers, linking bank accounts, or long waiting periods." %}</p>
       </div>
 
-      <div class="col-md-6">
-        <p><img class="img-responsive" src="{% static "img/exchange.png" %}" alt="Generic placeholder image" style="margin:0 auto;"></p>
+      <div class="col-md-6 text-center">
+        <p><img class="img-responsive img-featurette" src="{% static "img/exchange.png" %}" alt="Convert cash into bitcoin and bitcoin into cash"></p>
       </div>
     </div>
   </div>
@@ -74,7 +76,7 @@
     <div class="row">
 
       <div class="col-md-6">
-        <p><img class="img-responsive" src="{% static "img/devices.png" %}" alt="Generic placeholder image" style="margin:0 auto;"></p>
+        <p><img class="img-responsive img-featurette" src="{% static "img/devices.png" %}" alt="CoinSafe works on any internet-connected device"></p>
       </div>
 
       <div class="col-md-6">

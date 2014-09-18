@@ -49,6 +49,7 @@ class Merchant(models.Model):
     longitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True, db_index=True)
     latitude_position = models.DecimalField(max_digits=18, decimal_places=14, blank=True, null=True, db_index=True)
     ignored_at = models.DateTimeField(blank=True, null=True, db_index=True)
+    syndicated_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.business_name)

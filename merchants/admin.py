@@ -119,6 +119,48 @@ class NeedsCoordinatesFilter(admin.SimpleListFilter):
             return queryset.filter(ignored_at__isnull=False)
 
 
+# https://docs.djangoproject.com/en/1.6/ref/contrib/admin/#django.contrib.admin.ModelAdmin.list_filter
+class NeedsSyndicationFilter(admin.SimpleListFilter):
+    # Human-readable title which will be displayed in the
+    # right admin sidebar just above the filter options.
+    title = 'Needing Syndication'
+
+    # Parameter for the filter that will be used in the URL query.
+    parameter_name = 'syndication'
+
+    def lookups(self, request, model_admin):
+        """
+        Returns a list of tuples. The first element in each
+        tuple is the coded value for the option that will
+        appear in the URL query. The second element is the
+        human-readable name for the option that will appear
+        in the right sidebar.
+        """
+        return (
+            ('syndicated', 'Syndicated'),
+            ('ready_to_syndicate', 'Ready to Syndicate'),
+            ('ignore', 'Ignore'),
+        )
+
+    def queryset(self, request, queryset):
+        """
+        Returns the filtered queryset based on the value
+        provided in the query string and retrievable via
+        `self.value()`.
+        """
+        if self.value() == 'syndicated':
+            return queryset.filter(syndicated_at__isnull=False)
+        if self.value() == 'ready_to_syndicate':
+            return queryset.filter(ignored_at=None,
+                    syndicated_at=None,
+                    longitude_position__isnull=False,
+                    merchantwebsite__deleted_at=None,
+                    merchantdoc__deleted_at=None,
+                    ).distinct()
+        if self.value() == 'ignore':
+            return queryset.filter(ignored_at__isnull=False)
+
+
 def set_latitude_longitude(modeladmin, request, queryset):
     for obj in queryset:
         obj.set_latitude_longitude()
@@ -209,10 +251,18 @@ class MerchantAdmin(admin.ModelAdmin):
         'latitude_position',
         'longitude_position',
         'ignored_at',
+        'syndicated_at',
     )
     raw_id_fields = ('user', )
     search_fields = ['user__email', 'user__full_name', 'phone_num', 'business_name', ]
-    list_filter = (NeedsCoordinatesFilter, CredentialFilter, IgnoredAtFilter, 'currency_code', 'country', )
+    list_filter = (
+            NeedsCoordinatesFilter,
+            NeedsSyndicationFilter,
+            CredentialFilter,
+            IgnoredAtFilter,
+            'currency_code',
+            'country',
+            )
 
     class Meta:
         model = Merchant

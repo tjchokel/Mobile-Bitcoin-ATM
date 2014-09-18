@@ -131,14 +131,15 @@ else:
     BASE_URL = 'http://%s' % SITE_DOMAIN
 
 
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
 IS_PRODUCTION = (SITE_DOMAIN == PRODUCTION_DOMAIN)
 
 if IS_PRODUCTION:
     EMAIL_DEV_PREFIX = False
+    DEBUG_TOOLBAR_PATCH_SETTINGS = False
 else:
     EMAIL_DEV_PREFIX = True
     # Enable debug toolbar on local and staging
+    DEBUG_TOOLBAR_PATCH_SETTINGS = True
     MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware',) + MIDDLEWARE_CLASSES
     INSTALLED_APPS += ('debug_toolbar', )
 

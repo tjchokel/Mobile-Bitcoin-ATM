@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
@@ -19,6 +20,8 @@ from emails.trigger import send_and_log
 from datetime import timedelta
 
 from utils import SATOSHIS_PER_BTC
+import requests
+import json
 
 
 @render_to('index.html')
@@ -32,8 +35,29 @@ def home(request):
             else:
                 return HttpResponseRedirect(reverse_lazy('register_router'))
     merchants_for_map = Merchant.objects.filter(longitude_position__isnull=False, latitude_position__isnull=False)
+    form = CustomerRegistrationForm()
+    if request.method == 'POST':
+        form = CustomerRegistrationForm(data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            country = form.cleaned_data['country']
+            city = form.cleaned_data['city']
+            FutureShopper.objects.create(
+                    email=form.cleaned_data['email'],
+                    city=form.cleaned_data['city'],
+                    country=form.cleaned_data['country'],
+            )
+            msg = _("Thanks! We'll email you when new businesses near you sign up.")
+            messages.success(request, msg, extra_tags='safe')
+            return HttpResponseRedirect(reverse_lazy('home'))
+        else:
+            msg = _("There was an error with your submission. Please try again.")
+            messages.warning(request, msg, extra_tags='safe')
 
-    return {'merchants_for_map': merchants_for_map}
+    return {
+            'merchants_for_map': merchants_for_map,
+            'form': form,
+           }
 
 
 @render_to('register_customer.html')
@@ -47,11 +71,13 @@ def register_customer(request):
                     email=form.cleaned_data['email'],
                     city=form.cleaned_data['city'],
                     country=form.cleaned_data['country'],
-                    intention=form.cleaned_data['intention'],
             )
             msg = _("Thanks! We'll email you when new businesses near you sign up.")
             messages.success(request, msg, extra_tags='safe')
             return HttpResponseRedirect(reverse_lazy('home'))
+        else:
+            msg = _("There was an error with your submission. Please try again.")
+            messages.warning(request, msg, extra_tags='safe')
 
     return {'form': form}
 
@@ -250,3 +276,15 @@ def set_new_password(request):
                 return HttpResponseRedirect(reverse_lazy('customer_dashboard'))
 
     return {'form': form}
+
+
+def city_autocomplete(request, city, country=None):
+    " Returns AJAX payload of cities matching search term"
+    AUTOCOMPLETE_URL = "http://gd.geobytes.com/AutoCompleteCity"
+    params = {'q': city}
+    if country:
+        params['filter'] = country
+    r = requests.get(AUTOCOMPLETE_URL, params=params)
+    json_dict = {'cities': r.content}
+    json_response = json.dumps(json_dict)
+    return HttpResponse(json_response, content_type='application/json')

@@ -147,7 +147,6 @@ ROOT_URLCONF = 'bitcash.urls'
 
 WSGI_APPLICATION = 'bitcash.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 

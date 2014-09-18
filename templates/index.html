@@ -102,8 +102,19 @@
 
     <p class="text-center lead">
       {% trans "Can't Find a Merchant in Your Area?" %}
-      <a href="{% url 'register_customer' %}" class="btn btn-primary btn-lg">{% trans "Get Notified When One Is Available" %}</a>
+      <a class="btn btn-primary btn-lg" data-toggle="collapse" data-target="#customer-signup-form">{% trans "Get Notified When One Is Available" %}</a>
     </p>
+
+    <div id="customer-signup-form" class="collapse" style="padding-right:10%; padding-left:10%;">
+      <form class="form-horizontal" method="post" action="{% url "home" %}" >
+        {% load crispy_forms_tags %}
+        {{ form|crispy }}
+        {% csrf_token %}
+        <div class="button-wrapper">
+          <button type="submit" class="btn btn-primary btn-lg">{% trans "Submit" %}</button>
+        </div>
+      </form>
+    </div>
 
   </div>
 </div>
@@ -239,7 +250,54 @@
       var script = document.createElement('script');
       script.src = "https://maps.googleapis.com/maps/api/js?sensor=false&callback=initializeMap";
       document.body.appendChild(script);
+
+      $.getJSON('https://freegeoip.net/json/', function(data) {
+          var response = data;
+          console.log(data);
+          var country3 = country2_to_country3[response["country_code"]];
+          console.log('after');
+          $('#id_country').val(country3);
+      });
+
+      jQuery(function($) {
+          $("#id_city").autocomplete({
+            source: function( request, response ) {
+              var country3 = $('#id_country').val();
+              var country2 = country3_to_country2[country3];
+              var autocomplete_url = "city-autocomplete/"+request.term;
+              autocomplete_url += "/";
+              autocomplete_url += country2;
+              console.log(autocomplete_url);
+              $.ajax({
+                url: autocomplete_url,
+                data: {
+                  q: request.term
+                },
+                success: function( data ) {
+                  var parsed = JSON.parse(data['cities']);
+                  console.log('after');
+                  console.log(parsed);
+                  
+                  response( parsed );
+                }
+              });
+            },
+            minLength: 3,
+            // select: function( event, ui ) {
+            //   log( ui.item ?
+            //     "Selected: " + ui.item.label :
+            //     "Nothing selected, input was " + this.value);
+            // },
+            // open: function() {
+            //   $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            // },
+            // close: function() {
+            //   $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            // }
+          });
+      });
     });
+  
 
   </script>
 

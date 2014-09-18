@@ -249,6 +249,9 @@ hr.featurette-break {
 }
 
 /* Testimonial section */
+.press-logo {
+    margin:0 auto;
+}
 .testimonials .quote {
     padding:16px 1em 0;
     font-size:2.6em;

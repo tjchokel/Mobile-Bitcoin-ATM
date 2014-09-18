@@ -100,8 +100,9 @@
     </div>
 
     <p class="text-center lead row">
-      {% trans "Can't Find a Merchant in Your Area?" %}
-      <a class="btn btn-primary btn-lg" data-toggle="collapse" data-target="#customer-signup-form">{% trans "Get Notified" %}</a>
+      {% trans "Can't Find a Merchant in Your Area? Get Notified When One Is Available." %}<br>
+      <a style="cursor: pointer;" data-toggle="collapse" data-target="#customer-signup-form" class="btn btn-primary btn-lg">
+      <i class="fa fa-plus-circle"></i> {% trans "Sign Up" %}</a>
     </p>
 
     <div id="customer-signup-form" class="collapse col-md-6 col-md-offset-3">
@@ -260,13 +261,15 @@
             source: function( request, response ) {
               var country3 = $('#id_country').val();
               var country2 = country3_to_country2[country3];
-              var autocomplete_url = "city-autocomplete/"+request.term;
-              autocomplete_url += "/";
-              autocomplete_url += country2;
+              var autocomplete_url = "city-autocomplete/";
+              // var autocomplete_url = "city-autocomplete/"+request.term;
+              // autocomplete_url += "/";
+              // autocomplete_url += country2;
               $.ajax({
                 url: autocomplete_url,
                 data: {
-                  q: request.term
+                  q: request.term,
+                  filter: country2
                 },
                 success: function( data ) {
                   var parsed = JSON.parse(data['cities']);

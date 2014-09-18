@@ -278,9 +278,11 @@ def set_new_password(request):
     return {'form': form}
 
 
-def city_autocomplete(request, city, country=None):
+def city_autocomplete(request):
     " Returns AJAX payload of cities matching search term"
     AUTOCOMPLETE_URL = "http://gd.geobytes.com/AutoCompleteCity"
+    city = request.GET.get('q')
+    country = request.GET.get('filter')
     params = {'q': city}
     if country:
         params['filter'] = country

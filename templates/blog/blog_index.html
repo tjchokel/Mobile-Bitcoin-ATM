@@ -25,9 +25,9 @@
       {% for post in posts %}
         <div class="blog-summary">
           {% if forloop.first %}
-            <h4 class="new-story"><a href="{{ post.get_uri }}">{{post.title|safe}}</a></h4>
+            <h3 class="new-story"><a href="{{ post.get_uri }}">{{post.title|safe}}</a></h3>
           {% else %}
-            <h4><a href="{{ post.get_uri }}">{{post.title|safe}}</a></h4>
+            <h3><a href="{{ post.get_uri }}">{{post.title|safe}}</a></h3>
           {% endif %}
           <ul class="text-muted list-inline" style="margin:0;">
             <!-- <li><i class="fa fa-user"></i> <a href="profile.html">Administrator</a></li> -->

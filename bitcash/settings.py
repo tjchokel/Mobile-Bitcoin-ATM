@@ -119,6 +119,8 @@ PRODUCTION_DOMAIN = 'www.coinsafe.com'
 STAGING_DOMAIN = 'bitcashstaging.herokuapp.com'
 SITE_DOMAIN = os.getenv('SITE_DOMAIN', PRODUCTION_DOMAIN)
 
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
 # SSL and BASE_URL settings for Production, Staging and Local:
 if SITE_DOMAIN in (PRODUCTION_DOMAIN, STAGING_DOMAIN):
     BASE_URL = 'https://%s' % SITE_DOMAIN
@@ -128,6 +130,8 @@ if SITE_DOMAIN in (PRODUCTION_DOMAIN, STAGING_DOMAIN):
     CSRF_COOKIE_SECURE = True
     MIDDLEWARE_CLASSES += ('bitcash.middleware.SSLMiddleware',)
 else:
+    # FIXME: this should work on staging too, but I can't get it to work with gunicorn
+    DEBUG_TOOLBAR_PATCH_SETTINGS = True
     BASE_URL = 'http://%s' % SITE_DOMAIN
 
 
@@ -135,11 +139,9 @@ IS_PRODUCTION = (SITE_DOMAIN == PRODUCTION_DOMAIN)
 
 if IS_PRODUCTION:
     EMAIL_DEV_PREFIX = False
-    DEBUG_TOOLBAR_PATCH_SETTINGS = False
 else:
     EMAIL_DEV_PREFIX = True
     # Enable debug toolbar on local and staging
-    DEBUG_TOOLBAR_PATCH_SETTINGS = True
     MIDDLEWARE_CLASSES = ('debug_toolbar.middleware.DebugToolbarMiddleware',) + MIDDLEWARE_CLASSES
     INSTALLED_APPS += ('debug_toolbar', )
 

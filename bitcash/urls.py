@@ -1,6 +1,8 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
+from bitcash.settings import IS_PRODUCTION
+
 from django.contrib import admin
 
 admin.autodiscover()
@@ -76,3 +78,9 @@ urlpatterns = patterns('',
     url(r'^(?P<uri>[-\w]+)/$', 'profiles.views.merchant_site', name='merchant_site'),
     url(r'', include('two_factor.urls', 'two_factor')),
 )
+
+if not IS_PRODUCTION:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )

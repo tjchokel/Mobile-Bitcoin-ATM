@@ -5,6 +5,8 @@ from bitcash.settings import BASE_URL
 
 from utils import uri_to_url
 
+import re
+
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
@@ -22,6 +24,14 @@ class BlogPost(models.Model):
 
     def get_url(self):
         return uri_to_url(BASE_URL, self.get_uri())
+
+    def get_first_paragraph(self):
+        " Used in /blog "
+        paragraphs = re.findall(r'(<p>.*?</p>)', self.body, re.DOTALL)
+        if paragraphs:
+            return paragraphs[0]
+        else:
+            return self.body
 
 
 class Category(models.Model):

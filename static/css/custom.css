@@ -7,6 +7,7 @@ Last change:    04/01/2014
 
 h1, h2, h3, h4, h5, h6, .rale {
     font-family: "Raleway",Helvetica,Arial,sans-serif;
+    font-weight: 300;
 }
 h1.hl, h2.hl, h3.hl, h4.hl, h5.hl, h6.hl {
     color: #515151;

@@ -80,6 +80,7 @@ class FutureShopper(models.Model):
     country = models.CharField(max_length=256, blank=False, null=False, db_index=True, choices=ALL_COUNTRIES)
     intention = models.CharField(max_length=256, blank=True, null=True, db_index=True)
     message = models.CharField(max_length=5000, blank=True, null=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
         return '%s: %s' % (self.id, self.email)

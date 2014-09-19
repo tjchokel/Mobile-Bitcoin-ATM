@@ -30,8 +30,9 @@ admin.site.register(LoggedLogin, LoggedLoginAdmin)
 
 class FutureShopperAdmin(ReadOnlyModelAdmin):
     list_display = (
-        'id', 'email', 'city', 'country', 'intention'
+        'id', 'email', 'city', 'country', 'intention', 'subscribed_at',
     )
+    list_filter = ('intention', 'country', )
 
     class Meta:
         model = FutureShopper

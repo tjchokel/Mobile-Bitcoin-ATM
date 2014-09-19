@@ -57,7 +57,7 @@ var maptrix = [
 	[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
 ];
 
-var map = {
+var dotMap = {
 	config: {
 		colors: ["#3c4a55", "#6b8452"], //[dot when off, lit up dot]
 		dotSize: 4, //dot radius
@@ -74,33 +74,34 @@ var map = {
 		if(this.supportsSvg()){
 			var i = 0, c = 0; //iterators
 
-			for(y = 0; y < map.config.matrix.length; y++) {
-				for(x = 0; x < map.config.matrix[y].length; x++) {
-					var spot = map.config.matrix[y][x];
-					var cx = x*(map.config.dotSize*2+map.config.margin*2)+map.config.dotSize;
-					var cy = y*(map.config.dotSize*2+map.config.margin*2)+map.config.dotSize;
+			for(y = 0; y < dotMap.config.matrix.length; y++) {
+				for(x = 0; x < dotMap.config.matrix[y].length; x++) {
+					var spot = dotMap.config.matrix[y][x];
+					var cx = x*(dotMap.config.dotSize*2+dotMap.config.margin*2)+dotMap.config.dotSize;
+					var cy = y*(dotMap.config.dotSize*2+dotMap.config.margin*2)+dotMap.config.dotSize;
 					
 					if(spot!==0){
 						var color = this.config.colors[0];
 					
 						if(spot==2){ 
-							//color = this.config.colors[Math.floor(Math.random()*2)]; //Flip a coin to see if a city is lit up to start with
-							map.cities[c] = i;
+							dotMap.cities[c] = i;
 							c++;
 						}
 						
-						map.finalMap[i] = '\<circle fill="'+color+'" id="dot'+i+'" cx="'+cx+'" cy="'+cy+'" r="'+map.config.dotSize+'"/>';
+						dotMap.finalMap[i] = '\<circle fill="'+color+'" id="dot'+i+'" cx="'+cx+'" cy="'+cy+'" r="'+dotMap.config.dotSize+'"/>';
 						i++;
 					}
 				}
 			}
-			
-			//Join our circles and put them in the #mapWrap with the proper svg wrapper
-			mapEl.innerHTML = '\<svg version="1.1" id="map-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"  viewBox="0, 0, 1178, 558" preserveAspectRatio="xMidYMid slice" \>\<g\>'+map.finalMap.join("")+'\</g\>\</svg\>';
+
+			// viewBox="0, 0, 1178, 558" preserveAspectRatio="xMidYMid slice"
+			mapEl.innerHTML = '\<svg version="1.1" id="map-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0, 0, 1178, 558" preserveAspectRatio="xMidYMid slice" xml:space="preserve" \>\<g\>'+dotMap.finalMap.join("")+'\</g\>\</svg\>';
 			mapEl.className = mapEl.className + " svg-map";
 
+			this.resize();
+
 			//Call the citylight function at the frequency in the config
-			setInterval(function(){map.citylight()}, this.config.freq);
+			setInterval(function(){dotMap.citylight()}, this.config.freq);
 		} else {
 			mapEl.className = mapEl.className + " no-svg-map";
 		}
@@ -122,7 +123,15 @@ var map = {
 	supportsSvg: function(){
 		//http://voormedia.com/blog/2012/10/displaying-and-detecting-support-for-svg-images
 	    return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1");
+	},
+	resize: function(){
+		$('#map-svg').width($(".container").outerWidth());
+		$('#map-svg').height($("#mapForeground").outerHeight());
 	}
 }
 
-map.init();
+dotMap.init();
+
+$(window).resize(function(){
+	dotMap.resize();
+});

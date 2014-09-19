@@ -5,6 +5,8 @@
 {% block title %}{% trans "Profile" %}{% endblock title %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap-formhelpers.css" %}" />
+
 <div class="container">
     <!-- Profile Menu -->
   {% with current_tab='profile' %}
@@ -124,7 +126,7 @@
                 {% endif %}
               </tr>
               <tr>
-                <td class="text-muted">{% trans "Phone Number" %}</td>
+                <td class="text-muted">{% trans " " %}</td>
                 {% if merchant.phone_num %}
                   <td align="right">
                     {{merchant.phone_num.as_international}}

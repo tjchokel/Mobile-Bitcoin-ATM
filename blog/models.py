@@ -27,9 +27,9 @@ class BlogPost(models.Model):
 
     def get_truncated_preview(self):
         " Used in /blog "
-        paragraphs = re.findall(r'<p>(.*?)</p>', self.body, re.DOTALL)
+        paragraphs = re.findall(r'(<p>.*?</p>)', self.body, re.DOTALL)
         if paragraphs:
-            return '<p>%s</p>' % paragraphs[0]
+            return paragraphs[0]
         else:
             return self.body
 

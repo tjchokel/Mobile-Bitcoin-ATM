@@ -60,28 +60,6 @@ def home(request):
            }
 
 
-@render_to('register_customer.html')
-def register_customer(request):
-    form = CustomerRegistrationForm()
-    if request.method == 'POST':
-        form = CustomerRegistrationForm(data=request.POST)
-        if form.is_valid():
-            # create customer
-            FutureShopper.objects.create(
-                    email=form.cleaned_data['email'],
-                    city=form.cleaned_data['city'],
-                    country=form.cleaned_data['country'],
-            )
-            msg = _("Thanks! We'll email you when new businesses near you sign up.")
-            messages.success(request, msg, extra_tags='safe')
-            return HttpResponseRedirect(reverse_lazy('home'))
-        else:
-            msg = _("There was an error with your submission. Please try again.")
-            messages.warning(request, msg, extra_tags='safe')
-
-    return {'form': form}
-
-
 @render_to('fixed_pages/contact.html')
 def contact(request):
     if request.user.is_authenticated():

@@ -36,16 +36,7 @@
              <button type="submit" class="btn btn-primary btn-lg">{% trans "Create Account" %}</button>
            </div>
        </form>
-
        <br />
-       <p class="lead">
-         {% url 'register_customer' as rc_url %}
-         {% blocktrans %}
-           To register as an individual customer (not a business) please
-           <a href="{{ rc_url }}">click here</a>.
-         {% endblocktrans %}
-       </p>
-
   </div>
 </div>
 
@@ -58,13 +49,37 @@
 
     <script>
 
-      $(document).ready(function(){
+     $(document).ready(function(){
         $('#id_email').focus();
         $.getJSON('https://freegeoip.net/json/', function(data) {
           var response = data;
           var country3 = country2_to_country3[response.country_code]
           $('#id_country').val(country3);
+          var currency3 = country3_to_currency3[country3];
+          $('#id_currency_code').val(currency3);
         });
+
+        jQuery(function($) {
+          $("#id_business_city").autocomplete({
+            source: function( request, response ) {
+               var country3 = $('#id_country').val();
+               var country2 = country3_to_country2[country3];
+               var autocomplete_url = "/city-autocomplete/";
+               $.ajax({
+                 url: autocomplete_url,
+                 data: {
+                   q: request.term,
+                   filter: country2
+                 },
+                 success: function( data ) {
+                   var parsed = JSON.parse(data['cities']);
+                   response( parsed );
+                 }
+               });
+            },
+            minLength: 3,
+            });
+          });
         
       });
     </script>

@@ -1,8 +1,10 @@
 from django.contrib import admin
 from emails.models import SentEmail
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class SentEmailAdmin(admin.ModelAdmin):
+
+class SentEmailAdmin(ReadOnlyModelAdmin):
     list_display = (
             'id',
             'sent_at',

@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from users.models import AuthUser, FutureShopper, EmailAuthToken, LoggedLogin
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class AuthUserAdmin(admin.ModelAdmin):
+
+class AuthUserAdmin(ReadOnlyModelAdmin):
     list_display = (
         'id', 'first_name', 'last_name', 'email', 'phone_num', 'username'
     )
@@ -14,7 +16,7 @@ class AuthUserAdmin(admin.ModelAdmin):
 admin.site.register(AuthUser, AuthUserAdmin)
 
 
-class LoggedLoginAdmin(admin.ModelAdmin):
+class LoggedLoginAdmin(ReadOnlyModelAdmin):
     list_display = (
         'id', 'login_at', 'auth_user', 'ip_address', 'user_agent',
     )
@@ -26,7 +28,7 @@ class LoggedLoginAdmin(admin.ModelAdmin):
 admin.site.register(LoggedLogin, LoggedLoginAdmin)
 
 
-class FutureShopperAdmin(admin.ModelAdmin):
+class FutureShopperAdmin(ReadOnlyModelAdmin):
     list_display = (
         'id', 'email', 'city', 'country', 'intention'
     )
@@ -37,7 +39,7 @@ class FutureShopperAdmin(admin.ModelAdmin):
 admin.site.register(FutureShopper, FutureShopperAdmin)
 
 
-class EmailAuthTokenAdmin(admin.ModelAdmin):
+class EmailAuthTokenAdmin(ReadOnlyModelAdmin):
     list_display = (
         'id',
         'created_at',

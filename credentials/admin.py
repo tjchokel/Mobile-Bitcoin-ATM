@@ -4,8 +4,10 @@ from credentials.models import (BaseCredential, BaseSellBTC, BaseBalance,
 
 from utils import format_satoshis_with_units
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class BaseCredentialAdmin(admin.ModelAdmin):
+
+class BaseCredentialAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',
@@ -23,7 +25,7 @@ class BaseCredentialAdmin(admin.ModelAdmin):
 admin.site.register(BaseCredential, BaseCredentialAdmin)
 
 
-class BaseBalanceAdmin(admin.ModelAdmin):
+class BaseBalanceAdmin(ReadOnlyModelAdmin):
 
     def satoshis_formatted(self, instance):
         return format_satoshis_with_units(instance.satoshis)
@@ -38,7 +40,7 @@ class BaseBalanceAdmin(admin.ModelAdmin):
 admin.site.register(BaseBalance, BaseBalanceAdmin)
 
 
-class BaseAddressFromCredentialAdmin(admin.ModelAdmin):
+class BaseAddressFromCredentialAdmin(ReadOnlyModelAdmin):
     list_display = (
             'id',
             'created_at',
@@ -54,7 +56,7 @@ class BaseAddressFromCredentialAdmin(admin.ModelAdmin):
 admin.site.register(BaseAddressFromCredential, BaseAddressFromCredentialAdmin)
 
 
-class BaseSellBTCAdmin(admin.ModelAdmin):
+class BaseSellBTCAdmin(ReadOnlyModelAdmin):
 
     def satoshis_formatted(self, instance):
         return format_satoshis_with_units(instance.satoshis)
@@ -77,7 +79,7 @@ class BaseSellBTCAdmin(admin.ModelAdmin):
 admin.site.register(BaseSellBTC, BaseSellBTCAdmin)
 
 
-class BaseSentBTCAdmin(admin.ModelAdmin):
+class BaseSentBTCAdmin(ReadOnlyModelAdmin):
 
     def satoshis_formatted(self, instance):
         return format_satoshis_with_units(instance.satoshis)

@@ -183,15 +183,12 @@
 
     <!-- Static Page Footer -->
     {% block static_page_footer %}{% endblock static_page_footer %}
-    <script src="{% static "js/globals.js" %}"></script>
-    <script src="{% static "js/jquery.js" %}"></script>
-    <script src="{% static "js/jquery-ui.min.js" %}"></script>
-
-    <script src="{% static "js/bootstrap.min.js" %}"></script>
-    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
-    <script src="{% static "js/bootstrap-formhelpers.js" %}"></script><!-- http://vincentlamanna.com/BootstrapFormHelpers/phone/#jquery-plugins -->
-    <script src="{% static "js/custom.js" %}"></script>
-    <script src="{% static "js/autoNumeric.js" %}"></script> <!--https://github.com/BobKnothe/autoNumeric -->
+      <script src="{% static "js/globals.js" %}"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+      <script src="{% static "js/bootstrap.min.js" %}"></script>
+      <script src="{% static "js/custom.js" %}"></script>
+      <script src="{% static "js/autoNumeric.js" %}"></script> <!--https://github.com/BobKnothe/autoNumeric -->
 
     {% block extra_js %}{% endblock extra_js %}
     {% include "partials/ga.html" %}

@@ -10,15 +10,15 @@
 {# Showcase section #}
 <div id="wrap" class="container-fluid bg-dark-blue" style="position:relative;">
 
-  <div class="container" style="position:relative;">
+  <div id="mapOuterWrap">
     <div id="mapWrap"></div>
   </div>
 
   <div class="container text-center">
-    <div class="foreground">
+    <div id="mapForeground" class="foreground">
 
       <h1 class="tagline">{% trans "A Bitcoin ATM That Runs on Your Phone." %}</h1>
-      <h4>{% trans "Turn Your Store Into The Neighborhood Bitcoin Trading Post" %}</h4>
+      <h2>{% trans "Turn Your Store Into The Neighborhood Bitcoin Trading Post" %}</h2>
       
       <p class="sign-up-box">
         <a href="{% url 'register_merchant' %}" class="btn btn-primary btn-lg">{% trans "Sign Up For Free" %}</a>
@@ -81,7 +81,7 @@
 
       <div class="col-sm-6 featurette-3">
           <h2>{% trans "An App that Makes Selling Bitcoin as Simple as Selling Coffee" %}</h2>
-          <p>{% trans "Our easy-to-use software requires no special knowledge or hardware to operate, and supports over 160 currencies. Simply sign up, set your prices, and rest easy knowing you will earn a small profit on every transaction." %}</p>
+          <p>{% trans "Our easy-to-use software requires no special knowledge or hardware to operate, and supports over 160 currencies. Just sign up, set your prices, and earn a small profit with every transaction." %}</p>
       </div>
   
     </div>
@@ -144,7 +144,7 @@
 
     <hr class="featurette-break">
 
-    <div class="testimonials">
+    <div class="testimonials rale">
       <p class="text-center quote">
         <q>{% trans "Now every physical store in the world can become a Bitcoin ATM with no new hardware" %}</q>
       </p>

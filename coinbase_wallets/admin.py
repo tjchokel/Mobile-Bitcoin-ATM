@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from coinbase_wallets.models import CBSCredential, CBSSentBTC, CBSSellBTC
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class CBSCredentialAdmin(admin.ModelAdmin):
+
+class CBSCredentialAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',
@@ -21,7 +23,7 @@ class CBSCredentialAdmin(admin.ModelAdmin):
 admin.site.register(CBSCredential, CBSCredentialAdmin)
 
 
-class CBSSentBTCAdmin(admin.ModelAdmin):
+class CBSSentBTCAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',
@@ -42,7 +44,7 @@ class CBSSentBTCAdmin(admin.ModelAdmin):
 admin.site.register(CBSSentBTC, CBSSentBTCAdmin)
 
 
-class CBSSellBTCAdmin(admin.ModelAdmin):
+class CBSSellBTCAdmin(ReadOnlyModelAdmin):
     list_display = ('id', 'coinbase_code', )
     raw_id_fields = ('credential', )
 

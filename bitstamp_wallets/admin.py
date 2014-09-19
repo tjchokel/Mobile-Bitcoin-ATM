@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from bitstamp_wallets.models import BTSCredential, BTSSentBTC
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class BTSCredentialAdmin(admin.ModelAdmin):
+
+class BTSCredentialAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',
@@ -22,7 +24,7 @@ class BTSCredentialAdmin(admin.ModelAdmin):
 admin.site.register(BTSCredential, BTSCredentialAdmin)
 
 
-class BTSSentBTCAdmin(admin.ModelAdmin):
+class BTSSentBTCAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',

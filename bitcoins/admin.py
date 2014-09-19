@@ -1,10 +1,12 @@
 from django.contrib import admin
 from bitcoins.models import DestinationAddress, ForwardingAddress, BTCTransaction, ShopperBTCPurchase
 
+from bitcash.custom import ReadOnlyModelAdmin
+
 from utils import format_satoshis_with_units
 
 
-class DestinationAddressAdmin(admin.ModelAdmin):
+class DestinationAddressAdmin(ReadOnlyModelAdmin):
     list_display = (
             'id',
             'uploaded_at',
@@ -21,7 +23,7 @@ class DestinationAddressAdmin(admin.ModelAdmin):
 admin.site.register(DestinationAddress, DestinationAddressAdmin)
 
 
-class ForwardingAddressAdmin(admin.ModelAdmin):
+class ForwardingAddressAdmin(ReadOnlyModelAdmin):
     list_display = (
             'id',
             'generated_at',
@@ -42,7 +44,7 @@ class ForwardingAddressAdmin(admin.ModelAdmin):
 admin.site.register(ForwardingAddress, ForwardingAddressAdmin)
 
 
-class BTCTransactionAdmin(admin.ModelAdmin):
+class BTCTransactionAdmin(ReadOnlyModelAdmin):
 
     def satoshis_formatted(self, instance):
         return format_satoshis_with_units(instance.satoshis)
@@ -71,7 +73,7 @@ class BTCTransactionAdmin(admin.ModelAdmin):
 admin.site.register(BTCTransaction, BTCTransactionAdmin)
 
 
-class ShopperBTCPurchaseAdmin(admin.ModelAdmin):
+class ShopperBTCPurchaseAdmin(ReadOnlyModelAdmin):
 
     def satoshis_formatted(self, instance):
         return format_satoshis_with_units(instance.satoshis)

@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from services.models import APICall, WebHook
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class APICallAdmin(admin.ModelAdmin):
+
+class APICallAdmin(ReadOnlyModelAdmin):
     list_display = (
             'id',
             'created_at',
@@ -25,7 +27,7 @@ class APICallAdmin(admin.ModelAdmin):
 admin.site.register(APICall, APICallAdmin)
 
 
-class WebHookAdmin(admin.ModelAdmin):
+class WebHookAdmin(ReadOnlyModelAdmin):
     list_display = (
             'id',
             'created_at',

@@ -4,9 +4,10 @@ from profiles.models import ShortURL, MerchantDoc
 from utils import uri_to_url
 
 from bitcash.settings import BASE_URL
+from bitcash.custom import ReadOnlyModelAdmin
 
 
-class ShortURLAdmin(admin.ModelAdmin):
+class ShortURLAdmin(ReadOnlyModelAdmin):
 
     def short_url(self, instance):
         url = uri_to_url(BASE_URL, instance.uri_display)
@@ -28,7 +29,7 @@ class ShortURLAdmin(admin.ModelAdmin):
 admin.site.register(ShortURL, ShortURLAdmin)
 
 
-class MerchantDocAdmin(admin.ModelAdmin):
+class MerchantDocAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',

@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from phones.models import SentSMS
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class SentSMSAdmin(admin.ModelAdmin):
+
+class SentSMSAdmin(ReadOnlyModelAdmin):
     list_display = (
         'id', 'sent_at', 'phone_num', 'to_user', 'to_merchant', 'to_shopper',
     )

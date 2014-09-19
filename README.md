@@ -117,3 +117,10 @@ You're on your own for that.
 To impersonate a user, you must be logged in as the super admin. From there, append `?__impersonate=username_here` to the end of the url. 
 
 To switch back to your admin user, add `?__unimpersonate=True` to the url.
+
+## Git Foo ##
+
+Compare your local version of site to what's on github:
+```
+$ git log origin/master..HEAD --oneline
+```

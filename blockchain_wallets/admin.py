@@ -2,8 +2,10 @@ from django.contrib import admin
 
 from blockchain_wallets.models import BCICredential, BCISentBTC
 
+from bitcash.custom import ReadOnlyModelAdmin
 
-class BCICredentialAdmin(admin.ModelAdmin):
+
+class BCICredentialAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',
@@ -21,7 +23,7 @@ class BCICredentialAdmin(admin.ModelAdmin):
 admin.site.register(BCICredential, BCICredentialAdmin)
 
 
-class BCISentBTCAdmin(admin.ModelAdmin):
+class BCISentBTCAdmin(ReadOnlyModelAdmin):
 
     list_display = (
             'id',

@@ -524,7 +524,6 @@ input[type="button"].hl-btn-block {
   border-top: 1px solid #FFF;
 }
 
-
 /* ===== Info Boards ==== */
 
 .info-board {
@@ -536,8 +535,8 @@ input[type="button"].hl-btn-block {
 /* 1. Info board green */
 
 .info-board-green {
-    background-color: #F5FAF0;
-    border-color: #72a53b;
+  background-color: #F5FAF0;
+  border-color: #72a53b;
 }
 .info-board h4 {
     margin-top: 0;
@@ -549,14 +548,14 @@ input[type="button"].hl-btn-block {
 /* 2. Info board blue */
 
 .info-board-blue {
-    background-color: #EBF9FF;
-    border-color: #00B4FF;
+  background-color: #EBF9FF;
+  border-color: #00B4FF;
 }
 .info-board h4 {
     margin-top: 0;
 }
 .info-board p:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* 3. Info board red */

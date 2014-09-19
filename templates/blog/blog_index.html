@@ -35,9 +35,9 @@
           </ul>
           <hr>
           <p class="blog-text">
-            {{post.get_truncated_preview|safe}}
+            {{post.get_first_paragraph|safe}}
           </p>
-          {% ifnotequal post.get_truncated_preview post.body %}
+          {% ifnotequal post.get_first_paragraph post.body %}
             <p>
               <i>
                 ...<a href="{{ post.get_uri }}">Read the full blog post here</a>.

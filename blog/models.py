@@ -25,7 +25,7 @@ class BlogPost(models.Model):
     def get_url(self):
         return uri_to_url(BASE_URL, self.get_uri())
 
-    def get_truncated_preview(self):
+    def get_first_paragraph(self):
         " Used in /blog "
         paragraphs = re.findall(r'(<p>.*?</p>)', self.body, re.DOTALL)
         if paragraphs:

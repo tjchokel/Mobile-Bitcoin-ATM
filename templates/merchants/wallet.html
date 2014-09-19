@@ -383,9 +383,14 @@
 
     function getTopOffAddress(credential_id) {
         $("#fund-wallet-button").toggleClass("active");
-        if (! credential_id){
-          credential_id = {{credential.id}};
-        }
+
+        {% if credential %}
+        {# HACK so this method can be called from other pages with no credential_id supplied #}
+          if (! credential_id){
+            credential_id = {{credential.id}};
+          }
+        {% endif %}
+
         $.ajax({
           type: 'get',
           url: '/get-new-address/'+credential_id,

@@ -262,9 +262,6 @@
               var country3 = $('#id_country').val();
               var country2 = country3_to_country2[country3];
               var autocomplete_url = "city-autocomplete/";
-              // var autocomplete_url = "city-autocomplete/"+request.term;
-              // autocomplete_url += "/";
-              // autocomplete_url += country2;
               $.ajax({
                 url: autocomplete_url,
                 data: {
@@ -278,17 +275,6 @@
               });
             },
             minLength: 3,
-            // select: function( event, ui ) {
-            //   log( ui.item ?
-            //     "Selected: " + ui.item.label :
-            //     "Nothing selected, input was " + this.value);
-            // },
-            // open: function() {
-            //   $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-            // },
-            // close: function() {
-            //   $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-            // }
           });
       });
     });

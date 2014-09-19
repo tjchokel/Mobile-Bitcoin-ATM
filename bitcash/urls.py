@@ -40,7 +40,7 @@ urlpatterns = patterns('',
     url(r'^cancel-address/$', 'bitcoins.views.cancel_address', name='cancel_address'),
     url(r'^cancel-buy/$', 'bitcoins.views.cancel_buy', name='cancel_buy'),
     url(r'^city-autocomplete/$', 'users.views.city_autocomplete', name='city_autocomplete'),
-    # url(r'^city-autocomplete/(?P<city>\w+)/(?P<country>\w+)$', 'users.views.city_autocomplete', name='city_autocomplete'),
+
     # API Partner AJAX Calls
     url(r'^get-new-address/(?P<credential_id>\w+)$', 'credentials.views.get_new_address', name='get_new_address'),
     url(r'^get-current-balance/(?P<credential_id>\w+)$', 'credentials.views.get_current_balance', name='get_current_balance'),

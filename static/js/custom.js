@@ -12,6 +12,9 @@ $(document).ajaxComplete(function(e, xhr, settings) {
     if (settings.url.search('freegeoip.net') >= 0) {
         console.log(settings.url+' Error');
     }
+    else if (settings.url.search('geobytes.com') >= 0) {
+        console.log(settings.url+' Error');
+    }
     else if (settings.url.search('/get-bitcoin-price') >= 0) {
         console.log(settings.url+' Error');
     }

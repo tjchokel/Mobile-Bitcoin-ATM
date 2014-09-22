@@ -9,24 +9,15 @@ class CustomerRegistrationForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'me@example.com'}),
     )
-    city = forms.CharField(
-        label=_('City'),
-        required=False,
-    )
     country = forms.ChoiceField(
         label=_('Country'),
         required=True,
         choices=COUNTRY_DROPDOWN,
         widget=forms.Select(attrs={'data-country': 'USA'}),
     )
-    intention = forms.ChoiceField(
-        label=_('Which Service Interests You Most?'),
+    city = forms.CharField(
+        label=_('City'),
         required=False,
-        widget=forms.RadioSelect(),
-        choices=(
-            ('buy_btc', _('Spend Cash to Buy Bitcoin')),
-            ('sell_btc', _('Sell Bitcoin to Receive Cash')),
-        ),
     )
 
 

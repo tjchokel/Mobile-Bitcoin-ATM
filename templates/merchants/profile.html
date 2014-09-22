@@ -308,6 +308,8 @@
 {% endblock admin_footer %}
 
 {% block extra_js %}
+  {# http://vincentlamanna.com/BootstrapFormHelpers/phone/#jquery-plugins #}
+  <script src="{% static "js/bootstrap-formhelpers.js" %}"></script>
   <script>
     $(document).ready(function(){
       if( {{ show_merchant_form }} === true){

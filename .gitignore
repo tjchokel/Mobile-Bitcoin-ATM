@@ -47,3 +47,6 @@ coverage.xml
 # Django stuff:
 *.log
 *.pot
+
+# SASS stuff
+.sass-cache

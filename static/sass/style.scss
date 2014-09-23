@@ -4,6 +4,11 @@
 // From https://github.com/FortAwesome/font-awesome-sass
 @import "_font-awesome.scss";
 
+// jQuery UI
+@import "_jquery-ui.scss";
+@import "_jquery-ui.structure.scss";
+@import "_jquery-ui.theme.scss";
+
 @import "_sticky-footer.scss";
 @import "_custom.scss";
 @import "_elements.scss";

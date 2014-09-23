@@ -135,15 +135,15 @@
                   {% else %}
                     <a class="btn btn-info has-spinner" id="fund-wallet-button" onclick="getTopOffAddress({{credential.id}});">
                       <span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>
-                      <i class="fa fa-bitcoin"></i>{% trans "Add Funds" %}
+                      <i class="fa fa-bitcoin"></i> {% trans "Add Funds" %}
                     </a>
                   {% endif %}
 
                   <a class="btn btn-info" style="cursor:pointer;" href="{{ credential.get_login_link }}" target="_blank">
-                    <i class="fa fa-external-link"></i>{% trans "Login" %}
+                    <i class="fa fa-external-link"></i> {% trans "Login" %}
                   </a>
                   <a class="btn-danger btn" style="cursor:pointer;" data-toggle="modal" data-target="#delete-credentials-modal">
-                    <i class="fa fa-trash-o"></i>{% trans "Delete" %}
+                    <i class="fa fa-trash-o"></i> {% trans "Delete" %}
                   </a>
                 </span>
                 <span class="hidden-sm hidden-md hidden-lg">

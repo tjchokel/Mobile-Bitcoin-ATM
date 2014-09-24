@@ -48,9 +48,23 @@ hr {
   font-weight: bold;
   background-color: #515151;
 }
+
 .navbar-inverse .navbar-brand {
-  color: white;
+    padding:11px 15px;
+
+    .logo {
+        width:152px;
+        height:28px;
+        background:transparent url("../img/logo.png") center no-repeat;
+        background:transparent url("../img/logo.svg") center no-repeat;
+    }
+
+    strong {
+        text-indent:-9999em;
+        display:block;
+    }
 }
+
 .navbar-inverse .navbar-nav > li > a {
   color: white;
 }
